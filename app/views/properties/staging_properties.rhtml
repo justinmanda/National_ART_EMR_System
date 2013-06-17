@@ -1,0 +1,8 @@
+
+<%# staging_options = ['Extended Staging','Normal Staging','Standard Staging'] %>
+<% staging_options = ['Extended Staging','Standard Staging'] %>
+
+<form id='staging_options' action="staging_options" method='post'>
+  <%=  select_tag "staging_options", options_for_select(staging_options),{
+  :helpText  => "Staging Options"} %>
+</form>>

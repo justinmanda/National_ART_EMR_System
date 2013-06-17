@@ -1,0 +1,58 @@
+<script>
+	function load(){
+
+		var finish = document.getElementById("finishButton");
+		var button = document.getElementById("buttons");
+		var back = document.createElement("button");
+		finish.setAttribute("onclick", "window.location= '/clinic'")
+		back.innerHTML = "<span>Back</span>"
+		back.setAttribute("class","button navButton blue")
+		back.setAttribute("onclick","history.back(-1);")
+		button.appendChild(back) 
+	}
+	setTimeout("load();",300)
+</script>
+<style>
+	tr{
+		height:35px;
+	}
+	caption{
+		color:brown;
+		font-family: verdana;
+		font-size:200%;
+	}
+	td{
+		text-align: center;
+		color: Darkred;
+		border-color:black;
+	}
+	A{
+		color:red;
+	}
+	A.visited{
+		color:red;
+	}
+	
+</style>
+<div style= "-moz-user-select:none;">
+<table border = 1 cellspacing = 1 cellpadding =0 width= 90%  align=center>
+			<caption> Patient Specific Register Details For: <%= @values["name"]%></caption>
+			<th colspan = 2><font size = 4>DESCRIPTION</font></th><th width = 40%><font size = 4>VALUE</font></th>
+			<tr><th colspan = 2>Sputum Examination</th></tr>
+			<tr><th rowspan = 3> Initiation </th><th>Smear</th><td><%= @values["smearat1"] %></td></tr>
+			<tr><th>Xpert</th><td><%= @values["xpert"] %></td></tr>
+			<tr><th>Culture</th><td><%= @values["culture"] %></td></tr>
+			<tr><th>Month 2</th><th>Smear</th><td><%= @values["smearat2"] %></td></tr>
+			<tr><th>Month 5</th><th>Smear</th><td><%= @values["smearat5"] %></td></tr>
+			<tr><th>Month 6</th><th>Smear</th><td><%= @values["smearat6"] %></td></tr>
+			<tr><th>[Month 8]</th><th>Smear</th><td><%= @values["smearat8"] %></td></tr>
+			<tr><th>&nbsp</th><th>X-ray or Other Diagnosis</th><td><%= @values["xray"] %></td></tr>
+			<tr><th colspan = 3>&nbsp</th></tr>
+			<tr><th colspan = 2>Treatment Outcome</th><td><%= @values["outcome"]%></td></tr>
+			<tr><th colspan = 2>HIV Status</th><td><%= @values["hivstatus"]%></td></tr>
+			<tr><th colspan = 2>Time of HIV Test</th><td><%= @values["hiv_test_date"] %></td></tr>
+			<tr><th colspan = 2>ARV Status</th><td><%= @values["arvstatus"]%></td></tr>
+			<tr><th colspan = 2>ARV No.</th><td><%= @values["arvnumber"]%></td></tr>
+			<tr><th colspan = 2>CPT Status</th><td><%= @values["cpt"] %></td></tr>
+</table>
+</div>

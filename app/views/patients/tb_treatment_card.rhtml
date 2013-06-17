@@ -1,0 +1,118 @@
+<script type = "text/javascript">
+	function finish (){
+		var finish = document.getElementById("finishButton")
+		finish.setAttribute("onclick", "window.location='/patients/show/?patient_id=" + "<%=@patient_bean.person_id%>'")	
+		finish.setAttribute("class","red")
+	}
+	setTimeout("finish();", 300)
+	function buttAdd(){
+		var butid = document.getElementById("buttons")
+		var button = document.createElement("button")
+		button.innerHTML="<span>Next Page</span>"
+		button.setAttribute("id", "next")
+		button.setAttribute("class","green")
+		butid.appendChild(button)
+	}
+	setTimeout("buttAdd();",300)
+	function nextPage(){
+		var next = document.getElementById("next")
+		next.setAttribute("onclick", "window.location='/patients/tb_treatment_card_page/" + "<%= @patient_bean.person_id%>'")	
+	}
+	setTimeout("nextPage();",300)
+</script>
+
+
+		<title> TB Treatment Card </title>
+		<style>
+			table.fixed { table-layout:fixed; border: 1px; line-height: 40px; font-size:18px;}
+			table.fixed td { overflow: hidden; }
+			span.tab1{  padding: 0 100px; /* Or desired space*/} 		
+			span.tab2{  padding: 0 10px; /* Or desired space*/}
+			span.tab3{  padding: 0 25px; /* Or desired space*/}	
+			div.header{ text-align:center; width:40%;height:6%;}	
+			div.container1{height:100%/ ;border: 1px solid; border-radius:15px;  margin:10px;}			
+			div.container{overflow:auto; border: 1px solid;line-height:25px; border-radius:15px;margin:10px;}
+			div.option{border: 1px solid;height:35px;width:90%; border-radius:5px; margin:10px}
+			div.option2{border: 1px solid;height:25px;width:95%;text-align:center; border-radius:4px;margin:10px;}
+div.main{height:230px;overflow:scroll; margin: 10px;webkit-user-select: none;-webkit-user-select: none;-khtml-user-select: none;-moz-user-select: none;-o-user-select: none;user-select: none;}
+		</style>
+
+	<div style= "overflow:auto;-webkit-user-select: none;-khtml-user-select: none;-moz-user-select: none;-o-user-select: none;user-select: none;">	
+
+		<table width= 100% >
+			<tr><th width = 50%>NATIONAL TUBERCULOSIS PROGRAMME<br>MALAWI</td>
+			<th ><div class = "option"><font size= 4>TUBERCULOSIS TREATMENT CARD</font></div></th>
+			</tr>
+			<tr>			
+				<td>
+					<div class= "container1" >
+					  <div style= "margin-left:25px; height:100%" >
+					<table class = "fixed" >
+
+			<tr><td><b>Name</b><td width= 10%>:<td> <%= @patient_bean.name %></td></tr>
+			<tr><td><b>Address</b><td>:<td><%= @patient_bean.address%></td></tr>
+			<tr><td><b>Sex</b><td>:<td><%= @patient_bean.sex %></td></tr>			
+			<tr><td><b>Date of Birth</b><td>:<td><%= @patient_bean.birth_date.to_time.strftime('%d %B %Y') rescue nil%></td></tr>
+			<tr><td><b>Gaurdian Name</b><td>:<td><%= @patient_bean.guardian%></td></tr>
+
+					</table>			
+					  </div>
+						
+					</div>
+					
+				</td>
+				<td rowspan = 2>
+
+					<div class= "container">			
+						<div style = "margin-left:15px">
+					<table width =100%>
+
+						<tr><td width= 30%><b>District TB No</b><td>:<td> <%= @variables["patientId"] %></td></tr>
+						<tr><td><b>Health Unit</b><td>:<td><%= Location.current_health_center.name %></td></tr>
+						<tr><td><b>Registr. Date</b><td>:<td><%= @variables["tbStart"] %></td></tr>
+					</table>
+						</div>
+						
+					</div>
+					<div class= "container">			
+						<div style = "margin-left:15px">
+					<table width = 100%>
+						<tr><td width= "30%"><b> Disease Class <td width= 5%>:</b></td><td><%= @variables["tbType"] %></td></tr>
+						<tr><td><b> Patient Category <td>:</b></td><td><%= @variables["patientType"] %></td></tr>
+						<tr><td><b> Patient Regimen <td>:</b></td><td><%= @variables["regimen"]%></td></tr>
+						<tr><td><b> DOT <td>:</b></td><td><%= @variables["dotOption"] %></td></tr>
+					</table>
+						</div>
+						
+					</div>
+			
+			
+				</td>
+			</tr>
+
+					
+				</table>
+			</div>
+			</td></tr>
+		</table>
+		
+		
+		<hr size = 2px color= "black" noshade= "noshade" >
+
+		<div class = "container">
+			<div style= "margin:10px">
+						<font size= 4><b>Management of HIV Positive Patients</b></font><br><br>
+						<b>HIV Status :</b> <%=	@variables["hiv"] %> 
+								<hr size = 2px color= "black" noshade= "noshade" >
+						<table width= 85% >
+						<tr><td>&nbsp<td >&nbsp</td><th width = 35%>ARV</th><th width = 35%>CPT</th></tr>
+						<tr><td><b>Start Date <td>:</b><td><div class= "option2"><%= @variables["arvStart"] %></div></td>
+							<td><div class= "option2"></div></td>
+						<tr><td><b>ARV No. <td>:</b><td><div class= "option2"><%= @patient_bean.arv_number %></div></td></tr>
+						<tr><td><b>ARV Status <td>:</b><td><div class= "option2"><%= @variables["status"] %></div></td></tr>
+						</table>
+			</div>
+		</div>
+
+
+

@@ -1,0 +1,20 @@
+
+<form method = 'post' action='duplicates'>
+<%
+attributes = []
+#attributes << "Name"
+#attributes << "DOB"
+attributes << "Address"
+attributes << "Location (Physical)"
+%>
+
+<%= select_tag("attributes[]", options_for_select(attributes.sort),
+    :optional => true,
+    :multiple => true,
+    :helpText => "Select attributes",
+    :tt_onLoad => "changeButtons()" ) %>
+<%= hidden_field_tag"attributes[]", "Name" %>
+<%= hidden_field_tag"attributes[]", "DOB" %>
+<%= submit_tag"Finish" %>
+</form>
+

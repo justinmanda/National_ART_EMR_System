@@ -1,0 +1,26 @@
+--- 
+global_property_00000: 
+  property: use_patient_attribute.tribe
+  description: Indicates whether or not the 'tribe' attribute is shown when viewing/searching for patients
+  property_value: "true"
+  uuid: 1fe55c20-268f-102d-a2b3-16da04859145
+global_property_00001: 
+  property: remote_demographics_servers
+  description: Indicates hostnames for retrieving patient demographics
+  property_value: "localhost"
+  uuid: 1fe590fa-268f-102d-a2b3-16da04859145
+global_property_00002: 
+  property: list.of.clinical.encounters.sequentially
+  description: Sequential list of encounters
+  property_value: "UPDATE HIV STATUS,LAB ORDERS,SPUTUM SUBMISSION,LAB RESULTS,TB REGISTRATION,TB RECEPTION,ART_INITIAL,HIV RECEPTION,VITALS,HIV STAGING,PART_FOLLOWUP,ART VISIT,ART ADHERENCE,TREATMENT,DISPENSING"
+  uuid: aa318db6-178b-11e1-9603-544249e32ba2
+global_property_00003: 
+  property: site_prefix
+  description: site prefix code
+  property_value: "MPC"
+  uuid: aa319e50-178b-11e1-9603-544249e32ba2
+global_property_00004: 
+  property: current_health_center_id
+  description: current health centres id
+  property_value: 700
+  uuid: c6223d20-a31b-11e0-bcd1-544249e32ba2

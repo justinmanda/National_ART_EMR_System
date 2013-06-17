@@ -1,0 +1,76 @@
+<%= javascript_include_tag "prototype" %>
+<%= javascript_include_tag 'jquery' %>
+<%= stylesheet_link_tag 'extra_buttons' %>
+
+<style>
+
+  .tt_controls_start_month #keyboard{
+    display: none !important;
+  }
+
+  #tt_page_start_month .options{
+    height: 22em;
+  }
+  #tt_page_start_month .inputFrameClass{
+    height: 36em;
+  }
+  .tt_controls_end_month #keyboard{
+    display: none !important;
+  }
+
+  #tt_page_end_month .options{
+    height: 22em;
+  }
+  #tt_page_end_month .inputFrameClass{
+    height: 36em;
+  }
+</style>
+
+<form name='drug_menu' method='post' action="drug_report" >
+  <% month_names = month_name_options.gsub('<option value="Unknown">Unknown</option>', '') %>
+
+
+	<%= text_field_tag "start_year", nil,
+          {:helpText => 'Start year',
+          :field_type => 'number',
+          :absoluteMin => "1890",
+          :min => "1940",
+          :absoluteMax => Date.today.year,
+          :tt_pageStyleClass => "Numeric NumbersOnly"
+         }  %>
+
+	<%= select_tag "start_month", month_names,
+          {:helpText => 'Start month',
+          :validationMessage => 'Please enter a valid date'
+        }%>
+
+	<%= text_field_tag "start_day",  nil, {
+          :field_type => 'number',
+          :helpText => "Start day" ,
+          :validationJS => "validateDOB()",
+          :tt_pageStyleClass => "Numeric NumbersOnly",
+          :validationMessage => 'Please enter a valid date'}
+        %>
+
+
+        <%= text_field_tag "end_year", nil,
+          {:helpText => 'End year',
+          :field_type => 'number',
+          :absoluteMin => "1890",
+          :min => "1940",
+          :absoluteMax => Date.today.year,
+          :tt_pageStyleClass => "Numeric NumbersOnly"
+         }  %>
+
+	<%= select_tag "end_month", month_names,
+          {:helpText => 'End month',
+          :validationMessage => 'Please enter a valid date'
+        }%>
+
+	<%= text_field_tag "end_day",  nil, {:field_type => 'number',
+          :helpText => "End day" ,
+          :tt_pageStyleClass => "Numeric NumbersOnly",
+          :validationMessage => 'Please enter a valid date'
+        }%>
+
+</form>

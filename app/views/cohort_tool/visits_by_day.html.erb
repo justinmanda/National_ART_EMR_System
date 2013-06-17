@@ -1,0 +1,89 @@
+<html>
+  <head>
+    <%= stylesheet_link_tag 'visits_by_day' %>
+
+    <script language = 'javascript'>
+      var visitsByWeekDay   = <%= @visits_by_week_day.to_json %>
+      var visitingPatients  = <%= @patients.to_json%>
+    </script>
+
+    <%= javascript_include_tag 'jquery'  %>
+    <%= javascript_include_tag 'jquery.flot'%>
+    <%= javascript_include_tag 'utils' %>
+    <%= javascript_include_tag 'visits_by_day' %>
+    <style>
+      .logo {
+        float:left
+      }
+       #find{
+       display: none;
+      }
+
+      .horizontal_line hr{
+        position:absolute;
+        bottom:104px;
+      }
+      #visits-table{
+
+        width: 100%;
+      }
+      div{
+        -moz-user-select: none;
+      }
+      #placeholder{
+        position: absolute;
+        top: -50px;
+        left: -75px;
+      }
+      #done-button{
+        background-color: #4A708B;
+        border-bottom: 1px outset black;
+        border-style: outset;
+        border-top: 1px outset black;
+        color: white;
+        display: block;
+        padding: 10px 16px 10px 10px;
+        text-align: center;
+        text-decoration: none;
+        width: 150px;
+      }
+      #page-title{
+        position: absolute;
+        top: -17%;
+        left: 33%;
+      }
+      #tabbed-content{
+        border: 0px;
+      }
+    </style>
+  </head>
+  <body>
+  <%= image_tag(@logo, :class => "logo")%>
+    <br /><b style="margin-left:75px"><%= @location_name %></b><br />
+    <b style="position:relative; top:0px;margin-left:75px">Visits By Day at Registration</b><br />
+    <b style="position:relative; top:0px;margin-left:75px"><%=  params[:quarter] %></b><br /><br />
+    <div id='tabbed-content'>
+      <div id='visits-table-tab' class='activated'>
+        <%= render :partial => 'visits_table' %>
+      </div>
+
+      <div id='visits-graph-tab' style='display: none'>
+          <%= render :partial => 'visits_graph' %>
+      </div>
+
+      <div id='patients-list-tab' style='display: none'>
+        <%= render :partial => 'patients_list'%>
+      </div>
+    </div>
+
+    <div class="horizontal_line">
+      <hr width="100%" color="gray"/>
+    </div>
+    <div id="keypad">
+      <span class="keypad">
+      </span>
+
+  </div>
+  </body>
+</html>
+

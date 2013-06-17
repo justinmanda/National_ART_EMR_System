@@ -1,0 +1,230 @@
+<html>
+  <head>
+    <title>Mastercard</title>
+    <%= stylesheet_link_tag "mateme" %>
+    <%= stylesheet_link_tag fancy_or_high_contrast_touch %>
+
+    <script type="text/javascript">
+      var tt_cancel_destination = "/patients/show/?patient_id=" + "<%=@patient_id%>"
+
+     var total  = <%="#{session[:mastercard_ids].length.to_i}" rescue 0%>;
+     var current = <%="#{session[:mastercard_counter].to_i + 1}" rescue 0%>;
+ 
+      function next(){
+        current = current + 1;
+        if (current >= total){
+           current = total;
+        }
+        document.location = "/patients/mastercard?show_mastercard_counter=true&current=" + current;
+      }
+
+      function prev(){
+        current = current - 1 ;
+        if (current <= 0){
+           current = 1;
+        }
+        document.location = "/patients/mastercard?show_mastercard_counter=true&current=" + current;
+      }    
+      
+      function hideLoadMsg() {
+        document.getElementById('msgBox').style.display = "none";
+      }
+
+      function loadMsg() {
+        try {
+          document.getElementById('msgBox').style.display = "inline";
+          document.getElementById('dot1').style.display = "inline";
+        }catch(e) {}
+      }
+
+      function showDots() {
+        if(document.getElementById('dot10').style.display == "inline"){
+          allDots = document.getElementsByClassName('dots');
+          for(i=0;i<allDots.length;i++) {
+            allDots[i].style.display = "none";
+          }
+          document.getElementById('dot1').style.display = "inline";
+          return
+        }
+
+        if(document.getElementById('dot9').style.display == "inline"){
+          document.getElementById('dot10').style.display = "inline";
+        }else if(document.getElementById('dot8').style.display == "inline"){
+          document.getElementById('dot9').style.display = "inline";
+        }else if(document.getElementById('dot7').style.display == "inline"){
+          document.getElementById('dot8').style.display = "inline";
+        }else if(document.getElementById('dot6').style.display == "inline"){
+          document.getElementById('dot7').style.display = "inline";
+        }else if(document.getElementById('dot5').style.display == "inline"){
+          document.getElementById('dot6').style.display = "inline";
+        }else if(document.getElementById('dot4').style.display == "inline"){
+          document.getElementById('dot5').style.display = "inline";
+        }else if(document.getElementById('dot3').style.display == "inline"){
+          document.getElementById('dot4').style.display = "inline";
+        }else if(document.getElementById('dot2').style.display == "inline"){
+          document.getElementById('dot3').style.display = "inline";
+        }else if(document.getElementById('dot1').style.display == "inline"){
+          document.getElementById('dot2').style.display = "inline";
+        }
+      }
+    </script>
+
+    <style>
+      .dots {
+        display: none;
+      }
+
+      body {
+        background-color: #000;
+      }
+      #main {
+        width: 99.7%;
+        height: 88.5%;
+        overflow: hidden;
+        -moz-user-select:none;
+      }
+
+      #msgBox table {
+        -moz-user-select:none;
+        font-size: 27px;
+        margin-left: 10px;
+        margin-right: 10px;
+        position: absolute;
+        top: 25px;
+      }
+
+      #msgBox {
+        background: none repeat scroll 0 0 #40f999;
+        border: 5px outset #40f999;
+        border-radius: 15px 15px 15px 15px;
+        float: right;
+        font-size: 1.2em;
+        height: 130px;
+        left: 260px;
+        padding: 20px;
+        position: absolute;
+        text-align: left;
+        top: 150px;
+        width: 450px;
+        z-index: 842;
+      }
+
+      #content {
+        background:#FFFFFF;
+        position:absolute;
+        left:50%;
+        top:50%;
+        width:1000px;
+        height:750px;
+        margin-left:-500px;
+        margin-top:-380px;
+        -moz-user-select:none;
+
+      }
+
+      #footer {
+        background-color:#333333;
+        color:#CADCEA;
+        height:80px;
+        width:100%;
+        bottom:0px;
+        position:absolute;
+        overflow:hidden;
+        -moz-user-select:none;
+      }
+
+    </style>
+
+  </head>
+  <body onload="hideLoadMsg();">
+    <div id="content">
+      <iframe id="main" style="border: 0px solid #fff;"
+              src="/patients/<%= (!@type.nil? ? "general_mastercard" : "mastercard_printable")
+                  %>?patient_id=<%=@patient_id%>&type=<%= @type %>"></iframe>
+
+      <div id="footer" style="">
+      	<% report_url = "/patients/show/?patient_id=#{@patient_id}" %>
+      	
+		    <% if (@show_mastercard_counter.to_s == "true") || (@from_report.to_s == "true") %>
+		    		<% report_url = session[:report_url] if !session[:report_url].blank? %>
+		    <% end %>
+		    
+        <button onclick="window.location ='<%="#{report_url}"%>';" class="button navButton green"
+                id="nextButton" style="float: right; margin-right: 10px;" ><span>Finish</span>
+        </button>
+
+        <% if @source.nil? %>
+          <button class="button navButton blue" style="float: left;"
+          	<% if !@show_mastercard_counter %>
+                  onmousedown="window.location = '/patients/print_mastercard?patient_id=<%=@patient_id%>'">
+            <% else %>
+                  onmousedown="window.location = '/patients/print_mastercard?patient_id=<%=@patient_id%>&show_mastercard_counter=true&current=' + current;">            
+            <% end %>
+            <span>
+              Print Mastercard
+            </span>
+          </button>
+
+          <%if @show_mastercard_counter %>        
+                <button id="back" class="<%=@prev_button_class%>" style="position:relative; float:left;" onclick="prev()">
+                	<span>Previous</span>
+                </button>
+                
+                <span style="position:relative;float:left; top:-6px; padding : 0px 10px 0 20px">
+                	<h1 id="navigation_value"> ----- </h1>
+                </span>
+                
+                <button id="forward" class="<%=@next_button_class%>" style="position:relative; float:left;" onclick="next()">
+                	<span>Next</span>
+                </button>
+          <%end%>
+        <% end %>
+    
+        <% if show_lab_results %>                                     
+          <button class="button navButton blue" style="float: left;"
+                  onmousedown="window.location = '/lab/results/<%=@patient.id -%>'">
+            <span>
+              Lab trail
+            </span>
+          </button>
+        <%end%> 
+
+      </div>
+
+      <div id="msgBox">
+        <table>
+          <tr>
+            <td>Loading: please wait</td>
+            <td>&nbsp;</td>
+            <td class="dots" id="dot1">.</td>
+            <td class="dots" id="dot2">.</td>
+            <td class="dots" id="dot3">.</td>
+            <td class="dots" id="dot4">.</td>
+            <td class="dots" id="dot5">.</td>
+            <td class="dots" id="dot6">.</td>
+            <td class="dots" id="dot7">.</td>
+            <td class="dots" id="dot8">.</td>
+            <td class="dots" id="dot9">.</td>
+            <td class="dots" id="dot10">.</td>
+          </tr>
+        <table>
+      </div>
+    </div>
+  </body>
+</html>
+
+<script>
+
+	try {
+		 document.getElementById('navigation_value').innerHTML = "<input value =" + current + " size='3' maxlength='<%= "#{(session[:mastercard_ids].length.to_s rescue 0).split('').count}" %>' type='text' readonly='readonly' style='font-size:35px; text-align:right;font-weight: bold; padding-right:10px;' />" + " of " + total;
+	}
+	catch(e) {
+	 try{
+		document.getElementById('navigation_value').innerHTML = ''
+		}catch(d){}
+	}
+	
+  setInterval("showDots();",200);
+  loadMsg();
+</script>
+

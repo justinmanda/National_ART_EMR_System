@@ -1,0 +1,188 @@
+<script>
+var tt_cancel_destination = "/patients/mastercard?patient_id=" + "<%=@patient_id%>"
+</script>
+
+
+<style>
+
+#visit-left table
+{
+  width:100%;
+  -moz-user-select:none;
+}
+
+#head
+{
+  border-bottom-style:solid;
+  padding:10px;
+  font-size:15px;
+  border-width: 1px;
+  -moz-user-select:none;
+}
+
+#visit-left
+{
+  float:left;
+  -moz-user-select:none;
+}
+
+#visit-right
+{
+  float:right;
+  -moz-user-select:none;
+}
+
+.data-visit
+{
+  padding:10px;
+  width:47%;
+  border-bottom-style:solid;
+  border-left-style:solid;
+  border-right-style:solid;
+  border-width: 1px;
+  -moz-user-select:none;
+}
+
+
+#visit-left th
+{
+  text-align:left;
+  padding-left:5px;
+}
+
+#visit-left td , th
+{
+  border-style:solid;
+  border-width:1px;
+}
+
+#visit-right table
+{
+  width:98%;
+}
+
+caption
+{
+  font-weight: bold;
+}
+
+</style>
+
+<div id = 'head'>
+<h3>Patient's visit summary:&nbsp;<%=@date.to_date.strftime('%A, %d %B %Y')%></h3>
+Name:&nbsp;<%person = @patient.person %>
+<%= @patient_bean.name %><br/>
+Age:&nbsp;<%= @patient_bean.age %><br/>
+Guardian(s):&nbsp;<%= @patient_gaurdians rescue 'NONE' %>
+</div>
+
+<div id = 'visit-left' class = 'data-visit'>
+  <table>
+    <% @visits.each do |date,visit| %>
+    <tr>
+      <th>Weight</th>
+      <td><%=visit.weight%></td>
+    </tr>
+    <tr>
+      <th>Height</th>
+      <td><%=visit.height%></td>
+    </tr>
+    <tr>
+      <th>BMI</th>
+      <td><%=visit.bmi%></td>
+    </tr>
+    <tr>
+      <th>Regimen</th>
+      <td><%=visit.reg%></td>
+    </tr>
+    <tr>
+      <th>Outcome</th>
+      <td><%=visit.outcome%></td>
+    </tr>
+    <tr>
+      <th>Outcome date</th>
+      <td><%=visit.date_of_outcome.to_date.strftime('%b %d %Y') rescue '&nbsp;'%></td>
+    </tr>
+    <tr>
+      <th>Adherence</th>
+      <td>
+        <% adherence = ''
+        (visit.adherence || []).each do | name , percentage |
+          adherence += "<br/>#{name} (#{percentage})" unless adherence.blank?
+          adherence = "#{name} (#{percentage})" if adherence.blank?
+        end %>
+        <%= adherence || '&nbsp;'%>
+      </td>
+    </tr>
+    <tr>
+      <th>TB Status</th>
+      <td><%=visit.tb_status%></td>
+    </tr>
+    <tr>
+      <th>Symptoms</th>
+      <td>                                                                      
+      <% side_effects = nil                                                     
+      (visit.s_eff.split("<br/>").compact.reject(&:blank?) || []).each do | side_effect |
+        side_effects += "<br/>#{side_effect}" unless side_effects.blank?        
+        side_effects = "#{side_effect}" if side_effects.blank?                  
+      end if visit.s_eff%>                                                       
+      <%= side_effects || '&nbsp;'%>                                            
+      </td>
+    </tr>
+    <tr>
+      <th>Pill count</th>
+      <td>
+        <% pills = ''
+        (visit.pills || []).each do | drug_name,count |
+          pills += "<br/>#{drug_name}: #{count}" unless pills.blank?
+          pills = "#{drug_name}: #{count}" if pills.blank?
+        end %>
+        <%= pills || '&nbsp;'%>
+      </td>
+    </tr>
+    <tr>
+      <th>Drugs given</th>
+      <td>
+        <% gave = ''
+        (visit.gave || []).each do | name , quantity |
+          gave += "<br/>#{name} (#{quantity})" unless gave.blank?
+          gave = "#{name} (#{quantity})" if gave.blank?
+        end %>
+        <%= gave || '&nbsp;'%>
+      </td>
+    </tr>
+    <tr>
+      <th>Visit by</th>
+      <td><%=visit.visit_by%></td>
+    </tr>
+    <tr>
+      <th>CPT</th>
+      <td><%=visit.cpt || '&nbsp;'%></td>
+    </tr>
+    <tr>
+      <th>Appointment date</th>
+      <td><%=visit.appointment_date.to_date.strftime('%A, %B %d %Y') rescue '&nbsp;'%></td>
+    </tr>
+    <% end %>
+  </table>
+</div>
+<div id = 'visit-right' class = 'data-visit'>
+  <table>
+    <%@visits.each do |date,visit| %>
+      <caption>Clinical notes (optional) ....</caption>
+      <tr>
+        <td><%=visit.notes%></td>
+      </tr>
+    <% end %>
+  </table>
+</div>
+
+<div id="buttons" class="buttonsDiv" style="top:456;z-index:15">
+	<div id="tt_extraButtons"></div>
+		<button id="printSummaryVisit" class="button navButton blue" style="float: left;" onmousedown="window.location = '/patients/specific_patient_visit_date_label?patient_id=<%=@patient_bean.patient_id%>&session_date=<%=@date.to_date%>'">
+			<span>Print Visit Summary</span>
+		</button>
+		<button id="finishButton" class="button navButton green" style="float: right;" onmousedown="window.location = '/patients/mastercard?patient_id=' + '<%=@patient_id%>'">
+			<span>Finish</span>
+		</button>
+</div>

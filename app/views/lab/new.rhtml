@@ -1,0 +1,99 @@
+<style>
+
+#lessthan , #greaterthan , #equals, #decimal {
+  display: inline !important;
+}
+
+.tt_controls_test_result #date,#minus,#abc,#comma,#qwerty,
+  #slash,#percent,#star,#plus,#date,#Unknown,#char,#backspace {     
+  display:none;                                                               
+}
+
+
+.tt_controls_test_date #Unknown { display: none; }
+</style>
+
+<script>
+   tt_cancel_destination = "/lab/results/<%=@patient.id%>";
+
+function updateResultKeyPad() {                                             
+    curr_page = tstCurrentPage - 1                                              
+    buttons = document.getElementsByClassName("keyboardButton");                
+    $("clearButton").setAttribute("onmousedown","clearInput();updateResultKeyPad();");
+    $("backButton").setAttribute("onmousedown",";gotoPage(" + curr_page + ", null, true);resetPad();");
+    //$("nextButton").setAttribute("onmousedown","gotoNextPage();resetPad();");   
+                                                                                
+    for(i = 0; i < buttons.length ; i++) {                                      
+      if (buttons[i].id == "equals" || buttons[i].id == "greaterthan" || buttons[i].id == "lessthan") {
+        buttons[i].disabled = false;                                            
+        if( buttons[i].id == "equals"){                                         
+          buttons[i].setAttribute("onmousedown","press('=');resetKeyPad();");   
+        }else if( buttons[i].id == "lessthan") {                                
+          buttons[i].setAttribute("onmousedown","press('<');resetKeyPad();");   
+        }else if( buttons[i].id == "greaterthan") {                             
+          buttons[i].setAttribute("onmousedown","press('>');resetKeyPad();");   
+        }                                                                       
+      }else{                                                                    
+        buttons[i].disabled = true;                                             
+      }                                                                         
+    }                                                                           
+  }    
+
+
+
+
+function resetPad() {                                                         
+    curr_page = tstCurrentPage - 1                                              
+    buttons = document.getElementsByClassName("keyboardButton");                
+    for(i = 0; i < buttons.length ; i++) {                                      
+    buttons[i].disabled = false;                                                
+    }                                                                           
+    $("clearButton").setAttribute("onmousedown","clearInput();");               
+    $("backButton").setAttribute("onmousedown",";gotoPage(" + curr_page + ", null, true);");
+    $("nextButton").setAttribute("onmousedown","gotoNextPage();");              
+  }                                                                             
+                                                                                
+  function resetKeyPad() {                                                      
+    buttons = document.getElementsByClassName("keyboardButton");                
+    for(i = 0; i < buttons.length ; i++) {                                      
+      if (buttons[i].id == "equals" || buttons[i].id == "greaterthan" || buttons[i].id == "lessthan") {
+        buttons[i].disabled = true;                                             
+      }else{                                                                    
+        buttons[i].disabled = false;                                            
+      }                                                                         
+    }                                                                           
+  } 
+
+
+
+</script>
+
+<% form_tag 'create', :method => :post do %>
+   <%= select_tag("lab_result", options_for_select(@lab_test),
+       :id => 'value',
+       :helpText  => "Available tests") %>
+
+<%= select_tag 'date_available',options_for_select(["","Yes","No"]), 
+  {:onchange => "displayDate();" ,
+   :id => 'test_date_available',
+   :helpText => 'Test date available'} %>
+
+<%= text_field_tag 'test_date', Date.today,                              
+      {:id => 'test_date_id',                                                 
+       :field_type => 'date',                                                 
+       :condition => '$("test_date_available").value.toLowerCase() =="yes"',
+       :helpText => "Test date",                                 
+       :max => "#{(Date.today).strftime('%Y-%m-%d')}",                        
+       :tt_pageStyleClass => "Date DatesOnly"} %>
+
+
+<%= text_field 'test_value', nil,:size => 8, :field_type => "number",
+    :helpText => 'Test results', 
+    :validationRule => "^(>|<|=|U|M)([\\d.]+|nknown|issing)$",
+    :validationMessage => "You must specify >, < or =" ,
+    :tt_onLoad => "updateResultKeyPad();"%>
+
+
+<%= hidden_field_tag "patient_id", @patient.id %>
+
+<%end%>

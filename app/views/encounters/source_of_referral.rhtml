@@ -1,0 +1,392 @@
+<style>
+  #num{ display:none; }
+  #char{ display:none; }
+  #space { display:inline; font-size:1.2em; }
+  #Unknown { display: none}
+  .label {
+    display: inline-block;
+    margin: 5px;
+    border: 2px dashed black;
+    height: 80px;
+    width: 300px
+  }
+  .label .labelLine {
+    width: 100%;
+    display:block
+
+  }
+  .reverse {
+    background: black;
+    color: white;
+  }
+
+  .tt_controls_main_tests .keyboard{display:none;}
+  #tt_page_main_tests .options{height:550px}
+
+  .tt_controls_select_test .keyboard{display:none;}
+  #tt_page_select_test .options{height:530px}
+</style>
+<%# all_test  = @select_options["lab_orders"]["Sputum-AAFB"] + @select_options["lab_orders"]["Sputum-Culture"]
+%>
+<script type="text/javascript" defer>
+  var people = [{}];
+    var val_arr = [];
+    var val_in_list = [];
+    var number_of_selected_test = 0;
+
+    function showLabels(){
+		//alert($('lab_orders').value);
+        var ordersArray = tstPageValues[1].split(";")
+        //var ordersArray = val_arr
+
+        var displayText = ""
+        for(var i=0;i<ordersArray.length;i++){
+	        displayText += drawLabel(ordersArray[i])
+        }
+
+        $('tt_page_summary_').innerHTML = '<div id="summary">' + displayText + '</div>' ;
+    }
+
+    function drawLabel(test_type){
+        //TODO Replace below wtih http://barcode-coder.com/en/barcode-jquery-plugin-201.html
+        label = "\
+        <div class='label'>\
+        <span class='labelLine'>\
+        <%= "#{@patient_bean.name} #{@patient_bean.national_id_with_dashes}" %>\
+        </span>\
+        <span class='labelLine reverse'>"+test_type+"</span>\
+        <span class='labelLine'> <del>999999 || |||| | ||||| | | ||||| || | |</del></span>\
+        <%= "#{DateTime.now.strftime("%d%b%y %H:%M")}" %>\
+        </div>\
+        "
+        return label
+    }
+
+    function updateLaborderUrl(mainTest){
+        var url = '/encounters/lab_orders?sample=' + mainTest + '&search_string=';
+        $('lab_orders').setAttribute('ajaxURL', url);
+    }
+
+   /* function updateInfoBar(element){
+        var val = unescape(element.innerHTML)
+        var idx = val_arr.indexOf(val);
+        if (idx == -1){
+          val_arr.push(val);
+          }else{
+          val_arr.splice(idx,1)
+        }
+        //tstInputTarget.value = ""
+        $('final_tests').value = val_arr.join(';');
+    }*/
+
+    function colourfy(){
+        alert('AA');
+    }
+<%
+pos = 1
+@patients.each do |person|
+	next if person.blank? -%>
+
+		people.push({});
+
+		people[<%= pos %>]["Name"] = "<%= person.name %>";
+			  
+		people[<%= pos %>]["Gender"] = "<%= person.sex %>";
+
+		<% if person.dead == 1 %>
+			people[<%= pos %>]["Status"] = "<%=h 'Died' if person.dead == 1 rescue '' -%>";
+		<% end %>
+
+		people[<%= pos %>]["Birthdate"] = "<%= person.birth_date rescue "" %>";
+
+		people[<%= pos %>]["Age"] = "<%= person.age rescue "" %>";
+			   
+		people[<%= pos %>]["Home District"] = "<%=h person.home_district -%>";
+
+		people[<%= pos %>]["Ancestral Traditional Authority(T/A)"] = "<%=h person.traditional_authority -%>";
+
+		people[<%= pos %>]["Current Residence"] = "<%=h person.current_residence -%>";
+
+		<% if !person.mothers_surname.blank? %>  
+			people[<%= pos %>]["Mother Surname"] = "<%=h person.mothers_surname -%>";
+		<% end %>
+
+		<% if !person.arv_number.blank? %> 
+			people[<%= pos %>]["ARV Number"] = "<%=h person.arv_number rescue "" -%>";
+		<% end %>
+
+		<% if !person.national_id.blank? %>     
+			people[<%= pos %>]["Patient National ID"] = "<%=h person.national_id rescue "" -%>";
+		<% end %>
+
+		<% if !person.eid_number.blank? %>    
+			people[<%= pos %>]["EID Number"] = "<%=h person.eid_number rescue "" -%>";
+		<% end %>
+
+		<% if !person.pre_art_number.blank? %>    
+			people[<%= pos %>]["Pre-ART Number"] = "<%=h person.pre_art_number rescue "" -%>";
+		<% end %>
+
+	<%
+
+  pos = pos + 1
+end -%>
+
+<% if (params[:relation].strip rescue "") != "" %>
+    var tt_cancel_destination = "/patients/guardians_dashboard?patient_id=<%=h params[:relation] -%>"
+<% else %>
+    var tt_cancel_destination = "/clinic"
+<% end %>
+
+  function changeNextButtonText(text){
+    $('nextButton').innerHTML = "<span>" + text + "</span>";
+  }
+
+  function newSearch(){
+    if (window.location.href.match(/\?identifier/))
+      window.location.href = "/people/identifiers";
+    else
+      window.location.href = "/people/search";
+  }
+
+  function createNewSearchButton(){
+    $('clearButton').innerHTML = "<span>New Search</span>";
+    $('clearButton').setAttribute("onmousedown","newSearch();");
+  }
+
+  function newSearch() {
+    document.location = "/people/search?relation=<%=h params[:relation] -%>"
+  }
+
+  function setAttributes() {
+<%if params[:given_name] and params[:family_name] %>
+      var buttondiv = __$("buttons");
+      buttondiv = document.getElementById("buttons");
+      buttondiv.innerHTML += "<div id='tt_extraButtons'></div>"
+      buttondiv.innerHTML+= "<button class='button navButton' id='newSearch' onmousedown='newSearch();'><span>New search</span></button>"
+<%end%>
+  }
+  
+ function compileDate(){
+    var tmpDate = $('sputum_microscopy_year').value + "-" + $('sputum_microscopy_month').value +"-" +$('sputum_microscopy_day').value;
+    return tmpDate;
+  }
+
+  function updateLaborderUrl(mainTest){
+        var url = '/encounters/lab_orders?sample=' + mainTest + '&search_string=';
+        $('lab_orders').setAttribute('ajaxURL', url);
+		$('lab_orders2').setAttribute('ajaxURL', url);
+    }
+
+    function updateLabOptions(){
+        opts_arr = document.getElementsByTagName('li');
+        val_in_list = [];
+        for (var i = 0; i < opts_arr.length; i++){
+            for(k = 0; k < val_arr.length; k++){
+                if(opts_arr[i].innerHTML.toString() == val_arr[k].toString()){
+                    val_in_list.push(val_arr[k]);
+                }
+            }
+
+        }
+        tstInputTarget.value = val_in_list.join(';');
+        listSuggestions(tstCurrentPage);
+    }
+
+  var str; var tt;
+
+  function createHTML(){
+	tt = document.getElementById("lab_orders");
+	str = tt.value + " RESULTS";
+	tt = document.getElementById("first_results").value;
+	createForm(str, tt)
+  }
+
+  function createSecondHTML(){
+	tt = document.getElementById("lab_orders2")
+	str = tt.value + " RESULTS"
+	tt = document.getElementById("second_results").value;
+	createForm(str, tt)
+  }
+
+  function createForm(concept, value){
+	var submitForm = document.getElementById("appointment");
+    var newElement = document.createElement("input");
+
+    newElement.setAttribute("name","observations[][concept_name]");
+    newElement.setAttribute("type","hidden");
+    newElement.value = concept;
+
+    submitForm.appendChild(newElement);
+
+	newElement = document.createElement("input");
+    newElement.setAttribute("name","observations[][value_coded_or_text]");
+    newElement.setAttribute("type","hidden");
+    newElement.value = value;
+    submitForm.appendChild(newElement);
+  }
+
+  function validateOptions(){
+        number_of_selected_test = tstInputTarget.value.split(';').length;
+        if(number_of_selected_test < 2){
+            showMessage('Please select 2 or more tests');
+			//gotoPage(tstCurrentPage - 1, false);
+        }
+    }
+</script>
+<body onload = "setTimeout('setAttributes();', 300);">
+  <% if (params[:gender].blank? || params[:given_name].blank? || params[:family_name].blank?) && (params[:identifier].blank?) %>
+
+    <form id='appointment' action="/encounters/create" method='post'>
+      <%= hidden_field_tag "encounter[encounter_type_name]", "SOURCE OF REFERRAL" %>
+      <%= hidden_field_tag "encounter[patient_id]", @patient.id %>
+      <%= hidden_field_tag "encounter[encounter_datetime]", DateTime.now() %>
+      <%= hidden_field_tag "encounter[provider_id]", current_user.user_id %>
+
+
+      <%#= touch_select_tag "Referred by", @patient, concept_set_options('Source of referral'),%>
+      <%= touch_select_tag "Referred by", @patient, options_for_select(@select_options['source_of_referral']),
+        {:id => "referred_by",
+        :tt_pageStyleClass => "NoKeyboard",
+        :helpText => "Referred by",
+	   :tt_onLoad => "__$('keyboard').style.display = 'none'"
+	 } %>
+
+      <%= text_field_tag :given_name, params[:given_name], 
+          {:field_type => 'alpha', 
+            :helpText => 'First name of index patient', 
+            :ajaxURL => '/person_names/given_names?search_string=', 
+            :allowFreeText => true, 
+            :condition => '$("referred_by").value == "Index Patient"'}%> 
+
+      <%= text_field_tag :family_name, params[:family_name], 
+        {:field_type => 'alpha', 
+          :helpText => 'Last name of index patient ', 
+          :ajaxURL => '/person_names/family_names?search_string=', 
+          :allowFreeText => true, 
+          :condition => '$("referred_by").value == "Index Patient"'}%>
+
+      <%= select_tag :gender, options_for_select({"" => "", "Male" => "M", "Female" => "F"}), 
+        {:helpText => "Gender of index patient", 
+         :condition => '$("referred_by").value == "Index Patient"'} %>
+
+      <%= touch_yes_no_tag "Sputum result", @patient, nil,
+		{	:id => "sputum_result",
+			:helpText => "With sputum results?" } %>
+
+	    <%= text_field_tag "sputum_microscopy_year", nil,
+		  {:helpText => 'Sputum microscopy year',
+		  :field_type => 'number',
+		  :absoluteMin => "1982",
+		  :min => "1982",
+		  :absoluteMax => Date.today.year,
+		  :tt_pageStyleClass => "Numeric NumbersOnly",
+		  :condition => '$("sputum_result").value.toLowerCase() == "yes"'}  %>
+
+  <label for='sputum_microscopy_month'>Sputum microscopy month</label>
+  <%= select_tag "sputum_microscopy_month", month_name_options,
+    {:helpText => 'Sputum microscopy month',
+	 :tt_onLoad => "__$('keyboard').style.display = 'none';",
+     :condition => '($("sputum_microscopy_year").value.toLowerCase() != "Unknown") && ($("sputum_result").value.toLowerCase() == "yes")'
+	}%>
+
+
+  <label for='sputum_microscopy_day'>Sputum microscopy day</label>
+  <%= text_field_tag "sputum_microscopy_day",  nil, :field_type => 'number',
+       :helpText => 'Sputum microscopy day',
+       :condition => '($("sputum_microscopy_year").value != "Unknown") && ($("sputum_microscopy_month").value != "Unknown") && ($("sputum_result").value.toLowerCase() == "yes")', :tt_onLoad => ";getDayOfMonthPicker($('sputum_microscopy_year').value, $('sputum_microscopy_month').value)",
+	   :tt_onUnload => "$('sputum_microscopy_date').value = compileDate()" %>
+
+  <%= touch_hidden_tag "SPUTUM MICROSCOPY DATE", @patient, "", :id => "sputum_microscopy_date", :value_datetime => true %>
+
+  
+  <%= select_tag "main_tests", options_for_select(["Sputum-AAFB", "Sputum-Culture"].unshift(" ")),
+		{	:helptext => 'Main tests',
+			:id => 'main_tests',
+			:tt_onUnLoad => 'updateLaborderUrl($("main_tests").value);',
+			:condition => '$("sputum_result").value.toLowerCase() == "yes"'} %>
+
+
+	<%= touch_select_tag "TESTS ORDERED", @patient, options_for_select([]),
+		{	:id => "lab_orders",
+			:tt_onLoad => "$('clearButton').style.display='block'",
+			:multiple => false,
+			:helpText => "First test",
+			:condition => '$("sputum_result").value.toLowerCase() == "yes"' } %>
+
+  <%= select_tag "$('lab_orders').value", options_for_select(@sputum_results),
+      {:id => "first_results",
+      :helpText => "Result",
+	  :tt_onUnLoad => "createHTML()",
+	  :condition => '$("sputum_result").value.toLowerCase() == "yes"'} %>
+
+  <%= touch_select_tag "TESTS ORDERED", @patient, options_for_select([]),
+		{	:id => "lab_orders2",
+			:tt_onLoad => "$('clearButton').style.display='block'",
+			:multiple => true,
+			:helpText => "Second test",
+			:condition => '$("sputum_result").value.toLowerCase() == "yes"'} %>
+
+    <%= select_tag "$('lab_orders2').value", options_for_select(@sputum_results),
+      {	:id => "second_results",
+		:helpText => "Result",
+		:tt_onUnLoad => "createSecondHTML()",
+		:condition => '$("sputum_result").value.toLowerCase() == "yes"'} %>
+  
+  	<%#= touch_select_tag "TESTS ORDERED", @patient, options_for_select([]),
+		{	:id => "lab_orders",
+			:tt_onLoad => "$('clearButton').style.display='block'",
+			:multiple => true,
+			:helpText => "Second test",
+			:condition => '$("sputum_result").value.toLowerCase() == "yes"' } %>
+
+    <% session_date = session[:datetime].to_date rescue nil
+      if session_date %>
+
+    <p><label for="filter_provider">Staff who provided the information (Provider)</label></br>
+    <%= text_field "filter" , 'provider',
+         :helpText => 'Staff who provided the information (Provider)',
+         :ajaxURL => '/user/username?username=' %></p>
+    <% else %>
+      <%= hidden_field_tag "filter[provider]", nil %>
+    <%end%>
+    </form>
+
+    <% end -%>
+
+    <% 
+      unless (params[:gender].blank? || params[:given_name].blank? || params[:family_name].blank?) && (params[:identifier].blank?) %>
+    <% form_tag "/relationships/create", :method => :post do %>
+      <% if @people.blank? %>
+        <label for="person">No index person found:</label>
+      <% else -%>
+        <label for="person">Select the index person from the following</label>
+      <% end -%>
+      <select name="person" id="person" dualView="true" dualViewOptions="people">
+        <% if params[:identifier] %>
+          <option value="0" onmousedown="changeNextButtonText('New index person')">Create a new person with the identifier <%=h params[:identifier] -%></option>
+        <% else %>
+          <option value="0" onmousedown="changeNextButtonText('New index person')">Create a new person with the name <%=h params[:given_name] -%> <%=h params[:family_name] -%></option>
+        <% end %>
+        <% @patients.each do |person|
+          next if person.blank? -%>
+          <option value="<%= patient.person_id %>" onmousedown="changeNextButtonText('Select index person')">
+            <%=h person.name -%> (<%= person.gender %>)
+            <% unless person.birth_date.blank? %> <%=h person.birth_date -%><% end %>,
+            <% unless person.current_residence.blank? %> <%=h person.current_residence -%> <% end %>,
+            <% unless person.guardian.blank? %> Guardian: <%=h person.guardian -%> <% end %>
+          </option>
+        <% end -%>
+      </select>
+      <input type="hidden" name="identifier" value="<%=h params[:identifier] -%>" />
+      <input type="hidden" name="gender" value="<%=h params[:gender] -%>" />
+      <input type="hidden" name="given_name" value="<%=h params[:given_name] -%>" />
+      <input type="hidden" name="family_name" value="<%=h params[:family_name] -%>" />
+      <input type="hidden" name="family_name2" value="<%=h params[:family_name2] -%>" />
+      <input type="hidden" name="address2" value="<%=h params[:address2] -%>" />
+      <input type="hidden" name="relation" value="<%=h params[:relation] -%>" />
+      <input type="hidden" name="patient_id"  value="<%=params[:patient_id]%>" />
+      <input type="hidden" name="relationship" value="<%=h RelationshipType.find_by_b_is_to_a('TB Index Person').id -%>" />
+    <% end -%>
+  <% end -%>
+</body>

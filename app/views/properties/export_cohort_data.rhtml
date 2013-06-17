@@ -1,0 +1,10 @@
+<script>
+   tt_cancel_destination = "/clinic";
+</script>
+
+<% form_tag 'export_cohort_data', :method => :post do %>
+   <%= select_tag("export_cohort_data", options_for_select([" ", "Yes", "No"]),
+       :id => 'value',
+       :helpText  => "Export Cohort data?") %>
+
+<%end%>

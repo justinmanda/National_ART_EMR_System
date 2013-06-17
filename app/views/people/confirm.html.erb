@@ -1,0 +1,388 @@
+<html>
+	<head>
+		<title>Patient Treatment Dashboard</title>
+		<script type="text/javascript" language="javascript"
+			src="/touchscreentoolkit/lib/javascripts/touchScreenToolkit.js" defer  ></script>
+		<meta http-equiv='content-type' content='text/html;charset=UTF-8' />
+		<%= javascript_include_tag "jquery" %>
+		<%= javascript_include_tag "jquery.flot" %>
+		<%= javascript_include_tag "prototype" %>
+
+		<% if Location.current_location.name.match(/HIV|ART/i) %>
+			<style>
+				#tab2 {
+					background-color: white;
+					border: 0 none;
+					color: black;
+					font-weight: bold;
+				}
+			</style>
+		<% else %>
+			<style>
+				#tab1 {
+					background-color: white;
+					border: 0 none;
+					color: black;
+					font-weight: bold;
+				}
+			</style>
+		<% end %>             
+
+		<script>
+
+			tt_cancel_destination = "/clinic";
+				
+			<%if !@patient_bean.archived_filing_number.blank? %>
+				tt_cancel_show = "javascript:confirmAction(0)";  
+				<% elsif @transferred_out  %>
+				tt_cancel_show = "javascript:confirmAction(1)";  
+				<% elsif @defaulted  %>
+				tt_cancel_show = "javascript:confirmAction(2)";
+			<% else %> 
+				tt_cancel_show = "<%=@task.url%>";
+				
+			<% end %>
+
+			function changeAttributes(){
+				document.getElementById("btnNext").innerHTML = "<span>Continue</span>" 
+				<% if improved_viral_load_check(@person.patient) == true &&
+                                    (@task.encounter_type.upcase == "HIV CLINIC CONSULTATION" || @task.encounter_type.upcase == "HIV STAGING") &&  show_lab_results &&
+	 	(current_user_roles.include?("Nurse") || current_user_roles.include?("Clinician") || current_user_roles.include?("Doctor"))%>
+					document.getElementById("btnNext").setAttribute("onclick","showPopup();")
+				<% end %>
+			}
+			
+			function showPopup(){
+				popup = document.getElementById('popup')
+				if (typeof popup != 'undefined'){
+					document.getElementById('popup').style.display='inline'
+					document.getElementById('cover').style.display='inline'
+				}
+			}
+			
+			function confirmAction(status){
+				if(status == 0) {
+					confirmOperation("Patient files in archive cabinets.Move to active cabinets?",
+					"/patients/set_new_filing_number/<%=@person.patient.id %>");
+				} else if(status == 1) {
+					confirmOperation("Patient was transferred out. Do you wish to continue?",
+					"<%=@task.url%>");
+				} else if(status == 2) {
+					confirmOperation("Patient is a defaulter. Do you wish to continue?",
+					"<%=@task.url%>");
+				}
+
+				return;
+			}
+
+			function reSize(){
+				__$("buttonlinks").style.display = "none";
+				__$("patient-dashboard-main").style.width = "100%";
+			}
+			
+			setTimeout('reSize()',500);
+		</script>
+	</head>
+	<body onload = "setTimeout('changeAttributes()',500);">
+		<% 	task = @task
+			task_name = (task.encounter_type || 'NONE').upcase rescue 'NONE' %>
+
+		<form id = 'dashboard' action='/clinic'>
+			<div id='project_name'>
+				<%=what_app?%>
+			</div>
+
+			<span id='patient_name'><%= @patient_bean.name rescue "" %></span>
+			<span id='patient_id'><%= @patient_bean.national_id_with_dashes rescue "" %></span>
+			<span id='patient_residence'><%= @patient_bean.current_residence rescue "" %></span>
+
+			<% if @patient_bean.age > 0 %>
+				<span id='patient_age'><%= @patient_bean.age rescue "" %></span>
+			<% else %>
+				<span id='patient_age'><%= "#{@patient_bean.age_in_months} Months" rescue "" %></span>
+			<% end %>
+
+			<span id='patient_guardian'><%= @patient_bean.guardian rescue "" %></span>
+			<span id='patient_gender'><%= @patient_bean.sex rescue "" %></span>
+
+			<div id="patient_card">
+				<% if Location.current_location.name.match(/HIV|ART/i) %>
+					<%if(@patient_bean.guardian != nil) %>
+						<span value="<%= @patient_bean.guardian rescue '' %>">Guardian</span>
+					<% end %>
+
+					<% if (@reason_for_art_eligibility rescue nil) != nil && (@reason_for_art_eligibility) != "" %>
+						<span value="<%= @reason_for_art_eligibility rescue "" %>">Reason for Starting</span>
+					<% end %>
+
+					<% if (@arv_number rescue nil) != nil && (@arv_number) != " " %>
+						<span value="<%= @arv_number rescue '' %>">ARV Number</span>
+					<% end %>
+
+					<% if (@patient_bean.filing_number rescue nil) != nil && (@patient_bean.filing_number) != " " %>
+						<span value="<%= @patient_bean.filing_number rescue "" %>">Filing Number</span>
+					<% end %>
+
+					<% if (@patient_bean.eid_number rescue nil) != nil && (@patient_bean.eid_number) != " " %>
+						<span value="<%= @patient_bean.eid_number rescue "" %>">EID Number</span>
+					<% end %>
+
+					<% if (@patient_bean.pre_art_number rescue nil) != nil && (@patient_bean.pre_art_number) != " " %>
+						<span value="<%= @patient_bean.pre_art_number rescue "" %>">Pre-ART Number</span>
+					<% end %>
+                                        <% unless @art_start_date.blank? %>
+                                                <span value="<%= @art_start_date.strftime("%d-%b-%Y") rescue "" %>">ART start date</span>
+                                                <span value="<%= @duration_in_months.to_s + ' Months'  rescue "" %>">Duration on ART</span>
+                                        <% end %>
+                                        <% unless @second_line_treatment_start_date.blank? %>
+                                                <span value="<%= @second_line_treatment_start_date.strftime("%d-%b-%Y") rescue "" %>">ART start date(2<sup>nd</sup> Line)</span>
+                                                <span value="<%= @second_line_duration_in_months.to_s + ' Months'  rescue "" %>">Duration on 2<sup>nd</sup> Line ART</span>
+                                        <% end %>
+                                       <% unless @results.blank? %>
+                                                <span value="<%= @modifier + ' ' + @latest_result.to_s + ' (' + @latest_date.strftime("%d-%b-%Y").to_s + ')' %>">Latest Viral load</span>
+                                        <% end %>
+				<% end %>
+			</div>
+
+			<select id="tabs">
+				<% if Location.current_location.name.match(/HIV|ART/i) %>
+					<option value='/patients/overview?patient_id=<%= @person.patient.id %>'>Overview</option>
+				<% end %>             
+				<option value='/patients/next_task_description?task_id=<%= task.id -%>'>
+					NEXT TASK: <%= task_name.gsub('_',' ') %>
+				</option>
+			</select>
+
+			<input type='submit' value='Finish' />
+		</form>
+		
+	<% if improved_viral_load_check(@person.patient) == true && 
+            (@task.encounter_type.upcase == "HIV CLINIC CONSULTATION" || @task.encounter_type.upcase == "HIV STAGING") &&
+            show_lab_results &&
+	 	(current_user_roles.include?("Nurse") || current_user_roles.include?("Clinician") || current_user_roles.include?("Doctor"))%>
+
+          <div id="popup" style="display:none">
+            
+            <div class="art_container">
+                    <div class="header" style="position: absolute; left: 150px">
+                      <div id="viral_header">
+                        <u>Routine Viral Load Screening Due</u><br />
+                        <u>Assess Adherence:</u> <br />
+                      </div>
+                         <div id="more_details" style="font-size: 16pt; font-weight:bold; ">
+                           If good then request VL today <br />
+                           If poor then defer VL for three months after intensive adherence support
+                         </div>
+                    </div>
+		        <table  border=0.5 style = "border-radius:10px;">
+		        	<tr>
+		        		<td><span>ART start date</span></td>
+		        		<td style='text-align:left'><span><%= @art_start_date.strftime("%A, %d %B %Y") rescue '' %></span></td>
+		        	</tr>
+		        	<tr><td colspan =2><hr/></td></tr>
+		        	<tr>
+		        		<td><span>Duration on ART (Months)</span></td>
+		        		<td style='text-align:left'><span><%= @duration_in_months %></span></td>
+		        	</tr>
+		        	<tr><td colspan =2><hr/></td></tr>
+
+                              <% unless @second_line_treatment_start_date.blank? %>
+                                  <tr>
+                                    <td><span>Duration on 2<sup>nd</sup>Line ART (Months)</span></td>
+                                          <td style='text-align:left'><span><%= @second_line_duration_in_months %></span></td>
+                                  </tr>
+                                  <tr><td colspan =2><hr/></td></tr>
+                                <% end  %>
+                                  
+		        	<% unless @results.blank?%>
+		        	<tr>
+		        		<td><span>Latest viral load (<%= @latest_date.strftime("%A, %d %B %Y")%>)</span></td>
+		        		<td style='text-align:left'><span><%= @modifier + ' ' + @latest_result.to_s %></span></td>
+		        	</tr>  
+		        	<tr><td colspan =2><hr/></td></tr>
+		        	<% end %>
+		        	
+		        	<tr>
+		        		<td><span>Outcome</span></td>
+		        		<td style='text-align:left'><span><%= @outcome %></span></td>
+		        	</tr>  
+		        	<tr><td colspan =2><hr/></td></tr>		        	
+		        	<tr>
+		        		<td><span>Reason for starting</span></td>
+		        		<td style='text-align:left'><span><%=@reason_for_art%></span></td>
+		        	</tr>       	
+		        	
+		        </table>
+            </div>
+           
+			<hr class="popup_hr"></hr>
+            <a id='viral_load_done' onclick = "viral_load_requested_today();" ><span>VL Requested Today</span></a>
+			<!--<a id='lab_trail' onclick="window.location='/lab/results/<%=@person.id%>'"><span>View Lab Trail</span></a>-->
+			<a id='reminder' onclick="viral_load_not_requested_today(); removePopup();"><span>VL Not Requested Today</span></a>
+		</div>
+
+		<div id="cover">
+		</div>
+<% end %>
+		<script>
+			function removePopup(){
+				popup = document.getElementById('popup')
+				popup.parentNode.removeChild(popup)
+				cover = document.getElementById('cover')
+				cover.parentNode.removeChild(cover)
+				<%if !@patient_bean.archived_filing_number.blank? %>
+					javascript:confirmAction(0);  
+				<% elsif @transferred_out  %>
+					javascript:confirmAction(1);  
+				<% elsif @defaulted  %>
+					javascript:confirmAction(2);
+				<% else %> 
+					window.location="<%= next_task(@person.patient)%>"
+				<% end %>	
+			}
+			
+			function viral_load_requested_today(){
+			
+				jQuery.ajax({
+					type: "POST",
+					url: "/patients/viral_load_request",
+					data: "patient_id="+<%=@person.patient.id %> + "&requested_today=true",
+					success: function(){
+						window.location="<%= next_task(@person.patient)%>"
+					}
+					
+				});
+			}
+
+                        function viral_load_not_requested_today(){
+
+				jQuery.ajax({
+					type: "POST",
+					url: "/patients/viral_load_request",
+					data: "patient_id="+<%=@person.patient.id %>,
+					success: function(){
+						window.location="<%= next_task(@person.patient)%>"
+					}
+
+				});
+			}
+		</script>
+		<style>	
+		.art_container table{
+			background-color:gold;
+			color: black;
+			font-size: 18pt;
+			font-weight: bold;
+			left: 7px;
+			line-height: 35px;
+			position: absolute;
+			top: 152px;
+			width: 941px;
+			border: 1px solid black;
+		}
+		 #popup{
+			-moz-user-select: none;
+			background-color: white;
+			border: 4px solid #C6C6C6;
+			border-radius: 15px 15px 15px 15px;
+			color: black;
+			font-size: 28px;
+			height: 579px;
+			left: 30px !important;
+			padding: 5px;
+			position: absolute;
+			text-align: center;
+			top: 39px !important;
+			width: 947px;
+			z-index: 991;
+		}
+		#cover{
+			display:none;
+			position: absolute;
+			background-color: black;
+			width: 100%;
+			height: 102%;
+			left: 0%;
+			top: 0%;
+			z-index: 990;
+			opacity: 0.5;
+		  }
+		  
+		  #viral_load_done {
+			  position: absolute;
+			  border-radius: 7px;
+			  background-color:	#2E8B57;
+			  border-bottom: 1px outset black;
+			  border-style: outset;
+			  border-top: 1px outset black;
+			  color: white;
+			  padding: 9px 16px 16px 19px;
+			  text-align: center;
+			  text-decoration: none;
+			  cursor: pointer;
+			  bottom: 0px;
+			  left: 54px;
+			  font-weight: bold;
+			  font-size: 18pt;
+  			}
+  		
+  		#lab_trail {
+			  position: absolute;
+			  border-radius: 7px;
+			  background-color: #2E8B57;
+			  border-bottom: 1px outset black;
+			  border-style: outset;
+			  border-top: 1px outset black;
+			  color: white;
+			  padding: 9px 16px 16px 19px;
+			  text-align: center;
+			  text-decoration: none;
+			  cursor: pointer;
+			  bottom: 0px;
+			  left: 372px;
+			  font-weight: bold;
+			  font-size: 18pt;
+  			}
+  			
+  			
+  		#reminder {
+			  position: absolute;
+			  border-radius: 7px;
+			  background-color: #2E8B57;
+			  border-bottom: 1px outset black;
+			  border-style: outset;
+			  border-top: 1px outset black;
+			  color: white;
+			  padding: 9px 16px 16px 19px;
+			  text-align: center;
+			  text-decoration: none;
+			  cursor: pointer;
+			  bottom: 0px;
+			  left: 572px;
+			  font-weight: bold;
+			  font-size: 18pt;
+  			}
+		  
+		.popup_hr{
+			position: absolute;
+			background-color: #669999;
+			height: 5px;
+			width: 99%;
+			bottom: 55px;
+		
+		} 
+		  
+                #viral_header{
+                  font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+                  font-weight: bold;
+                  font-size: 18pt;
+                  color: #1874CD;
+                 }
+
+                 #more_details{
+                  font-family: Georgia, Times, "Times New Roman", serif;
+                
+                  }
+		</style>
+	</body>
+</html>

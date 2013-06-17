@@ -1,0 +1,2815 @@
+Script started on Mon 10 Dec 2012 09:44:05 AM CAT
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ passenger start[8Pcd OPD/passenger start[Kpassenger start[8Pcd OPD/[2P..[K[K[K[K[Kscript/e[Kserver
+=> Booting Mongrel
+=> Rails 2.3.5 application starting on http://0.0.0.0:3000
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/rails/gem_dependency.rb:119:Warning: Gem::Dependency#version_requirements is deprecated and will be removed on or after August 2010.  Use #requirement
+no such file to load -- rails
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `gem_original_require'
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `require'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:521:in `new_constants_in'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+/usr/lib/ruby/gems/1.8/gems/devise-1.5.3/lib/devise.rb:1
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `gem_original_require'
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `require'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:521:in `new_constants_in'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/rails/gem_dependency.rb:208:in `load'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:307:in `load_gems'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:307:in `each'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:307:in `load_gems'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:164:in `process'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:113:in `send'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:113:in `run'
+/home/timothy/work/ruby/bart2/config/environment.rb:8
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `gem_original_require'
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `require'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:521:in `new_constants_in'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/commands/server.rb:84
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `gem_original_require'
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `require'
+script/server:3
+no such file to load -- rails
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `gem_original_require'
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `require'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:521:in `new_constants_in'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+/usr/lib/ruby/gems/1.8/gems/devise-1.5.3/lib/devise.rb:1
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `gem_original_require'
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `require'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:521:in `new_constants_in'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/rails/gem_dependency.rb:208:in `load'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:307:in `load_gems'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:307:in `each'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:307:in `load_gems'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:169:in `process'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:113:in `send'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:113:in `run'
+/home/timothy/work/ruby/bart2/config/environment.rb:8
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `gem_original_require'
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `require'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:521:in `new_constants_in'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/commands/server.rb:84
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `gem_original_require'
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `require'
+script/server:3
+Missing these required gems:
+  devise  
+
+You're running:
+  ruby 1.8.7.352 at /usr/bin/ruby1.8
+  rubygems 1.3.7 at /home/timothy/.gem/ruby/1.8, /usr/lib/ruby/gems/1.8
+
+Run `rake gems:install` to install the missing gems.
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ script/server
+=> Booting Mongrel
+=> Rails 2.3.5 application starting on http://0.0.0.0:3000
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/rails/gem_dependency.rb:119:Warning: Gem::Dependency#version_requirements is deprecated and will be removed on or after August 2010.  Use #requirement
+WARNING: This version of mysql2 (0.3.11) doesn't ship with the ActiveRecord adapter bundled anymore as it's now part of Rails 3.1
+WARNING: Please use the 0.2.x releases if you plan on using it in Rails <= 3.0.x
+no such file to load -- rails
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `gem_original_require'
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `require'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:521:in `new_constants_in'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+/usr/lib/ruby/gems/1.8/gems/devise-1.5.3/lib/devise.rb:1
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `gem_original_require'
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `require'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:521:in `new_constants_in'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/rails/gem_dependency.rb:208:in `load'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:307:in `load_gems'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:307:in `each'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:307:in `load_gems'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:164:in `process'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:113:in `send'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:113:in `run'
+/home/timothy/work/ruby/bart2/config/environment.rb:8
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `gem_original_require'
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `require'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:521:in `new_constants_in'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/commands/server.rb:84
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `gem_original_require'
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `require'
+script/server:3
+no such file to load -- rails
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `gem_original_require'
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `require'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:521:in `new_constants_in'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+/usr/lib/ruby/gems/1.8/gems/devise-1.5.3/lib/devise.rb:1
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `gem_original_require'
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `require'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:521:in `new_constants_in'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/rails/gem_dependency.rb:208:in `load'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:307:in `load_gems'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:307:in `each'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:307:in `load_gems'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:169:in `process'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:113:in `send'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:113:in `run'
+/home/timothy/work/ruby/bart2/config/environment.rb:8
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `gem_original_require'
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `require'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:521:in `new_constants_in'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/commands/server.rb:84
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `gem_original_require'
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `require'
+script/server:3
+Missing these required gems:
+  devise  
+
+You're running:
+  ruby 1.8.7.352 at /usr/bin/ruby1.8
+  rubygems 1.3.7 at /home/timothy/.gem/ruby/1.8, /usr/lib/ruby/gems/1.8
+
+Run `rake gems:install` to install the missing gems.
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ script/serverpassenger start[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Kbundle exec script/server
+=> Booting WEBrick
+=> Rails 2.3.5 application starting on http://0.0.0.0:3000
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/rails/gem_dependency.rb:119:Warning: Gem::Dependency#version_requirements is deprecated and will be removed on or after August 2010.  Use #requirement
+WARNING: This version of mysql2 (0.3.11) doesn't ship with the ActiveRecord adapter bundled anymore as it's now part of Rails 3.1
+WARNING: Please use the 0.2.x releases if you plan on using it in Rails <= 3.0.x
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require': no such file to load -- rails (MissingSourceFile)
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:521:in `new_constants_in'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+	from /usr/lib/ruby/gems/1.8/gems/devise-1.5.3/lib/devise.rb:1
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:380:in `load_without_new_constant_marking'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:380:in `load_file'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:521:in `new_constants_in'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:379:in `load_file'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:259:in `require_or_load'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:425:in `load_missing_constant'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:80:in `const_missing'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:92:in `const_missing'
+	from /home/timothy/work/ruby/bart2/config/initializers/devise.rb:3
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:145:in `load_without_new_constant_marking'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:145:in `load'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:521:in `new_constants_in'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:145:in `load'
+	from /usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:622:in `load_application_initializers'
+	from /usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:621:in `each'
+	from /usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:621:in `load_application_initializers'
+	from /usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:176:in `process'
+	from /usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:113:in `send'
+	from /usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:113:in `run'
+	from /home/timothy/work/ruby/bart2/config/environment.rb:8
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:521:in `new_constants_in'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+	from /usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/commands/server.rb:84
+	from script/server:3:in `require'
+	from script/server:3
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ bundle exec script/server[12Pscript/serverpassenger start[8Pcd OPD/[2P..passenger start[2Pscript/servercd work/ruby/bart2/[4Ppassenger start[8Pcd OPD/[2P..passenger startcd mnch-hotline/..[Kscript/servercd Radiology/ls[Kcd work/ruby/passenger start[2Pscript/server[6Pcd OPD/ls[Kcd work/ruby/script/server cd work/ruby/library/exit[Kruby employee_controller_test.rb[4Pmain_controller_test.rbls[Kcd work/ruby/library/test/functional//home/timothy/work/ruby/library/test/functional/main_controller_test.rb [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Chome/timothy/work/ruby/library/test/functional/main_controller_test.rb -n test_index[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[1@/[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cscript/server [Kcd work/ruby/library/[3Pruby book_test.rb [10Pcd unit/test/script/server[8Pcd ..script/serverruby book_test.rb user[C[C[C[C[C[C[C[C[Cls[Kcd unit/ls[Kcd test/work/ruby/library/exit[Kclosescript/servercd work/ruby/library/[3Prfkill unblock all[3Plist[C[C[C[Cexit[Kgit checkout survival analysis_analysisstatus[Kcd work/ruby/bart-2-bart/git pull origin survival_analysischeckout -b survival_analysis [17Pedit .git/config[7Pit status[2Pcd bart2[K[K[K[K[K[K[K[Ksudo apt-get install build-essential libopenssl-ruby ruby1.8-dev
+[sudo] password for timothy: 
+Reading package lists... 0%Reading package lists... 100%Reading package lists... Done
+Building dependency tree... 0%Building dependency tree... 0%Building dependency tree... 50%Building dependency tree... 50%Building dependency tree       
+Reading state information... 0%Reading state information... 0%Reading state information... Done
+Note, selecting 'libruby' instead of 'libopenssl-ruby'
+build-essential is already the newest version.
+ruby1.8-dev is already the newest version.
+ruby1.8-dev set to manually installed.
+The following NEW packages will be installed:
+  libruby
+0 upgraded, 1 newly installed, 0 to remove and 0 not upgraded.
+Need to get 4,766 B of archives.
+After this operation, 32.8 kB of additional disk space will be used.
+Do you want to continue [Y/n]? y
+0% [Working]            0% [Connecting to mw.archive.ubuntu.com]                                        Get:1 http://mw.archive.ubuntu.com/ubuntu/ precise/main libruby all 4.8 [4,766 B]
+                                        0% [1 libruby 0 B/4,766 B 0%]                             100% [Working]              Fetched 4,766 B in 0s (7,167 B/s)
+Selecting previously unselected package libruby.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 210757 files and directories currently installed.)
+Unpacking libruby (from .../archives/libruby_4.8_all.deb) ...
+Setting up libruby (4.8) ...
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ sudo apt-get install build-essential libopenssl-ruby ruby1.8-dev[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[39Pbundle exec script/server
+=> Booting WEBrick
+=> Rails 2.3.5 application starting on http://0.0.0.0:3000
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/rails/gem_dependency.rb:119:Warning: Gem::Dependency#version_requirements is deprecated and will be removed on or after August 2010.  Use #requirement
+WARNING: This version of mysql2 (0.3.11) doesn't ship with the ActiveRecord adapter bundled anymore as it's now part of Rails 3.1
+WARNING: Please use the 0.2.x releases if you plan on using it in Rails <= 3.0.x
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require': no such file to load -- rails (MissingSourceFile)
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:521:in `new_constants_in'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+	from /usr/lib/ruby/gems/1.8/gems/devise-1.5.3/lib/devise.rb:1
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:380:in `load_without_new_constant_marking'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:380:in `load_file'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:521:in `new_constants_in'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:379:in `load_file'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:259:in `require_or_load'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:425:in `load_missing_constant'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:80:in `const_missing'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:92:in `const_missing'
+	from /home/timothy/work/ruby/bart2/config/initializers/devise.rb:3
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:145:in `load_without_new_constant_marking'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:145:in `load'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:521:in `new_constants_in'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:145:in `load'
+	from /usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:622:in `load_application_initializers'
+	from /usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:621:in `each'
+	from /usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:621:in `load_application_initializers'
+	from /usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:176:in `process'
+	from /usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:113:in `send'
+	from /usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:113:in `run'
+	from /home/timothy/work/ruby/bart2/config/environment.rb:8
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:521:in `new_constants_in'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+	from /usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/commands/server.rb:84
+	from script/server:3:in `require'
+	from script/server:3
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ bundle exec script/serversudo apt-get install build-essential libopenssl-ruby ruby1.8-dev
+Reading package lists... 0%Reading package lists... 100%Reading package lists... Done
+Building dependency tree... 0%Building dependency tree... 0%Building dependency tree... 50%Building dependency tree... 50%Building dependency tree       
+Reading state information... 0%Reading state information... 0%Reading state information... Done
+Note, selecting 'libruby' instead of 'libopenssl-ruby'
+libruby is already the newest version.
+build-essential is already the newest version.
+ruby1.8-dev is already the newest version.
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ ruby extconf.rbsudo apt-get install build-essential libopenssl-ruby ruby1.8-dev[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cruby extconf.rb[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Krake gems:install
+rake aborted!
+can't activate rake (= 0.9.2.2, runtime) for [], already activated rake-10.0.2 for []
+/home/timothy/work/ruby/bart2/Rakefile:9
+(See full trace by running task with --trace)
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ rake gems:unpack
+rake aborted!
+can't activate rake (= 0.9.2.2, runtime) for [], already activated rake-10.0.2 for []
+/home/timothy/work/ruby/bart2/Rakefile:9
+(See full trace by running task with --trace)
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ rake gems:unpack -trace
+rake aborted!
+Unrecognized --trace option 'race'
+/usr/lib/ruby/gems/1.8/gems/rake-10.0.2/lib/rake/application.rb:506:in `select_trace_output'
+/usr/lib/ruby/gems/1.8/gems/rake-10.0.2/lib/rake/application.rb:464:in `standard_rake_options'
+/usr/lib/ruby/1.8/optparse.rb:1298:in `call'
+/usr/lib/ruby/1.8/optparse.rb:1298:in `parse_in_order'
+/usr/lib/ruby/1.8/optparse.rb:1254:in `catch'
+/usr/lib/ruby/1.8/optparse.rb:1254:in `parse_in_order'
+/usr/lib/ruby/1.8/optparse.rb:1248:in `order!'
+/usr/lib/ruby/1.8/optparse.rb:1339:in `permute!'
+/usr/lib/ruby/1.8/optparse.rb:1360:in `parse!'
+/usr/lib/ruby/gems/1.8/gems/rake-10.0.2/lib/rake/application.rb:516:in `handle_options'
+/usr/lib/ruby/gems/1.8/gems/rake-10.0.2/lib/rake/application.rb:79:in `init'
+/usr/lib/ruby/gems/1.8/gems/rake-10.0.2/lib/rake/application.rb:158:in `standard_exception_handling'
+/usr/lib/ruby/gems/1.8/gems/rake-10.0.2/lib/rake/application.rb:77:in `init'
+/usr/lib/ruby/gems/1.8/gems/rake-10.0.2/lib/rake/application.rb:69:in `run'
+/usr/lib/ruby/gems/1.8/gems/rake-10.0.2/lib/rake/application.rb:158:in `standard_exception_handling'
+/usr/lib/ruby/gems/1.8/gems/rake-10.0.2/lib/rake/application.rb:68:in `run'
+/usr/lib/ruby/gems/1.8/gems/rake-10.0.2/bin/rake:37
+/usr/local/bin/rake:19:in `load'
+/usr/local/bin/rake:19
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ gem list
+
+*** LOCAL GEMS ***
+
+actionmailer (2.3.5)
+actionpack (2.3.5)
+activerecord (2.3.5)
+activerecord-mysql2-adapter (0.0.3)
+activeresource (2.3.5)
+activesupport (2.3.5)
+bcrypt-ruby (3.0.1)
+bundler (1.2.1)
+cgi_multipart_eof_fix (2.5.0)
+daemon_controller (1.1.0)
+daemons (1.1.9)
+devise (1.5.3, 1.0.11)
+domain_name (0.5.4, 0.5.3)
+fastercsv (1.5.5)
+fastthread (1.0.7)
+gem_plugin (0.2.3)
+hashery (2.1.0)
+jdbc-mysql (5.1.13)
+json (1.7.5, 1.5.0)
+mechanize (2.5.1)
+mime-types (1.19)
+mongrel (1.1.5)
+mongrel_cluster (1.0.5)
+mysql (2.8.1)
+mysql2 (0.3.11, 0.2.18)
+net-http-digest_auth (1.2.1)
+net-http-persistent (2.8, 2.6)
+nokogiri (1.5.5, 1.5.2)
+ntlm-http (0.1.1)
+orm_adapter (0.0.7)
+paginate (1.0.1)
+passenger (3.0.18)
+rack (1.0.1)
+rails (2.3.5)
+rake (10.0.2, 0.9.2.2, 0.8.7)
+require (0.2.7)
+rest-client (1.6.7)
+settingslogic (2.0.8)
+ttfunk (1.0.3)
+unf (0.0.5)
+unf_ext (0.0.5, 0.0.4)
+warden (1.2.1, 0.10.7)
+webrobots (0.0.13)
+will_paginate (3.0.3, 2.3.16)
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ passenger start
+=============== Phusion Passenger Standalone web server started ===============
+PID file: /home/timothy/work/ruby/bart2/tmp/pids/passenger.3000.pid
+Log file: /home/timothy/work/ruby/bart2/log/passenger.3000.log
+Environment: development
+Accessible via: http://0.0.0.0:3000/
+
+You can stop Phusion Passenger Standalone by pressing Ctrl-C.
+===============================================================================
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/rails/gem_dependency.rb:119:Warning: Gem::Dependency#version_requirements is deprecated and will be removed on or after August 2010.  Use #requirement
+WARNING: This version of mysql2 (0.3.11) doesn't ship with the ActiveRecord adapter bundled anymore as it's now part of Rails 3.1
+WARNING: Please use the 0.2.x releases if you plan on using it in Rails <= 3.0.x
+[ pid=8787 thr=69846606514620 file=utils.rb:176 time=2012-12-10 09:57:47.947 ]: *** Exception PhusionPassenger::UnknownError in PhusionPassenger::ClassicRails::ApplicationSpawner (no such file to load -- rails (MissingSourceFile)) (process 8787, thread #<Thread:0x7f0cdc571378>):
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:521:in `new_constants_in'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+	from /usr/lib/ruby/gems/1.8/gems/devise-1.5.3/lib/devise.rb:1
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:380:in `load_without_new_constant_marking'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:380:in `load_file'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:521:in `new_constants_in'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:379:in `load_file'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:259:in `require_or_load'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:425:in `load_missing_constant'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:80:in `const_missing'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:92:in `const_missing'
+	from /home/timothy/work/ruby/bart2/config/initializers/devise.rb:3
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:145:in `load_without_new_constant_marking'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:145:in `load'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:521:in `new_constants_in'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:145:in `load'
+	from /usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:622:in `load_application_initializers'
+	from /usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:621:in `each'
+	from /usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:621:in `load_application_initializers'
+	from /usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:176:in `process'
+	from /usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:113:in `send'
+	from /usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:113:in `run'
+	from /home/timothy/work/ruby/bart2/config/environment.rb:8
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/classic_rails/application_spawner.rb:222:in `require'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/classic_rails/application_spawner.rb:222:in `preload_application'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/classic_rails/application_spawner.rb:181:in `initialize_server'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/utils.rb:563:in `report_app_init_status'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/classic_rails/application_spawner.rb:174:in `initialize_server'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/abstract_server.rb:204:in `start_synchronously'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/abstract_server.rb:180:in `start'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/classic_rails/application_spawner.rb:149:in `start'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/spawn_manager.rb:219:in `spawn_rails_application'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/abstract_server_collection.rb:132:in `lookup_or_add'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/spawn_manager.rb:214:in `spawn_rails_application'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/abstract_server_collection.rb:82:in `synchronize'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/abstract_server_collection.rb:79:in `synchronize'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/spawn_manager.rb:213:in `spawn_rails_application'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/spawn_manager.rb:132:in `spawn_application'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/spawn_manager.rb:275:in `handle_spawn_application'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/abstract_server.rb:357:in `__send__'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/abstract_server.rb:357:in `server_main_loop'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/abstract_server.rb:206:in `start_synchronously'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/helper-scripts/passenger-spawn-server:99
+^[[B^[[B^[[B^[[B^CStopping web server... done
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ passenger start[7Pgem listrake gems:unpack -trace[K
+rake aborted!
+can't activate rake (= 0.9.2.2, runtime) for [], already activated rake-10.0.2 for []
+/home/timothy/work/ruby/bart2/Rakefile:9
+(See full trace by running task with --trace)
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ rake gems:unpack[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Kbud[Kndle install
+Using rake (10.0.2) 
+Using activesupport (2.3.5) 
+Using rack (1.0.1) 
+Using actionpack (2.3.5) 
+Using actionmailer (2.3.5) 
+Using activerecord (2.3.5) 
+Using mysql2 (0.3.11) 
+Using activerecord-mysql2-adapter (0.0.3) 
+Using activeresource (2.3.5) 
+Using bcrypt-ruby (3.0.1) 
+Using orm_adapter (0.0.7) 
+Using warden (1.2.1) 
+Using devise (1.5.3) 
+Using unf_ext (0.0.5) 
+Using unf (0.0.5) 
+Using domain_name (0.5.4) 
+Using fastercsv (1.5.5) 
+Using json (1.5.0) 
+Using mime-types (1.19) 
+Using net-http-digest_auth (1.2.1) 
+Using net-http-persistent (2.8) 
+Using nokogiri (1.5.5) 
+Using ntlm-http (0.1.1) 
+Using webrobots (0.0.13) 
+Using mechanize (2.5.1) 
+Using paginate (1.0.1) 
+Using rails (2.3.5) 
+Using rest-client (1.6.7) 
+Using settingslogic (2.0.8) 
+Using will_paginate (2.3.16) 
+Using bundler (1.2.1) 
+[32mYour bundle is complete! Use `bundle show [gemname]` to see where a bundled gem is installed.[0m
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ bundle installrake gems:unpack[1@d[1@u[1@n[1@d[1@l[1@ [1P[1@e[1@ [1@e[1@x[1@e[1@c[1@ 
+No command 'dundle' found, did you mean:
+ Command 'bundle' from package 'ruby-bundler' (universe)
+dundle: command not found
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ dundle exec rake gems:unpack[1P[1@b
+rake aborted!
+no such file to load -- rake/rdoctask
+/home/timothy/work/ruby/bart2/Rakefile:9:in `require'
+/home/timothy/work/ruby/bart2/Rakefile:9
+(See full trace by running task with --trace)
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ bundle exec rake gems:unpackd[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[14Pbundle installrake gems:unpack
+rake aborted!
+can't activate rake (= 0.9.2.2, runtime) for [], already activated rake-10.0.2 for []
+/home/timothy/work/ruby/bart2/Rakefile:9
+(See full trace by running task with --trace)
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ rake gems:unpack[12@bundle exec [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[12P[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[CD[K[K[K[K[K[K[Kinstall
+rake aborted!
+can't activate rake (= 0.9.2.2, runtime) for [], already activated rake-10.0.2 for []
+/home/timothy/work/ruby/bart2/Rakefile:9
+(See full trace by running task with --trace)
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ rake gems:install[K[K[K[K[K[K[Kunpacl[Kk
+rake aborted!
+can't activate rake (= 0.9.2.2, runtime) for [], already activated rake-10.0.2 for []
+/home/timothy/work/ruby/bart2/Rakefile:9
+(See full trace by running task with --trace)
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ bundle update
+Fetching gem metadata from http://rubygems.org/.^Z
+[1]+  Stopped                 bundle update
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ gem list
+
+*** LOCAL GEMS ***
+
+actionmailer (2.3.5)
+actionpack (2.3.5)
+activerecord (2.3.5)
+activerecord-mysql2-adapter (0.0.3)
+activeresource (2.3.5)
+activesupport (2.3.5)
+bcrypt-ruby (3.0.1)
+bundler (1.2.1)
+cgi_multipart_eof_fix (2.5.0)
+daemon_controller (1.1.0)
+daemons (1.1.9)
+devise (1.5.3, 1.0.11)
+domain_name (0.5.4, 0.5.3)
+fastercsv (1.5.5)
+fastthread (1.0.7)
+gem_plugin (0.2.3)
+hashery (2.1.0)
+jdbc-mysql (5.1.13)
+json (1.7.5, 1.5.0)
+mechanize (2.5.1)
+mime-types (1.19)
+mongrel (1.1.5)
+mongrel_cluster (1.0.5)
+mysql (2.8.1)
+mysql2 (0.3.11, 0.2.18)
+net-http-digest_auth (1.2.1)
+net-http-persistent (2.8, 2.6)
+nokogiri (1.5.5, 1.5.2)
+ntlm-http (0.1.1)
+orm_adapter (0.0.7)
+paginate (1.0.1)
+passenger (3.0.18)
+rack (1.0.1)
+rails (2.3.5)
+rake (10.0.2, 0.9.2.2, 0.8.7)
+require (0.2.7)
+rest-client (1.6.7)
+settingslogic (2.0.8)
+ttfunk (1.0.3)
+unf (0.0.5)
+unf_ext (0.0.5, 0.0.4)
+warden (1.2.1, 0.10.7)
+webrobots (0.0.13)
+will_paginate (3.0.3, 2.3.16)
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ passenger start
+=============== Phusion Passenger Standalone web server started ===============
+PID file: /home/timothy/work/ruby/bart2/tmp/pids/passenger.3000.pid
+Log file: /home/timothy/work/ruby/bart2/log/passenger.3000.log
+Environment: development
+Accessible via: http://0.0.0.0:3000/
+
+You can stop Phusion Passenger Standalone by pressing Ctrl-C.
+===============================================================================
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/rails/gem_dependency.rb:119:Warning: Gem::Dependency#version_requirements is deprecated and will be removed on or after August 2010.  Use #requirement
+WARNING: This version of mysql2 (0.3.11) doesn't ship with the ActiveRecord adapter bundled anymore as it's now part of Rails 3.1
+WARNING: Please use the 0.2.x releases if you plan on using it in Rails <= 3.0.x
+[ pid=8970 thr=70003979608500 file=utils.rb:176 time=2012-12-10 10:48:19.801 ]: *** Exception PhusionPassenger::UnknownError in PhusionPassenger::ClassicRails::ApplicationSpawner (no such file to load -- rails (MissingSourceFile)) (process 8970, thread #<Thread:0x7f5624acc368>):
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:521:in `new_constants_in'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+	from /usr/lib/ruby/gems/1.8/gems/devise-1.5.3/lib/devise.rb:1
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:380:in `load_without_new_constant_marking'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:380:in `load_file'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:521:in `new_constants_in'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:379:in `load_file'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:259:in `require_or_load'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:425:in `load_missing_constant'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:80:in `const_missing'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:92:in `const_missing'
+	from /home/timothy/work/ruby/bart2/config/initializers/devise.rb:3
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:145:in `load_without_new_constant_marking'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:145:in `load'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:521:in `new_constants_in'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:145:in `load'
+	from /usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:622:in `load_application_initializers'
+	from /usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:621:in `each'
+	from /usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:621:in `load_application_initializers'
+	from /usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:176:in `process'
+	from /usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:113:in `send'
+	from /usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:113:in `run'
+	from /home/timothy/work/ruby/bart2/config/environment.rb:8
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/classic_rails/application_spawner.rb:222:in `require'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/classic_rails/application_spawner.rb:222:in `preload_application'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/classic_rails/application_spawner.rb:181:in `initialize_server'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/utils.rb:563:in `report_app_init_status'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/classic_rails/application_spawner.rb:174:in `initialize_server'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/abstract_server.rb:204:in `start_synchronously'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/abstract_server.rb:180:in `start'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/classic_rails/application_spawner.rb:149:in `start'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/spawn_manager.rb:219:in `spawn_rails_application'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/abstract_server_collection.rb:132:in `lookup_or_add'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/spawn_manager.rb:214:in `spawn_rails_application'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/abstract_server_collection.rb:82:in `synchronize'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/abstract_server_collection.rb:79:in `synchronize'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/spawn_manager.rb:213:in `spawn_rails_application'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/spawn_manager.rb:132:in `spawn_application'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/spawn_manager.rb:275:in `handle_spawn_application'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/abstract_server.rb:357:in `__send__'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/abstract_server.rb:357:in `server_main_loop'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/abstract_server.rb:206:in `start_synchronously'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/helper-scripts/passenger-spawn-server:99
+^[[B^[[A        ^[[A^Z
+[2]+  Stopped                 passenger start
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ ^C
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ 
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ git status
+# On branch survival_analysis
+# Changes not staged for commit:
+#   (use "git add <file>..." to update what will be committed)
+#   (use "git checkout -- <file>..." to discard changes in working directory)
+#
+#	modified:   .gitignore
+#	modified:   Capfile
+#	modified:   Gemfile
+#	modified:   app/controllers/charts_controller.rb
+#	modified:   app/controllers/encounters_controller.rb
+#	modified:   app/controllers/generic_admin_controller.rb
+#	modified:   app/controllers/generic_application_controller.rb
+#	modified:   app/controllers/generic_barcodes_controller.rb
+#	modified:   app/controllers/generic_charts_controller.rb
+#	modified:   app/controllers/generic_clinic_controller.rb
+#	modified:   app/controllers/generic_cohort_tool_controller.rb
+#	modified:   app/controllers/generic_config_controller.rb
+#	modified:   app/controllers/generic_dispensations_controller.rb
+#	modified:   app/controllers/generic_drug_controller.rb
+#	modified:   app/controllers/generic_heartbeat_controller.rb
+#	modified:   app/controllers/generic_lab_controller.rb
+#	modified:   app/controllers/generic_location_controller.rb
+#	modified:   app/controllers/generic_migration_controller.rb
+#	modified:   app/controllers/generic_patient_identifiers_controller.rb
+#	modified:   app/controllers/generic_patients_controller.rb
+#	modified:   app/controllers/generic_people_controller.rb
+#	modified:   app/controllers/generic_person_addresses_controller.rb
+#	modified:   app/controllers/generic_person_attributes_controller.rb
+#	modified:   app/controllers/generic_person_names_controller.rb
+#	modified:   app/controllers/generic_programs_controller.rb
+#	modified:   app/controllers/generic_properties_controller.rb
+#	modified:   app/controllers/generic_regimens_controller.rb
+#	modified:   app/controllers/generic_relationships_controller.rb
+#	modified:   app/controllers/generic_report_controller.rb
+#	modified:   app/controllers/generic_sessions_controller.rb
+#	modified:   app/controllers/generic_single_sign_on_controller.rb
+#	modified:   app/controllers/generic_user_controller.rb
+#	modified:   app/controllers/lab_controller.rb
+#	modified:   app/controllers/location_controller.rb
+#	modified:   app/controllers/migration_controller.rb
+#	modified:   app/controllers/properties_controller.rb
+#	modified:   app/controllers/single_sign_on_controller.rb
+#	modified:   app/helpers/charts_helper.rb
+#	modified:   app/helpers/encounters_helper.rb
+#	modified:   app/helpers/lab_helper.rb
+#	modified:   app/helpers/location_helper.rb
+#	modified:   app/helpers/migration_helper.rb
+#	modified:   app/helpers/people_helper.rb
+#	modified:   app/helpers/properties_helper.rb
+#	modified:   app/helpers/report_helper.rb
+#	modified:   app/helpers/user_helper.rb
+#	modified:   app/models/bart_one_encounter.rb
+#	modified:   app/models/cohort.rb
+#	modified:   app/models/district.rb
+#	modified:   app/models/drug_ingredient.rb
+#	modified:   app/models/lab.rb
+#	modified:   app/models/location_tag.rb
+#	modified:   app/models/location_tag_map.rb
+#	modified:   app/models/migration.rb
+#	modified:   app/models/national_id.rb
+#	modified:   app/models/outpatient.rb
+#	modified:   app/models/property.rb
+#	modified:   app/models/region.rb
+#	modified:   app/models/report.rb
+#	modified:   app/models/survival_analysis.rb
+#	modified:   app/models/traditional_authority.rb
+#	modified:   app/models/village.rb
+#	modified:   app/views/charts/pie.html.erb
+#	modified:   app/views/charts/series.html.erb
+#	modified:   app/views/clinic/administration_tab.rhtml
+#	modified:   app/views/clinic/data_cleaning_tab.rhtml
+#	modified:   app/views/clinic/index.rhtml
+#	modified:   app/views/clinic/lab_tab.rhtml
+#	modified:   app/views/clinic/location_management_tab.rhtml
+#	modified:   app/views/clinic/management_tab.rhtml
+#	modified:   app/views/clinic/overview_simple.rhtml
+#	modified:   app/views/clinic/overview_tab.rhtml
+#	modified:   app/views/clinic/properties_tab.rhtml
+#	modified:   app/views/clinic/reports_tab.rhtml
+#	modified:   app/views/clinic/supervision_tab.rhtml
+#	modified:   app/views/clinic/users_tab.rhtml
+#	modified:   app/views/cohort_tool/_patients_list.html.erb
+#	modified:   app/views/cohort_tool/_visits_graph.html.erb
+#	modified:   app/views/cohort_tool/_visits_table.html.erb
+#	modified:   app/views/cohort_tool/cohort.html.erb
+#	modified:   app/views/cohort_tool/cohort_menu.html.erb
+#	modified:   app/views/cohort_tool/list_patients_details.rhtml
+#	modified:   app/views/cohort_tool/visits_by_day.html.erb
+#	modified:   app/views/dashboards/dispension_tab.rhtml
+#	modified:   app/views/dashboards/exitcare_dashboard.rhtml
+#	modified:   app/views/dashboards/exitcare_tab.rhtml
+#	modified:   app/views/dashboards/next_task_description.rhtml
+#	modified:   app/views/dashboards/opdoverview_tab.rhtml
+#	modified:   app/views/dashboards/opdtreatment_dashboard.rhtml
+#	modified:   app/views/dashboards/overview_tab.rhtml
+#	modified:   app/views/dashboards/past_visits_summary_tab.rhtml
+#	modified:   app/views/dashboards/personal_tab.rhtml
+#	modified:   app/views/dashboards/programs_dashboard.rhtml
+#	modified:   app/views/dashboards/programs_tab.rhtml
+#	modified:   app/views/dashboards/relationships_dashboard.rhtml
+#	modified:   app/views/dashboards/relationships_tab.rhtml
+#	modified:   app/views/dashboards/treatment_dashboard.rhtml
+#	modified:   app/views/dashboards/treatment_tab.rhtml
+#	modified:   app/views/dashboards/visit_history_tab.rhtml
+#	modified:   app/views/drug/expiring.html.erb
+#	modified:   app/views/drug/print_barcode.html.erb
+#	modified:   app/views/drug/removed_from_shelves.html.erb
+#	modified:   app/views/encounters/appointment.rhtml
+#	modified:   app/views/encounters/give_drugs.html.erb
+#	modified:   app/views/encounters/hiv_status.html.erb
+#	modified:   app/views/encounters/lab_orders.rhtml
+#	modified:   app/views/encounters/opddrug_dispensing.html.erb
+#	modified:   app/views/encounters/referral.html.erb
+#	modified:   app/views/encounters/source_of_referral.rhtml
+#	modified:   app/views/encounters/specimen_labelling.rhtml
+#	modified:   app/views/encounters/tb_reception.rhtml
+#	modified:   app/views/graphs/weight_tab.rhtml
+#	modified:   app/views/lab/graph.html.erb
+#	modified:   app/views/lab/results.html.erb
+#	modified:   app/views/lab/view.html.erb
+#	modified:   app/views/patients/_mastercard_details_blue.rhtml
+#	modified:   app/views/patients/_mastercard_details_green.rhtml
+#	modified:   app/views/patients/_mastercard_details_pink.rhtml
+#	modified:   app/views/patients/_mastercard_details_yellow.rhtml
+#	modified:   app/views/patients/_mastercard_header.rhtml
+#	modified:   app/views/patients/_patient_details.rhtml
+#	modified:   app/views/patients/_status_details.rhtml
+#	modified:   app/views/patients/demographics.html.erb
+#	modified:   app/views/patients/general_mastercard.rhtml
+#	modified:   app/views/patients/index.rhtml
+#	modified:   app/views/patients/mastercard.html.erb
+#	modified:   app/views/patients/mastercard_menu.rhtml
+#	modified:   app/views/patients/mastercard_printable.rhtml
+#	modified:   app/views/patients/opdcard.html.erb
+#	modified:   app/views/patients/opdshow.html.erb
+#	modified:   app/views/patients/recent_lab_orders.html.erb
+#	modified:   app/views/patients/summary.rhtml
+#	modified:   app/views/patients/tb_treatment_card.rhtml
+#	modified:   app/views/patients/visit_history.rhtml
+#	modified:   app/views/people/confirm.html.erb
+#	modified:   app/views/people/demographics.html.erb
+#	modified:   app/views/people/tranfer_patient_in.html.erb
+#	modified:   app/views/properties/clinic_days.html.erb
+#	modified:   app/views/properties/clinic_holidays.html.erb
+#	modified:   app/views/properties/creation.html.erb
+#	modified:   app/views/properties/set_clinic_holidays.html.erb
+#	modified:   app/views/properties/set_role_privileges.html.erb
+#	modified:   app/views/properties/show_clinic_days.html.erb
+#	modified:   app/views/report/_opd_diagnosis.rhtml
+#	modified:   app/views/report/_opd_diagnosis_by_address.rhtml
+#	modified:   app/views/report/_opd_diagnosis_plus_demographics.rhtml
+#	modified:   app/views/report/_opd_disaggregated_diagnosis.rhtml
+#	modified:   app/views/report/_opd_referrals.rhtml
+#	modified:   app/views/report/age_group_select.html.erb
+#	modified:   app/views/report/appointment_dates.rhtml
+#	modified:   app/views/report/opd.html.erb
+#	modified:   app/views/report/select_date.rhtml
+#	modified:   app/views/report/set_appointments.rhtml
+#	modified:   app/views/user/activities.html.erb
+#	modified:   app/views/user/properties.html.erb
+#	modified:   app/views/user/select_user.html.erb
+#	modified:   app/views/user/show.html.erb
+#	modified:   app/views/user/users.rhtml
+#	modified:   config/application.yml.example
+#	modified:   config/database.yml.example
+#	modified:   config/deploy.rb
+#	modified:   config/environment.rb
+#	modified:   config/initializers/devise.rb
+#	modified:   config/initializers/warden.rb
+#	modified:   config/locales/devise.en.yml
+#	modified:   config/migration.yml
+#	modified:   config/mongrel_cluster.yml
+#	modified:   db/bart1_to_bart2_drug_map.sql
+#	modified:   db/bart2_role_privileges.sql
+#	modified:   db/bart2_views_schema_additions.sql
+#	modified:   db/create_dde_server_connection.sql
+#	modified:   db/create_patient_start_date_function.sql
+#	modified:   db/data/defaults/drug_ingredient.yml
+#	modified:   db/data/moh/moh.sql
+#	modified:   db/data/mpc/mpc.sql
+#	modified:   db/drop_patient_start_date_function.sql
+#	modified:   db/drug_ingredient.sql
+#	modified:   db/malawi_regions.sql
+#	modified:   db/migrate/20110131133924_age_function.rb
+#	modified:   db/migrate/20110201142615_age_group_function.rb
+#	modified:   db/migrate/20110214131134_create_drug_ingredients.rb
+#	modified:   db/migrate/20110222091353_patient_start_date_function.rb
+#	modified:   db/migrate/20110602192435_create_labs.rb
+#	modified:   db/migrate/20110604141723_create_location_tag_workstation_location.rb
+#	modified:   db/migrate/20110604142913_create_location_tags.rb
+#	modified:   db/migrate/20110604142932_create_location_tag_maps.rb
+#	modified:   db/migrate/20110609132925_create_outpatients.rb
+#	modified:   db/migrate/20110614184541_create_national_ids.rb
+#	modified:   db/migrate/20110726131026_create_traditional_authorities.rb
+#	modified:   db/migrate/20110727100353_create_villages.rb
+#	modified:   db/migrate/20110727100435_create_districts.rb
+#	modified:   db/migrate/20110727100509_create_regions.rb
+#	modified:   db/missing_encounters_query.sql
+#	modified:   db/moh_regimens-2011.sql
+#	modified:   db/moh_regimens_only.sql
+#	modified:   db/mpc_regimens_only.sql
+#	modified:   db/mysql_functions.sql
+#	modified:   db/national_id.sql
+#	modified:   db/non_art_regimens.sql
+#	modified:   db/openmrs_1_7_2_concept_server_full_db.sql
+#	modified:   db/openmrs_metadata_1_7.sql
+#	modified:   db/privilege.sql
+#	modified:   db/raw_areas.sql
+#	modified:   db/regimen_indexes.sql
+#	modified:   db/regimens.sql
+#	modified:   db/retrospective_station_entries.sql
+#	modified:   db/tb_regimens.sql
+#	modified:   db/user_schema_modifications.sql
+#	modified:   db/weight_for_heights.sql
+#	modified:   lib/bean.rb
+#	modified:   lib/core_service.rb
+#	modified:   lib/dde_service.rb
+#	modified:   lib/diabetes_service.rb
+#	modified:   lib/medication_service.rb
+#	modified:   lib/patient_service.rb
+#	modified:   lib/settings.rb
+#	modified:   public/touchscreentoolkit/README.md
+#	modified:   public/touchscreentoolkit/examples/calendar.html
+#	modified:   public/touchscreentoolkit/examples/dashboard-home.html
+#	modified:   public/touchscreentoolkit/examples/data.txt
+#	modified:   public/touchscreentoolkit/examples/dispense.html
+#	modified:   public/touchscreentoolkit/examples/facilities.txt
+#	modified:   public/touchscreentoolkit/examples/lib/images/active_scaffold/default/add.gif
+#	modified:   public/touchscreentoolkit/examples/lib/images/active_scaffold/default/arrow_down.gif
+#	modified:   public/touchscreentoolkit/examples/lib/images/active_scaffold/default/arrow_up.gif
+#	modified:   public/touchscreentoolkit/examples/lib/images/active_scaffold/default/close.gif
+#	modified:   public/touchscreentoolkit/examples/lib/images/active_scaffold/default/cross.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/active_scaffold/default/indicator-small.gif
+#	modified:   public/touchscreentoolkit/examples/lib/images/active_scaffold/default/indicator.gif
+#	modified:   public/touchscreentoolkit/examples/lib/images/active_scaffold/default/magnifier.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/barcode.jpg
+#	modified:   public/touchscreentoolkit/examples/lib/images/bg.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/btn_blue.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/btn_blue_hover.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/btn_yellow.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_left_blue.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_left_dark.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_left_gray.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_left_green.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_left_hover_blue.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_left_hover_dark.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_left_hover_gray.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_left_hover_green.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_left_hover_red.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_left_hover_yellow.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_left_red.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_left_yellow.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_right_blue.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_right_dark.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_right_gray.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_right_green.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_right_hover_blue.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_right_hover_dark.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_right_hover_gray.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_right_hover_green.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_right_hover_red.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_right_hover_yellow.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_right_red.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_right_yellow.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/cancel_flat.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/cancel_flat_red.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/cancel_flat_small.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/cancel_flat_small_red.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/checked.jpg
+#	modified:   public/touchscreentoolkit/examples/lib/images/close.gif
+#	modified:   public/touchscreentoolkit/examples/lib/images/drug_label.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/drug_label_ch.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/drug_label_en.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/drug_label_small.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/female.gif
+#	modified:   public/touchscreentoolkit/examples/lib/images/hour.svg
+#	modified:   public/touchscreentoolkit/examples/lib/images/loading.gif
+#	modified:   public/touchscreentoolkit/examples/lib/images/madzulo.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/male.gif
+#	modified:   public/touchscreentoolkit/examples/lib/images/masana.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/minute.svg
+#	modified:   public/touchscreentoolkit/examples/lib/images/mmawa.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/overlay.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/scream.gif
+#	modified:   public/touchscreentoolkit/examples/lib/images/select.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/smirk.gif
+#	modified:   public/touchscreentoolkit/examples/lib/images/target.gif
+#	modified:   public/touchscreentoolkit/examples/lib/images/ticked.jpg
+#	modified:   public/touchscreentoolkit/examples/lib/images/unchecked.jpg
+#	modified:   public/touchscreentoolkit/examples/lib/images/unticked.jpg
+#	modified:   public/touchscreentoolkit/examples/lib/images/usiku.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/watermark.png
+#	modified:   public/touchscreentoolkit/examples/lib/javascripts/calendar.js
+#	modified:   public/touchscreentoolkit/examples/lib/javascripts/dashboard.js
+#	modified:   public/touchscreentoolkit/examples/lib/javascripts/dispense.js
+#	modified:   public/touchscreentoolkit/examples/lib/javascripts/dosages.js
+#	modified:   public/touchscreentoolkit/examples/lib/javascripts/generics.js
+#	modified:   public/touchscreentoolkit/examples/lib/javascripts/multiTouch.js
+#	modified:   public/touchscreentoolkit/examples/lib/javascripts/nested_select.js
+#	modified:   public/touchscreentoolkit/examples/lib/javascripts/selects.js
+#	modified:   public/touchscreentoolkit/examples/lib/javascripts/standard.js
+#	modified:   public/touchscreentoolkit/examples/lib/javascripts/touchScreenToolkit.js
+#	modified:   public/touchscreentoolkit/examples/lib/javascripts/treatment.js
+#	modified:   public/touchscreentoolkit/examples/lib/samples-sql-scripts/dosages.sql
+#	modified:   public/touchscreentoolkit/examples/lib/samples-sql-scripts/drugs.sql
+#	modified:   public/touchscreentoolkit/examples/lib/samples-sql-scripts/generics.sql
+#	modified:   public/touchscreentoolkit/examples/lib/stylesheets/bluetabs.css
+#	modified:   public/touchscreentoolkit/examples/lib/stylesheets/calendar.css
+#	modified:   public/touchscreentoolkit/examples/lib/stylesheets/classic.css
+#	modified:   public/touchscreentoolkit/examples/lib/stylesheets/dashboard.css
+#	modified:   public/touchscreentoolkit/examples/lib/stylesheets/dispense.css
+#	modified:   public/touchscreentoolkit/examples/lib/stylesheets/drug-style.css
+#	modified:   public/touchscreentoolkit/examples/lib/stylesheets/form.css
+#	modified:   public/touchscreentoolkit/examples/lib/stylesheets/graytabs.css
+#	modified:   public/touchscreentoolkit/examples/lib/stylesheets/multiTouch.css
+#	modified:   public/touchscreentoolkit/examples/lib/stylesheets/touch-basic.css
+#	modified:   public/touchscreentoolkit/examples/lib/stylesheets/touch-fancy.css
+#	modified:   public/touchscreentoolkit/examples/multiTouch.html
+#	modified:   public/touchscreentoolkit/examples/nested_select.html
+#	modified:   public/touchscreentoolkit/examples/overview.html
+#	modified:   public/touchscreentoolkit/examples/patient-dashboard.html
+#	modified:   public/touchscreentoolkit/examples/programs.html
+#	modified:   public/touchscreentoolkit/examples/relationships.html
+#	modified:   public/touchscreentoolkit/examples/select_nested.html
+#	modified:   public/touchscreentoolkit/examples/standard.html
+#	modified:   public/touchscreentoolkit/examples/time.html
+#	modified:   public/touchscreentoolkit/examples/treatment.html
+#	modified:   public/touchscreentoolkit/lib/images/active_scaffold/default/add.gif
+#	modified:   public/touchscreentoolkit/lib/images/active_scaffold/default/arrow_down.gif
+#	modified:   public/touchscreentoolkit/lib/images/active_scaffold/default/arrow_up.gif
+#	modified:   public/touchscreentoolkit/lib/images/active_scaffold/default/close.gif
+#	modified:   public/touchscreentoolkit/lib/images/active_scaffold/default/cross.png
+#	modified:   public/touchscreentoolkit/lib/images/active_scaffold/default/indicator-small.gif
+#	modified:   public/touchscreentoolkit/lib/images/active_scaffold/default/indicator.gif
+#	modified:   public/touchscreentoolkit/lib/images/active_scaffold/default/magnifier.png
+#	modified:   public/touchscreentoolkit/lib/images/barcode.jpg
+#	modified:   public/touchscreentoolkit/lib/images/bg.png
+#	modified:   public/touchscreentoolkit/lib/images/btn_blue.png
+#	modified:   public/touchscreentoolkit/lib/images/btn_blue_hover.png
+#	modified:   public/touchscreentoolkit/lib/images/btn_yellow.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_left_blue.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_left_dark.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_left_gray.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_left_green.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_left_hover_blue.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_left_hover_dark.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_left_hover_gray.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_left_hover_green.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_left_hover_red.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_left_hover_yellow.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_left_red.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_left_yellow.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_right_blue.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_right_dark.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_right_gray.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_right_green.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_right_hover_blue.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_right_hover_dark.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_right_hover_gray.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_right_hover_green.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_right_hover_red.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_right_hover_yellow.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_right_red.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_right_yellow.png
+#	modified:   public/touchscreentoolkit/lib/images/cancel_flat.png
+#	modified:   public/touchscreentoolkit/lib/images/cancel_flat_red.png
+#	modified:   public/touchscreentoolkit/lib/images/cancel_flat_small.png
+#	modified:   public/touchscreentoolkit/lib/images/cancel_flat_small_red.png
+#	modified:   public/touchscreentoolkit/lib/images/checked.jpg
+#	modified:   public/touchscreentoolkit/lib/images/close.gif
+#	modified:   public/touchscreentoolkit/lib/images/drug_label.png
+#	modified:   public/touchscreentoolkit/lib/images/drug_label_ch.png
+#	modified:   public/touchscreentoolkit/lib/images/drug_label_en.png
+#	modified:   public/touchscreentoolkit/lib/images/drug_label_small.png
+#	modified:   public/touchscreentoolkit/lib/images/female.gif
+#	modified:   public/touchscreentoolkit/lib/images/hour.svg
+#	modified:   public/touchscreentoolkit/lib/images/loading.gif
+#	modified:   public/touchscreentoolkit/lib/images/madzulo.png
+#	modified:   public/touchscreentoolkit/lib/images/male.gif
+#	modified:   public/touchscreentoolkit/lib/images/masana.png
+#	modified:   public/touchscreentoolkit/lib/images/minute.svg
+#	modified:   public/touchscreentoolkit/lib/images/mmawa.png
+#	modified:   public/touchscreentoolkit/lib/images/overlay.png
+#	modified:   public/touchscreentoolkit/lib/images/scream.gif
+#	modified:   public/touchscreentoolkit/lib/images/select.png
+#	modified:   public/touchscreentoolkit/lib/images/smirk.gif
+#	modified:   public/touchscreentoolkit/lib/images/target.gif
+#	modified:   public/touchscreentoolkit/lib/images/ticked.jpg
+#	modified:   public/touchscreentoolkit/lib/images/unchecked.jpg
+#	modified:   public/touchscreentoolkit/lib/images/unticked.jpg
+#	modified:   public/touchscreentoolkit/lib/images/usiku.png
+#	modified:   public/touchscreentoolkit/lib/images/watermark.png
+#	modified:   public/touchscreentoolkit/lib/javascripts/calendar.js
+#	modified:   public/touchscreentoolkit/lib/javascripts/calendar_horizontal.js
+#	modified:   public/touchscreentoolkit/lib/javascripts/dashboard.js
+#	modified:   public/touchscreentoolkit/lib/javascripts/dispense.js
+#	modified:   public/touchscreentoolkit/lib/javascripts/generics.js
+#	modified:   public/touchscreentoolkit/lib/javascripts/multiTouch.js
+#	modified:   public/touchscreentoolkit/lib/javascripts/prescriber.js
+#	modified:   public/touchscreentoolkit/lib/javascripts/standard.js
+#	modified:   public/touchscreentoolkit/lib/javascripts/touchScreenToolkit.js
+#	modified:   public/touchscreentoolkit/lib/javascripts/treatment.js
+#	modified:   public/touchscreentoolkit/lib/stylesheets/bluetabs.css
+#	modified:   public/touchscreentoolkit/lib/stylesheets/calendar.css
+#	modified:   public/touchscreentoolkit/lib/stylesheets/classic.css
+#	modified:   public/touchscreentoolkit/lib/stylesheets/dashboard.css
+#	modified:   public/touchscreentoolkit/lib/stylesheets/dispense.css
+#	modified:   public/touchscreentoolkit/lib/stylesheets/drug-style.css
+#	modified:   public/touchscreentoolkit/lib/stylesheets/form.css
+#	modified:   public/touchscreentoolkit/lib/stylesheets/graytabs.css
+#	modified:   public/touchscreentoolkit/lib/stylesheets/multiTouch.css
+#	modified:   public/touchscreentoolkit/lib/stylesheets/touch-basic.css
+#	modified:   public/touchscreentoolkit/lib/stylesheets/touch-fancy.css
+#	modified:   script/add_regimen_categories.rb
+#	modified:   script/agrees_to_followup_fix_value_text_to_value_coded.sql
+#	modified:   script/arv_number_fix.sql
+#	modified:   script/calculate_art_adherence_from_pill_count.rb
+#	modified:   script/compare_encounters.rb
+#	modified:   script/data_cleaning_after_migration.sql
+#	modified:   script/doses_missed_calculation.rb
+#	modified:   script/find_patients_with_missing_orders.rb
+#	modified:   script/fix_drug_orders_with_zero_quantity.sql
+#	modified:   script/generate_exit_from_care_encounters_from_bart1.rb
+#	modified:   script/get_states_for_creating_exit_from_care_encounters.sql
+#	modified:   script/migration_import_script.rb
+#	modified:   script/missing_drug_orders.sql
+#	modified:   script/move_value_text_to_value_coded.rb
+#	modified:   script/move_value_text_to_value_datetime_datearvstarted.rb
+#	modified:   script/move_value_text_to_value_numeric.rb
+#	modified:   script/mpc_data_fix_script.sql
+#	modified:   script/patient_base_data.sql
+#	modified:   script/patient_base_data_update.sql
+#	modified:   script/patient_states_fixes.sql
+#	modified:   script/remove_dispensations_without_treatment.sql
+#	modified:   script/remove_on_arv_state_for_patients_in_bart2_not_registered_as_on_arv_in_bart1.sql
+#	modified:   script/remove_wrongly_imported_encounters.sql
+#	modified:   script/tb_status_fix_after_migration.sql
+#	modified:   script/update_bart2_patient_state_to_match_bart1_registration_dates.rb
+#	modified:   script/update_initial_state_on_arvs.sql
+#	modified:   script/update_states_for_patients_with_arv_numbers.sql
+#	modified:   script/updating_patient_died_state_on_patients_with_dead_0.rb
+#	modified:   script/void_bart2_orders_voided_in_bart1.rb
+#	modified:   script/void_encounters.rb
+#	modified:   script/void_specific_bart2_orders_voided_in_bart1.rb
+#	modified:   test/fixtures/district.yml
+#	modified:   test/fixtures/districts.yml
+#	modified:   test/fixtures/drug_ingredient.yml
+#	modified:   test/fixtures/labs.yml
+#	modified:   test/fixtures/location_tag_maps.yml
+#	modified:   test/fixtures/location_tags.yml
+#	modified:   test/fixtures/national_ids.yml
+#	modified:   test/fixtures/outpatients.yml
+#	modified:   test/fixtures/person_attribute.yml
+#	modified:   test/fixtures/region.yml
+#	modified:   test/fixtures/regions.yml
+#	modified:   test/fixtures/role.yml
+#	modified:   test/fixtures/traditional_authorities.yml
+#	modified:   test/fixtures/traditional_authority.yml
+#	modified:   test/fixtures/villages.yml
+#	modified:   test/functional/charts_controller_test.rb
+#	modified:   test/functional/lab_controller_test.rb
+#	modified:   test/functional/location_controller_test.rb
+#	modified:   test/functional/migration_controller_test.rb
+#	modified:   test/functional/properties_controller_test.rb
+#	modified:   test/functional/user_controller_test.rb
+#	modified:   test/unit/cohort_test.rb
+#	modified:   test/unit/district_test.rb
+#	modified:   test/unit/drug_ingredient_test.rb
+#	modified:   test/unit/helpers/charts_helper_test.rb
+#	modified:   test/unit/helpers/encounters_helper_test.rb
+#	modified:   test/unit/helpers/lab_helper_test.rb
+#	modified:   test/unit/helpers/location_helper_test.rb
+#	modified:   test/unit/helpers/migration_helper_test.rb
+#	modified:   test/unit/helpers/people_helper_test.rb
+#	modified:   test/unit/helpers/properties_helper_test.rb
+#	modified:   test/unit/helpers/report_helper_test.rb
+#	modified:   test/unit/helpers/user_helper_test.rb
+#	modified:   test/unit/lab_test.rb
+#	modified:   test/unit/location_tag_map_test.rb
+#	modified:   test/unit/location_tag_test.rb
+#	modified:   test/unit/national_id_test.rb
+#	modified:   test/unit/outpatient_test.rb
+#	modified:   test/unit/region_test.rb
+#	modified:   test/unit/traditional_authority_test.rb
+#	modified:   test/unit/users_test.rb
+#	modified:   test/unit/village_test.rb
+#
+# Untracked files:
+#   (use "git add <file>..." to include in what will be committed)
+#
+#	server
+no changes added to commit (use "git add" and/or "git commit -a")
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ got[K[Kit pull
+remote: Counting objects: 198, done.[K
+remote: Compressing objects:   1% (1/68)   [Kremote: Compressing objects:   2% (2/68)   [Kremote: Compressing objects:   4% (3/68)   [Kremote: Compressing objects:   5% (4/68)   [Kremote: Compressing objects:   7% (5/68)   [Kremote: Compressing objects:   8% (6/68)   [Kremote: Compressing objects:  10% (7/68)   [Kremote: Compressing objects:  11% (8/68)   [Kremote: Compressing objects:  13% (9/68)   [Kremote: Compressing objects:  14% (10/68)   [Kremote: Compressing objects:  16% (11/68)   [Kremote: Compressing objects:  17% (12/68)   [Kremote: Compressing objects:  19% (13/68)   [Kremote: Compressing objects:  20% (14/68)   [Kremote: Compressing objects:  22% (15/68)   [Kremote: Compressing objects:  23% (16/68)   [Kremote: Compressing objects:  25% (17/68)   [Kremote: Compressing objects:  26% (18/68)   [Kremote: Compressing objects:  27% (19/68)   [Kremote: Compressing objects:  29% (20/68)   [Kremote: Compressing objects:  30% (21/68)   [Kremote: Compressing objects:  32% (22/68)   [Kremote: Compressing objects:  33% (23/68)   [Kremote: Compressing objects:  35% (24/68)   [Kremote: Compressing objects:  36% (25/68)   [Kremote: Compressing objects:  38% (26/68)   [Kremote: Compressing objects:  39% (27/68)   [Kremote: Compressing objects:  41% (28/68)   [Kremote: Compressing objects:  42% (29/68)   [Kremote: Compressing objects:  44% (30/68)   [Kremote: Compressing objects:  45% (31/68)   [Kremote: Compressing objects:  47% (32/68)   [Kremote: Compressing objects:  48% (33/68)   [Kremote: Compressing objects:  50% (34/68)   [Kremote: Compressing objects:  51% (35/68)   [Kremote: Compressing objects:  52% (36/68)   [Kremote: Compressing objects:  54% (37/68)   [Kremote: Compressing objects:  55% (38/68)   [Kremote: Compressing objects:  57% (39/68)   [Kremote: Compressing objects:  58% (40/68)   [Kremote: Compressing objects:  60% (41/68)   [Kremote: Compressing objects:  61% (42/68)   [Kremote: Compressing objects:  63% (43/68)   [Kremote: Compressing objects:  64% (44/68)   [Kremote: Compressing objects:  66% (45/68)   [Kremote: Compressing objects:  67% (46/68)   [Kremote: Compressing objects:  69% (47/68)   [Kremote: Compressing objects:  70% (48/68)   [Kremote: Compressing objects:  72% (49/68)   [Kremote: Compressing objects:  73% (50/68)   [Kremote: Compressing objects:  75% (51/68)   [Kremote: Compressing objects:  76% (52/68)   [Kremote: Compressing objects:  77% (53/68)   [Kremote: Compressing objects:  79% (54/68)   [Kremote: Compressing objects:  80% (55/68)   [Kremote: Compressing objects:  82% (56/68)   [Kremote: Compressing objects:  83% (57/68)   [Kremote: Compressing objects:  85% (58/68)   [Kremote: Compressing objects:  86% (59/68)   [Kremote: Compressing objects:  88% (60/68)   [Kremote: Compressing objects:  89% (61/68)   [Kremote: Compressing objects:  91% (62/68)   [Kremote: Compressing objects:  92% (63/68)   [Kremote: Compressing objects:  94% (64/68)   [Kremote: Compressing objects:  95% (65/68)   [Kremote: Compressing objects:  97% (66/68)   [Kremote: Compressing objects:  98% (67/68)   [Kremote: Compressing objects: 100% (68/68)   [Kremote: Compressing objects: 100% (68/68), done.[K
+Receiving objects:   0% (1/134)   Receiving objects:   1% (2/134)   Receiving objects:   2% (3/134)   Receiving objects:   3% (5/134)   Receiving objects:   4% (6/134)   Receiving objects:   5% (7/134)   Receiving objects:   6% (9/134)   Receiving objects:   7% (10/134)   Receiving objects:   8% (11/134)   Receiving objects:   9% (13/134)   Receiving objects:  10% (14/134)   Receiving objects:  11% (15/134)   Receiving objects:  12% (17/134)   Receiving objects:  13% (18/134)   Receiving objects:  14% (19/134)   Receiving objects:  15% (21/134)   Receiving objects:  16% (22/134)   Receiving objects:  17% (23/134)   Receiving objects:  18% (25/134)   Receiving objects:  19% (26/134)   Receiving objects:  20% (27/134)   Receiving objects:  21% (29/134)   Receiving objects:  22% (30/134)   Receiving objects:  23% (31/134)   Receiving objects:  23% (31/134), 12.00 KiB   Receiving objects:  24% (33/134), 12.00 KiB   Receiving objects:  25% (34/134), 12.00 KiB   Receiving objects:  26% (35/134), 12.00 KiB   Receiving objects:  27% (37/134), 12.00 KiB   Receiving objects:  28% (38/134), 12.00 KiB   Receiving objects:  29% (39/134), 12.00 KiB   Receiving objects:  30% (41/134), 12.00 KiB   Receiving objects:  31% (42/134), 12.00 KiB   Receiving objects:  32% (43/134), 12.00 KiB   Receiving objects:  33% (45/134), 12.00 KiB   Receiving objects:  34% (46/134), 12.00 KiB   Receiving objects:  35% (47/134), 12.00 KiB   Receiving objects:  36% (49/134), 12.00 KiB   Receiving objects:  37% (50/134), 12.00 KiB   Receiving objects:  38% (51/134), 12.00 KiB   Receiving objects:  39% (53/134), 12.00 KiB   Receiving objects:  40% (54/134), 12.00 KiB   remote: Total 134 (delta 101), reused 98 (delta 66)[K
+Receiving objects:  40% (54/134), 28.00 KiB | 1 KiB/s   Receiving objects:  41% (55/134), 28.00 KiB | 1 KiB/s   Receiving objects:  42% (57/134), 28.00 KiB | 1 KiB/s   Receiving objects:  43% (58/134), 28.00 KiB | 1 KiB/s   Receiving objects:  44% (59/134), 28.00 KiB | 1 KiB/s   Receiving objects:  45% (61/134), 28.00 KiB | 1 KiB/s   Receiving objects:  46% (62/134), 28.00 KiB | 1 KiB/s   Receiving objects:  47% (63/134), 28.00 KiB | 1 KiB/s   Receiving objects:  48% (65/134), 28.00 KiB | 1 KiB/s   Receiving objects:  49% (66/134), 28.00 KiB | 1 KiB/s   Receiving objects:  50% (67/134), 28.00 KiB | 1 KiB/s   Receiving objects:  51% (69/134), 28.00 KiB | 1 KiB/s   Receiving objects:  52% (70/134), 28.00 KiB | 1 KiB/s   Receiving objects:  53% (72/134), 28.00 KiB | 1 KiB/s   Receiving objects:  54% (73/134), 28.00 KiB | 1 KiB/s   Receiving objects:  55% (74/134), 28.00 KiB | 1 KiB/s   Receiving objects:  56% (76/134), 28.00 KiB | 1 KiB/s   Receiving objects:  57% (77/134), 28.00 KiB | 1 KiB/s   Receiving objects:  58% (78/134), 28.00 KiB | 1 KiB/s   Receiving objects:  59% (80/134), 28.00 KiB | 1 KiB/s   Receiving objects:  60% (81/134), 28.00 KiB | 1 KiB/s   Receiving objects:  61% (82/134), 28.00 KiB | 1 KiB/s   Receiving objects:  62% (84/134), 28.00 KiB | 1 KiB/s   Receiving objects:  63% (85/134), 28.00 KiB | 1 KiB/s   Receiving objects:  64% (86/134), 28.00 KiB | 1 KiB/s   Receiving objects:  65% (88/134), 28.00 KiB | 1 KiB/s   Receiving objects:  66% (89/134), 28.00 KiB | 1 KiB/s   Receiving objects:  67% (90/134), 28.00 KiB | 1 KiB/s   Receiving objects:  68% (92/134), 28.00 KiB | 1 KiB/s   Receiving objects:  69% (93/134), 28.00 KiB | 1 KiB/s   Receiving objects:  70% (94/134), 28.00 KiB | 1 KiB/s   Receiving objects:  71% (96/134), 28.00 KiB | 1 KiB/s   Receiving objects:  72% (97/134), 28.00 KiB | 1 KiB/s   Receiving objects:  73% (98/134), 28.00 KiB | 1 KiB/s   Receiving objects:  74% (100/134), 28.00 KiB | 1 KiB/s   Receiving objects:  75% (101/134), 28.00 KiB | 1 KiB/s   Receiving objects:  76% (102/134), 28.00 KiB | 1 KiB/s   Receiving objects:  77% (104/134), 28.00 KiB | 1 KiB/s   Receiving objects:  78% (105/134), 28.00 KiB | 1 KiB/s   Receiving objects:  79% (106/134), 28.00 KiB | 1 KiB/s   Receiving objects:  80% (108/134), 28.00 KiB | 1 KiB/s   Receiving objects:  81% (109/134), 28.00 KiB | 1 KiB/s   Receiving objects:  82% (110/134), 28.00 KiB | 1 KiB/s   Receiving objects:  83% (112/134), 28.00 KiB | 1 KiB/s   Receiving objects:  84% (113/134), 28.00 KiB | 1 KiB/s   Receiving objects:  85% (114/134), 28.00 KiB | 1 KiB/s   Receiving objects:  86% (116/134), 28.00 KiB | 1 KiB/s   Receiving objects:  87% (117/134), 28.00 KiB | 1 KiB/s   Receiving objects:  88% (118/134), 28.00 KiB | 1 KiB/s   Receiving objects:  89% (120/134), 28.00 KiB | 1 KiB/s   Receiving objects:  90% (121/134), 28.00 KiB | 1 KiB/s   Receiving objects:  91% (122/134), 28.00 KiB | 1 KiB/s   Receiving objects:  92% (124/134), 28.00 KiB | 1 KiB/s   Receiving objects:  93% (125/134), 28.00 KiB | 1 KiB/s   Receiving objects:  94% (126/134), 28.00 KiB | 1 KiB/s   Receiving objects:  95% (128/134), 28.00 KiB | 1 KiB/s   Receiving objects:  96% (129/134), 28.00 KiB | 1 KiB/s   Receiving objects:  97% (130/134), 28.00 KiB | 1 KiB/s   Receiving objects:  98% (132/134), 28.00 KiB | 1 KiB/s   Receiving objects:  99% (133/134), 28.00 KiB | 1 KiB/s   Receiving objects: 100% (134/134), 28.00 KiB | 1 KiB/s   Receiving objects: 100% (134/134), 40.60 KiB | 1 KiB/s, done.
+Resolving deltas:   0% (0/101)   Resolving deltas:   1% (2/101)   Resolving deltas:   6% (7/101)   Resolving deltas:   7% (8/101)   Resolving deltas:  19% (20/101)   Resolving deltas:  29% (30/101)   Resolving deltas:  32% (33/101)   Resolving deltas:  35% (36/101)   Resolving deltas:  38% (39/101)   Resolving deltas:  41% (42/101)   Resolving deltas:  49% (50/101)   Resolving deltas:  51% (52/101)   Resolving deltas:  54% (55/101)   Resolving deltas:  55% (56/101)   Resolving deltas:  56% (57/101)   Resolving deltas:  57% (58/101)   Resolving deltas:  58% (59/101)   Resolving deltas:  61% (62/101)   Resolving deltas:  62% (63/101)   Resolving deltas:  63% (64/101)   Resolving deltas:  64% (65/101)   Resolving deltas:  65% (66/101)   Resolving deltas:  68% (69/101)   Resolving deltas:  72% (73/101)   Resolving deltas:  76% (77/101)   Resolving deltas:  80% (81/101)   Resolving deltas:  83% (84/101)   Resolving deltas:  84% (85/101)   Resolving deltas:  85% (86/101)   Resolving deltas:  86% (87/101)   Resolving deltas:  89% (90/101)   Resolving deltas:  91% (92/101)   Resolving deltas:  92% (93/101)   Resolving deltas:  93% (94/101)   Resolving deltas:  94% (95/101)   Resolving deltas:  96% (97/101)   Resolving deltas:  97% (98/101)   Resolving deltas:  98% (99/101)   Resolving deltas:  99% (100/101)   Resolving deltas: 100% (101/101)   Resolving deltas: 100% (101/101), completed with 36 local objects.
+From https://github.com/BaobabHealthTrust/bart2
+   3e88fd8..47c060f  bart2      -> origin/bart2
+   1249ab1..be9c3f1  survival_analysis -> origin/survival_analysis
+ * [new branch]      tb_art     -> origin/tb_art
+You asked me to pull without telling me which branch you
+want to merge with, and 'branch.survival_analysis.merge' in
+your configuration file does not tell me, either. Please
+specify which branch you want to use on the command line and
+try again (e.g. 'git pull <repository> <refspec>').
+See git-pull(1) for details.
+
+If you often merge with the same branch, you may want to
+use something like the following in your configuration file:
+    [branch "survival_analysis"]
+    remote = <nickname>
+    merge = <remote-ref>
+
+    [remote "<nickname>"]
+    url = <url>
+    fetch = <refspec>
+
+See git-config(1) for details.
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ git pull[K[K[K[Kcheckoou[K[Kut tb_art
+error: Your local changes to the following files would be overwritten by checkout:
+	.gitignore
+	Capfile
+	Gemfile
+	app/controllers/charts_controller.rb
+	app/controllers/encounters_controller.rb
+	app/controllers/generic_admin_controller.rb
+	app/controllers/generic_application_controller.rb
+	app/controllers/generic_barcodes_controller.rb
+	app/controllers/generic_charts_controller.rb
+	app/controllers/generic_clinic_controller.rb
+	app/controllers/generic_cohort_tool_controller.rb
+	app/controllers/generic_config_controller.rb
+	app/controllers/generic_dispensations_controller.rb
+	app/controllers/generic_drug_controller.rb
+	app/controllers/generic_heartbeat_controller.rb
+	app/controllers/generic_lab_controller.rb
+	app/controllers/generic_location_controller.rb
+	app/controllers/generic_migration_controller.rb
+	app/controllers/generic_patient_identifiers_controller.rb
+	app/controllers/generic_patients_controller.rb
+	app/controllers/generic_people_controller.rb
+	app/controllers/generic_person_addresses_controller.rb
+	app/controllers/generic_person_attributes_controller.rb
+	app/controllers/generic_person_names_controller.rb
+	app/controllers/generic_programs_controller.rb
+	app/controllers/generic_properties_controller.rb
+	app/controllers/generic_regimens_controller.rb
+	app/controllers/generic_relationships_controller.rb
+	app/controllers/generic_report_controller.rb
+	app/controllers/generic_sessions_controller.rb
+	app/controllers/generic_single_sign_on_controller.rb
+	app/controllers/generic_user_controller.rb
+	app/controllers/lab_controller.rb
+	app/controllers/location_controller.rb
+	app/controllers/migration_controller.rb
+	app/controllers/properties_controller.rb
+	app/controllers/single_sign_on_controller.rb
+	app/helpers/charts_helper.rb
+	app/helpers/encounters_helper.rb
+	app/helpers/lab_helper.rb
+	app/helpers/location_helper.rb
+	app/helpers/migration_helper.rb
+	app/helpers/people_helper.rb
+	app/helpers/properties_helper.rb
+	app/helpers/report_helper.rb
+	app/helpers/user_helper.rb
+	app/models/bart_one_encounter.rb
+	app/models/cohort.rb
+	app/models/district.rb
+	app/models/drug_ingredient.rb
+	app/models/lab.rb
+	app/models/location_tag.rb
+	app/models/location_tag_map.rb
+	app/models/migration.rb
+	app/models/national_id.rb
+	app/models/outpatient.rb
+	app/models/property.rb
+	app/models/region.rb
+	app/models/report.rb
+	app/models/survival_analysis.rb
+	app/models/traditional_authority.rb
+	app/models/village.rb
+	app/views/charts/pie.html.erb
+	app/views/charts/series.html.erb
+	app/views/clinic/administration_tab.rhtml
+	app/views/clinic/data_cleaning_tab.rhtml
+	app/views/clinic/index.rhtml
+	app/views/clinic/lab_tab.rhtml
+	app/views/clinic/location_management_tab.rhtml
+	app/views/clinic/management_tab.rhtml
+	app/views/clinic/overview_simple.rhtml
+	app/views/clinic/overview_tab.rhtml
+	app/views/clinic/properties_tab.rhtml
+	app/views/clinic/reports_tab.rhtml
+	app/views/clinic/supervision_tab.rhtml
+	app/views/clinic/users_tab.rhtml
+	app/views/cohort_tool/_patients_list.html.erb
+	app/views/cohort_tool/_visits_graph.html.erb
+	app/views/cohort_tool/_visits_table.html.erb
+	app/views/cohort_tool/cohort.html.erb
+	app/views/cohort_tool/cohort_menu.html.erb
+	app/views/cohort_tool/list_patients_details.rhtml
+	app/views/cohort_tool/visits_by_day.html.erb
+	app/views/dashboards/dispension_tab.rhtml
+	app/views/dashboards/exitcare_dashboard.rhtml
+	app/views/dashboards/exitcare_tab.rhtml
+	app/views/dashboards/next_task_description.rhtml
+	app/views/dashboards/opdoverview_tab.rhtml
+	app/views/dashboards/opdtreatment_dashboard.rhtml
+	app/views/dashboards/overview_tab.rhtml
+	app/views/dashboards/past_visits_summary_tab.rhtml
+	app/views/dashboards/personal_tab.rhtml
+	app/views/dashboards/programs_dashboard.rhtml
+	app/views/dashboards/programs_tab.rhtml
+	app/views/dashboards/relationships_dashboard.rhtml
+	app/views/dashboards/relationships_tab.rhtml
+	app/views/dashboards/treatment_dashboard.rhtml
+	app/views/dashboards/treatment_tab.rhtml
+	app/views/dashboards/visit_history_tab.rhtml
+	app/views/drug/expiring.html.erb
+	app/views/drug/print_barcode.html.erb
+	app/views/drug/remov
+Aborting
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ [H[2J]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ git checkout tb_artpull[Kstatus
+# On branch survival_analysis
+# Changes not staged for commit:
+#   (use "git add <file>..." to update what will be committed)
+#   (use "git checkout -- <file>..." to discard changes in working directory)
+#
+#	modified:   .gitignore
+#	modified:   Capfile
+#	modified:   Gemfile
+#	modified:   app/controllers/charts_controller.rb
+#	modified:   app/controllers/encounters_controller.rb
+#	modified:   app/controllers/generic_admin_controller.rb
+#	modified:   app/controllers/generic_application_controller.rb
+#	modified:   app/controllers/generic_barcodes_controller.rb
+#	modified:   app/controllers/generic_charts_controller.rb
+#	modified:   app/controllers/generic_clinic_controller.rb
+#	modified:   app/controllers/generic_cohort_tool_controller.rb
+#	modified:   app/controllers/generic_config_controller.rb
+#	modified:   app/controllers/generic_dispensations_controller.rb
+#	modified:   app/controllers/generic_drug_controller.rb
+#	modified:   app/controllers/generic_heartbeat_controller.rb
+#	modified:   app/controllers/generic_lab_controller.rb
+#	modified:   app/controllers/generic_location_controller.rb
+#	modified:   app/controllers/generic_migration_controller.rb
+#	modified:   app/controllers/generic_patient_identifiers_controller.rb
+#	modified:   app/controllers/generic_patients_controller.rb
+#	modified:   app/controllers/generic_people_controller.rb
+#	modified:   app/controllers/generic_person_addresses_controller.rb
+#	modified:   app/controllers/generic_person_attributes_controller.rb
+#	modified:   app/controllers/generic_person_names_controller.rb
+#	modified:   app/controllers/generic_programs_controller.rb
+#	modified:   app/controllers/generic_properties_controller.rb
+#	modified:   app/controllers/generic_regimens_controller.rb
+#	modified:   app/controllers/generic_relationships_controller.rb
+#	modified:   app/controllers/generic_report_controller.rb
+#	modified:   app/controllers/generic_sessions_controller.rb
+#	modified:   app/controllers/generic_single_sign_on_controller.rb
+#	modified:   app/controllers/generic_user_controller.rb
+#	modified:   app/controllers/lab_controller.rb
+#	modified:   app/controllers/location_controller.rb
+#	modified:   app/controllers/migration_controller.rb
+#	modified:   app/controllers/properties_controller.rb
+#	modified:   app/controllers/single_sign_on_controller.rb
+#	modified:   app/helpers/charts_helper.rb
+#	modified:   app/helpers/encounters_helper.rb
+#	modified:   app/helpers/lab_helper.rb
+#	modified:   app/helpers/location_helper.rb
+#	modified:   app/helpers/migration_helper.rb
+#	modified:   app/helpers/people_helper.rb
+#	modified:   app/helpers/properties_helper.rb
+#	modified:   app/helpers/report_helper.rb
+#	modified:   app/helpers/user_helper.rb
+#	modified:   app/models/bart_one_encounter.rb
+#	modified:   app/models/cohort.rb
+#	modified:   app/models/district.rb
+#	modified:   app/models/drug_ingredient.rb
+#	modified:   app/models/lab.rb
+#	modified:   app/models/location_tag.rb
+#	modified:   app/models/location_tag_map.rb
+#	modified:   app/models/migration.rb
+#	modified:   app/models/national_id.rb
+#	modified:   app/models/outpatient.rb
+#	modified:   app/models/property.rb
+#	modified:   app/models/region.rb
+#	modified:   app/models/report.rb
+#	modified:   app/models/survival_analysis.rb
+#	modified:   app/models/traditional_authority.rb
+#	modified:   app/models/village.rb
+#	modified:   app/views/charts/pie.html.erb
+#	modified:   app/views/charts/series.html.erb
+#	modified:   app/views/clinic/administration_tab.rhtml
+#	modified:   app/views/clinic/data_cleaning_tab.rhtml
+#	modified:   app/views/clinic/index.rhtml
+#	modified:   app/views/clinic/lab_tab.rhtml
+#	modified:   app/views/clinic/location_management_tab.rhtml
+#	modified:   app/views/clinic/management_tab.rhtml
+#	modified:   app/views/clinic/overview_simple.rhtml
+#	modified:   app/views/clinic/overview_tab.rhtml
+#	modified:   app/views/clinic/properties_tab.rhtml
+#	modified:   app/views/clinic/reports_tab.rhtml
+#	modified:   app/views/clinic/supervision_tab.rhtml
+#	modified:   app/views/clinic/users_tab.rhtml
+#	modified:   app/views/cohort_tool/_patients_list.html.erb
+#	modified:   app/views/cohort_tool/_visits_graph.html.erb
+#	modified:   app/views/cohort_tool/_visits_table.html.erb
+#	modified:   app/views/cohort_tool/cohort.html.erb
+#	modified:   app/views/cohort_tool/cohort_menu.html.erb
+#	modified:   app/views/cohort_tool/list_patients_details.rhtml
+#	modified:   app/views/cohort_tool/visits_by_day.html.erb
+#	modified:   app/views/dashboards/dispension_tab.rhtml
+#	modified:   app/views/dashboards/exitcare_dashboard.rhtml
+#	modified:   app/views/dashboards/exitcare_tab.rhtml
+#	modified:   app/views/dashboards/next_task_description.rhtml
+#	modified:   app/views/dashboards/opdoverview_tab.rhtml
+#	modified:   app/views/dashboards/opdtreatment_dashboard.rhtml
+#	modified:   app/views/dashboards/overview_tab.rhtml
+#	modified:   app/views/dashboards/past_visits_summary_tab.rhtml
+#	modified:   app/views/dashboards/personal_tab.rhtml
+#	modified:   app/views/dashboards/programs_dashboard.rhtml
+#	modified:   app/views/dashboards/programs_tab.rhtml
+#	modified:   app/views/dashboards/relationships_dashboard.rhtml
+#	modified:   app/views/dashboards/relationships_tab.rhtml
+#	modified:   app/views/dashboards/treatment_dashboard.rhtml
+#	modified:   app/views/dashboards/treatment_tab.rhtml
+#	modified:   app/views/dashboards/visit_history_tab.rhtml
+#	modified:   app/views/drug/expiring.html.erb
+#	modified:   app/views/drug/print_barcode.html.erb
+#	modified:   app/views/drug/removed_from_shelves.html.erb
+#	modified:   app/views/encounters/appointment.rhtml
+#	modified:   app/views/encounters/give_drugs.html.erb
+#	modified:   app/views/encounters/hiv_status.html.erb
+#	modified:   app/views/encounters/lab_orders.rhtml
+#	modified:   app/views/encounters/opddrug_dispensing.html.erb
+#	modified:   app/views/encounters/referral.html.erb
+#	modified:   app/views/encounters/source_of_referral.rhtml
+#	modified:   app/views/encounters/specimen_labelling.rhtml
+#	modified:   app/views/encounters/tb_reception.rhtml
+#	modified:   app/views/graphs/weight_tab.rhtml
+#	modified:   app/views/lab/graph.html.erb
+#	modified:   app/views/lab/results.html.erb
+#	modified:   app/views/lab/view.html.erb
+#	modified:   app/views/patients/_mastercard_details_blue.rhtml
+#	modified:   app/views/patients/_mastercard_details_green.rhtml
+#	modified:   app/views/patients/_mastercard_details_pink.rhtml
+#	modified:   app/views/patients/_mastercard_details_yellow.rhtml
+#	modified:   app/views/patients/_mastercard_header.rhtml
+#	modified:   app/views/patients/_patient_details.rhtml
+#	modified:   app/views/patients/_status_details.rhtml
+#	modified:   app/views/patients/demographics.html.erb
+#	modified:   app/views/patients/general_mastercard.rhtml
+#	modified:   app/views/patients/index.rhtml
+#	modified:   app/views/patients/mastercard.html.erb
+#	modified:   app/views/patients/mastercard_menu.rhtml
+#	modified:   app/views/patients/mastercard_printable.rhtml
+#	modified:   app/views/patients/opdcard.html.erb
+#	modified:   app/views/patients/opdshow.html.erb
+#	modified:   app/views/patients/recent_lab_orders.html.erb
+#	modified:   app/views/patients/summary.rhtml
+#	modified:   app/views/patients/tb_treatment_card.rhtml
+#	modified:   app/views/patients/visit_history.rhtml
+#	modified:   app/views/people/confirm.html.erb
+#	modified:   app/views/people/demographics.html.erb
+#	modified:   app/views/people/tranfer_patient_in.html.erb
+#	modified:   app/views/properties/clinic_days.html.erb
+#	modified:   app/views/properties/clinic_holidays.html.erb
+#	modified:   app/views/properties/creation.html.erb
+#	modified:   app/views/properties/set_clinic_holidays.html.erb
+#	modified:   app/views/properties/set_role_privileges.html.erb
+#	modified:   app/views/properties/show_clinic_days.html.erb
+#	modified:   app/views/report/_opd_diagnosis.rhtml
+#	modified:   app/views/report/_opd_diagnosis_by_address.rhtml
+#	modified:   app/views/report/_opd_diagnosis_plus_demographics.rhtml
+#	modified:   app/views/report/_opd_disaggregated_diagnosis.rhtml
+#	modified:   app/views/report/_opd_referrals.rhtml
+#	modified:   app/views/report/age_group_select.html.erb
+#	modified:   app/views/report/appointment_dates.rhtml
+#	modified:   app/views/report/opd.html.erb
+#	modified:   app/views/report/select_date.rhtml
+#	modified:   app/views/report/set_appointments.rhtml
+#	modified:   app/views/user/activities.html.erb
+#	modified:   app/views/user/properties.html.erb
+#	modified:   app/views/user/select_user.html.erb
+#	modified:   app/views/user/show.html.erb
+#	modified:   app/views/user/users.rhtml
+#	modified:   config/application.yml.example
+#	modified:   config/database.yml.example
+#	modified:   config/deploy.rb
+#	modified:   config/environment.rb
+#	modified:   config/initializers/devise.rb
+#	modified:   config/initializers/warden.rb
+#	modified:   config/locales/devise.en.yml
+#	modified:   config/migration.yml
+#	modified:   config/mongrel_cluster.yml
+#	modified:   db/bart1_to_bart2_drug_map.sql
+#	modified:   db/bart2_role_privileges.sql
+#	modified:   db/bart2_views_schema_additions.sql
+#	modified:   db/create_dde_server_connection.sql
+#	modified:   db/create_patient_start_date_function.sql
+#	modified:   db/data/defaults/drug_ingredient.yml
+#	modified:   db/data/moh/moh.sql
+#	modified:   db/data/mpc/mpc.sql
+#	modified:   db/drop_patient_start_date_function.sql
+#	modified:   db/drug_ingredient.sql
+#	modified:   db/malawi_regions.sql
+#	modified:   db/migrate/20110131133924_age_function.rb
+#	modified:   db/migrate/20110201142615_age_group_function.rb
+#	modified:   db/migrate/20110214131134_create_drug_ingredients.rb
+#	modified:   db/migrate/20110222091353_patient_start_date_function.rb
+#	modified:   db/migrate/20110602192435_create_labs.rb
+#	modified:   db/migrate/20110604141723_create_location_tag_workstation_location.rb
+#	modified:   db/migrate/20110604142913_create_location_tags.rb
+#	modified:   db/migrate/20110604142932_create_location_tag_maps.rb
+#	modified:   db/migrate/20110609132925_create_outpatients.rb
+#	modified:   db/migrate/20110614184541_create_national_ids.rb
+#	modified:   db/migrate/20110726131026_create_traditional_authorities.rb
+#	modified:   db/migrate/20110727100353_create_villages.rb
+#	modified:   db/migrate/20110727100435_create_districts.rb
+#	modified:   db/migrate/20110727100509_create_regions.rb
+#	modified:   db/missing_encounters_query.sql
+#	modified:   db/moh_regimens-2011.sql
+#	modified:   db/moh_regimens_only.sql
+#	modified:   db/mpc_regimens_only.sql
+#	modified:   db/mysql_functions.sql
+#	modified:   db/national_id.sql
+#	modified:   db/non_art_regimens.sql
+#	modified:   db/openmrs_1_7_2_concept_server_full_db.sql
+#	modified:   db/openmrs_metadata_1_7.sql
+#	modified:   db/privilege.sql
+#	modified:   db/raw_areas.sql
+#	modified:   db/regimen_indexes.sql
+#	modified:   db/regimens.sql
+#	modified:   db/retrospective_station_entries.sql
+#	modified:   db/tb_regimens.sql
+#	modified:   db/user_schema_modifications.sql
+#	modified:   db/weight_for_heights.sql
+#	modified:   lib/bean.rb
+#	modified:   lib/core_service.rb
+#	modified:   lib/dde_service.rb
+#	modified:   lib/diabetes_service.rb
+#	modified:   lib/medication_service.rb
+#	modified:   lib/patient_service.rb
+#	modified:   lib/settings.rb
+#	modified:   public/touchscreentoolkit/README.md
+#	modified:   public/touchscreentoolkit/examples/calendar.html
+#	modified:   public/touchscreentoolkit/examples/dashboard-home.html
+#	modified:   public/touchscreentoolkit/examples/data.txt
+#	modified:   public/touchscreentoolkit/examples/dispense.html
+#	modified:   public/touchscreentoolkit/examples/facilities.txt
+#	modified:   public/touchscreentoolkit/examples/lib/images/active_scaffold/default/add.gif
+#	modified:   public/touchscreentoolkit/examples/lib/images/active_scaffold/default/arrow_down.gif
+#	modified:   public/touchscreentoolkit/examples/lib/images/active_scaffold/default/arrow_up.gif
+#	modified:   public/touchscreentoolkit/examples/lib/images/active_scaffold/default/close.gif
+#	modified:   public/touchscreentoolkit/examples/lib/images/active_scaffold/default/cross.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/active_scaffold/default/indicator-small.gif
+#	modified:   public/touchscreentoolkit/examples/lib/images/active_scaffold/default/indicator.gif
+#	modified:   public/touchscreentoolkit/examples/lib/images/active_scaffold/default/magnifier.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/barcode.jpg
+#	modified:   public/touchscreentoolkit/examples/lib/images/bg.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/btn_blue.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/btn_blue_hover.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/btn_yellow.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_left_blue.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_left_dark.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_left_gray.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_left_green.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_left_hover_blue.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_left_hover_dark.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_left_hover_gray.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_left_hover_green.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_left_hover_red.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_left_hover_yellow.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_left_red.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_left_yellow.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_right_blue.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_right_dark.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_right_gray.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_right_green.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_right_hover_blue.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_right_hover_dark.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_right_hover_gray.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_right_hover_green.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_right_hover_red.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_right_hover_yellow.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_right_red.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/buttons/btn_right_yellow.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/cancel_flat.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/cancel_flat_red.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/cancel_flat_small.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/cancel_flat_small_red.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/checked.jpg
+#	modified:   public/touchscreentoolkit/examples/lib/images/close.gif
+#	modified:   public/touchscreentoolkit/examples/lib/images/drug_label.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/drug_label_ch.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/drug_label_en.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/drug_label_small.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/female.gif
+#	modified:   public/touchscreentoolkit/examples/lib/images/hour.svg
+#	modified:   public/touchscreentoolkit/examples/lib/images/loading.gif
+#	modified:   public/touchscreentoolkit/examples/lib/images/madzulo.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/male.gif
+#	modified:   public/touchscreentoolkit/examples/lib/images/masana.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/minute.svg
+#	modified:   public/touchscreentoolkit/examples/lib/images/mmawa.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/overlay.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/scream.gif
+#	modified:   public/touchscreentoolkit/examples/lib/images/select.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/smirk.gif
+#	modified:   public/touchscreentoolkit/examples/lib/images/target.gif
+#	modified:   public/touchscreentoolkit/examples/lib/images/ticked.jpg
+#	modified:   public/touchscreentoolkit/examples/lib/images/unchecked.jpg
+#	modified:   public/touchscreentoolkit/examples/lib/images/unticked.jpg
+#	modified:   public/touchscreentoolkit/examples/lib/images/usiku.png
+#	modified:   public/touchscreentoolkit/examples/lib/images/watermark.png
+#	modified:   public/touchscreentoolkit/examples/lib/javascripts/calendar.js
+#	modified:   public/touchscreentoolkit/examples/lib/javascripts/dashboard.js
+#	modified:   public/touchscreentoolkit/examples/lib/javascripts/dispense.js
+#	modified:   public/touchscreentoolkit/examples/lib/javascripts/dosages.js
+#	modified:   public/touchscreentoolkit/examples/lib/javascripts/generics.js
+#	modified:   public/touchscreentoolkit/examples/lib/javascripts/multiTouch.js
+#	modified:   public/touchscreentoolkit/examples/lib/javascripts/nested_select.js
+#	modified:   public/touchscreentoolkit/examples/lib/javascripts/selects.js
+#	modified:   public/touchscreentoolkit/examples/lib/javascripts/standard.js
+#	modified:   public/touchscreentoolkit/examples/lib/javascripts/touchScreenToolkit.js
+#	modified:   public/touchscreentoolkit/examples/lib/javascripts/treatment.js
+#	modified:   public/touchscreentoolkit/examples/lib/samples-sql-scripts/dosages.sql
+#	modified:   public/touchscreentoolkit/examples/lib/samples-sql-scripts/drugs.sql
+#	modified:   public/touchscreentoolkit/examples/lib/samples-sql-scripts/generics.sql
+#	modified:   public/touchscreentoolkit/examples/lib/stylesheets/bluetabs.css
+#	modified:   public/touchscreentoolkit/examples/lib/stylesheets/calendar.css
+#	modified:   public/touchscreentoolkit/examples/lib/stylesheets/classic.css
+#	modified:   public/touchscreentoolkit/examples/lib/stylesheets/dashboard.css
+#	modified:   public/touchscreentoolkit/examples/lib/stylesheets/dispense.css
+#	modified:   public/touchscreentoolkit/examples/lib/stylesheets/drug-style.css
+#	modified:   public/touchscreentoolkit/examples/lib/stylesheets/form.css
+#	modified:   public/touchscreentoolkit/examples/lib/stylesheets/graytabs.css
+#	modified:   public/touchscreentoolkit/examples/lib/stylesheets/multiTouch.css
+#	modified:   public/touchscreentoolkit/examples/lib/stylesheets/touch-basic.css
+#	modified:   public/touchscreentoolkit/examples/lib/stylesheets/touch-fancy.css
+#	modified:   public/touchscreentoolkit/examples/multiTouch.html
+#	modified:   public/touchscreentoolkit/examples/nested_select.html
+#	modified:   public/touchscreentoolkit/examples/overview.html
+#	modified:   public/touchscreentoolkit/examples/patient-dashboard.html
+#	modified:   public/touchscreentoolkit/examples/programs.html
+#	modified:   public/touchscreentoolkit/examples/relationships.html
+#	modified:   public/touchscreentoolkit/examples/select_nested.html
+#	modified:   public/touchscreentoolkit/examples/standard.html
+#	modified:   public/touchscreentoolkit/examples/time.html
+#	modified:   public/touchscreentoolkit/examples/treatment.html
+#	modified:   public/touchscreentoolkit/lib/images/active_scaffold/default/add.gif
+#	modified:   public/touchscreentoolkit/lib/images/active_scaffold/default/arrow_down.gif
+#	modified:   public/touchscreentoolkit/lib/images/active_scaffold/default/arrow_up.gif
+#	modified:   public/touchscreentoolkit/lib/images/active_scaffold/default/close.gif
+#	modified:   public/touchscreentoolkit/lib/images/active_scaffold/default/cross.png
+#	modified:   public/touchscreentoolkit/lib/images/active_scaffold/default/indicator-small.gif
+#	modified:   public/touchscreentoolkit/lib/images/active_scaffold/default/indicator.gif
+#	modified:   public/touchscreentoolkit/lib/images/active_scaffold/default/magnifier.png
+#	modified:   public/touchscreentoolkit/lib/images/barcode.jpg
+#	modified:   public/touchscreentoolkit/lib/images/bg.png
+#	modified:   public/touchscreentoolkit/lib/images/btn_blue.png
+#	modified:   public/touchscreentoolkit/lib/images/btn_blue_hover.png
+#	modified:   public/touchscreentoolkit/lib/images/btn_yellow.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_left_blue.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_left_dark.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_left_gray.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_left_green.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_left_hover_blue.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_left_hover_dark.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_left_hover_gray.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_left_hover_green.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_left_hover_red.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_left_hover_yellow.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_left_red.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_left_yellow.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_right_blue.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_right_dark.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_right_gray.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_right_green.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_right_hover_blue.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_right_hover_dark.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_right_hover_gray.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_right_hover_green.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_right_hover_red.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_right_hover_yellow.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_right_red.png
+#	modified:   public/touchscreentoolkit/lib/images/buttons/btn_right_yellow.png
+#	modified:   public/touchscreentoolkit/lib/images/cancel_flat.png
+#	modified:   public/touchscreentoolkit/lib/images/cancel_flat_red.png
+#	modified:   public/touchscreentoolkit/lib/images/cancel_flat_small.png
+#	modified:   public/touchscreentoolkit/lib/images/cancel_flat_small_red.png
+#	modified:   public/touchscreentoolkit/lib/images/checked.jpg
+#	modified:   public/touchscreentoolkit/lib/images/close.gif
+#	modified:   public/touchscreentoolkit/lib/images/drug_label.png
+#	modified:   public/touchscreentoolkit/lib/images/drug_label_ch.png
+#	modified:   public/touchscreentoolkit/lib/images/drug_label_en.png
+#	modified:   public/touchscreentoolkit/lib/images/drug_label_small.png
+#	modified:   public/touchscreentoolkit/lib/images/female.gif
+#	modified:   public/touchscreentoolkit/lib/images/hour.svg
+#	modified:   public/touchscreentoolkit/lib/images/loading.gif
+#	modified:   public/touchscreentoolkit/lib/images/madzulo.png
+#	modified:   public/touchscreentoolkit/lib/images/male.gif
+#	modified:   public/touchscreentoolkit/lib/images/masana.png
+#	modified:   public/touchscreentoolkit/lib/images/minute.svg
+#	modified:   public/touchscreentoolkit/lib/images/mmawa.png
+#	modified:   public/touchscreentoolkit/lib/images/overlay.png
+#	modified:   public/touchscreentoolkit/lib/images/scream.gif
+#	modified:   public/touchscreentoolkit/lib/images/select.png
+#	modified:   public/touchscreentoolkit/lib/images/smirk.gif
+#	modified:   public/touchscreentoolkit/lib/images/target.gif
+#	modified:   public/touchscreentoolkit/lib/images/ticked.jpg
+#	modified:   public/touchscreentoolkit/lib/images/unchecked.jpg
+#	modified:   public/touchscreentoolkit/lib/images/unticked.jpg
+#	modified:   public/touchscreentoolkit/lib/images/usiku.png
+#	modified:   public/touchscreentoolkit/lib/images/watermark.png
+#	modified:   public/touchscreentoolkit/lib/javascripts/calendar.js
+#	modified:   public/touchscreentoolkit/lib/javascripts/calendar_horizontal.js
+#	modified:   public/touchscreentoolkit/lib/javascripts/dashboard.js
+#	modified:   public/touchscreentoolkit/lib/javascripts/dispense.js
+#	modified:   public/touchscreentoolkit/lib/javascripts/generics.js
+#	modified:   public/touchscreentoolkit/lib/javascripts/multiTouch.js
+#	modified:   public/touchscreentoolkit/lib/javascripts/prescriber.js
+#	modified:   public/touchscreentoolkit/lib/javascripts/standard.js
+#	modified:   public/touchscreentoolkit/lib/javascripts/touchScreenToolkit.js
+#	modified:   public/touchscreentoolkit/lib/javascripts/treatment.js
+#	modified:   public/touchscreentoolkit/lib/stylesheets/bluetabs.css
+#	modified:   public/touchscreentoolkit/lib/stylesheets/calendar.css
+#	modified:   public/touchscreentoolkit/lib/stylesheets/classic.css
+#	modified:   public/touchscreentoolkit/lib/stylesheets/dashboard.css
+#	modified:   public/touchscreentoolkit/lib/stylesheets/dispense.css
+#	modified:   public/touchscreentoolkit/lib/stylesheets/drug-style.css
+#	modified:   public/touchscreentoolkit/lib/stylesheets/form.css
+#	modified:   public/touchscreentoolkit/lib/stylesheets/graytabs.css
+#	modified:   public/touchscreentoolkit/lib/stylesheets/multiTouch.css
+#	modified:   public/touchscreentoolkit/lib/stylesheets/touch-basic.css
+#	modified:   public/touchscreentoolkit/lib/stylesheets/touch-fancy.css
+#	modified:   script/add_regimen_categories.rb
+#	modified:   script/agrees_to_followup_fix_value_text_to_value_coded.sql
+#	modified:   script/arv_number_fix.sql
+#	modified:   script/calculate_art_adherence_from_pill_count.rb
+#	modified:   script/compare_encounters.rb
+#	modified:   script/data_cleaning_after_migration.sql
+#	modified:   script/doses_missed_calculation.rb
+#	modified:   script/find_patients_with_missing_orders.rb
+#	modified:   script/fix_drug_orders_with_zero_quantity.sql
+#	modified:   script/generate_exit_from_care_encounters_from_bart1.rb
+#	modified:   script/get_states_for_creating_exit_from_care_encounters.sql
+#	modified:   script/migration_import_script.rb
+#	modified:   script/missing_drug_orders.sql
+#	modified:   script/move_value_text_to_value_coded.rb
+#	modified:   script/move_value_text_to_value_datetime_datearvstarted.rb
+#	modified:   script/move_value_text_to_value_numeric.rb
+#	modified:   script/mpc_data_fix_script.sql
+#	modified:   script/patient_base_data.sql
+#	modified:   script/patient_base_data_update.sql
+#	modified:   script/patient_states_fixes.sql
+#	modified:   script/remove_dispensations_without_treatment.sql
+#	modified:   script/remove_on_arv_state_for_patients_in_bart2_not_registered_as_on_arv_in_bart1.sql
+#	modified:   script/remove_wrongly_imported_encounters.sql
+#	modified:   script/tb_status_fix_after_migration.sql
+#	modified:   script/update_bart2_patient_state_to_match_bart1_registration_dates.rb
+#	modified:   script/update_initial_state_on_arvs.sql
+#	modified:   script/update_states_for_patients_with_arv_numbers.sql
+#	modified:   script/updating_patient_died_state_on_patients_with_dead_0.rb
+#	modified:   script/void_bart2_orders_voided_in_bart1.rb
+#	modified:   script/void_encounters.rb
+#	modified:   script/void_specific_bart2_orders_voided_in_bart1.rb
+#	modified:   test/fixtures/district.yml
+#	modified:   test/fixtures/districts.yml
+#	modified:   test/fixtures/drug_ingredient.yml
+#	modified:   test/fixtures/labs.yml
+#	modified:   test/fixtures/location_tag_maps.yml
+#	modified:   test/fixtures/location_tags.yml
+#	modified:   test/fixtures/national_ids.yml
+#	modified:   test/fixtures/outpatients.yml
+#	modified:   test/fixtures/person_attribute.yml
+#	modified:   test/fixtures/region.yml
+#	modified:   test/fixtures/regions.yml
+#	modified:   test/fixtures/role.yml
+#	modified:   test/fixtures/traditional_authorities.yml
+#	modified:   test/fixtures/traditional_authority.yml
+#	modified:   test/fixtures/villages.yml
+#	modified:   test/functional/charts_controller_test.rb
+#	modified:   test/functional/lab_controller_test.rb
+#	modified:   test/functional/location_controller_test.rb
+#	modified:   test/functional/migration_controller_test.rb
+#	modified:   test/functional/properties_controller_test.rb
+#	modified:   test/functional/user_controller_test.rb
+#	modified:   test/unit/cohort_test.rb
+#	modified:   test/unit/district_test.rb
+#	modified:   test/unit/drug_ingredient_test.rb
+#	modified:   test/unit/helpers/charts_helper_test.rb
+#	modified:   test/unit/helpers/encounters_helper_test.rb
+#	modified:   test/unit/helpers/lab_helper_test.rb
+#	modified:   test/unit/helpers/location_helper_test.rb
+#	modified:   test/unit/helpers/migration_helper_test.rb
+#	modified:   test/unit/helpers/people_helper_test.rb
+#	modified:   test/unit/helpers/properties_helper_test.rb
+#	modified:   test/unit/helpers/report_helper_test.rb
+#	modified:   test/unit/helpers/user_helper_test.rb
+#	modified:   test/unit/lab_test.rb
+#	modified:   test/unit/location_tag_map_test.rb
+#	modified:   test/unit/location_tag_test.rb
+#	modified:   test/unit/national_id_test.rb
+#	modified:   test/unit/outpatient_test.rb
+#	modified:   test/unit/region_test.rb
+#	modified:   test/unit/traditional_authority_test.rb
+#	modified:   test/unit/users_test.rb
+#	modified:   test/unit/village_test.rb
+#
+# Untracked files:
+#   (use "git add <file>..." to include in what will be committed)
+#
+#	server
+no changes added to commit (use "git add" and/or "git commit -a")
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ git checkout --
+M	.gitignore
+M	Capfile
+M	Gemfile
+M	app/controllers/charts_controller.rb
+M	app/controllers/encounters_controller.rb
+M	app/controllers/generic_admin_controller.rb
+M	app/controllers/generic_application_controller.rb
+M	app/controllers/generic_barcodes_controller.rb
+M	app/controllers/generic_charts_controller.rb
+M	app/controllers/generic_clinic_controller.rb
+M	app/controllers/generic_cohort_tool_controller.rb
+M	app/controllers/generic_config_controller.rb
+M	app/controllers/generic_dispensations_controller.rb
+M	app/controllers/generic_drug_controller.rb
+M	app/controllers/generic_heartbeat_controller.rb
+M	app/controllers/generic_lab_controller.rb
+M	app/controllers/generic_location_controller.rb
+M	app/controllers/generic_migration_controller.rb
+M	app/controllers/generic_patient_identifiers_controller.rb
+M	app/controllers/generic_patients_controller.rb
+M	app/controllers/generic_people_controller.rb
+M	app/controllers/generic_person_addresses_controller.rb
+M	app/controllers/generic_person_attributes_controller.rb
+M	app/controllers/generic_person_names_controller.rb
+M	app/controllers/generic_programs_controller.rb
+M	app/controllers/generic_properties_controller.rb
+M	app/controllers/generic_regimens_controller.rb
+M	app/controllers/generic_relationships_controller.rb
+M	app/controllers/generic_report_controller.rb
+M	app/controllers/generic_sessions_controller.rb
+M	app/controllers/generic_single_sign_on_controller.rb
+M	app/controllers/generic_user_controller.rb
+M	app/controllers/lab_controller.rb
+M	app/controllers/location_controller.rb
+M	app/controllers/migration_controller.rb
+M	app/controllers/properties_controller.rb
+M	app/controllers/single_sign_on_controller.rb
+M	app/helpers/charts_helper.rb
+M	app/helpers/encounters_helper.rb
+M	app/helpers/lab_helper.rb
+M	app/helpers/location_helper.rb
+M	app/helpers/migration_helper.rb
+M	app/helpers/people_helper.rb
+M	app/helpers/properties_helper.rb
+M	app/helpers/report_helper.rb
+M	app/helpers/user_helper.rb
+M	app/models/bart_one_encounter.rb
+M	app/models/cohort.rb
+M	app/models/district.rb
+M	app/models/drug_ingredient.rb
+M	app/models/lab.rb
+M	app/models/location_tag.rb
+M	app/models/location_tag_map.rb
+M	app/models/migration.rb
+M	app/models/national_id.rb
+M	app/models/outpatient.rb
+M	app/models/property.rb
+M	app/models/region.rb
+M	app/models/report.rb
+M	app/models/survival_analysis.rb
+M	app/models/traditional_authority.rb
+M	app/models/village.rb
+M	app/views/charts/pie.html.erb
+M	app/views/charts/series.html.erb
+M	app/views/clinic/administration_tab.rhtml
+M	app/views/clinic/data_cleaning_tab.rhtml
+M	app/views/clinic/index.rhtml
+M	app/views/clinic/lab_tab.rhtml
+M	app/views/clinic/location_management_tab.rhtml
+M	app/views/clinic/management_tab.rhtml
+M	app/views/clinic/overview_simple.rhtml
+M	app/views/clinic/overview_tab.rhtml
+M	app/views/clinic/properties_tab.rhtml
+M	app/views/clinic/reports_tab.rhtml
+M	app/views/clinic/supervision_tab.rhtml
+M	app/views/clinic/users_tab.rhtml
+M	app/views/cohort_tool/_patients_list.html.erb
+M	app/views/cohort_tool/_visits_graph.html.erb
+M	app/views/cohort_tool/_visits_table.html.erb
+M	app/views/cohort_tool/cohort.html.erb
+M	app/views/cohort_tool/cohort_menu.html.erb
+M	app/views/cohort_tool/list_patients_details.rhtml
+M	app/views/cohort_tool/visits_by_day.html.erb
+M	app/views/dashboards/dispension_tab.rhtml
+M	app/views/dashboards/exitcare_dashboard.rhtml
+M	app/views/dashboards/exitcare_tab.rhtml
+M	app/views/dashboards/next_task_description.rhtml
+M	app/views/dashboards/opdoverview_tab.rhtml
+M	app/views/dashboards/opdtreatment_dashboard.rhtml
+M	app/views/dashboards/overview_tab.rhtml
+M	app/views/dashboards/past_visits_summary_tab.rhtml
+M	app/views/dashboards/personal_tab.rhtml
+M	app/views/dashboards/programs_dashboard.rhtml
+M	app/views/dashboards/programs_tab.rhtml
+M	app/views/dashboards/relationships_dashboard.rhtml
+M	app/views/dashboards/relationships_tab.rhtml
+M	app/views/dashboards/treatment_dashboard.rhtml
+M	app/views/dashboards/treatment_tab.rhtml
+M	app/views/dashboards/visit_history_tab.rhtml
+M	app/views/drug/expiring.html.erb
+M	app/views/drug/print_barcode.html.erb
+M	app/views/drug/removed_from_shelves.html.erb
+M	app/views/encounters/appointment.rhtml
+M	app/views/encounters/give_drugs.html.erb
+M	app/views/encounters/hiv_status.html.erb
+M	app/views/encounters/lab_orders.rhtml
+M	app/views/encounters/opddrug_dispensing.html.erb
+M	app/views/encounters/referral.html.erb
+M	app/views/encounters/source_of_referral.rhtml
+M	app/views/encounters/specimen_labelling.rhtml
+M	app/views/encounters/tb_reception.rhtml
+M	app/views/graphs/weight_tab.rhtml
+M	app/views/lab/graph.html.erb
+M	app/views/lab/results.html.erb
+M	app/views/lab/view.html.erb
+M	app/views/patients/_mastercard_details_blue.rhtml
+M	app/views/patients/_mastercard_details_green.rhtml
+M	app/views/patients/_mastercard_details_pink.rhtml
+M	app/views/patients/_mastercard_details_yellow.rhtml
+M	app/views/patients/_mastercard_header.rhtml
+M	app/views/patients/_patient_details.rhtml
+M	app/views/patients/_status_details.rhtml
+M	app/views/patients/demographics.html.erb
+M	app/views/patients/general_mastercard.rhtml
+M	app/views/patients/index.rhtml
+M	app/views/patients/mastercard.html.erb
+M	app/views/patients/mastercard_menu.rhtml
+M	app/views/patients/mastercard_printable.rhtml
+M	app/views/patients/opdcard.html.erb
+M	app/views/patients/opdshow.html.erb
+M	app/views/patients/recent_lab_orders.html.erb
+M	app/views/patients/summary.rhtml
+M	app/views/patients/tb_treatment_card.rhtml
+M	app/views/patients/visit_history.rhtml
+M	app/views/people/confirm.html.erb
+M	app/views/people/demographics.html.erb
+M	app/views/people/tranfer_patient_in.html.erb
+M	app/views/properties/clinic_days.html.erb
+M	app/views/properties/clinic_holidays.html.erb
+M	app/views/properties/creation.html.erb
+M	app/views/properties/set_clinic_holidays.html.erb
+M	app/views/properties/set_role_privileges.html.erb
+M	app/views/properties/show_clinic_days.html.erb
+M	app/views/report/_opd_diagnosis.rhtml
+M	app/views/report/_opd_diagnosis_by_address.rhtml
+M	app/views/report/_opd_diagnosis_plus_demographics.rhtml
+M	app/views/report/_opd_disaggregated_diagnosis.rhtml
+M	app/views/report/_opd_referrals.rhtml
+M	app/views/report/age_group_select.html.erb
+M	app/views/report/appointment_dates.rhtml
+M	app/views/report/opd.html.erb
+M	app/views/report/select_date.rhtml
+M	app/views/report/set_appointments.rhtml
+M	app/views/user/activities.html.erb
+M	app/views/user/properties.html.erb
+M	app/views/user/select_user.html.erb
+M	app/views/user/show.html.erb
+M	app/views/user/users.rhtml
+M	config/application.yml.example
+M	config/database.yml.example
+M	config/deploy.rb
+M	config/environment.rb
+M	config/initializers/devise.rb
+M	config/initializers/warden.rb
+M	config/locales/devise.en.yml
+M	config/migration.yml
+M	config/mongrel_cluster.yml
+M	db/bart1_to_bart2_drug_map.sql
+M	db/bart2_role_privileges.sql
+M	db/bart2_views_schema_additions.sql
+M	db/create_dde_server_connection.sql
+M	db/create_patient_start_date_function.sql
+M	db/data/defaults/drug_ingredient.yml
+M	db/data/moh/moh.sql
+M	db/data/mpc/mpc.sql
+M	db/drop_patient_start_date_function.sql
+M	db/drug_ingredient.sql
+M	db/malawi_regions.sql
+M	db/migrate/20110131133924_age_function.rb
+M	db/migrate/20110201142615_age_group_function.rb
+M	db/migrate/20110214131134_create_drug_ingredients.rb
+M	db/migrate/20110222091353_patient_start_date_function.rb
+M	db/migrate/20110602192435_create_labs.rb
+M	db/migrate/20110604141723_create_location_tag_workstation_location.rb
+M	db/migrate/20110604142913_create_location_tags.rb
+M	db/migrate/20110604142932_create_location_tag_maps.rb
+M	db/migrate/20110609132925_create_outpatients.rb
+M	db/migrate/20110614184541_create_national_ids.rb
+M	db/migrate/20110726131026_create_traditional_authorities.rb
+M	db/migrate/20110727100353_create_villages.rb
+M	db/migrate/20110727100435_create_districts.rb
+M	db/migrate/20110727100509_create_regions.rb
+M	db/missing_encounters_query.sql
+M	db/moh_regimens-2011.sql
+M	db/moh_regimens_only.sql
+M	db/mpc_regimens_only.sql
+M	db/mysql_functions.sql
+M	db/national_id.sql
+M	db/non_art_regimens.sql
+M	db/openmrs_1_7_2_concept_server_full_db.sql
+M	db/openmrs_metadata_1_7.sql
+M	db/privilege.sql
+M	db/raw_areas.sql
+M	db/regimen_indexes.sql
+M	db/regimens.sql
+M	db/retrospective_station_entries.sql
+M	db/tb_regimens.sql
+M	db/user_schema_modifications.sql
+M	db/weight_for_heights.sql
+M	lib/bean.rb
+M	lib/core_service.rb
+M	lib/dde_service.rb
+M	lib/diabetes_service.rb
+M	lib/medication_service.rb
+M	lib/patient_service.rb
+M	lib/settings.rb
+M	public/touchscreentoolkit/README.md
+M	public/touchscreentoolkit/examples/calendar.html
+M	public/touchscreentoolkit/examples/dashboard-home.html
+M	public/touchscreentoolkit/examples/data.txt
+M	public/touchscreentoolkit/examples/dispense.html
+M	public/touchscreentoolkit/examples/facilities.txt
+M	public/touchscreentoolkit/examples/lib/images/active_scaffold/default/add.gif
+M	public/touchscreentoolkit/examples/lib/images/active_scaffold/default/arrow_down.gif
+M	public/touchscreentoolkit/examples/lib/images/active_scaffold/default/arrow_up.gif
+M	public/touchscreentoolkit/examples/lib/images/active_scaffold/default/close.gif
+M	public/touchscreentoolkit/examples/lib/images/active_scaffold/default/cross.png
+M	public/touchscreentoolkit/examples/lib/images/active_scaffold/default/indicator-small.gif
+M	public/touchscreentoolkit/examples/lib/images/active_scaffold/default/indicator.gif
+M	public/touchscreentoolkit/examples/lib/images/active_scaffold/default/magnifier.png
+M	public/touchscreentoolkit/examples/lib/images/barcode.jpg
+M	public/touchscreentoolkit/examples/lib/images/bg.png
+M	public/touchscreentoolkit/examples/lib/images/btn_blue.png
+M	public/touchscreentoolkit/examples/lib/images/btn_blue_hover.png
+M	public/touchscreentoolkit/examples/lib/images/btn_yellow.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_left_blue.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_left_dark.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_left_gray.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_left_green.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_left_hover_blue.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_left_hover_dark.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_left_hover_gray.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_left_hover_green.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_left_hover_red.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_left_hover_yellow.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_left_red.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_left_yellow.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_right_blue.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_right_dark.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_right_gray.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_right_green.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_right_hover_blue.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_right_hover_dark.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_right_hover_gray.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_right_hover_green.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_right_hover_red.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_right_hover_yellow.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_right_red.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_right_yellow.png
+M	public/touchscreentoolkit/examples/lib/images/cancel_flat.png
+M	public/touchscreentoolkit/examples/lib/images/cancel_flat_red.png
+M	public/touchscreentoolkit/examples/lib/images/cancel_flat_small.png
+M	public/touchscreentoolkit/examples/lib/images/cancel_flat_small_red.png
+M	public/touchscreentoolkit/examples/lib/images/checked.jpg
+M	public/touchscreentoolkit/examples/lib/images/close.gif
+M	public/touchscreentoolkit/examples/lib/images/drug_label.png
+M	public/touchscreentoolkit/examples/lib/images/drug_label_ch.png
+M	public/touchscreentoolkit/examples/lib/images/drug_label_en.png
+M	public/touchscreentoolkit/examples/lib/images/drug_label_small.png
+M	public/touchscreentoolkit/examples/lib/images/female.gif
+M	public/touchscreentoolkit/examples/lib/images/hour.svg
+M	public/touchscreentoolkit/examples/lib/images/loading.gif
+M	public/touchscreentoolkit/examples/lib/images/madzulo.png
+M	public/touchscreentoolkit/examples/lib/images/male.gif
+M	public/touchscreentoolkit/examples/lib/images/masana.png
+M	public/touchscreentoolkit/examples/lib/images/minute.svg
+M	public/touchscreentoolkit/examples/lib/images/mmawa.png
+M	public/touchscreentoolkit/examples/lib/images/overlay.png
+M	public/touchscreentoolkit/examples/lib/images/scream.gif
+M	public/touchscreentoolkit/examples/lib/images/select.png
+M	public/touchscreentoolkit/examples/lib/images/smirk.gif
+M	public/touchscreentoolkit/examples/lib/images/target.gif
+M	public/touchscreentoolkit/examples/lib/images/ticked.jpg
+M	public/touchscreentoolkit/examples/lib/images/unchecked.jpg
+M	public/touchscreentoolkit/examples/lib/images/unticked.jpg
+M	public/touchscreentoolkit/examples/lib/images/usiku.png
+M	public/touchscreentoolkit/examples/lib/images/watermark.png
+M	public/touchscreentoolkit/examples/lib/javascripts/calendar.js
+M	public/touchscreentoolkit/examples/lib/javascripts/dashboard.js
+M	public/touchscreentoolkit/examples/lib/javascripts/dispense.js
+M	public/touchscreentoolkit/examples/lib/javascripts/dosages.js
+M	public/touchscreentoolkit/examples/lib/javascripts/generics.js
+M	public/touchscreentoolkit/examples/lib/javascripts/multiTouch.js
+M	public/touchscreentoolkit/examples/lib/javascripts/nested_select.js
+M	public/touchscreentoolkit/examples/lib/javascripts/selects.js
+M	public/touchscreentoolkit/examples/lib/javascripts/standard.js
+M	public/touchscreentoolkit/examples/lib/javascripts/touchScreenToolkit.js
+M	public/touchscreentoolkit/examples/lib/javascripts/treatment.js
+M	public/touchscreentoolkit/examples/lib/samples-sql-scripts/dosages.sql
+M	public/touchscreentoolkit/examples/lib/samples-sql-scripts/drugs.sql
+M	public/touchscreentoolkit/examples/lib/samples-sql-scripts/generics.sql
+M	public/touchscreentoolkit/examples/lib/stylesheets/bluetabs.css
+M	public/touchscreentoolkit/examples/lib/stylesheets/calendar.css
+M	public/touchscreentoolkit/examples/lib/stylesheets/classic.css
+M	public/touchscreentoolkit/examples/lib/stylesheets/dashboard.css
+M	public/touchscreentoolkit/examples/lib/stylesheets/dispense.css
+M	public/touchscreentoolkit/examples/lib/stylesheets/drug-style.css
+M	public/touchscreentoolkit/examples/lib/stylesheets/form.css
+M	public/touchscreentoolkit/examples/lib/stylesheets/graytabs.css
+M	public/touchscreentoolkit/examples/lib/stylesheets/multiTouch.css
+M	public/touchscreentoolkit/examples/lib/stylesheets/touch-basic.css
+M	public/touchscreentoolkit/examples/lib/stylesheets/touch-fancy.css
+M	public/touchscreentoolkit/examples/multiTouch.html
+M	public/touchscreentoolkit/examples/nested_select.html
+M	public/touchscreentoolkit/examples/overview.html
+M	public/touchscreentoolkit/examples/patient-dashboard.html
+M	public/touchscreentoolkit/examples/programs.html
+M	public/touchscreentoolkit/examples/relationships.html
+M	public/touchscreentoolkit/examples/select_nested.html
+M	public/touchscreentoolkit/examples/standard.html
+M	public/touchscreentoolkit/examples/time.html
+M	public/touchscreentoolkit/examples/treatment.html
+M	public/touchscreentoolkit/lib/images/active_scaffold/default/add.gif
+M	public/touchscreentoolkit/lib/images/active_scaffold/default/arrow_down.gif
+M	public/touchscreentoolkit/lib/images/active_scaffold/default/arrow_up.gif
+M	public/touchscreentoolkit/lib/images/active_scaffold/default/close.gif
+M	public/touchscreentoolkit/lib/images/active_scaffold/default/cross.png
+M	public/touchscreentoolkit/lib/images/active_scaffold/default/indicator-small.gif
+M	public/touchscreentoolkit/lib/images/active_scaffold/default/indicator.gif
+M	public/touchscreentoolkit/lib/images/active_scaffold/default/magnifier.png
+M	public/touchscreentoolkit/lib/images/barcode.jpg
+M	public/touchscreentoolkit/lib/images/bg.png
+M	public/touchscreentoolkit/lib/images/btn_blue.png
+M	public/touchscreentoolkit/lib/images/btn_blue_hover.png
+M	public/touchscreentoolkit/lib/images/btn_yellow.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_left_blue.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_left_dark.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_left_gray.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_left_green.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_left_hover_blue.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_left_hover_dark.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_left_hover_gray.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_left_hover_green.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_left_hover_red.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_left_hover_yellow.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_left_red.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_left_yellow.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_right_blue.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_right_dark.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_right_gray.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_right_green.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_right_hover_blue.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_right_hover_dark.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_right_hover_gray.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_right_hover_green.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_right_hover_red.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_right_hover_yellow.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_right_red.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_right_yellow.png
+M	public/touchscreentoolkit/lib/images/cancel_flat.png
+M	public/touchscreentoolkit/lib/images/cancel_flat_red.png
+M	public/touchscreentoolkit/lib/images/cancel_flat_small.png
+M	public/touchscreentoolkit/lib/images/cancel_flat_small_red.png
+M	public/touchscreentoolkit/lib/images/checked.jpg
+M	public/touchscreentoolkit/lib/images/close.gif
+M	public/touchscreentoolkit/lib/images/drug_label.png
+M	public/touchscreentoolkit/lib/images/drug_label_ch.png
+M	public/touchscreentoolkit/lib/images/drug_label_en.png
+M	public/touchscreentoolkit/lib/images/drug_label_small.png
+M	public/touchscreentoolkit/lib/images/female.gif
+M	public/touchscreentoolkit/lib/images/hour.svg
+M	public/touchscreentoolkit/lib/images/loading.gif
+M	public/touchscreentoolkit/lib/images/madzulo.png
+M	public/touchscreentoolkit/lib/images/male.gif
+M	public/touchscreentoolkit/lib/images/masana.png
+M	public/touchscreentoolkit/lib/images/minute.svg
+M	public/touchscreentoolkit/lib/images/mmawa.png
+M	public/touchscreentoolkit/lib/images/overlay.png
+M	public/touchscreentoolkit/lib/images/scream.gif
+M	public/touchscreentoolkit/lib/images/select.png
+M	public/touchscreentoolkit/lib/images/smirk.gif
+M	public/touchscreentoolkit/lib/images/target.gif
+M	public/touchscreentoolkit/lib/images/ticked.jpg
+M	public/touchscreentoolkit/lib/images/unchecked.jpg
+M	public/touchscreentoolkit/lib/images/unticked.jpg
+M	public/touchscreentoolkit/lib/images/usiku.png
+M	public/touchscreentoolkit/lib/images/watermark.png
+M	public/touchscreentoolkit/lib/javascripts/calendar.js
+M	public/touchscreentoolkit/lib/javascripts/calendar_horizontal.js
+M	public/touchscreentoolkit/lib/javascripts/dashboard.js
+M	public/touchscreentoolkit/lib/javascripts/dispense.js
+M	public/touchscreentoolkit/lib/javascripts/generics.js
+M	public/touchscreentoolkit/lib/javascripts/multiTouch.js
+M	public/touchscreentoolkit/lib/javascripts/prescriber.js
+M	public/touchscreentoolkit/lib/javascripts/standard.js
+M	public/touchscreentoolkit/lib/javascripts/touchScreenToolkit.js
+M	public/touchscreentoolkit/lib/javascripts/treatment.js
+M	public/touchscreentoolkit/lib/stylesheets/bluetabs.css
+M	public/touchscreentoolkit/lib/stylesheets/calendar.css
+M	public/touchscreentoolkit/lib/stylesheets/classic.css
+M	public/touchscreentoolkit/lib/stylesheets/dashboard.css
+M	public/touchscreentoolkit/lib/stylesheets/dispense.css
+M	public/touchscreentoolkit/lib/stylesheets/drug-style.css
+M	public/touchscreentoolkit/lib/stylesheets/form.css
+M	public/touchscreentoolkit/lib/stylesheets/graytabs.css
+M	public/touchscreentoolkit/lib/stylesheets/multiTouch.css
+M	public/touchscreentoolkit/lib/stylesheets/touch-basic.css
+M	public/touchscreentoolkit/lib/stylesheets/touch-fancy.css
+M	script/add_regimen_categories.rb
+M	script/agrees_to_followup_fix_value_text_to_value_coded.sql
+M	script/arv_number_fix.sql
+M	script/calculate_art_adherence_from_pill_count.rb
+M	script/compare_encounters.rb
+M	script/data_cleaning_after_migration.sql
+M	script/doses_missed_calculation.rb
+M	script/find_patients_with_missing_orders.rb
+M	script/fix_drug_orders_with_zero_quantity.sql
+M	script/generate_exit_from_care_encounters_from_bart1.rb
+M	script/get_states_for_creating_exit_from_care_encounters.sql
+M	script/migration_import_script.rb
+M	script/missing_drug_orders.sql
+M	script/move_value_text_to_value_coded.rb
+M	script/move_value_text_to_value_datetime_datearvstarted.rb
+M	script/move_value_text_to_value_numeric.rb
+M	script/mpc_data_fix_script.sql
+M	script/patient_base_data.sql
+M	script/patient_base_data_update.sql
+M	script/patient_states_fixes.sql
+M	script/remove_dispensations_without_treatment.sql
+M	script/remove_on_arv_state_for_patients_in_bart2_not_registered_as_on_arv_in_bart1.sql
+M	script/remove_wrongly_imported_encounters.sql
+M	script/tb_status_fix_after_migration.sql
+M	script/update_bart2_patient_state_to_match_bart1_registration_dates.rb
+M	script/update_initial_state_on_arvs.sql
+M	script/update_states_for_patients_with_arv_numbers.sql
+M	script/updating_patient_died_state_on_patients_with_dead_0.rb
+M	script/void_bart2_orders_voided_in_bart1.rb
+M	script/void_encounters.rb
+M	script/void_specific_bart2_orders_voided_in_bart1.rb
+M	test/fixtures/district.yml
+M	test/fixtures/districts.yml
+M	test/fixtures/drug_ingredient.yml
+M	test/fixtures/labs.yml
+M	test/fixtures/location_tag_maps.yml
+M	test/fixtures/location_tags.yml
+M	test/fixtures/national_ids.yml
+M	test/fixtures/outpatients.yml
+M	test/fixtures/person_attribute.yml
+M	test/fixtures/region.yml
+M	test/fixtures/regions.yml
+M	test/fixtures/role.yml
+M	test/fixtures/traditional_authorities.yml
+M	test/fixtures/traditional_authority.yml
+M	test/fixtures/villages.yml
+M	test/functional/charts_controller_test.rb
+M	test/functional/lab_controller_test.rb
+M	test/functional/location_controller_test.rb
+M	test/functional/migration_controller_test.rb
+M	test/functional/properties_controller_test.rb
+M	test/functional/user_controller_test.rb
+M	test/unit/cohort_test.rb
+M	test/unit/district_test.rb
+M	test/unit/drug_ingredient_test.rb
+M	test/unit/helpers/charts_helper_test.rb
+M	test/unit/helpers/encounters_helper_test.rb
+M	test/unit/helpers/lab_helper_test.rb
+M	test/unit/helpers/location_helper_test.rb
+M	test/unit/helpers/migration_helper_test.rb
+M	test/unit/helpers/people_helper_test.rb
+M	test/unit/helpers/properties_helper_test.rb
+M	test/unit/helpers/report_helper_test.rb
+M	test/unit/helpers/user_helper_test.rb
+M	test/unit/lab_test.rb
+M	test/unit/location_tag_map_test.rb
+M	test/unit/location_tag_test.rb
+M	test/unit/national_id_test.rb
+M	test/unit/outpatient_test.rb
+M	test/unit/region_test.rb
+M	test/unit/traditional_authority_test.rb
+M	test/unit/users_test.rb
+M	test/unit/village_test.rb
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ git checkout --[5Pstatus[K[K[K[K[K[Kignore
+git: 'ignore' is not a git command. See 'git --help'.
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ [H[2J]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ git ignorecheckout --[5Pstatuscheckout tb_artpull[Kstatuspassenger start[7Pgem listbundle updaterake gems:unpackinstall[1Punpack[12@bundle exec [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cd[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cb[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cd[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[14Pbundle installrake gems:unpack[2Pbundle installrake gems:unpack[1Ppassenger start[7Pgem listpassenger startrake gems:unpack[1Ppassenger start
+*** ERROR ***
+The address 0.0.0.0:3000 is already in use by another process, perhaps another
+Phusion Passenger Standalone instance.
+
+If you want to run this Phusion Passenger Standalone instance on another port,
+use the -p option, like this:
+
+  passenger start -p 3001
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ passenger start -p 4001
+=============== Phusion Passenger Standalone web server started ===============
+PID file: /home/timothy/work/ruby/bart2/tmp/pids/passenger.4001.pid
+Log file: /home/timothy/work/ruby/bart2/log/passenger.4001.log
+Environment: development
+Accessible via: http://0.0.0.0:4001/
+
+You can stop Phusion Passenger Standalone by pressing Ctrl-C.
+===============================================================================
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/rails/gem_dependency.rb:119:Warning: Gem::Dependency#version_requirements is deprecated and will be removed on or after August 2010.  Use #requirement
+WARNING: This version of mysql2 (0.3.11) doesn't ship with the ActiveRecord adapter bundled anymore as it's now part of Rails 3.1
+WARNING: Please use the 0.2.x releases if you plan on using it in Rails <= 3.0.x
+[ pid=9086 thr=69832909539760 file=utils.rb:176 time=2012-12-10 10:59:20.002 ]: *** Exception PhusionPassenger::UnknownError in PhusionPassenger::ClassicRails::ApplicationSpawner (no such file to load -- rails (MissingSourceFile)) (process 9086, thread #<Thread:0x7f067b889360>):
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:521:in `new_constants_in'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+	from /usr/lib/ruby/gems/1.8/gems/devise-1.5.3/lib/devise.rb:1
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:380:in `load_without_new_constant_marking'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:380:in `load_file'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:521:in `new_constants_in'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:379:in `load_file'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:259:in `require_or_load'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:425:in `load_missing_constant'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:80:in `const_missing'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:92:in `const_missing'
+	from /home/timothy/work/ruby/bart2/config/initializers/devise.rb:3
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:145:in `load_without_new_constant_marking'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:145:in `load'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:521:in `new_constants_in'
+	from /usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:145:in `load'
+	from /usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:622:in `load_application_initializers'
+	from /usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:621:in `each'
+	from /usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:621:in `load_application_initializers'
+	from /usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:176:in `process'
+	from /usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:113:in `send'
+	from /usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:113:in `run'
+	from /home/timothy/work/ruby/bart2/config/environment.rb:8
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/classic_rails/application_spawner.rb:222:in `require'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/classic_rails/application_spawner.rb:222:in `preload_application'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/classic_rails/application_spawner.rb:181:in `initialize_server'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/utils.rb:563:in `report_app_init_status'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/classic_rails/application_spawner.rb:174:in `initialize_server'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/abstract_server.rb:204:in `start_synchronously'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/abstract_server.rb:180:in `start'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/classic_rails/application_spawner.rb:149:in `start'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/spawn_manager.rb:219:in `spawn_rails_application'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/abstract_server_collection.rb:132:in `lookup_or_add'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/spawn_manager.rb:214:in `spawn_rails_application'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/abstract_server_collection.rb:82:in `synchronize'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/abstract_server_collection.rb:79:in `synchronize'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/spawn_manager.rb:213:in `spawn_rails_application'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/spawn_manager.rb:132:in `spawn_application'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/spawn_manager.rb:275:in `handle_spawn_application'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/abstract_server.rb:357:in `__send__'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/abstract_server.rb:357:in `server_main_loop'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/lib/phusion_passenger/abstract_server.rb:206:in `start_synchronously'
+	from /var/lib/passenger-standalone/3.0.18-x86_64-ruby1.8.7-linux-gcc4.6.3-1002/support/helper-scripts/passenger-spawn-server:99
+^Z
+[3]+  Stopped                 passenger start -p 4001
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ git branch
+  bart2
+* survival_analysis
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ git checkout bart2
+M	.gitignore
+M	Capfile
+M	Gemfile
+M	app/controllers/charts_controller.rb
+M	app/controllers/encounters_controller.rb
+M	app/controllers/generic_admin_controller.rb
+M	app/controllers/generic_application_controller.rb
+M	app/controllers/generic_barcodes_controller.rb
+M	app/controllers/generic_charts_controller.rb
+M	app/controllers/generic_clinic_controller.rb
+M	app/controllers/generic_cohort_tool_controller.rb
+M	app/controllers/generic_config_controller.rb
+M	app/controllers/generic_dispensations_controller.rb
+M	app/controllers/generic_drug_controller.rb
+M	app/controllers/generic_heartbeat_controller.rb
+M	app/controllers/generic_lab_controller.rb
+M	app/controllers/generic_location_controller.rb
+M	app/controllers/generic_migration_controller.rb
+M	app/controllers/generic_patient_identifiers_controller.rb
+M	app/controllers/generic_patients_controller.rb
+M	app/controllers/generic_people_controller.rb
+M	app/controllers/generic_person_addresses_controller.rb
+M	app/controllers/generic_person_attributes_controller.rb
+M	app/controllers/generic_person_names_controller.rb
+M	app/controllers/generic_programs_controller.rb
+M	app/controllers/generic_properties_controller.rb
+M	app/controllers/generic_regimens_controller.rb
+M	app/controllers/generic_relationships_controller.rb
+M	app/controllers/generic_report_controller.rb
+M	app/controllers/generic_sessions_controller.rb
+M	app/controllers/generic_single_sign_on_controller.rb
+M	app/controllers/generic_user_controller.rb
+M	app/controllers/lab_controller.rb
+M	app/controllers/location_controller.rb
+M	app/controllers/migration_controller.rb
+M	app/controllers/properties_controller.rb
+M	app/controllers/single_sign_on_controller.rb
+M	app/helpers/charts_helper.rb
+M	app/helpers/encounters_helper.rb
+M	app/helpers/lab_helper.rb
+M	app/helpers/location_helper.rb
+M	app/helpers/migration_helper.rb
+M	app/helpers/people_helper.rb
+M	app/helpers/properties_helper.rb
+M	app/helpers/report_helper.rb
+M	app/helpers/user_helper.rb
+M	app/models/bart_one_encounter.rb
+M	app/models/cohort.rb
+M	app/models/district.rb
+M	app/models/drug_ingredient.rb
+M	app/models/lab.rb
+M	app/models/location_tag.rb
+M	app/models/location_tag_map.rb
+M	app/models/migration.rb
+M	app/models/national_id.rb
+M	app/models/outpatient.rb
+M	app/models/property.rb
+M	app/models/region.rb
+M	app/models/report.rb
+M	app/models/survival_analysis.rb
+M	app/models/traditional_authority.rb
+M	app/models/village.rb
+M	app/views/charts/pie.html.erb
+M	app/views/charts/series.html.erb
+M	app/views/clinic/administration_tab.rhtml
+M	app/views/clinic/data_cleaning_tab.rhtml
+M	app/views/clinic/index.rhtml
+M	app/views/clinic/lab_tab.rhtml
+M	app/views/clinic/location_management_tab.rhtml
+M	app/views/clinic/management_tab.rhtml
+M	app/views/clinic/overview_simple.rhtml
+M	app/views/clinic/overview_tab.rhtml
+M	app/views/clinic/properties_tab.rhtml
+M	app/views/clinic/reports_tab.rhtml
+M	app/views/clinic/supervision_tab.rhtml
+M	app/views/clinic/users_tab.rhtml
+M	app/views/cohort_tool/_patients_list.html.erb
+M	app/views/cohort_tool/_visits_graph.html.erb
+M	app/views/cohort_tool/_visits_table.html.erb
+M	app/views/cohort_tool/cohort.html.erb
+M	app/views/cohort_tool/cohort_menu.html.erb
+M	app/views/cohort_tool/list_patients_details.rhtml
+M	app/views/cohort_tool/visits_by_day.html.erb
+M	app/views/dashboards/dispension_tab.rhtml
+M	app/views/dashboards/exitcare_dashboard.rhtml
+M	app/views/dashboards/exitcare_tab.rhtml
+M	app/views/dashboards/next_task_description.rhtml
+M	app/views/dashboards/opdoverview_tab.rhtml
+M	app/views/dashboards/opdtreatment_dashboard.rhtml
+M	app/views/dashboards/overview_tab.rhtml
+M	app/views/dashboards/past_visits_summary_tab.rhtml
+M	app/views/dashboards/personal_tab.rhtml
+M	app/views/dashboards/programs_dashboard.rhtml
+M	app/views/dashboards/programs_tab.rhtml
+M	app/views/dashboards/relationships_dashboard.rhtml
+M	app/views/dashboards/relationships_tab.rhtml
+M	app/views/dashboards/treatment_dashboard.rhtml
+M	app/views/dashboards/treatment_tab.rhtml
+M	app/views/dashboards/visit_history_tab.rhtml
+M	app/views/drug/expiring.html.erb
+M	app/views/drug/print_barcode.html.erb
+M	app/views/drug/removed_from_shelves.html.erb
+M	app/views/encounters/appointment.rhtml
+M	app/views/encounters/give_drugs.html.erb
+M	app/views/encounters/hiv_status.html.erb
+M	app/views/encounters/lab_orders.rhtml
+M	app/views/encounters/opddrug_dispensing.html.erb
+M	app/views/encounters/referral.html.erb
+M	app/views/encounters/source_of_referral.rhtml
+M	app/views/encounters/specimen_labelling.rhtml
+M	app/views/encounters/tb_reception.rhtml
+M	app/views/graphs/weight_tab.rhtml
+M	app/views/lab/graph.html.erb
+M	app/views/lab/results.html.erb
+M	app/views/lab/view.html.erb
+M	app/views/patients/_mastercard_details_blue.rhtml
+M	app/views/patients/_mastercard_details_green.rhtml
+M	app/views/patients/_mastercard_details_pink.rhtml
+M	app/views/patients/_mastercard_details_yellow.rhtml
+M	app/views/patients/_mastercard_header.rhtml
+M	app/views/patients/_patient_details.rhtml
+M	app/views/patients/_status_details.rhtml
+M	app/views/patients/demographics.html.erb
+M	app/views/patients/general_mastercard.rhtml
+M	app/views/patients/index.rhtml
+M	app/views/patients/mastercard.html.erb
+M	app/views/patients/mastercard_menu.rhtml
+M	app/views/patients/mastercard_printable.rhtml
+M	app/views/patients/opdcard.html.erb
+M	app/views/patients/opdshow.html.erb
+M	app/views/patients/recent_lab_orders.html.erb
+M	app/views/patients/summary.rhtml
+M	app/views/patients/tb_treatment_card.rhtml
+M	app/views/patients/visit_history.rhtml
+M	app/views/people/confirm.html.erb
+M	app/views/people/demographics.html.erb
+M	app/views/people/tranfer_patient_in.html.erb
+M	app/views/properties/clinic_days.html.erb
+M	app/views/properties/clinic_holidays.html.erb
+M	app/views/properties/creation.html.erb
+M	app/views/properties/set_clinic_holidays.html.erb
+M	app/views/properties/set_role_privileges.html.erb
+M	app/views/properties/show_clinic_days.html.erb
+M	app/views/report/_opd_diagnosis.rhtml
+M	app/views/report/_opd_diagnosis_by_address.rhtml
+M	app/views/report/_opd_diagnosis_plus_demographics.rhtml
+M	app/views/report/_opd_disaggregated_diagnosis.rhtml
+M	app/views/report/_opd_referrals.rhtml
+M	app/views/report/age_group_select.html.erb
+M	app/views/report/appointment_dates.rhtml
+M	app/views/report/opd.html.erb
+M	app/views/report/select_date.rhtml
+M	app/views/report/set_appointments.rhtml
+M	app/views/user/activities.html.erb
+M	app/views/user/properties.html.erb
+M	app/views/user/select_user.html.erb
+M	app/views/user/show.html.erb
+M	app/views/user/users.rhtml
+M	config/application.yml.example
+M	config/database.yml.example
+M	config/deploy.rb
+M	config/environment.rb
+M	config/initializers/devise.rb
+M	config/initializers/warden.rb
+M	config/locales/devise.en.yml
+M	config/migration.yml
+M	config/mongrel_cluster.yml
+M	db/bart1_to_bart2_drug_map.sql
+M	db/bart2_role_privileges.sql
+M	db/bart2_views_schema_additions.sql
+M	db/create_dde_server_connection.sql
+M	db/create_patient_start_date_function.sql
+M	db/data/defaults/drug_ingredient.yml
+M	db/data/moh/moh.sql
+M	db/data/mpc/mpc.sql
+M	db/drop_patient_start_date_function.sql
+M	db/drug_ingredient.sql
+M	db/malawi_regions.sql
+M	db/migrate/20110131133924_age_function.rb
+M	db/migrate/20110201142615_age_group_function.rb
+M	db/migrate/20110214131134_create_drug_ingredients.rb
+M	db/migrate/20110222091353_patient_start_date_function.rb
+M	db/migrate/20110602192435_create_labs.rb
+M	db/migrate/20110604141723_create_location_tag_workstation_location.rb
+M	db/migrate/20110604142913_create_location_tags.rb
+M	db/migrate/20110604142932_create_location_tag_maps.rb
+M	db/migrate/20110609132925_create_outpatients.rb
+M	db/migrate/20110614184541_create_national_ids.rb
+M	db/migrate/20110726131026_create_traditional_authorities.rb
+M	db/migrate/20110727100353_create_villages.rb
+M	db/migrate/20110727100435_create_districts.rb
+M	db/migrate/20110727100509_create_regions.rb
+M	db/missing_encounters_query.sql
+M	db/moh_regimens-2011.sql
+M	db/moh_regimens_only.sql
+M	db/mpc_regimens_only.sql
+M	db/mysql_functions.sql
+M	db/national_id.sql
+M	db/non_art_regimens.sql
+M	db/openmrs_1_7_2_concept_server_full_db.sql
+M	db/openmrs_metadata_1_7.sql
+M	db/privilege.sql
+M	db/raw_areas.sql
+M	db/regimen_indexes.sql
+M	db/regimens.sql
+M	db/retrospective_station_entries.sql
+M	db/tb_regimens.sql
+M	db/user_schema_modifications.sql
+M	db/weight_for_heights.sql
+M	lib/bean.rb
+M	lib/core_service.rb
+M	lib/dde_service.rb
+M	lib/diabetes_service.rb
+M	lib/medication_service.rb
+M	lib/patient_service.rb
+M	lib/settings.rb
+M	public/touchscreentoolkit/README.md
+M	public/touchscreentoolkit/examples/calendar.html
+M	public/touchscreentoolkit/examples/dashboard-home.html
+M	public/touchscreentoolkit/examples/data.txt
+M	public/touchscreentoolkit/examples/dispense.html
+M	public/touchscreentoolkit/examples/facilities.txt
+M	public/touchscreentoolkit/examples/lib/images/active_scaffold/default/add.gif
+M	public/touchscreentoolkit/examples/lib/images/active_scaffold/default/arrow_down.gif
+M	public/touchscreentoolkit/examples/lib/images/active_scaffold/default/arrow_up.gif
+M	public/touchscreentoolkit/examples/lib/images/active_scaffold/default/close.gif
+M	public/touchscreentoolkit/examples/lib/images/active_scaffold/default/cross.png
+M	public/touchscreentoolkit/examples/lib/images/active_scaffold/default/indicator-small.gif
+M	public/touchscreentoolkit/examples/lib/images/active_scaffold/default/indicator.gif
+M	public/touchscreentoolkit/examples/lib/images/active_scaffold/default/magnifier.png
+M	public/touchscreentoolkit/examples/lib/images/barcode.jpg
+M	public/touchscreentoolkit/examples/lib/images/bg.png
+M	public/touchscreentoolkit/examples/lib/images/btn_blue.png
+M	public/touchscreentoolkit/examples/lib/images/btn_blue_hover.png
+M	public/touchscreentoolkit/examples/lib/images/btn_yellow.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_left_blue.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_left_dark.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_left_gray.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_left_green.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_left_hover_blue.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_left_hover_dark.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_left_hover_gray.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_left_hover_green.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_left_hover_red.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_left_hover_yellow.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_left_red.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_left_yellow.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_right_blue.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_right_dark.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_right_gray.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_right_green.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_right_hover_blue.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_right_hover_dark.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_right_hover_gray.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_right_hover_green.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_right_hover_red.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_right_hover_yellow.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_right_red.png
+M	public/touchscreentoolkit/examples/lib/images/buttons/btn_right_yellow.png
+M	public/touchscreentoolkit/examples/lib/images/cancel_flat.png
+M	public/touchscreentoolkit/examples/lib/images/cancel_flat_red.png
+M	public/touchscreentoolkit/examples/lib/images/cancel_flat_small.png
+M	public/touchscreentoolkit/examples/lib/images/cancel_flat_small_red.png
+M	public/touchscreentoolkit/examples/lib/images/checked.jpg
+M	public/touchscreentoolkit/examples/lib/images/close.gif
+M	public/touchscreentoolkit/examples/lib/images/drug_label.png
+M	public/touchscreentoolkit/examples/lib/images/drug_label_ch.png
+M	public/touchscreentoolkit/examples/lib/images/drug_label_en.png
+M	public/touchscreentoolkit/examples/lib/images/drug_label_small.png
+M	public/touchscreentoolkit/examples/lib/images/female.gif
+M	public/touchscreentoolkit/examples/lib/images/hour.svg
+M	public/touchscreentoolkit/examples/lib/images/loading.gif
+M	public/touchscreentoolkit/examples/lib/images/madzulo.png
+M	public/touchscreentoolkit/examples/lib/images/male.gif
+M	public/touchscreentoolkit/examples/lib/images/masana.png
+M	public/touchscreentoolkit/examples/lib/images/minute.svg
+M	public/touchscreentoolkit/examples/lib/images/mmawa.png
+M	public/touchscreentoolkit/examples/lib/images/overlay.png
+M	public/touchscreentoolkit/examples/lib/images/scream.gif
+M	public/touchscreentoolkit/examples/lib/images/select.png
+M	public/touchscreentoolkit/examples/lib/images/smirk.gif
+M	public/touchscreentoolkit/examples/lib/images/target.gif
+M	public/touchscreentoolkit/examples/lib/images/ticked.jpg
+M	public/touchscreentoolkit/examples/lib/images/unchecked.jpg
+M	public/touchscreentoolkit/examples/lib/images/unticked.jpg
+M	public/touchscreentoolkit/examples/lib/images/usiku.png
+M	public/touchscreentoolkit/examples/lib/images/watermark.png
+M	public/touchscreentoolkit/examples/lib/javascripts/calendar.js
+M	public/touchscreentoolkit/examples/lib/javascripts/dashboard.js
+M	public/touchscreentoolkit/examples/lib/javascripts/dispense.js
+M	public/touchscreentoolkit/examples/lib/javascripts/dosages.js
+M	public/touchscreentoolkit/examples/lib/javascripts/generics.js
+M	public/touchscreentoolkit/examples/lib/javascripts/multiTouch.js
+M	public/touchscreentoolkit/examples/lib/javascripts/nested_select.js
+M	public/touchscreentoolkit/examples/lib/javascripts/selects.js
+M	public/touchscreentoolkit/examples/lib/javascripts/standard.js
+M	public/touchscreentoolkit/examples/lib/javascripts/touchScreenToolkit.js
+M	public/touchscreentoolkit/examples/lib/javascripts/treatment.js
+M	public/touchscreentoolkit/examples/lib/samples-sql-scripts/dosages.sql
+M	public/touchscreentoolkit/examples/lib/samples-sql-scripts/drugs.sql
+M	public/touchscreentoolkit/examples/lib/samples-sql-scripts/generics.sql
+M	public/touchscreentoolkit/examples/lib/stylesheets/bluetabs.css
+M	public/touchscreentoolkit/examples/lib/stylesheets/calendar.css
+M	public/touchscreentoolkit/examples/lib/stylesheets/classic.css
+M	public/touchscreentoolkit/examples/lib/stylesheets/dashboard.css
+M	public/touchscreentoolkit/examples/lib/stylesheets/dispense.css
+M	public/touchscreentoolkit/examples/lib/stylesheets/drug-style.css
+M	public/touchscreentoolkit/examples/lib/stylesheets/form.css
+M	public/touchscreentoolkit/examples/lib/stylesheets/graytabs.css
+M	public/touchscreentoolkit/examples/lib/stylesheets/multiTouch.css
+M	public/touchscreentoolkit/examples/lib/stylesheets/touch-basic.css
+M	public/touchscreentoolkit/examples/lib/stylesheets/touch-fancy.css
+M	public/touchscreentoolkit/examples/multiTouch.html
+M	public/touchscreentoolkit/examples/nested_select.html
+M	public/touchscreentoolkit/examples/overview.html
+M	public/touchscreentoolkit/examples/patient-dashboard.html
+M	public/touchscreentoolkit/examples/programs.html
+M	public/touchscreentoolkit/examples/relationships.html
+M	public/touchscreentoolkit/examples/select_nested.html
+M	public/touchscreentoolkit/examples/standard.html
+M	public/touchscreentoolkit/examples/time.html
+M	public/touchscreentoolkit/examples/treatment.html
+M	public/touchscreentoolkit/lib/images/active_scaffold/default/add.gif
+M	public/touchscreentoolkit/lib/images/active_scaffold/default/arrow_down.gif
+M	public/touchscreentoolkit/lib/images/active_scaffold/default/arrow_up.gif
+M	public/touchscreentoolkit/lib/images/active_scaffold/default/close.gif
+M	public/touchscreentoolkit/lib/images/active_scaffold/default/cross.png
+M	public/touchscreentoolkit/lib/images/active_scaffold/default/indicator-small.gif
+M	public/touchscreentoolkit/lib/images/active_scaffold/default/indicator.gif
+M	public/touchscreentoolkit/lib/images/active_scaffold/default/magnifier.png
+M	public/touchscreentoolkit/lib/images/barcode.jpg
+M	public/touchscreentoolkit/lib/images/bg.png
+M	public/touchscreentoolkit/lib/images/btn_blue.png
+M	public/touchscreentoolkit/lib/images/btn_blue_hover.png
+M	public/touchscreentoolkit/lib/images/btn_yellow.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_left_blue.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_left_dark.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_left_gray.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_left_green.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_left_hover_blue.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_left_hover_dark.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_left_hover_gray.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_left_hover_green.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_left_hover_red.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_left_hover_yellow.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_left_red.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_left_yellow.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_right_blue.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_right_dark.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_right_gray.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_right_green.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_right_hover_blue.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_right_hover_dark.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_right_hover_gray.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_right_hover_green.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_right_hover_red.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_right_hover_yellow.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_right_red.png
+M	public/touchscreentoolkit/lib/images/buttons/btn_right_yellow.png
+M	public/touchscreentoolkit/lib/images/cancel_flat.png
+M	public/touchscreentoolkit/lib/images/cancel_flat_red.png
+M	public/touchscreentoolkit/lib/images/cancel_flat_small.png
+M	public/touchscreentoolkit/lib/images/cancel_flat_small_red.png
+M	public/touchscreentoolkit/lib/images/checked.jpg
+M	public/touchscreentoolkit/lib/images/close.gif
+M	public/touchscreentoolkit/lib/images/drug_label.png
+M	public/touchscreentoolkit/lib/images/drug_label_ch.png
+M	public/touchscreentoolkit/lib/images/drug_label_en.png
+M	public/touchscreentoolkit/lib/images/drug_label_small.png
+M	public/touchscreentoolkit/lib/images/female.gif
+M	public/touchscreentoolkit/lib/images/hour.svg
+M	public/touchscreentoolkit/lib/images/loading.gif
+M	public/touchscreentoolkit/lib/images/madzulo.png
+M	public/touchscreentoolkit/lib/images/male.gif
+M	public/touchscreentoolkit/lib/images/masana.png
+M	public/touchscreentoolkit/lib/images/minute.svg
+M	public/touchscreentoolkit/lib/images/mmawa.png
+M	public/touchscreentoolkit/lib/images/overlay.png
+M	public/touchscreentoolkit/lib/images/scream.gif
+M	public/touchscreentoolkit/lib/images/select.png
+M	public/touchscreentoolkit/lib/images/smirk.gif
+M	public/touchscreentoolkit/lib/images/target.gif
+M	public/touchscreentoolkit/lib/images/ticked.jpg
+M	public/touchscreentoolkit/lib/images/unchecked.jpg
+M	public/touchscreentoolkit/lib/images/unticked.jpg
+M	public/touchscreentoolkit/lib/images/usiku.png
+M	public/touchscreentoolkit/lib/images/watermark.png
+M	public/touchscreentoolkit/lib/javascripts/calendar.js
+M	public/touchscreentoolkit/lib/javascripts/calendar_horizontal.js
+M	public/touchscreentoolkit/lib/javascripts/dashboard.js
+M	public/touchscreentoolkit/lib/javascripts/dispense.js
+M	public/touchscreentoolkit/lib/javascripts/generics.js
+M	public/touchscreentoolkit/lib/javascripts/multiTouch.js
+M	public/touchscreentoolkit/lib/javascripts/prescriber.js
+M	public/touchscreentoolkit/lib/javascripts/standard.js
+M	public/touchscreentoolkit/lib/javascripts/touchScreenToolkit.js
+M	public/touchscreentoolkit/lib/javascripts/treatment.js
+M	public/touchscreentoolkit/lib/stylesheets/bluetabs.css
+M	public/touchscreentoolkit/lib/stylesheets/calendar.css
+M	public/touchscreentoolkit/lib/stylesheets/classic.css
+M	public/touchscreentoolkit/lib/stylesheets/dashboard.css
+M	public/touchscreentoolkit/lib/stylesheets/dispense.css
+M	public/touchscreentoolkit/lib/stylesheets/drug-style.css
+M	public/touchscreentoolkit/lib/stylesheets/form.css
+M	public/touchscreentoolkit/lib/stylesheets/graytabs.css
+M	public/touchscreentoolkit/lib/stylesheets/multiTouch.css
+M	public/touchscreentoolkit/lib/stylesheets/touch-basic.css
+M	public/touchscreentoolkit/lib/stylesheets/touch-fancy.css
+M	script/add_regimen_categories.rb
+M	script/agrees_to_followup_fix_value_text_to_value_coded.sql
+M	script/arv_number_fix.sql
+M	script/calculate_art_adherence_from_pill_count.rb
+M	script/compare_encounters.rb
+M	script/data_cleaning_after_migration.sql
+M	script/doses_missed_calculation.rb
+M	script/find_patients_with_missing_orders.rb
+M	script/fix_drug_orders_with_zero_quantity.sql
+M	script/generate_exit_from_care_encounters_from_bart1.rb
+M	script/get_states_for_creating_exit_from_care_encounters.sql
+M	script/migration_import_script.rb
+M	script/missing_drug_orders.sql
+M	script/move_value_text_to_value_coded.rb
+M	script/move_value_text_to_value_datetime_datearvstarted.rb
+M	script/move_value_text_to_value_numeric.rb
+M	script/mpc_data_fix_script.sql
+M	script/patient_base_data.sql
+M	script/patient_base_data_update.sql
+M	script/patient_states_fixes.sql
+M	script/remove_dispensations_without_treatment.sql
+M	script/remove_on_arv_state_for_patients_in_bart2_not_registered_as_on_arv_in_bart1.sql
+M	script/remove_wrongly_imported_encounters.sql
+M	script/tb_status_fix_after_migration.sql
+M	script/update_bart2_patient_state_to_match_bart1_registration_dates.rb
+M	script/update_initial_state_on_arvs.sql
+M	script/update_states_for_patients_with_arv_numbers.sql
+M	script/updating_patient_died_state_on_patients_with_dead_0.rb
+M	script/void_bart2_orders_voided_in_bart1.rb
+M	script/void_encounters.rb
+M	script/void_specific_bart2_orders_voided_in_bart1.rb
+M	test/fixtures/district.yml
+M	test/fixtures/districts.yml
+M	test/fixtures/drug_ingredient.yml
+M	test/fixtures/labs.yml
+M	test/fixtures/location_tag_maps.yml
+M	test/fixtures/location_tags.yml
+M	test/fixtures/national_ids.yml
+M	test/fixtures/outpatients.yml
+M	test/fixtures/person_attribute.yml
+M	test/fixtures/region.yml
+M	test/fixtures/regions.yml
+M	test/fixtures/role.yml
+M	test/fixtures/traditional_authorities.yml
+M	test/fixtures/traditional_authority.yml
+M	test/fixtures/villages.yml
+M	test/functional/charts_controller_test.rb
+M	test/functional/lab_controller_test.rb
+M	test/functional/location_controller_test.rb
+M	test/functional/migration_controller_test.rb
+M	test/functional/properties_controller_test.rb
+M	test/functional/user_controller_test.rb
+M	test/unit/cohort_test.rb
+M	test/unit/district_test.rb
+M	test/unit/drug_ingredient_test.rb
+M	test/unit/helpers/charts_helper_test.rb
+M	test/unit/helpers/encounters_helper_test.rb
+M	test/unit/helpers/lab_helper_test.rb
+M	test/unit/helpers/location_helper_test.rb
+M	test/unit/helpers/migration_helper_test.rb
+M	test/unit/helpers/people_helper_test.rb
+M	test/unit/helpers/properties_helper_test.rb
+M	test/unit/helpers/report_helper_test.rb
+M	test/unit/helpers/user_helper_test.rb
+M	test/unit/lab_test.rb
+M	test/unit/location_tag_map_test.rb
+M	test/unit/location_tag_test.rb
+M	test/unit/national_id_test.rb
+M	test/unit/outpatient_test.rb
+M	test/unit/region_test.rb
+M	test/unit/traditional_authority_test.rb
+M	test/unit/users_test.rb
+M	test/unit/village_test.rb
+Switched to branch 'bart2'
+Your branch is behind 'origin/bart2' by 1 commit, and can be fast-forwarded.
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ git checkout bart2[8Pbranch
+* bart2
+  survival_analysis
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ git pull
+Updating 3e88fd8..47c060f
+error: Your local changes to the following files would be overwritten by merge:
+	app/controllers/encounters_controller.rb
+	app/controllers/generic_application_controller.rb
+Please, commit your changes or stash them before you can merge.
+Aborting
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ git stash
+Saved working directory and index state WIP on bart2: 3e88fd8 code cleaning. Usage of params[:location], for migration, it is not blank, and for application it is blank.
+HEAD is now at 3e88fd8 code cleaning. Usage of params[:location], for migration, it is not blank, and for application it is blank.
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ git stash[1Ppull
+Updating 3e88fd8..47c060f
+Fast-forward
+ app/controllers/encounters_controller.rb          |   33 +++++++++++++++++++--
+ app/controllers/generic_application_controller.rb |    6 ++--
+ 2 files changed, 34 insertions(+), 5 deletions(-)
+]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ [H[2J]0;timothy@timothy-SVE15115FXS: ~/work/ruby/bart2timothy@timothy-SVE15115FXS:~/work/ruby/bart2$ ser[K[K[Kscript/server
+=> Booting Mongrel
+=> Rails 2.3.5 application starting on http://0.0.0.0:3000
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/rails/gem_dependency.rb:119:Warning: Gem::Dependency#version_requirements is deprecated and will be removed on or after August 2010.  Use #requirement
+WARNING: This version of mysql2 (0.3.11) doesn't ship with the ActiveRecord adapter bundled anymore as it's now part of Rails 3.1
+WARNING: Please use the 0.2.x releases if you plan on using it in Rails <= 3.0.x
+no such file to load -- rails
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `gem_original_require'
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `require'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:521:in `new_constants_in'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+/usr/lib/ruby/gems/1.8/gems/devise-1.5.3/lib/devise.rb:1
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `gem_original_require'
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `require'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:521:in `new_constants_in'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/rails/gem_dependency.rb:208:in `load'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:307:in `load_gems'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:307:in `each'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:307:in `load_gems'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:164:in `process'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:113:in `send'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:113:in `run'
+/home/timothy/work/ruby/bart2/config/environment.rb:8
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `gem_original_require'
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `require'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:521:in `new_constants_in'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/commands/server.rb:84
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `gem_original_require'
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `require'
+script/server:3
+no such file to load -- rails
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `gem_original_require'
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `require'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:521:in `new_constants_in'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+/usr/lib/ruby/gems/1.8/gems/devise-1.5.3/lib/devise.rb:1
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `gem_original_require'
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `require'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:521:in `new_constants_in'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/rails/gem_dependency.rb:208:in `load'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:307:in `load_gems'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:307:in `each'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:307:in `load_gems'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:169:in `process'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:113:in `send'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/initializer.rb:113:in `run'
+/home/timothy/work/ruby/bart2/config/environment.rb:8
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `gem_original_require'
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `require'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:521:in `new_constants_in'
+/usr/lib/ruby/gems/1.8/gems/activesupport-2.3.5/lib/active_support/dependencies.rb:156:in `require'
+/usr/lib/ruby/gems/1.8/gems/rails-2.3.5/lib/commands/server.rb:84
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `gem_original_require'
+/usr/local/lib/site_ruby/1.8/rubygems/custom_require.rb:31:in `require'
+script/server:3
+Missing these required gems:
+  devise  
+
+You're running:
+  ruby 1.8.7.352 at /usr/bin/ruby1.8
+  rubygems 1.3.7 at /home/timothy/.gem/ruby/1.8, /usr/lib/ruby/gems/1.8
+
+Run `rake gems:install` to install the missing gems.
+]0;timothy@timothy-SVE1

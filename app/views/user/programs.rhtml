@@ -1,0 +1,19 @@
+<script>                                                                        
+  var tt_cancel_destination = "/user/login"; // /properties"                      
+</script>                                                                       
+                                                                                
+<style>                                                                         
+  #tt_page_select_program .options { height: 100px; }                        
+  #cancelButton { display: none; }                        
+</style>                                                                        
+                          
+<% programs = ['','HIV PROGRAM','TB PROGRAM'] %>                                                      
+                                                                                
+<form method = 'post' action = "/user/programs">      
+  <%= select_tag 'program',                                          
+      options_for_select(programs),                             
+      :helpText => "Select program" ,                                        
+      :multiple =>  false %>                                                     
+
+<%= hidden_field_tag("user_id", @user_id) %>
+</form> 

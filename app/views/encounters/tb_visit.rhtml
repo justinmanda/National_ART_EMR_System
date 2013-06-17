@@ -1,0 +1,529 @@
+<script>
+  var tt_cancel_destination = "/patients/show/<%= @patient.patient_id %>"
+  var originaltestDate = createDate("<%= @hiv_test_date.year rescue Date.today.year %>","<%= @hiv_test_date.month rescue Date.today.month %>","<%= @hiv_test_date.day rescue Date.today.day %>");
+  <% @session_date = "#{session[:datetime].to_date rescue Date.today}" %>
+  <% @todayDate = @session_date.to_date %>
+  var todayDate = createDate("<%= @todayDate.year %>","<%= @todayDate.month %>","<%= @todayDate.day %>");
+
+
+  function checkIfExists(searchItem,searchElement){
+    var elem = document.getElementById(searchElement);
+    var elemArray = elem.options;
+    for(var i = 0; i < elemArray.length; i++) {
+      if (elemArray[i].selected == true) {
+        if (elemArray[i].value == searchItem) {
+          return "True";
+          break;
+        }
+      }
+    }
+    return "False";
+  }
+
+  function checkTBstatus() {
+    try {
+      tb_status = $('tb_status').value;
+      tb_suspected = $('tb_suspected').value;
+
+      if (tb_status.length == 0 && $('tb_suspected').value == 0)
+        $('tb_status').value = "Confirmed TB NOT on treatment";
+	  return
+    }catch(e) {}
+
+    try {
+      tb_type = $('tb_type').value;
+      if (tb_type.length > 0 && $('set_tb_status')) {
+        $('set_tb_status').value = "Confirmed TB NOT on treatment"
+        return
+      }
+
+      if (tb_type.length > 0) {
+        submitForm = document.getElementById("appointment");
+
+        newElement = document.createElement("input");
+        newElement.setAttribute("name","observations[][concept_name]");
+        newElement.setAttribute("type","hidden");
+        newElement.value = "TB STATUS";
+        submitForm.appendChild(newElement);
+
+        newElement = document.createElement("input");
+        newElement.setAttribute("name","observations[][value_coded_or_text]");
+        newElement.setAttribute("id","set_tb_status");
+        newElement.setAttribute("type","hidden");
+        newElement.value =  "Confirmed TB NOT on treatment";
+        submitForm.appendChild(newElement);
+
+        newElement = document.createElement("input");
+        newElement.setAttribute("name","observations[][patient_id]");
+        newElement.setAttribute("type","hidden");
+        newElement.value =  "<%= @patient.id %>";
+        submitForm.appendChild(newElement);
+      }
+    }catch(e) {}
+  }
+
+
+ function checkInitiationDate(){
+    var testDate = $('date_of_art_initiation').value;
+	testDate = new Date(testDate)
+    if ((testDate <= originaltestDate) || ( testDate > todayDate)) {
+      return false
+	}
+	else {
+      return true
+    }
+
+  }
+
+  function checkTestDate(){
+
+    var testDate = createDate($('hiv_initiation_year').value, $('hiv_initiation_month').value , $('hiv_initiation_day').value);
+
+    if ((testDate <= originaltestDate) || ( testDate > todayDate)) {
+      return false
+	}
+	else {
+      return true
+	}
+  }
+
+  function updateInitiationDate(){
+
+    testDate = createDate($('hiv_initiation_year').value, $('hiv_initiation_month').value , $('hiv_initiation_day').value);
+    $('hiv_initiation_date').value = testDate;
+	if (testDate == 'Invalid Date'){
+	  return true
+	}
+	else {
+	  return false;
+	}
+  }
+
+  function showLastTBsigns(){
+	var innerHtml = '';
+	var resultString = '';
+
+<% if @previous_tb_visit.length != 0 %>
+	  resultString += '<b>Previous TB visit summary<br> Date: <%="#{@date}"%></b><br><ul>'
+  <%
+  visit_list = []
+  i = 0
+  @previous_tb_visit.map do |method|
+	if method.to_s.downcase.include?("any need to see a clinician")
+	  visit_list[i] = method
+	  i += 1
+	end
+  end
+  @previous_tb_visit.map do |method|
+	if method.to_s.downcase.include?("continue treatment")
+	  visit_list[i] = method
+	  i += 1
+	end
+  end
+  @previous_tb_visit.map do |method|
+	if method.to_s.downcase.include?("patient using family planing")
+	  visit_list[i] = method
+	  i += 1
+	end
+  end
+  @previous_tb_visit.map do |method|
+	if method.to_s.downcase.include?("prescribe drugs")
+	  visit_list[i] = method
+	  i += 1
+	end
+  end
+  @previous_tb_visit.map do |method|
+	if method.to_s.downcase.include?("tb symptoms")
+	  visit_list[i] = method
+	  i += 1
+	end
+  end
+  @previous_tb_visit.map do |method|
+	if method.to_s.downcase.include?("in hiv program")
+	  visit_list[i] = method
+	  i += 1
+	end
+  end
+  visit_list[i] = "HIV Status: #{@current_hiv_program_status}"
+  previous_tb_visit = visit_list.map do | method |
+	"<li> #{method}</li>"
+  end
+end
+%>
+
+	resultString += <%= "'#{previous_tb_visit}'" %>
+	resultString += '</ul>'
+
+	innerHtml = '<div id="summary" style="min-height:400px"><div>' +
+	  '<span class="title" style="font-size:25px;padding-top:7px;">' + resultString + '</span>' +
+	  '</div></div>'
+                     
+	$('inputFrame'+tstCurrentPage).innerHTML = innerHtml
+  }
+
+  function checkPregnancyAndAge() {
+    var patientAge = "<%= @patient_bean.age.to_i %>";
+    var pregnancyStatus = $('pregnant').value;
+
+    if ((patientAge >= 55) && pregnancyStatus == "YES") {
+	  return "true";
+    } else {
+      return "false";
+    }
+  }
+
+  function checkSymptoms(){
+
+<% if @patient.person.observations.to_s.include?('TB symptoms') %>
+	  $('any_tb_symptoms').value = 'NO'
+	  return true;
+<% end  %>
+  }
+
+
+  function isTestOverDue(testDate,alertDate) {
+    if (testDate <= alertDate){
+      return true;
+    }else {
+      return false;
+    }
+  }
+
+  function createDate(year,month,day) {
+    date_str = year
+
+    if(month.length == 1)
+      month = '0' + month
+
+    date_str+='-' + month
+
+    if(day.length == 1)
+      day = '0' + day
+
+    date_str+='-' + day
+
+    intyear = 0 ; intmonth = 0 ; intday = 0;
+    intyear = parseInt(date_str.substring(0,4))
+    intmonth = (parseInt(date_str.substring(5,7)) - 1)
+    intday = (parseInt(date_str.substring(8,10)))
+
+    if (intmonth == -1)
+      intmonth = (parseInt(date_str.substring(5,7).substring(1,2)) - 1)
+
+    if (intday == 0)
+      intday = parseInt(date_str.substring(8,10).substring(1,2))
+
+    return new Date(intyear,intmonth,intday);
+  }
+</script>
+
+<style>
+  #char { display: none;
+  }
+  .NoKeyboard .inputFrameClass {
+	height:600;
+  }
+</style>
+
+<!--.........TODO...........
+	This is referred to as ART Enrollment/HIV Visit in the specs
+
+	Concepts - mostly in caps
+	Skip logic - implement and verify
+	Get @answer_array_values
+	Check multi select especially on WHO staging conditions
+	Change the date fields to 3tier date
+	Check appropriateness of Encounter type
+
+	Check applicability of code below
+-->
+<% @smear_positive = @recent_sputum_results.map{|obs| obs.to_s if obs.answer_string.to_s.strip != "Negative"} %>
+
+<form id='appointment' action="/encounters/create" method='post'>
+  <%= hidden_field_tag "encounter[encounter_type_name]", "TB VISIT" %>
+  <%= hidden_field_tag "encounter[patient_id]", @patient.id %>
+  <%= hidden_field_tag "encounter[encounter_datetime]", DateTime.now() %>
+  <%= hidden_field_tag "encounter[provider_id]", current_user.user_id %>
+  <%= touch_hidden_tag "Patient enrolled in HIV program", @patient, nil, { :id => "enroll_patient_in_art"} %>
+
+  <% if @previous_tb_visit.length != 0 %>
+	<%= text_field_tag :task_name, nil,
+	  {   :tt_onLoad => "__$('keyboard').style.display = 'none';showLastTBsigns();",
+	  :optional => "true",
+	  :tt_pageStyleClass => "NoControls;",
+	  :helpText => ''
+	} %>
+  <% end %>
+
+  <% if @previous_tb_visit.length == 0
+	if @patient_bean.sex == 'Female' && @patient_bean.age > 13 %>
+
+	  <% if @is_patient_pregnant_value.nil? %>
+
+		<%= touch_yes_no_unknown_tag "IS PATIENT PREGNANT?", @patient, nil,
+		  {:id => "pregnant",
+		  :optional => false,
+		  :validationCode => "checkPregnancyAndAge() == 'false'",
+		  :validationMessage => "Patient (#{@patient_bean.name}) is #{@patient_bean.age} years old. Is she pregnant?",
+		  :helpText => "Is patient pregnant?" } %>
+	  <%else%>
+		<%= touch_hidden_tag "IS PATIENT PREGNANT?" , @patient, @is_patient_pregnant_value , :id => "pregnant" %>
+	  <%end%>
+	<% end
+  end %>
+
+  <%  if @previous_tb_visit.length == 0  %>
+	<%  if @patient_bean.age > 13 %>
+
+	  <% if @patient_bean.sex == 'Male' %>
+
+		<%= touch_yes_no_unknown_tag "CURRENTLY USING FAMILY PLANNING METHOD", @patient, nil,
+		  {	:id => "on_fpm",
+		  :helpText => "Currently using family planning method" } %>
+
+		<%= touch_select_tag "FAMILY PLANNING METHOD", @patient, options_for_select(@select_options['male_family_planning_methods']),
+		  {	:id => "mfpm_used",
+		  :condition => '$("on_fpm").value == "YES"',
+		  :multiple => true,
+		  :tt_pageStyleClass => "NoKeyboard",
+		  :helpText => "What method?" } %>
+	  <% else %>
+
+		<%=# touch_select_tag "FAMILY PLANNING METHOD", @patient, options_for_select(@select_options['female_family_planning_methods']),
+		{	:id => "mfpm_used",
+		  :condition => '$("on_fpm").value == "YES"',
+		  :multiple => true,
+		  :tt_pageStyleClass => "NoKeyboard",
+		  :helpText => "What method?" } %>
+
+		<% if @currently_using_family_planning_methods.nil? and @previous_tb_visit.length == 0 %>
+		  <%= touch_yes_no_unknown_tag "CURRENTLY USING FAMILY PLANNING METHOD", @patient, nil,
+			{:id => "on_fpm",
+			:condition => "$('pregnant').value == 'NO'",
+			:helpText => "Currently using family planning method" } %>
+
+		  <%= touch_select_tag "FAMILY PLANNING METHOD", @patient, options_for_select(@select_options['family_planning_methods']),
+			{:id => "fpm_used",
+			:condition => '$("on_fpm").value == "YES"',
+			:multiple => true,
+			:tt_pageStyleClass => "NoKeyboard",
+			:helpText => "What method?" } %>
+
+		<%else%>
+		  <%= touch_hidden_tag "CURRENTLY USING FAMILY PLANNING METHOD" , @patient, @currently_using_family_planning_methods , :id => "on_fpm" %>
+		  <% id = 0 %>
+		  <% if @family_planning_methods.length != 0 %>
+			<% @family_planning_methods.each do | planning_method | %>
+			  <%= touch_hidden_tag "FAMILY PLANNING METHOD" , @patient, planning_method.to_s , :id => "fpm_used_#{id}" %>
+			  <% id = id + 1 %>
+			<% end %>
+		  <% end %>
+		<%end%>
+
+	  <% end %>
+	<% end %>
+  <% end %>
+
+  <% if @tb_symptoms.empty? || (@current_user_role.include?("Doctor") || @current_user_role.include?("Nurse") || @current_user_role.include?("Clinician")) %>
+	<%= touch_yes_no_unknown_tag "SYMPTOMATIC", @patient, nil,
+	  {	:id => "any_tb_symptoms",
+	  :condition => 'checkSymptoms() != true;',
+	  :helpText => "Any current TB signs?" } %>
+
+	<% if @current_user_role.include?("Doctor") || @current_user_role.include?("Nurse") || @current_user_role.include?("Clinician") %>
+
+	  <%= touch_select_tag "TB symptoms", @patient, options_for_select(@select_options['tb_symptoms_all']),
+		{	:id => 'tb_symptoms',
+		:optional => true,
+		:multiple => true,
+		:condition => "$('any_tb_symptoms').value == 'YES'",
+		:helpText => "Select current TB symptoms" } %>
+	<% else %>
+	  <%= touch_select_tag "TB symptoms", @patient, options_for_select(@select_options['tb_symptoms_short']),
+		{	:id => "tb_symptoms",
+		:multiple => true,
+		:tt_pageStyleClass => "NoKeyboard",
+		:condition => "$('any_tb_symptoms').value == 'YES'",
+		:helpText => "Select current TB symptoms"} %>
+	<% end %>
+  <% else %>
+	<%= touch_hidden_tag "SYMPTOMATIC", @patient, "YES", :id => "any_tb_symptoms" %>
+
+	<% @tb_symptoms.each do |symptom| %>
+	  <%= touch_hidden_tag "TB symptoms", @patient, "#{symptom}", :id => "tb_symptoms" %>
+	<% end %>
+  <% end %>
+
+  <% if @tb_first_registration == false %>
+	<%= touch_yes_no_tag "SIDE EFFECTS", @patient, nil,
+	  {	:id => "side_effects",
+	  :helpText => "Any side effects?" } %>
+
+	<%= touch_select_tag "Drug related side effects", @patient, options_for_select(@select_options['drug_related_side_effects']),
+	  {	:id => "drug_side_effects",
+	  :multiple => true,
+	  :condition => "$('side_effects').value == 'YES'",
+	  :tt_pageStyleClass => "NoKeyboard",
+	  :tt_onUnLoad => "",
+	  :helpText => "Drug related side effects" } %>
+
+  <%# if not current_user.user_roles.map{|r|r.role}.include?('Clinician') and not current_user.user_roles.map{|r|r.role}.include?('Doctor')%>
+  <%#= touch_yes_no_tag "REFER PATIENT TO CLINICIAN", @patient, nil,
+  {:id => "refer_to_clinician",
+  :helpText => "Refer patient to clinician" } %>
+  <%# end %>
+  <% end %>
+
+  <%
+  date = session[:datetime].to_date rescue Date.today
+  visit_type = []
+  visit_type << 'TB CLINIC VISIT'
+  types = EncounterType.find(:all,:conditions => ["name IN (?)",visit_type]).collect{|n|n.encounter_type_id}
+
+  tb_clinic = Encounter.find(:first,:order => "encounter_datetime DESC",
+	:conditions =>["DATE(encounter_datetime) = ? AND patient_id = ? AND encounter_type IN (?)",
+	  date,@patient.id,types])
+  if tb_clinic.blank? and not (@current_user_role.include?("Doctor") || @current_user_role.include?("Clinician")) || ! @patient_present.to_s.match(/patient present for consultation:  no/i)
+  %>
+	<%= touch_yes_no_tag "ANY NEED TO SEE A CLINICIAN", @patient, nil,
+	  {	:id => "refer_to_clinician",
+	  :helpText => "Refer patient to clinician" } %>
+  <% else %>
+	<%= touch_hidden_tag "ANY NEED TO SEE A CLINICIAN", @patient, "NO", :id => "refer_to_clinician" %>
+  <% end %>
+  <!----->
+  <%= touch_yes_no_tag "Prescribe drugs", @patient, nil,
+	{	:id => "prescribe_drugs",
+	:condition => "$('refer_to_clinician').value == 'NO'" ,
+	:helpText => "Prescribe drugs during this visit" } %>
+
+  <%#= touch_yes_no_unknown_tag "Allergic to sulphur", @patient, nil,
+	{	:id => "allergic_to_sulphur",
+	:condition => "$('refer_to_clinician').value == 'NO' && $('prescribe_drugs').value == 'YES'" ,
+	:helpText => "Is patient allergic to sulphur" } %>
+
+  <% if @continue_treatment_at_site.to_s.strip.upcase != "YES" %>
+	<%= touch_yes_no_tag "Continue treatment", @patient, nil,
+	  {	:id => "continue_treatment",
+	  :condition => "$('refer_to_clinician').value == 'NO'",
+	  :helpText => "Continue TB treatment at this clinic" } %>
+  <% else %>
+	<%= touch_hidden_tag "Continue treatment", @patient, "#{@continue_treatment_at_site.to_s.strip.upcase}",
+	  :id => "continue_treatment" %>
+  <% end %>
+
+  <%= select_tag "transfer_type", options_for_select(["Peripheral site", "Another TB registration centre"]),
+	{
+	:condition => "$('continue_treatment').value == 'NO'" ,
+	:helpText => "Transfer out to" } %>
+
+  <%
+  ajax_url = "/programs/locations?transfer_type=#{@local_tb_dot_sites_tag}&q="
+  if @local_tb_dot_sites_tag.nil?
+	ajax_url = "/programs/locations?q="
+  end
+%>
+
+  <%= touch_location_tag "Transfer to", @patient, nil,
+	{	:id => 'transfer_out_location_id',
+	:field_type => 'alpha',
+	:helpText => "Transfer out to location",
+	:ajaxURL => "#{ajax_url}",
+	:condition => "($('continue_treatment').value == 'NO') && ($('transfer_type').value == 'Peripheral site')" ,
+	:allowFreeText => true } %>
+
+  <%= touch_location_tag "Transfer to", @patient, nil,
+	{	:id => 'transfer_out_location_id',
+	:field_type => 'alpha',
+	:helpText => "Transfer out to location",
+	:ajaxURL => '/programs/locations?q=',
+	:condition => "($('continue_treatment').value == 'NO') && ($('transfer_type').value == 'Another TB registration centre')"   ,
+	:allowFreeText => true } %>
+
+  <% if @hiv_status.upcase == 'POSITIVE' && !@patient.patient_programs.current.local.map(&:program).map(&:name).include?('HIV PROGRAM') %>
+  <%#= touch_hidden_tag "ON ART", @patient, nil,
+  {	:id => "art_status"}%>
+	<% if ! @patient.person.observations.to_s.include?('On ART:') %>
+	  <%= touch_yes_no_unknown_tag "ON ART", @patient, nil,
+		{:id => "art_status",
+		:tt_pageStyleClass => "NoKeyboard",
+		:helpText => "On ART?" } %>
+	<%else%>
+	  <%= touch_hidden_tag "ON ART", @patient, nil,
+		{:id => "art_status"} %>
+	<% end %>
+
+	<%= text_field_tag "hiv_initiation_year", nil, {
+	  :helpText => 'Year of ART initiation',
+	  :field_type => 'number',
+	  :absoluteMin => "1982", :min => "1982",
+	  :absoluteMax => Date.today.year,
+	  :tt_pageStyleClass => "Numeric NumbersOnly",
+	  :condition => '$("art_status").value == "YES"'}  %>
+
+	<%= select_tag "hiv_initiation_month", month_name_options, {
+	  :tt_onLoad => "__$('keyboard').style.display = 'none'",
+	  :helpText => 'Month of ART initiation',
+	  :condition => '($("hiv_initiation_year").value.toLowerCase() != "unknown")  && ($("art_status").value == "YES")'}%>
+
+	<%= text_field_tag "hiv_initiation_day",  nil,
+	  {:field_type => 'number',
+	  :helpText => 'Day of ART initiation',
+	  :validationCode => "checkTestDate();",
+	  :validationMessage => "HIV initiation date out of range #{@hiv_test_date.to_date rescue @todayDate} and #{@todayDate.to_date}",
+	  :condition => '($("hiv_initiation_year").value != "Unknown") && ($("hiv_initiation_month").value != "Unknown")  && ($("art_status").value == "YES")',
+	  :tt_onLoad => "getDayOfMonthPicker($('hiv_initiation_year').value, $('hiv_initiation_month').value)",
+	  :tt_onUnload=> "updateInitiationDate();"
+	} %>
+
+	<%= touch_location_tag "Location Of ART Initiation", @patient, nil, {:id => "location_of_art_intiation", :value_datetime => true,:helpText => "Location Of ART Initiation", :condition => '$("art_status").value == "YES"'}%>
+	<%= touch_hidden_tag "HIV TEST DATE", @patient, nil, {:id => "hiv_test_date", :value_datetime => true}%>
+	<%= touch_hidden_tag "ART initiation date", @patient, nil, {:id => "hiv_initiation_date", :value_datetime => true}%>
+    
+
+	<% if ! @patient.person.observations.to_s.downcase.include?('in hiv program:') %>
+		<%= touch_yes_no_tag "Patient enrolled in HIV program", @patient, nil,
+		  {   :id => "enroll_patient_in_art",
+		  :condition => '$("refer_to_clinician").value != "YES"',
+		  :helpText => 'Enroll for HIV care' } %>
+	<%  end %>
+  <% end %>
+
+	<%= touch_yes_no_tag "Ever registered at ART clinic", @patient, nil,
+	  {	:id => "ever_registered_at_ART_clinic",
+	  :condition => '$("enroll_patient_in_art").value == "YES" && $("refer_to_clinician").value != "YES"',
+	  :helpText => "Ever registered at an ART clinic?"} %>
+
+	<%= touch_date_tag "ART initiation date", @patient, nil,
+	  {:id => "date_of_art_initiation",
+	  :condition => "$('ever_registered_at_ART_clinic').value =='YES' && $('refer_to_clinician').value != 'YES'",
+	  :validationCode => "checkInitiationDate()",
+	  :validationMessage => "Art initiation date out of range #{@hiv_test_date.to_date rescue @todayDate} and #{@todayDate.to_date}",
+	  :max => "#{session[:datetime].to_date rescue Date.today}",
+	  :helpText => "ART initiation date"} %>
+
+	<%= touch_location_tag "LOCATION OF ART INITIATION", @patient, nil,
+	  {	:id => "location_of_art_initialization",
+	  :condition => '$("ever_registered_at_ART_clinic").value == "YES" && $("refer_to_clinician").value != "YES"',
+	  :optional => false,
+	  :ajaxURL => '/encounters/locations?search_string=',
+	  :helpText => "Location of ART initiation" } %>
+
+
+
+  <% session_date = session[:datetime].to_date rescue nil
+  if session_date %>
+
+	<p><label for="filter_provider">Staff who provided the information (Provider)</label></br>
+	<%= text_field "filter" , 'provider', :helpText => 'Staff who provided the information (Provider)', :ajaxURL => '/user/username?username=' %></p>
+  <% else %>
+	<%= hidden_field_tag "filter[provider]", nil %>
+  <%end%>
+
+  <%= submit_tag "Finish" %>
+</form>
+
+<div id='sulfurAlert' class='messageBar' style='display:none'>
+  Ask if patient is alergic to Sulfur<br /> 
+  <button onmousedown="$('sulfurAlert').style.display = 'none';"><span>OK</span></button>
+</div>

@@ -1,0 +1,163 @@
+<html>
+
+	<head>
+	<title>Case Findings</title>
+	<style>
+		td{
+			color: red ;
+			font-size: 14;
+			border-color: black;
+			text-align:center;
+		}
+	</style>
+
+		<script>
+			function load(){
+				var button = document.getElementById("buttons");
+				var next = document.createElement("button")
+				
+				document.getElementById('find').style.display = 'none';
+				next.innerHTML = "<span> Page 2</span>"
+				next.setAttribute("class","blue")
+				next.setAttribute("width","500px")
+				next.setAttribute("onclick","window.location= '/cohort_tool/case_findings2?quarter=<%=@quarter%>' ")
+				button.appendChild(next)
+			}
+			setTimeout("load();",30)
+			
+
+		</script>
+	</head>
+	
+	<body style = "margin-top: 30px; -moz-user-select:none;">
+			<img src= "/images/mw.gif" >
+		<div style = "position:absolUte; top:30px;left:200px; -moz-user-select:none;">
+
+			<b>Facility : <%= Location.current_health_center.name %></b><br/>
+		  <b>Report Type : Case Findings Report</b><br/>
+	 		<b>Duration :<%= "#{@start_date.strftime('%d %B %Y')} to #{@end_date.strftime('%d %B %Y')} (#{@quarter})"%></b><br>
+	 		<b>Patients Registered : <%= @variables["count"] %></b>
+		</div>
+		<br><br>
+
+		<div style = "-moz-user-select:none;">
+			<table border = 1 cellpadding = 0 cellspacing =0  width = 95% style = margin = 30px align = center>
+				<tr>
+					<th rowspan =4 width = 10%>Age Category (Years)</th><th width = 25% colspan = 6>Pulmonary Tuberculosis</th>
+					<th rowspan =3 colspan = 2 >Extra-Pulmonary TB</th><th colspan = 6 width = 10%>Others</th>
+					<th  colspan = 2 rowspan = 3 width = 10%> Total</th><th rowspan = 4 width = 15%>Grand Total</th>
+				</tr>
+				<tr>
+				<th colspan = 4>Smear Positive Pulmonary TB</th><th rowspan = 2 colspan = 2 >Smear Negative Pulmonary TB</th>
+				<th colspan = 2 rowspan = 2>Treatment After Default</th><th colspan = 2 rowspan = 2> Treatment After Failure</th>
+				<th colspan = 2 rowspan = 2>Recurrent</th></tr>
+				<tr><th colspan = 2>New Cases</th><th colspan = 2>Relapses</th></tr>		
+				<tr>
+				<th>M</th><th>F</th><th>M</th><th>F</th><th>M</th><th>F</th><th >M</th><th>F</th>
+				<th>M</th><th>F</th><th>M</th><th>F</th><th>M</th><th>F</th><th>M</th><th>F</th>
+				
+				</tr>
+				<tr>
+				<th>0-4</th><td><%= @variables["Under5MPulnew"] %></td><td><%= @variables["Under5FPulnew"] %></td>
+				<td><%= @variables["Under5MPulrel"] %></td><td><%= @variables["Under5FPulrel"] %></td>
+				<td><%= @variables["Under5MXP"] %></td><td><%= @variables["Under5FXP"] %></td>
+				<td><%= @variables["Under5MEP"] %></td><td><%= @variables["Under5FEP"] %></td>
+				<td><%= @variables["Under5MPuldef"] %></td><td><%= @variables["Under5FPuldef"] %></td>
+				<td><%= @variables["Under5MPulF"] %></td><td><%= @variables["Under5FPulF"] %></td>
+				<td><%= @variables["Under5Moth"] %></td><td><%= @variables["Under5Foth"] %></td>
+				<td><%= @variables["Under5Males"] %></td><td><%= @variables["Under5Females"] %></td>
+				<td><%= @variables["Under5Females"] + @variables["Under5Males"] %></td>
+				</tr>
+				<tr>
+				<th>5-14</th><td><%= @variables["Under15MPulnew"] %></td><td><%= @variables["Under15FPulnew"] %></td>
+				<td><%= @variables["Under15MPulrel"] %></td><td><%= @variables["Under15FPulrel"] %></td>
+				<td><%= @variables["Under15MXP"] %></td><td><%= @variables["Under15FXP"] %></td>
+				<td><%= @variables["Under15MEP"] %></td><td><%= @variables["Under15FEP"] %></td>
+				<td><%= @variables["Under15MPuldef"] %></td><td><%= @variables["Under15FPuldef"] %></td>
+				<td><%= @variables["Under15MPulF"] %></td><td><%= @variables["Under15FPulF"] %></td>
+				<td><%= @variables["Under15Moth"] %></td><td><%= @variables["Under15Foth"] %></td>
+				<td><%= @variables["Under15Males"] %></td><td><%= @variables["Under15Females"] %></td>
+				<td><%= @variables["Under15Females"] + @variables["Under15Males"] %></td>
+				</tr>
+				<tr>
+				<th>15-24</th><td><%= @variables["Under25MPulnew"] %></td><td><%= @variables["Under25FPulnew"] %></td>
+				<td><%= @variables["Under25MPulrel"] %></td><td><%= @variables["Under25FPulrel"] %></td>
+				<td><%= @variables["Under25MXP"] %></td><td><%= @variables["Under25FXP"] %></td>
+				<td><%= @variables["Under25MEP"] %></td><td><%= @variables["Under25FEP"] %></td>
+				<td><%= @variables["Under25MPuldef"] %></td><td><%= @variables["Under25FPuldef"] %></td>
+				<td><%= @variables["Under25MPulF"] %></td><td><%= @variables["Under25FPulF"] %></td>
+				<td><%= @variables["Under25Moth"] %></td><td><%= @variables["Under25Foth"] %></td>
+				<td><%= @variables["Under25Males"] %></td><td><%= @variables["Under25Females"] %></td>
+				<td><%= @variables["Under25Females"] + @variables["Under25Males"] %></td>
+				</tr>
+				<tr>
+				<th>25-34</th><td><%= @variables["Under35MPulnew"] %></td><td><%= @variables["Under35FPulnew"] %></td>
+				<td><%= @variables["Under35MPulrel"] %></td><td><%= @variables["Under35FPulrel"] %></td>
+				<td><%= @variables["Under35MXP"] %></td><td><%= @variables["Under35FXP"] %></td>
+				<td><%= @variables["Under35MEP"] %></td><td><%= @variables["Under35FEP"] %></td>
+				<td><%= @variables["Under35MPuldef"] %></td><td><%= @variables["Under35FPuldef"] %></td>
+				<td><%= @variables["Under35MPulF"] %></td><td><%= @variables["Under35FPulF"] %></td>
+				<td><%= @variables["Under35Moth"] %></td><td><%= @variables["Under35Foth"] %></td>
+				<td><%= @variables["Under35Males"] %></td><td><%= @variables["Under35Females"] %></td>
+				<td><%= @variables["Under35Females"] + @variables["Under35Males"] %></td>
+				</tr>
+				<tr>
+				<th>35-44</th><td><%= @variables["Under45MPulnew"] %></td><td><%= @variables["Under45FPulnew"] %></td>
+				<td><%= @variables["Under45MPulrel"] %></td><td><%= @variables["Under45FPulrel"] %></td>
+				<td><%= @variables["Under45MXP"] %></td><td><%= @variables["Under45FXP"] %></td>
+				<td><%= @variables["Under45MEP"] %></td><td><%= @variables["Under45FEP"] %></td>
+				<td><%= @variables["Under45MPuldef"] %></td><td><%= @variables["Under45FPuldef"] %></td>
+				<td><%= @variables["Under45MPulF"] %></td><td><%= @variables["Under45FPulF"] %></td>
+				<td><%= @variables["Under45Moth"] %></td><td><%= @variables["Under45Foth"] %></td>
+				<td><%= @variables["Under45Males"] %></td><td><%= @variables["Under45Females"] %></td>
+				<td><%= @variables["Under45Females"] + @variables["Under45Males"] %></td>
+				</tr>
+				<tr>
+				<th>45-54</th><td><%= @variables["Under55MPulnew"] %></td><td><%= @variables["Under55FPulnew"] %></td>
+				<td><%= @variables["Under55MPulrel"] %></td><td><%= @variables["Under55FPulrel"] %></td>
+				<td><%= @variables["Under55MXP"] %></td><td><%= @variables["Under55FXP"] %></td>
+				<td><%= @variables["Under55MEP"] %></td><td><%= @variables["Under55FEP"] %></td>
+				<td><%= @variables["Under55MPuldef"] %></td><td><%= @variables["Under55FPuldef"] %></td>
+				<td><%= @variables["Under55MPulF"] %></td><td><%= @variables["Under55FPulF"] %></td>
+				<td><%= @variables["Under55Moth"] %></td><td><%= @variables["Under55Foth"] %></td>
+				<td><%= @variables["Under55Males"] %></td><td><%= @variables["Under55Females"] %></td>
+				<td><%= @variables["Under55Females"] + @variables["Under55Males"] %></td>
+				</tr>
+				<tr>
+				<th>55-64</th><td><%= @variables["Under65MPulnew"] %></td><td><%= @variables["Under65FPulnew"] %></td>
+				<td><%= @variables["Under65MPulrel"] %></td><td><%= @variables["Under65FPulrel"] %></td>
+				<td><%= @variables["Under65MXP"] %></td><td><%= @variables["Under65FXP"] %></td>
+				<td><%= @variables["Under65MEP"] %></td><td><%= @variables["Under65FEP"] %></td>
+				<td><%= @variables["Under65MPuldef"] %></td><td><%= @variables["Under65FPuldef"] %></td>
+				<td><%= @variables["Under65MPulF"] %></td><td><%= @variables["Under65FPulF"] %></td>
+				<td><%= @variables["Under65Moth"] %></td><td><%= @variables["Under65Foth"] %></td>
+				<td><%= @variables["Under65Males"] %></td><td><%= @variables["Under65Females"] %></td>
+				<td><%= @variables["Under65Females"] + @variables["Under65Males"] %></td>
+				</tr>
+				<tr>
+				<th>65+</th><td><%= @variables["Over64MPulnew"] %></td><td><%= @variables["Over64FPulnew"] %></td>
+				<td><%= @variables["Over64MPulrel"] %></td><td><%= @variables["Over64FPulrel"] %></td>
+				<td><%= @variables["Over64MXP"] %></td><td><%= @variables["Over64FXP"] %></td>
+				<td><%= @variables["Over64MEP"] %></td><td><%= @variables["Over64FEP"] %></td>
+				<td><%= @variables["Over64MPuldef"] %></td><td><%= @variables["Over64FPuldef"] %></td>
+				<td><%= @variables["Over64MPulF"] %></td><td><%= @variables["Over64FPulF"] %></td>
+				<td><%= @variables["Over64Moth"] %></td><td><%= @variables["Over64Foth"] %></td>
+				<td><%= @variables["Over64Males"] %></td><td><%= @variables["Over64Females"] %></td>
+				<td><%= @variables["Over64Females"] + @variables["Over64Males"] %></td>
+				</tr>
+				<tr>
+				<th>Total</th>
+				<td><%=@variables["MalesNew"]%></td><td><%=@variables["FemalesNew"]%></td><td><%=@variables["MalesRel"]%></td>
+				<td><%=@variables["FemalesRel"]%><td><%=@variables["MaleXP"]%></td><td><%=@variables["FemaleXP"]%></td>
+				<td><%=@variables["MalesEP"]%></td><td><%=@variables["FemalesEP"]%></td><td><%=@variables["MalesDef"]%></td>
+				<td><%=@variables["FemalesDef"]%></td><td><%= @variables["MalesF"] %></td><td> <%= @variables["FemalesF"] %>
+				</td><td><%= @variables["MaleOth"] %></td><td><%=@variables["FemaleOth"]%></td>
+				<td><%= @variables["Males"]%></td><td><%= @variables["Females"]%></td>
+				<td><%= @variables["Males"] + @variables["Females"] %></td>
+				</tr>
+
+			</table>
+		</div>
+	</body>
+
+</html>

@@ -1,0 +1,35 @@
+<script>
+	function load(){
+		document.getElementById('find').style.display = 'none';
+	}
+	setTimeout("load();",100);
+</script>
+<style>
+	td{
+		text-align:center;
+		height:50px;
+}
+	div{
+		-moz-user-select:none;
+	}
+	th{
+		background-color:lightblue; 
+	}
+</style>
+
+<img src= "/images/mw.gif" >
+<div style = "position:absolUte; top:30px;left:200px; -moz-user-select:none;">
+	<b>Facility : <%= Location.current_health_center.name %></b><br/>
+	<b>Report Type : Lab Register</b><br/>
+	<b>Duration : <b><%= "#{@start_date} to #{@end_date}"%></b>
+</div>
+<br><br>
+
+<div style = "margin-left: 10px;border: 1px solid; height:65%; width:98%" >
+	<table border = 1 cellspacing = 0 cellpadding =0 width= 100%>
+		<tr>
+		<th>Lab Serial Number</th><th>Date Specimens Collected</th><th>Date Specimens Received</th><th>Date Specimen Tested</th>
+		<th>Name</th><th>Age</th><th>Sex</th><th>Address</th><th>Result</th>
+		</tr>
+	</table>
+</div>

@@ -1,0 +1,65 @@
+<style>
+
+  #num , #Unknown { display:none; }                                  
+                                                                                
+  .dateselector {                                                               
+     position: fixed;                                                           
+     top: 195px;                                                                
+  }                                                                             
+
+</style>
+
+
+<script type="text/javascript">
+ var tt_cancel_destination = "/clinic";  // /management"
+
+ setTimeout("changeCancelButton()", 500);                                      
+                                                                                
+  function changeCancelButton() {                                               
+    cancelButton = document.getElementById('cancelButton');                     
+    cancelButton.setAttribute('onmousedown','javascript:history.back();');      
+  }  
+</script>
+
+<form method='post' action="stock_report_edit">
+
+<%if @edit_reason == 'relocated' 
+  
+  optionsString = []
+  optionsString << "Damaged"
+  optionsString << "Expired"
+  optionsString << "Given to other clinics"
+  optionsString << "Went missing"
+  optionsString << "Other"
+
+%>
+
+  <%= touch_select_tag "REASON", '', options_for_select(optionsString),
+        {:id => "edit_reason",
+         :multiple => false,
+         :helpText => "Edit reason",
+         :tt_pageStyleClass => "NoKeyboard NoInput small"  } %>
+
+  <input type="text" field_type="date" id="start_date" 
+    name="encounter_date" value="" 
+     maxDate="<%= (@max_date.to_date) %>"
+    helpText="Select relocation date" />
+
+<%else%>
+  <%= hidden_field_tag "encounter_date", @encounter_date %>
+<%end%>
+
+
+<%= hidden_field_tag "drug_id", @drug_id %>
+
+<%= text_field_tag "number_of_tins", nil, {:helpText => 'Number of tins', 
+    :field_type => 'number', :absoluteMin => "1", 
+    :min => "1", :tt_pageStyleClass => "Numeric NumbersOnly"}  %>
+
+<%= text_field_tag "number_of_pills_per_tin", nil, {:helpText => 'Number of pills per tin', 
+    :field_type => 'number', :absoluteMin => "1", 
+    :min => "1", :tt_pageStyleClass => "Numeric NumbersOnly"}  %>
+
+<%= hidden_field_tag "start_date", @start_date %>
+<%= hidden_field_tag "end_date", @end_date %>
+</form>

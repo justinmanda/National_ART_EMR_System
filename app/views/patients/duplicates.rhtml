@@ -1,0 +1,748 @@
+
+<head>
+    <%= javascript_include_tag "prototype" %>
+    <%= javascript_include_tag 'jquery' %>
+    <%= stylesheet_link_tag 'extra_buttons' %>
+    <%= javascript_include_tag 'jquery_data_table.js' %>
+    <%= stylesheet_link_tag 'jquery.dataTables' %>
+    <script type="text/javascript" charset="utf8" src="/javascripts/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+      jQuery(document).ready(function($) {
+          $('#table_id').dataTable({
+            "bAutoWidth": true,
+            "bProcessing": true,
+            "sScrollY": "450px",
+            "bInfo": true,
+            "bPaginate": false,
+            "bSort": false
+          });
+
+    search_box = $('#table_id').dataTable()
+    search = document.getElementsByTagName("input")[0];
+    search.setAttribute("id","search");
+    document.getElementById('search').setAttribute("onclick","showKeyboard();");
+    keyboard = document.getElementsByClassName("keypad")[0]
+    document.getElementById("find").style.display = 'none'
+    finish = document.getElementById('logout')
+    finish.setAttribute("class", "green left")
+    $("#finishButton").click(function() {
+      window.location = "/clinic"
+    });
+    function getCharButtonSetID(character,id){
+      return '<button onMouseDown="press(\''+character+'\');" class="keyboardButton" id="'+id+'">' +"<span style='width:32px'>"+character+"</span>"+ "</button>";
+    }
+    function getButtonString(id,string){
+      return "<button \
+                            onMouseDown='press(this.id);' \
+                            class='keyboardButton' \
+                            id='"+id+"'>"+
+        string +
+        "</button>";
+    }
+
+    function getButtons(chars){
+      var buttonLine = "";
+      for(var i=0; i<chars.length; i++){
+        character = chars.substring(i,i+1)
+        buttonLine += getCharButtonSetID(character,character)
+      }
+      return buttonLine;
+    }
+
+    showAlphaKeypad();
+
+    function showAlphaKeypad(){
+      document.getElementById("keypad").style.height = "280";
+      keyboard.innerHTML= getButtons("0123456789") + "</br>"
+      keyboard.innerHTML+= getButtons("QWERTYUIOP") + "</br>"
+      keyboard.innerHTML+= getButtons("ASDFGHJKL:") + "</br>"
+      keyboard.innerHTML+= getButtons("ZXCVBNM,.?")
+      keyboard.innerHTML+= getButtonString('backspace','<span>Bksp</span>')
+      keyboard.innerHTML+= getButtonString('Space','<span>Space</span>')
+      keyboard.innerHTML+= getButtonString('clear','<span>Clear</span>')
+    }
+
+    function showNumericKeypad(){
+      document.getElementById("keypad").style.height = "145";
+      keyboard.innerHTML = getButtons("123")
+      keyboard.innerHTML+= getButtons("456")
+      keyboard.innerHTML+= getButtons("7890")
+      keyboard.innerHTML+= getButtonString('space','<span>Space</span>')
+      keyboard.innerHTML+= getButtonString('clear','<span>Clear</span>')
+      keyboard.innerHTML+= getButtonString('backspace','<span>Bksp</span>')
+      keyboard.innerHTML+= getButtonString('abc','<span>abc</span>')
+      keyboard.innerHTML+= getButtonString('dash','<span>-</span>')
+      keyboard.innerHTML+= getButtonString('slash','<span>/</span>')
+    }
+
+  })
+    </script>
+
+    <script type="text/javascript">
+
+      function showKeyboard(){
+        key = document.getElementById("keypad")
+        if(key.style.display == 'none' || key.style.display == ""){
+          key.style.display = "inline";
+          return
+        }
+
+        key.style.display = "none";
+      }
+
+      function press(pressedChar){
+        switch (pressedChar) {
+          case 'backspace':
+            search.value = search.value.substring(0,search.value.length-1);
+            search_box.fnFilter(search.value)
+            return;
+          case 'Space':
+            search.value+= " "
+            search_box.fnFilter(search.value)
+            return
+          case 'clear':
+            search.value = ""
+            search_box.fnFilter(search.value)
+            return
+          case 'num':
+            showNumericKeypad();
+            return
+          case 'slash':
+            search.value+= "/"
+            search_box.fnFilter(search.value)
+            return
+          case 'dash':
+            search.value+= "-"
+            search_box.fnFilter(search.value)
+            return
+          case 'abc':
+            showAlphaKeypad();
+            return
+        }
+        search.value+= pressedChar
+        search_box.fnFilter(search.value)
+      }
+      //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    </script>
+
+    <style>
+
+      #backspace{
+        position:absolute;
+        left:100px;
+        bottom:2px;
+      }
+
+      #Space{
+        position:absolute;
+        left:220px;
+        bottom:2px;
+        width:200px;
+      }
+
+      #clear{
+        position:absolute;
+        left:470px;
+        bottom:2px;
+      }
+       #num{
+        position:absolute;
+        left:470px;
+        bottom:2px;
+        width:200px;
+      }
+      #keypad{
+        background-color: #FFFFFF;
+        border: 2px solid #9999FF;
+        border-radius: 15px 15px 15px 15px;
+        display: none;
+        height: 304px;
+        padding: 5px;
+        position: absolute;
+        right: 13px;
+        top: 194px;
+        width: 672px;
+      }
+    </style>
+    <style>
+      div {
+        -moz-user-select: none;
+      }
+      .basic_span {
+        position:relative;
+        width:50%;
+        display:block;
+        float:left;
+      }
+
+      .logo {
+        float:left
+      }
+
+      #table_id {
+        width: 100%;
+      }
+
+      #table_id_filter{
+        position:absolute;
+        top:0px;
+        right:1%;
+        margin-top:-40px;
+      }
+
+      #table_id_filter input{
+        padding:0.5em;
+      }
+
+
+      .dataTables_length select {
+        font-size: 25px;
+      }
+      .horizontal_line hr{
+        position:absolute;
+        bottom:104px;
+      }
+      #table_id_info{
+        left: 10px;
+        position: absolute;
+        top: 492px;
+        font-weight:bold;
+      }
+      #table_id_length{
+        display:none;
+      }
+       #table_id_paginate{
+        display:none;
+      }
+      #num{ display:none; }
+      #char{ display:none; }
+
+    </style>
+  </head>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  var patient_sets = {}
+  var total_id_hash_key = 0
+</script>
+
+<style>
+.color_white {
+  width:15%;
+  background-color:white;
+}
+
+.color_blue {
+  width:15%;
+  background-color:lightgrey;
+}
+
+td {
+  border-style: solid;
+  border-width: 1px;
+}
+
+.merge {
+}
+
+ table tbody a {
+      border-radius: 7px;
+      background-color: #669999;
+      border-bottom: 1px outset black;
+      border-style: outset;
+      border-top: 1px outset black;
+      color: white;
+      display: block;
+      padding: 10px 16px 10px 10px;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+  }
+
+  #yes{
+      position: relative;
+      border-radius: 7px;
+      background-color: #669999;
+      border-bottom: 1px outset black;
+      border-style: outset;
+      border-top: 1px outset black;
+      color: white;
+      padding: 20px 26px 20px 20px;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      top:46px;
+      left: -8px;
+  }
+
+  #no {
+      position: relative;
+      border-radius: 7px;
+      background-color: #669999;
+      border-bottom: 1px outset black;
+      border-style: outset;
+      border-top: 1px outset black;
+      color: white;
+      padding: 20px 26px 20px 20px;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      top:46px;
+      left: 3px;
+  }
+
+</style>
+
+<%= image_tag(@logo, :class => "logo")%>
+<br /><b style="margin-left:75px"><%= @current_location_name %></b><br />
+<b style="position:relative; top:0px;margin-left:75px">Possible patient duplicates</b>
+
+<!--<h2>Possible duplicate patients</h2>-->
+<table id="table_id">
+  <thead>
+    <tr>
+      <th>National ID</th>
+      <th>Name</th>
+      <th>DOB</th>
+      <th>Gender</th>
+      <th>Age</th>
+      <th>&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+  <%color = 'white'
+    row_number = 0
+    ( @duplicates || {} ).each do | key , patients |
+      count = 0
+      patient_ids = ''
+      if color == 'white'
+        color = 'blue'
+      else
+        color = 'white'
+      end
+      row_number+=1 %>
+      <script>
+        patient_sets[total_id_hash_key+=1] = null
+      </script>
+      <%patients.each do | patient | %>
+        <script type="text/javascript">
+          if(patient_sets[total_id_hash_key]){
+            patient_sets[total_id_hash_key]+= ",<%= patient.id %>"
+          } else { patient_sets[total_id_hash_key] = "<%= patient.id %>" }
+        </script>
+      <%
+        count+=1
+        patient_ids+=",#{patient.id}" unless patient_ids.blank?
+        patient_ids = "#{patient.id}" if patient_ids.blank?
+  %>
+    <tr>
+      <td class="color_<%=color%> row_number_<%=row_number%>" color="<%=color%>"><%= PatientService.get_national_id(patient) %></td>
+      <td class="color_<%=color%> row_number_<%=row_number%>" color="<%=color%>"><%= patient.name || '&nbsp;' %></td>
+      <td class="color_<%=color%> row_number_<%=row_number%>" color="<%=color%>"><%= patient.person.birthdate || '&nbsp;' %> </td>
+      <td class="color_<%=color%> row_number_<%=row_number%>" color="<%=color%>"><%= patient.person.gender || '&nbsp;' %></td>
+      <td class="color_<%=color%> row_number_<%=row_number%>" color="<%=color%>"><%= PatientService.age(patient.person) %></td>
+      <!--
+      <td class="color_<%=color%> row_number_<%=row_number%>">
+        <button id = '<%=patient.id%>' class ='merge button_row_<%=row_number%>' onmousedown="mergePatient('<%=patient.id%>','<%=row_number%>','<%=color%>');">Merge</button>
+      </td>-->
+       <td class="color_<%=color%> row_number_<%=row_number%>" color="<%=color%>">
+        <a id = '<%=patient.id%>' row="<%=row_number%>" class ='merge button_row_<%=row_number%>' onmousedown="showConfirm();confirmMerge('<%=patient.id%>','<%=row_number%>')">Merge</a>
+      </td>
+    </tr>
+  <% end %>
+  <% end %>
+  </tbody>
+</table>
+
+<script type="text/javascript">
+
+  function mergePatient(patient_id,row_id,previous_color){
+    document.getElementById('cover').style.display = 'inline'
+    //disableButtons();
+    tds = document.getElementsByClassName("row_number_" + row_id);
+    for(i = 0 ; i < tds.length ; i++){
+      tds[i].style.background = 'red';
+    }
+
+
+    msgbox = document.getElementById('popup_box');
+    msgbox.innerHTML = "<span>Are you sure?</span></p><a id='yes' onmousedown='mergePatients(\"" + patient_id + "\",\"" + row_id + "\")'>YES</a>" +
+                       "&nbsp;&nbsp;&nbsp;<a id='no' onmousedown='cancelMerge(\"" + previous_color + "\",\"" + row_id + "\")'>NO</a>"
+
+    msgbox.style.background = "tomato";
+    msgbox.style.height = "150";
+    javascript:window.scrollTo(0,0);
+    msgbox.style.display = 'inline';
+
+  }
+
+  function cancelMerge(previous_color,row_id){
+
+    if(previous_color == 'blue'){color = 'lightgrey'
+    }else{color = 'white'}
+
+    document.getElementById('popup_box').style.display = 'none';
+    tds = document.getElementsByClassName("row_number_" + row_id);
+    for(i = 0 ; i < tds.length ; i++){
+      tds[i].style.background = color;
+    }
+    //enableButtons();
+    document.getElementById('cover').style.display = 'none'
+  }
+
+  function mergePatients(patient_id,row_id){
+
+    buttons = document.getElementsByClassName('button_row_' + row_id)
+    patient_ids = patient_id
+    for(i = 0 ; i < buttons.length ; i++){
+      if(buttons[i].id != patient_id)
+        patient_ids+="," + buttons[i].id
+    }
+    //document.location = "/patient/merge_patients?patient_ids=" + patient_ids
+    document.getElementById('popup_box').style.display = 'none';
+
+    new Ajax.Request("/patients/merge_patients?patient_ids=" + patient_ids,{method:'get',onSuccess: function(transport){
+    done = transport.responseText || "";
+      if(done == "true"){
+        hideRow(row_id);
+        delete patient_sets[parseFloat(row_id)]
+        //enableButtons();
+      }
+    }});
+    document.getElementById('cover').style.display = 'none'
+  }
+
+  function hideRow(row_id){
+    tds = document.getElementsByClassName("row_number_" + row_id)
+    for(i = 0 ; i < tds.length ; i++){
+      tds[i].style.display = 'none';
+    }
+  }
+
+  function cancelAllMerge(){
+    document.getElementById('popup_box').style.display = 'none';
+    document.getElementById('cover').style.display = 'none';
+    //enableButtons();
+  }
+
+  function mergeAll(){
+    //disableButtons();
+    msgbox = document.getElementById('popup_box');
+    msgbox.innerHTML = "Are you sure?</p><a id='yes' onmousedown='mergeAllPatients()'>YES</a>" +
+                       "&nbsp;&nbsp;&nbsp;<a id='no' onmousedown='cancelAllMerge()'>NO</a>"
+    msgbox.style.background = "tomato";
+    msgbox.style.height = "150";
+    msgbox.style.display = 'inline';
+  }
+
+  function mergeAllPatients(){
+    $('yes').disabled = true;
+    var patient_ids = ''
+    for (set  in patient_sets){
+      if(patient_ids != '')
+        patient_ids+= ":"
+
+      set_ids = ''
+      ids = patient_sets[set].split(',')
+      for(var i = 0 ; i < ids.length ; i++){
+        if(set_ids == ''){
+          set_ids = ids[i]
+        } else {set_ids+= ',' + ids[i]}
+      }
+      patient_ids+= set_ids
+    }
+
+    var form = new Element('form',
+                        {method: 'post', action: '/patients/merge_all_patients'});
+    form.insert(new Element('input',
+                         {name: 'patient_ids', value: patient_ids, type: 'hidden'}));
+    $(document.body).insert(form);
+    form.submit();
+
+  }
+
+  function confirmMerge(patient_id, row_id){
+    var master = patient_id;
+    var slaves = []
+
+    buttons = document.getElementsByClassName("button_row_" + row_id)
+    for(i=0; i<buttons.length; i++){
+      if(buttons[i].id != master){
+        slaves.push(buttons[i].id)
+      }
+
+    }
+
+new Ajax.Request("/patients/confirm_merge?master_id=" + master + '&slaves_ids=' + slaves,
+    {
+      method:'get',onSuccess: function(transport){
+        patients = transport.responseText;
+        patients = eval('(' + patients + ')')
+        for(patient in patients){
+          for(key in patients[patient]){
+            //alert(key + ':' + patients[patient][key])
+          }
+        }
+        createConfirmPage(patients);
+
+      }
+    })
+}
+
+function createConfirmPage(patients){
+  confirm_page = document.getElementById('confirmPage')
+  div = document.createElement("div")
+  div.id = "slaves"
+  confirm_page.appendChild(div)
+  //slaves_table = document.createElement("table")
+  //slaves_table.id = "slaves_table"
+  master_table = document.createElement("table")
+  master_table.id = "master_table"
+  data = "<table style='position:absolute; margin-top:80px; font-size:10pt' cellspacing='0' cellpadding='0' border='0' width='900px';>"
+  data += "<tr><td><table cellspacing='0' cellpadding='1' border='1' width='900px' >"
+  data += "<tr style='text-align: left; background-color: #8FBC8F;'><th>Name</th><th>Gender</th><th>Date of Birth</th><th>Village</th><th>T/A</th><th>Date created</th><th>&nbsp;</th></tr></table></td></tr>"
+  data += "<tr><td style='width:600px'><div style='width:900px; height:327px; overflow:auto; border:0px'>"
+  data +="<table cellspacing='0' cellpadding='1' border='1' width='50px' >"
+  html = "<thead><tr><th>Name</th><th>Gender</th><th>Date of Birth</th><th>Village</th><th>T/A</th><th>Date created</th></tr></thead>"
+  for(patient in patients){
+    if (patients[patient].master) continue
+      data+="<tr><td>" + patients[patient].first_name + ' ' + patients[patient].last_name + "</td>"
+      //data+="<td>" + patients[patient].last_name + "</td>"
+      data+="<td>" + patients[patient].gender + "</td>"
+      data+="<td>" + patients[patient].date_of_birth + "</td>"
+      data+="<td>" + patients[patient].city_village + "</td>"
+      data+="<td>" + patients[patient].county_district + "</td>"
+      data+="<td>" + patients[patient].date_created + "</td>"
+      data+="<td><input type='checkbox' name='slaves_ids[]' id=" + patient + "></td></tr>"
+  }
+  data+="</table></div></td></tr></table>"
+  for(patient in patients){
+    if (patients[patient].master){
+      html+="<tr class='master_row' id=" + patient + "><td>" + patients[patient].first_name + ' ' + patients[patient].last_name + "</td>"
+      //html+="<td>" + patients[patient].last_name + "</td>"
+      html+="<td>" + patients[patient].gender + "</td>"
+      html+="<td>" + patients[patient].date_of_birth + "</td>"
+      html+="<td>" + patients[patient].city_village + "</td>"
+      html+="<td>" + patients[patient].county_district + "</td>"
+      html+="<td>" + patients[patient].date_created + "</td></tr>"
+    }
+  }
+	div.innerHTML = data
+	master_table.innerHTML=html
+	confirm_page.appendChild(master_table)
+
+	confirmPage = document.getElementById('confirmPage')
+    img = document.createElement('img')
+    img.src='/images/pointer.png'
+    img.className = 'pointer'
+    confirmPage.appendChild(img)
+
+
+}
+
+function hideObject(){
+  document.getElementById('confirmPage').style.display='none'
+  document.getElementById('cover').style.display='none'
+  pointer = document.getElementsByClassName('pointer')[0]
+  pointer.parentNode.removeChild(pointer)
+  master = document.getElementById('master_table')
+  slaves = document.getElementById('slaves')
+  master.parentNode.removeChild(master);
+  slaves.parentNode.removeChild(slaves);
+}
+
+function showConfirm(){
+  document.getElementById('confirmPage').style.display='inline'
+  document.getElementById('cover').style.display='inline'
+}
+
+function grabIds(){
+  inputs = document.getElementsByTagName("input")
+  master_row = document.getElementsByClassName("master_row")[0]
+  patients_ids = []
+  row_number = document.getElementById(master_row.id).getAttribute('row')
+  patients_ids.push(master_row.id)
+  for(i=0; i<inputs.length; i++){
+    if (inputs[i].type != 'checkbox') continue
+    if (inputs[i].checked == true){
+      patients_ids.push(inputs[i].id)
+    }
+
+  }
+  if ((patients_ids.length) == 1){
+  	return
+  }
+    new Ajax.Request("/patients/merge_patients?patient_ids=" + patients_ids,{method:'get',onSuccess: function(transport){
+    done = transport.responseText || "";
+      if(done == "true"){
+        hideObject();
+        tds = document.getElementsByClassName("row_number_" + row_number)
+          for(i = 0 ; i < tds.length ; i++){
+            tds[i].style.display = 'none';
+
+          }
+      }
+    }});
+}
+</script>
+
+<style>
+  #popup_box {
+    display:none;
+    z-index:1001;
+    left:489px;
+    top:100px;
+    text-align:center;
+    font-size:28;
+    color: #FFFFFF;
+    border: 2px solid #9999FF;
+    border-radius: 15px 15px 15px 15px;
+    height: 154px;
+    padding: 5px;
+    position: absolute;
+    top: 199px;
+    width: 421px;
+    -moz-user-select:none;
+  }
+
+    #popup_box span{
+    font-size:40px;
+  }
+
+  #cover{
+    display: none;
+    position: absolute;
+    background-color: black;
+    width: 100%;
+    height: 102%;
+    left: 0%;
+    top: 0%;
+    z-index: 1000;
+    opacity: 0.5;
+
+  }
+
+  #confirmPage{
+    z-index:1002;
+    left:48px;
+    top:30px !important;
+    text-align:center;
+    font-size:28;
+    background-color: white;
+    color: black;
+    border: 8px solid #669999;
+    border-radius: 15px 15px 15px 15px;
+    height: 579px;
+    padding: 5px;
+    position: absolute;
+    width: 900px;
+    -moz-user-select:none;
+
+}
+#continue {
+      position: absolute;
+      border-radius: 7px;
+      background-color: #57C057;
+      border-bottom: 1px outset black;
+      border-style: outset;
+      border-top: 1px outset black;
+      color: white;
+      padding: 20px 26px 20px 20px;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      top:512px;
+      left: 555px;
+      font-weight: bold;
+      font-size: 18pt;
+  }
+
+  #cancel {
+      position: absolute;
+      border-radius: 7px;
+      background-color: #57C057;
+      border-bottom: 1px outset black;
+      border-style: outset;
+      border-top: 1px outset black;
+      color: white;
+      padding: 20px 26px 20px 20px;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      top:512px;
+      left: 190px;
+      font-weight: bold;
+      font-size: 18pt;
+  }
+
+  #slaves_table{
+  	width: 100%;
+  	line-height: 48px;
+  }
+
+ #slaves{
+
+ position: absolute;
+ height: 359px;
+ top: 62px;
+ width: 99%;
+ }
+ #master_table{
+   width:100%;
+}
+#slaves table tr th{
+min-width: 89px;
+border: 0px;
+}
+
+#slaves table tr td{
+min-width:124px;
+
+}
+
+input[type="checkbox"] {
+   -moz-transform: scale(2);
+
+}
+
+.pointer{
+	position: absolute;
+	top: 71px;
+	width: 66px;
+	height: 65px;
+	left: 419px;
+}
+</style>
+<div class="horizontal_line">
+      <hr width="100%" color="gray"/>
+    </div>
+    <div id="keypad">
+      <span class="keypad">
+      </span>
+</div>
+<div id="cover">
+
+</div>
+
+
+<div id="popup_box" align="center">
+  <p>Merging patients</p>
+  <p><blink>Please wait.......</blink></p>
+</div>
+
+<div id="confirmPage" style="display:none">
+<a id='continue' onmousedown="grabIds();"><span>Continue</span></a>
+<a id='cancel' onmousedown="hideObject();"><span>Cancel</span></a>
+</div>

@@ -1,0 +1,107 @@
+		<title>New And Relapse Cases</title>
+<style>
+	td{
+			color: red ;
+			font-size: 14;
+			border-color: black;
+			text-align:center;
+	}
+</style>
+		<script>
+			function load(){
+				var button = document.getElementById("buttons");
+				var next = document.createElement("button")
+				
+				document.getElementById('find').style.display = 'none';
+				next.innerHTML = "<span> Page 1</span>"
+				next.setAttribute("class","blue")
+				next.setAttribute("width","500px")
+				next.setAttribute("onclick","history.back();")
+				button.appendChild(next)
+			}
+			setTimeout("load();",30)
+			
+
+		</script>
+	
+	<div style = "-moz-user-select:none">
+		<div style = " position:relative;top:10px;left:60px;width:90%;text-align:center;size:14;">	
+			<font size=6>
+				QUARTELY REPORT ON TREATMENT OUTCOME FOR NEW AND RELAPSE TB CASES FOR <%= @quarter %> (<%= "#{@start_date} To #{@end_date}" %>)
+			</font>
+		</div>
+		<div style = " margin-top:50px">
+
+		<table border = 1 cellspacing = 0 cellpadding = 0 width = 90% align= center>
+			<tr>
+				<th rowspan = 2></th>
+				<th colspan = 2>Cured</th><th colspan = 2>Failure</th><th colspan = 2>Rx. compx</th><th colspan = 2>Died</th>
+				<th colspan = 2>Default</th><th colspan = 2>T/O</th><th colspan = 2>No. notif</th><th colspan = 2>No. Eval</th>
+			</tr>
+			<tr>
+				<th>M</th><th>F</th><th>M</th><th>F</th><th>M</th><th>F</th><th>M</th><th>F</th><th>M</th><th>F</th>
+				<th>M</th><th>F</th><th>M</th><th>F</th><th>M</th><th>F</th>			
+			</tr>
+			<tr>
+				<th>SM +ve</th><td><%= @variables["SMposMC"] %></td><td><%= @variables["SMposFC"] %></td>
+				<td><%= @variables["SMposMF"] %></td><td><%= @variables["SMposFF"] %></td><td><%= @variables["SMposMRC"] %></td>
+				<td><%= @variables["SMposFRC"] %></td><td><%= @variables["SMposMDI"] %></td><td><%= @variables["SMposFDI"] %></td>
+				<td><%= @variables["SMposMDF"] %></td><td><%= @variables["SMposFDF"] %></td><td><%= @variables["SMposMTO"] %></td>
+				<td><%= @variables["SMposFTO"]%></td><td><%=@variables["SMposMNoNotif"]%></td><td><%=@variables["SMposFNoNotif"]%></td>
+				<td><%= @variables["SMposMNoEval"] %></td><td><%= @variables["SMposFNoEval"] %></td>			
+			</tr>
+			<tr>
+				<th>Relapse</th><td><%= @variables["relMC"] %></td><td><%= @variables["relFC"] %></td>
+				<td><%= @variables["relMF"] %></td><td><%= @variables["relFF"] %></td><td><%= @variables["relMRC"] %></td>
+				<td><%= @variables["relFRC"] %></td><td><%= @variables["relMDI"] %></td><td><%= @variables["relFDI"] %></td>
+				<td><%= @variables["relMDF"] %></td><td><%= @variables["relFDF"] %></td><td><%= @variables["relMTO"] %></td>
+				<td><%= @variables["relFTO"]%></td><td><%=@variables["relMNoNotif"]%></td><td><%=@variables["relFNoNotif"]%></td>
+				<td><%= @variables["relMNoEval"] %></td><td><%= @variables["relFNoEval"] %></td>			
+			</tr>
+			<tr>
+				<th>SM -ve</th><td><%= @variables["SMnegMC"] %></td><td><%= @variables["SMnegFC"] %></td>
+				<td><%= @variables["SMnegMF"] %></td><td><%= @variables["SMnegFF"] %></td><td><%= @variables["SMnegMRC"] %></td>
+				<td><%= @variables["SMnegFRC"] %></td><td><%= @variables["SMnegMDI"] %></td><td><%= @variables["SMnegFDI"] %></td>
+				<td><%= @variables["SMnegMDF"] %></td><td><%= @variables["SMnegFDF"] %></td><td><%= @variables["SMnegMTO"] %></td>
+				<td><%= @variables["SMnegFTO"]%></td><td><%=@variables["SMnegMNoNotif"]%></td><td><%=@variables["SMnegFNoNotif"]%></td>
+				<td><%= @variables["SMnegMNoEval"] %></td><td><%= @variables["SMnegFNoEval"] %></td>						</tr>
+			<tr>
+				<th>EPTB</th><td><%= @variables["SMeptbMC"] %></td><td><%= @variables["SMeptbFC"] %></td>
+				<td><%= @variables["SMeptbMF"] %></td><td><%= @variables["SMeptbFF"] %></td><td><%= @variables["SMeptbMRC"] %></td>
+				<td><%= @variables["SMeptbFRC"] %></td><td><%= @variables["SMeptbMDI"] %></td><td><%= @variables["SMeptbFDI"] %></td>
+				<td><%= @variables["SMeptbMDF"] %></td><td><%= @variables["SMeptbFDF"] %></td><td><%= @variables["SMeptbMTO"] %></td>
+				<td><%= @variables["SMeptbFTO"]%></td><td><%=@variables["SMeptbMNoNotif"]%></td>
+				<td><%=@variables["SMeptbFNoNotif"]%></td><td><%= @variables["SMeptbMNoEval"] %></td>
+				<td><%= @variables["SMeptbFNoEval"] %></td>			
+			</tr>
+			<tr>
+				<th>Rx. AD</th><td><%= @variables["SMrtadMC"] %></td><td><%= @variables["SMrtadFC"] %></td>
+				<td><%= @variables["SMrtadMF"] %></td><td><%= @variables["SMrtadFF"] %></td><td><%= @variables["SMrtadMRC"] %></td>
+				<td><%= @variables["SMrtadFRC"] %></td><td><%= @variables["SMrtadMDI"] %></td><td><%= @variables["SMrtadFDI"] %></td>
+				<td><%= @variables["SMrtadMDF"] %></td><td><%= @variables["SMrtadFDF"] %></td><td><%= @variables["SMrtadMTO"] %></td>
+				<td><%= @variables["SMrtadFTO"]%></td><td><%=@variables["SMrtadMNoNotif"]%></td>
+				<td><%=@variables["SMrtadFNoNotif"]%></td><td><%= @variables["SMrtadMNoEval"] %></td>
+				<td><%= @variables["SMrtadFNoEval"] %></td>			
+			</tr>
+			<tr>
+				<th>Rx. AF</th><td><%= @variables["SMrtafMC"] %></td><td><%= @variables["SMrtafFC"] %></td>
+				<td><%= @variables["SMrtafMF"] %></td><td><%= @variables["SMrtafFF"] %></td><td><%= @variables["SMrtafMRC"] %></td>
+				<td><%= @variables["SMrtafFRC"] %></td><td><%= @variables["SMrtafMDI"] %></td><td><%= @variables["SMrtafFDI"] %></td>
+				<td><%= @variables["SMrtafMDF"] %></td><td><%= @variables["SMrtafFDF"] %></td><td><%= @variables["SMrtafMTO"] %></td>
+				<td><%= @variables["SMrtafFTO"]%></td><td><%=@variables["SMrtafMNoNotif"]%></td>
+				<td><%=@variables["SMrtafFNoNotif"]%></td>
+				<td><%= @variables["SMrtafMNoEval"] %></td><td><%= @variables["SMrtafFNoEval"] %></td>			
+			</tr>
+			<tr>
+				<th>Recc</th><td><%= @variables["SMrecMC"] %></td><td><%= @variables["SMrecFC"] %></td>
+				<td><%= @variables["SMrecMF"] %></td><td><%= @variables["SMrecFF"] %></td><td><%= @variables["SMrecMRC"] %></td>
+				<td><%= @variables["SMrecFRC"] %></td><td><%= @variables["SMrecMDI"] %></td><td><%= @variables["SMrecFDI"] %></td>
+				<td><%= @variables["SMrecMDF"] %></td><td><%= @variables["SMrecFDF"] %></td><td><%= @variables["SMrecMTO"] %></td>
+				<td><%= @variables["SMrecFTO"]%></td><td><%=@variables["SMrecMNoNotif"]%></td><td><%=@variables["SMrecFNoNotif"]%></td>
+				<td><%= @variables["SMrecMNoEval"] %></td><td><%= @variables["SMrecFNoEval"] %></td>						
+			</tr>
+
+		</table>
+		</div>
+	</div>
+

@@ -1,0 +1,222 @@
+
+    <script type="text/javascript" charset="utf8" src="/javascripts/jquery.js"></script>
+<script>
+	function load()
+	{
+		var finish = document.getElementById("finishButton");
+		var buttons = document.getElementById("buttons");
+		var merge = document.createElement("button");
+		merge.innerHTML = "<span>Cancel</span>"
+		merge.setAttribute("class", "red left")
+		merge.setAttribute("id", "merge")
+		merge.setAttribute("onclick", "window.location = '/clinic'")
+		finish.setAttribute("onclick", "merge();")
+		buttons.appendChild(merge)
+		  
+	}
+	
+	setTimeout("load();", 300)
+	
+	function merge()
+	{
+			if (document.getElementById("user_id").innerHTML != "")
+			{
+	
+	    document.getElementById('cover').style.display = 'inline';
+ 	    document.getElementById('cover').style.height = 'inline'
+			msgbox = document.getElementById('popup_box');
+			msgbox.innerHTML = "<span>Are you sure you would like to merge these users?</span></p><a id='yes' onmousedown='mergeConfirmed()'>YES</a>" +
+				                   "&nbsp;&nbsp;&nbsp;<a id='no' onmousedown='cancelAllMerge()'>NO</a>"
+
+		  msgbox.style.background = "tomato";
+		  msgbox.style.height = "150";
+		  javascript:window.scrollTo(0,0);
+		  msgbox.style.display = 'inline';
+			
+			}
+			else
+			{
+				showMessage("Please select a user to merge with");
+			}
+	}
+
+	function cancelAllMerge(){
+		  document.getElementById('popup_box').style.display = 'none';
+		  document.getElementById('cover').style.display = 'none';
+		  //enableButtons();
+		}
+		
+	function mergeConfirmed(){
+
+			var datastring = 'primary=<%=@user.user_id%>; secondary=' + document.getElementById("user_id").innerHTML;
+	
+			jQuery.ajax({
+          type: "POST",
+          url: "/user/merge",
+          data: datastring,
+          success: function() {
+
+              showMessage("Users succesfully merged!");
+              window.location = '/clinic'
+          }
+      });
+      
+	
+	}
+	
+</script>
+<style>
+	div{
+		-moz-user-select :none;
+	}
+	div.container{
+		border-radius : 15px;
+		border : 1px solid black;
+		font-size: 20px;
+	}
+	
+	td.one{
+    background: lightblue;
+    font-size: 2em;
+	}
+	td.two{
+    background: lavender;
+    font-size: 2em;
+	}
+	caption.strong{
+		  font-size: 2em;
+	}
+	
+</style>
+<style>
+  #popup_box {
+    display:none;
+    z-index:1001;
+    left:300px;
+    top:100px;
+    text-align:center;
+    font-size:28;
+    color: black;
+    border: 2px solid #9999FF;
+    border-radius: 15px 15px 15px 15px;
+    border-style: outset;
+    height: 160px;
+    padding: 5px;
+    position: absolute;
+    top: 199px;
+    width: 450px;
+    -moz-user-select:none;
+  }
+  
+  #popup_box span{
+    font-size:35px;
+  }
+  
+  #popup_box a{
+			background-color: silver;
+      border-bottom: 1px outset black;
+      border-style: outset;
+      padding: 10px 25px 10px 25px;
+      border-radius:5px;
+      font-size:29;
+      cursor: pointer;
+
+  }
+
+  #cover{
+    display: none;
+    position: absolute;
+    background-color: black;
+    width: 100%;
+    height: 102%;
+    left: 0%;
+    top: 0%;
+    z-index: 1000;
+    opacity: 0.5;
+
+  }
+</style>
+
+
+<div>
+
+	<table align = centre width = 98% style = "margin:10px; ">
+		<caption class = "strong">Merge Users</caption>
+		<tr>
+		<td style = "height:190px;" width = 50%>
+		<div	class = "container">
+			<table width = 100%>
+				<thead>
+					<caption><b>User to Merge With</b></caption>
+				</thead>
+				<tbody>
+					<tr><td>Username</td><td>:</td><td width = 60%><%= @user.username%></td></tr>
+					<tr><td>User ID</td><td>:</td><td><%= @user.user_id%></td></tr>		
+					<tr><td>Person name</td><td>:</td><td><%= @user.person.names.last.given_name%></td></tr>		
+					<tr><td>Person Surname</td><td>:</td><td><%= @user.person.names.last.family_name%></td></tr>										
+
+				</tbody>
+			</table>
+		</div>
+		</td>
+		<td>
+			<div	class = "container">
+			<table width = 100%>
+				<thead>
+					<caption><b>User to Merge</b></caption>
+				</thead>
+				<tbody>
+					<tr><td>Username</td><td>:</td><td width = 60%><div id= "user_name"></div></td></tr>
+					<tr><td>User ID</td><td>:</td><td><div id= "user_id"></div></td></tr>					
+					<tr><td>Person name</td><td>:</td><td id = "name"></td></tr>		
+					<tr><td>Person Surname</td><td>:</td><td id = "surname"></td></tr>
+
+				</tbody>
+			</table>
+			</div>
+		</td></tr>
+		<tr><td colspan = 2>
+				<font size = 5 >Users</font>
+			<div style = "height: 370px; width: 100%; border:1px solid black;  border-radius:20px; overflow: auto;">
+				
+				<table width = 100% >
+					
+					<%@users.each do |user|%> 
+					<tr>
+					
+					<td class= "<%= cycle('one', 'two') %>" id =" <%= user.user_id%>" onmousedown = "select(<%= user.user_id%>, '<%= user.username%>','<%= user.person.names.last.given_name%>','<%= user.person.names.last.family_name%>')" ><%= user.username%></td>
+					
+					</tr>
+					<%end%>
+
+				</table>
+    
+			</div>
+</td></tr>
+	</table>
+	
+</div>
+
+<div id="cover" >
+
+</div>
+
+<div id="popup_box" >
+
+</div>
+
+
+<script type="text/javascript" lang="javascript">
+	function select(id, username,name,surname)
+	{
+		var usname = document.getElementById("user_name")
+		var usid = document.getElementById("user_id")
+
+		usname.innerHTML = username
+		usid.innerHTML = id
+		document.getElementById("name").innerHTML = name
+		document.getElementById("surname").innerHTML = surname
+
+	}
+
+</script>

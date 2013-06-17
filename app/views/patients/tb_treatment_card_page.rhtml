@@ -1,0 +1,111 @@
+<script>
+	function finish(){
+		var done = document.getElementById("finishButton")	
+		done.setAttribute("onclick","window.location='/patients/show/?patient_id=" + "<%=@patient_bean.person_id%>'")
+		done.setAttribute("class","red")
+	}
+	setTimeout("finish();",300)
+	
+	function backButton(){
+		var butid = document.getElementById("buttons")
+		var button = document.createElement("button")
+		button.innerHTML="<span>Back</span>"
+		button.setAttribute("id", "back")
+		button.setAttribute("class","green")
+		butid.appendChild(button)	
+	}
+	setTimeout("backButton();",300)
+	
+	function back(){
+		var back = document.getElementById("back")
+		back.setAttribute("onclick","window.location= '/patients/tb_treatment_card?patient_id=" + "<%=@patient_bean.person_id%>'")
+	}
+	setTimeout("back()",300)
+	
+	
+  function addRow() {
+ 
+  var table = document.getElementById("adherence");
+ 	<% @previous_visits.each do |visit| %>
+	
+		var rowCount = table.rows.length;
+		var row = table.insertRow(rowCount);
+	 
+		var cell1 = row.insertCell(0);   
+		cell1.innerHTML = table.rows.length -2;
+		cell1.setAttribute("align","center")
+		
+		var cell2 = row.insertCell(1);
+		cell2.innerHTML = <%= visit.date.strftime('%d/%m/%Y').to_json%>;
+		cell2.setAttribute("align","center")
+		 
+		var cell3 = row.insertCell(2);
+		cell3.innerHTML = <%= visit.observations[1].to_s.split(':')[1].to_json %>;
+		cell3.setAttribute("align","center")
+
+		var cell4 = row.insertCell(3);
+		cell4.innerHTML = <%= visit.observations[2].to_s.split(':')[1].to_json %>;
+		cell4.setAttribute("align","center")
+
+		var cell5 = row.insertCell(4);
+		cell5.innerHTML = <%= visit.observations[3].to_s.split(':')[1].to_json %>;
+		cell5.setAttribute("align","center")
+
+	<%end%>
+          
+  }
+ setTimeout("addRow();",300)
+</script>
+
+
+<style>
+	table.fixed { table-layout:fixed; }
+	table.fixed td { overflow: auto; }
+	span.tab1{  padding: 0 100px; /* Or desired space*/} 		
+	span.tab2{  padding: 0 10px; /* Or desired space*/}
+	span.tab3{  padding: 0 25px; /* Or desired space*/}	
+	div.header{ text-align:center; width:40%;height:6%;}	
+	div.container1{border: 1px solid;line-height:33px; border-radius:15px;  margin:10px;}			
+	div.container{border: 1px solid;line-height:25px; border-radius:15px;  margin:10px;}
+	div.option{border: 1px solid;height:35px;width:30px; border-radius:5px;}
+	div.option2{border: 1px solid;height:25px;width:95%;text-align:center; border-radius:4px;}
+	div.main {overflow:auto; height:630px;margin: 15px;-webkit-user-select: none;-khtml-user-select: none;-moz-user-select: none;-o-user-select: none;user-select: none;}
+</style>
+
+
+<div class = "main">
+
+<font size = 5><b>Patient Name : <%= @patient_bean.name %> (<%= @patient_bean.sex %>)</b></font>
+<br>
+
+<table width= 100% border= 1px cellspacing = 0px cellpadding = 0px >
+
+	<tr><th rowspan= "2" width ="10%">TIME<th rowspan = "1" colspan = "4">Sputum Results<th rowspan = "2" width ="10px" >Weight (kg)
+	<td rowspan = "2" width = 250px><b>Documented HIV Test History</b> (see back)</tr>
+
+	<tr><th width = 10%>Test<th width= 10%>Date<th>Accesion No<th width = 20%>Result</td></tr>
+
+	<tr><td>Initiation<td>Smear<td ><%= @variables["startWeightdate"]%><td><%= @variables["smear1AAccession"]%><td><%= @variables["smear1Aresult"]%><td>	<%= @variables["startWeight"]%><td ><%= @variables["hiv1"]%></td ></tr>
+			
+	<tr><td>Month 2<td>Smear<td><%= @variables["weight2date"]%><td><%= @variables["smear2AAccession"]%><td><%= @variables["smear2Aresult"]%><td rowspan = "2"><%= @variables["weight2"]%><td rowspan = "2"><%= @variables["hiv2"]%></td></tr>
+
+	<tr><td>Month 3*<td>Smear<td><%= @variables["weight3date"]%><td>&nbsp<td></tr>
+
+	<tr><td>Month 5<td>Smear<td ><%= @variables["weight4date"]%><td><%= @variables["smear3AAccession"]%><td><%= @variables["smear3Aresult"]%><td>	<%= @variables["weight4"]%><td ><%= @variables["hiv3"]%></td ></tr>
+
+	<tr><td>Last month 6/8<td>Smear<td ><%= @variables["weight5date"]%><td><%= @variables["smear4AAccession"]%><td><%= @variables["smear4Aresult"]%><td>	<%= @variables["weight5"]%><td ><%= @variables["hiv4"]%></td ></tr>
+	
+</table>
+<br>
+<font size = 4><b>TB DRUG ADHERENCE</b></font>
+<br>
+
+<table id= "adherence" width= 100% border= 1px cellspacing = 0px cellpadding = 0px align= "centre" >
+	<tr><th rowspan=2>Month</th><th rowspan =2>Date</th><th width = 60% colspan = 3>Drug Adherence</th></tr>
+	<tr><th>Drugs Brought</th><th>Drugs At Home</th><th>Adherence %</th></tr>
+	
+</table>
+	<br>
+
+<b>Remarks:</b>
+</div>

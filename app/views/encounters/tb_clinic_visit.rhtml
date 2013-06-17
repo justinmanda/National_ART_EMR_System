@@ -1,0 +1,340 @@
+<script>
+  var tt_cancel_destination = "/patients/show/<%= @patient.patient_id %>"
+  var hivTestedDate = "<%= @hiv_test_date %>"
+  var displayedDate
+  function showEnrollPatient() {
+    if (tb_status.match(/treatment/i))
+      return false;
+
+    return true;
+  }
+
+  function assignTBstatus() {
+      tb_status = $('tb_suspected').value;
+      if (tb_status == "YES") {
+        $('tb_status').value = "Confirmed TB NOT on treatment";
+      }
+  }
+
+
+  function updateInitiationDate(){
+
+    testDate = createDate($('hiv_initiation_year').value, $('hiv_initiation_month').value , $('hiv_initiation_day').value);
+    $('hiv_initiation_date').value = testDate;
+	<% @session_date = "#{session[:datetime]} rescue #{Date.today}" %>
+	<% @todayDate = @session_date.to_date - 90 %>
+
+    var sessionDate = "<%="#{@todayDate}"%>";
+    var todayDate = new Date(sessionDate);
+
+    if ((todayDate > testDate ) || (testDate > hivTestedDate )){
+      showNegativeTestReminder = true
+	}else {
+      showNegativeTestReminder = false
+    }
+    return showNegativeTestReminder
+ }
+
+  function checkTestDate (){
+    var dateCheck = "";
+
+    var testDate = createDate($('hiv_initiation_year').value, $('hiv_initiation_month').value , $('hiv_initiation_day').value);
+<% @session_date = "#{session[:datetime]} rescue #{Date.today}" %>
+
+    var sessionDate = "<%="#{@session_date.to_date.year},#{@session_date.to_date.month},#{@session_date.to_date.day}"%>";
+    var todayDate = new Date(sessionDate);
+	var convert = new Date(hivTestedDate)
+	
+    if ((testDate < convert ) || (todayDate < testDate )) {
+	  <%  displayedDate = @hiv_test_date %>
+	  dateCheck = false
+	}else {
+	  <%  displayedDate = @session_date %>
+      dateCheck = true
+    }
+    return dateCheck
+  }
+  /*
+   function updateTestDate(){
+    var testDate = createDate($('hiv_test_year').value, $('hiv_test_month').value , $('hiv_test_day').value);
+    $('hiv_test_date').value = testDate;
+
+<% @session_date = "#{session[:datetime]} rescue #{Date.today}" %>
+<% @todayDate = @session_date.to_date - 90 %>
+
+    var sessionDate = "<%="#{@todayDate}"%>";
+    var todayDate = new Date(sessionDate);
+	alert(hivTestedDate)
+    if ((todayDate > testDate ) || (testDate > hivTestedDate )){
+      showNegativeTestReminder = true
+	}else {
+      showNegativeTestReminder = false
+    }
+    return showNegativeTestReminder
+  }
+*/
+  function checkTBstatus() {
+    try {
+      tb_status = $('tb_status').value;
+      tb_suspected = $('tb_suspected').value;
+
+      if (tb_status.length == 0 && $('tb_suspected').value == 0)
+        $('tb_status').value = "Confirmed TB NOT on treatment";
+        return
+    }catch(e) {}
+
+    try {
+      tb_type = $('tb_type').value;
+      if (tb_type.length > 0 && $('set_tb_status')) {
+        $('set_tb_status').value = "Confirmed TB NOT on treatment"
+        return
+      }
+
+      if (tb_type.length > 0) {
+        submitForm = document.getElementById("appointment");
+
+        newElement = document.createElement("input");
+        newElement.setAttribute("name","observations[][concept_name]");
+        newElement.setAttribute("type","hidden");
+        newElement.value = "TB STATUS";
+        submitForm.appendChild(newElement);
+
+        newElement = document.createElement("input");
+        newElement.setAttribute("name","observations[][value_coded_or_text]");
+        newElement.setAttribute("id","set_tb_status");
+        newElement.setAttribute("type","hidden");
+        newElement.value =  "Confirmed TB NOT on treatment";
+        submitForm.appendChild(newElement);
+
+        newElement = document.createElement("input");
+        newElement.setAttribute("name","observations[][patient_id]");
+        newElement.setAttribute("type","hidden");
+        newElement.value =  "<%= @patient.id %>";
+        submitForm.appendChild(newElement);
+      }
+    }catch(e) {}
+  }
+
+  function setAttributes() {
+    var next_button = $('nextButton');
+    var back_button = $('backButton');
+
+    next_button.setAttribute("onmousedown","checkTBstatus();gotoNextPage();")
+    back_button.setAttribute("onmousedown","resetTBstatus();gotoPage(" + (tstCurrentPage - 1) + ")")
+  }
+
+  function resetTBstatus() {
+    var next_button = $('nextButton');
+    var back_button = $('backButton');
+
+    next_button.setAttribute("onmousedown","gotoNextPage();")
+  
+    try {
+      document.getElementById("appointment").removeChild($('set_tb_status'));
+    }catch(e) {}
+  }
+  
+  function updateTBstatys() {
+    if ($("xray").value == 'Consistent of TB'){
+        $('tb_status').value = "Confirmed TB NOT on treatment";
+        $('tb_suspected').value = "YES";   
+    }
+  }
+
+  function isTestOverDue(testDate,alertDate) {
+    if (testDate <= alertDate){
+      return true;
+    }else {
+      return false;
+    }
+  }
+
+    function createDate(year,month,day) {
+    date_str = year
+
+    if(month.length == 1)
+      month = '0' + month
+
+    date_str+='-' + month
+
+    if(day.length == 1)
+      day = '0' + day
+
+    date_str+='-' + day
+
+    intyear = 0 ; intmonth = 0 ; intday = 0;
+    intyear = parseInt(date_str.substring(0,4))
+    intmonth = (parseInt(date_str.substring(5,7)) - 1)
+    intday = (parseInt(date_str.substring(8,10)))
+
+    if (intmonth == -1)
+      intmonth = (parseInt(date_str.substring(5,7).substring(1,2)) - 1)
+
+    if (intday == 0)
+      intday = parseInt(date_str.substring(8,10).substring(1,2))
+
+    return new Date(intyear,intmonth,intday);
+  }
+</script> 
+<style>
+ 
+  
+</style>
+<form id='appointment' action="/encounters/create" method='post'>
+	<%= hidden_field_tag "encounter[encounter_type_name]", "TB CLINIC VISIT" %>
+	<%= hidden_field_tag "encounter[patient_id]", @patient.id %>
+	<%= hidden_field_tag "encounter[encounter_datetime]", DateTime.now() %>
+	<%= hidden_field_tag "encounter[provider_id]", current_user.user_id %>
+
+
+	<%= touch_yes_no_unknown_tag "SYMPTOMATIC", @patient, nil,
+		{	:id => "any_tb_symptoms",
+			:helpText => "Any current TB signs?" } %>
+
+	<% if @current_user_role.include?("Doctor") || @current_user_role.include?("Nurse") || @current_user_role.include?("Clinician") %>
+		<%= touch_select_tag "TB symptoms", @patient, options_for_select(@select_options['tb_symptoms_all']),
+			{	:id => 'tb_symptoms',
+				:optional => true,
+				:multiple => true,
+				:condition => "$('any_tb_symptoms').value == 'YES'",
+				:helpText => "Select current TB symptoms" } %>
+	<% else %>
+		<%= touch_select_tag "TB symptoms", @patient, options_for_select(@select_options['tb_symptoms_short']),
+			{	:id => "tb_symptoms",
+				:multiple => true,
+				:tt_pageStyleClass => "NoKeyboard",
+				:condition => "$('any_tb_symptoms').value == 'YES'",
+				:helpText => "Select current TB symptoms"} %>
+	<% end %>
+
+	<% session_date = session[:datetime].to_date rescue Date.today 
+		reception = Encounter.find(:first,:order => "encounter_datetime DESC",
+			:conditions => ["DATE(encounter_datetime) = ? AND patient_id = ? AND encounter_type = ?",
+			session_date,@patient.id,EncounterType.find_by_name('TB RECEPTION').id])
+		reception_obs = reception.observations.map{|obs|obs.to_s.strip.upcase} rescue []
+	%>
+
+	<%= touch_yes_no_tag "interpret x-ray?", @patient,  nil,
+		{	:id => "interpret_xray",
+			:helpText => "Is X-ray film available?" } %>
+
+	<%= touch_select_tag "Xray result interpretation", @patient, options_for_select(@select_options['tb_xray_interpretation']),
+		{	:id => "xray",
+			:tt_pageStyleClass => "NoKeyboard",
+		    :tt_onUnload => "updateTBstatys();",
+			:condition => "$('interpret_xray').value == 'YES'",
+			:helpText => "Interpret x-ray" } %>
+
+   <%= touch_yes_no_unknown_tag "TB SUSPECTED", @patient, nil,
+			{	:id => "tb_suspected",
+			    :tt_onUnload => 'assignTBstatus();',
+				:condition => "$('xray').value != 'Consistent of TB' && $('any_tb_symptoms').value == 'YES' && $('interpret_xray').value == 'YES'",
+				:helpText => 'Does the patient have TB?'} %>
+				
+	<%= touch_select_tag "Further examination for TB required", @patient, options_for_select(@select_options['tb_investigation']),
+		{	:id => "refer_to_xray",
+			:condition => "$('tb_suspected').value != 'YES' && $('interpret_xray').value != 'YES'",
+			:helpText => "Further examination for TB required?" } %>
+
+    <%= touch_hidden_tag "TB STATUS", @patient, nil, {:id => 'tb_status'} %>
+
+	<%= touch_select_tag "TB classification", @patient, options_for_select(@select_options['tb_classification']),
+		{	:id => "tb_classification",
+		 	:tt_pageStyleClass => "NoKeyboard",
+			:condition => "$('tb_suspected').value == 'YES'",
+		 	:helpText => "TB classification" } %>
+
+	<%= touch_select_tag "EPTB classification", @patient, options_for_select(@select_options['eptb_classification']),
+		{	:id => "further_tb_classification",
+			:condition => '$("tb_classification").value == "Extrapulmonary tuberculosis (EPTB)"',
+			:tt_onLoad => "__$('keyboard').style.display = 'none'",
+		 	:tt_pageStyleClass => "NoKeyboard",
+		 	:helpText => "EPTB classification" } %>
+
+	<%= touch_select_tag "TB type", @patient, options_for_select(@select_options['tb_types']),
+		{	:id => "tb_type",
+		 	:tt_pageStyleClass => "NoKeyboard",
+		 	:tt_onUnLoad => "checkTBstatus();",
+		 	:tt_onLoad => "setAttributes();",
+			:condition => "$('tb_suspected').value == 'YES'",
+		 	:helpText => "TB type / TB susceptibility"
+		 	} %>
+<%#= raise @hiv_status.upcase.to_yaml %>
+
+	<%if @hiv_status.upcase == 'POSITIVE' and not
+      @patient.patient_programs.current.local.map(&:program).map(&:name).include?('HIV PROGRAM')%>
+    <%= touch_yes_no_tag "Continue treatment", @patient, nil,
+		  {	:id => "continue_treatment",
+			  :condition => "$('tb_suspected').value == 'YES'",
+			  :helpText => "Do you plan to continue picking up TB drugs at this clinic?" } %>
+	<% end %>
+	 <% if @hiv_status.upcase == 'POSITIVE' && !@patient.patient_programs.current.local.map(&:program).map(&:name).include?('HIV PROGRAM') %>
+ 
+  <% if ! @patient.person.observations.to_s.include?('On ART:') %>
+  <%= touch_yes_no_unknown_tag "ON ART", @patient, nil,
+		{:id => "art_status",
+		:tt_pageStyleClass => "NoKeyboard",
+		:helpText => "On ART?" } %>
+  <%else%>
+	<%= touch_hidden_tag "ON ART", @patient, nil,
+		{:id => "art_status"} %>
+	<%  end %>
+		<%= text_field_tag "hiv_initiation_year", nil,
+		  {:helpText => 'Year of ART initiation',
+		  :field_type => 'number',
+		  :absoluteMin => "1982",
+		  :min => "1982",
+		  :absoluteMax => Date.today.year,
+		  :tt_pageStyleClass => "Numeric NumbersOnly",
+		  :condition => '$("art_status").value == "YES"'}  %>
+
+		<%= select_tag "hiv_initiation_month", month_name_options,
+		  {:tt_onLoad => "__$('keyboard').style.display = 'none'",
+		  :helpText => 'Month of ART initiation',
+		  :condition => '($("hiv_initiation_year").value.toLowerCase() != "unknown")  && ($("art_status").value == "YES")'}%>
+
+		<%= text_field_tag "hiv_initiation_day",  nil,
+		{:field_type => 'number',
+		:helpText => 'Day of ART initiation',
+		:validationCode => "checkTestDate();",
+		:validationMessage => "HIV initiation date greater than #{displayedDate.to_date}" ,
+		:condition => '($("hiv_initiation_year").value != "Unknown") && ($("hiv_initiation_month").value != "Unknown") && ($("art_status").value == "YES")',
+		:tt_onLoad => "getDayOfMonthPicker($('hiv_initiation_year').value, $('hiv_initiation_month').value)",
+		:tt_onUnload=> "updateInitiationDate();"
+		} %>
+
+		<%= touch_location_tag "Location Of ART Initiation", @patient, nil, 
+		  {	:id => "location_of_art_intiation",
+			:value_datetime => true,
+			:helpText => "Location Of ART Initiation",
+			:ajaxURL => '/encounters/locations?search_string=',
+			:condition => '$("art_status").value == "YES"'}%>
+		<%= touch_hidden_tag "ART initiation date", @patient, nil,
+		  {	:id => "hiv_initiation_date",
+			:value_datetime => true}%>
+<%end%>
+    <%if @hiv_status.upcase == 'POSITIVE' and not
+      @patient.patient_programs.current.local.map(&:program).map(&:name).include?('HIV PROGRAM')%>
+		<% if ! @patient.person.observations.to_s.downcase.include?('in hiv program:') %>
+		<%= touch_yes_no_unknown_tag "Patient enrolled in HIV program", 
+        @patient, nil,
+			  {	:id => "enroll_patient_in_art",
+			  :condition => "$('continue_treatment').value == 'YES'",
+				:helpText => 'Enroll for HIV care'} %>
+		<%else%>
+	<%= touch_hidden_tag "Patient enrolled in HIV program", @patient, nil,
+	  {   :id => "enroll_patient_in_art",
+	  :condition => '$("refer_to_clinician").value != "YES"' } %>
+	<%  end %>
+	<%end%>
+
+  <% session_date = session[:datetime].to_date rescue nil                       
+    if session_date %>
+
+    <p><label for="filter_provider">Staff who provided the information (Provider)</label></br>
+<%= text_field "filter" , 'provider', :helpText => 'Staff who provided the information (Provider)', :ajaxURL => '/user/username?username=' %></p>
+    <% else %>
+      <%= hidden_field_tag "filter[provider]", nil %>
+    <%end%>
+  <%= submit_tag "Finish" %>    
+</form>
