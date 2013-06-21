@@ -211,6 +211,7 @@
 		  :units     => "#{order.drug_order.units}",
 		  :order_id  => "#{order.order_id}",
 		  :tt_pageStyleClass => "unknownButton",
+          :tt_onLoad =>"showCategory('ADHERENCE');" ,
 		  :helpText  => "Total #{order.drug_order.units} of #{order.drug_order.drug.name} brought to clinic"} %>
 
 		<%if  ask_pills_remaining_at_home %>
@@ -219,6 +220,7 @@
 			:units     => "#{order.drug_order.units}",
 			:field_type=> "number",
 			:order_id  => "#{order.order_id}",
+            :tt_onLoad =>"showCategory('ADHERENCE');" ,
 			:tt_pageStyleClass => "unknownButton",
 			:helpText  => "Total #{order.drug_order.units} of #{order.drug_order.drug.name} <span style='color:red;'>left at home</span>" } %>
 		<% else %>
@@ -226,6 +228,7 @@
 			{	:id        => "amount_other_#{order.order_id}",
 			:units     => "#{order.drug_order.units}",
 			:order_id  => "#{order.order_id}",
+            :tt_onLoad =>"showCategory('ADHERENCE');" ,
 			:tt_pageStyleClass => "NoControls"} %>
 		<%end%>
 	  <% else %>
@@ -233,6 +236,7 @@
 		  {	:id        => "amount_brought_#{order.order_id}",
 		  :units     => "#{order.drug_order.units}",
 		  :order_id  => "#{order.order_id}",
+          :tt_onLoad =>"showCategory('ADHERENCE');" ,
 		  :helpText  => "Total #{order.drug_order.units} of #{order.drug_order.drug.name} brought to clinic"} %>
 
 		<%if  ask_pills_remaining_at_home %>
@@ -242,12 +246,14 @@
 			:units     => "#{order.drug_order.units}",
 			:order_id  => "#{order.order_id}",
 			:tt_pageStyleClass => "unknownButton",
+            :tt_onLoad =>"showCategory('ADHERENCE');" ,
 			:helpText  => "Total #{order.drug_order.units} of #{order.drug_order.drug.name} <span style='color:red;'>left at home</span>" } %>
 		<% else %>
 		  <%= touch_hidden_tag "AMOUNT OF DRUG REMAINING AT HOME", @patient, nil,
 			{	:id        => "amount_other_#{order.order_id}",
 			:units     => "#{order.drug_order.units}",
 			:order_id  => "#{order.order_id}",
+            :tt_onLoad =>"showCategory('ADHERENCE');" ,
 			:tt_pageStyleClass => "NoControls"} %>
 		<%end%>
 	  <% end %>
@@ -256,6 +262,7 @@
 		{	:id          => "adherence_#{order.order_id}",
 		:helpText    => "Adherence summary for #{order.drug_order.drug.name}",
 		:optional    => "true",
+        :tt_onLoad =>"showCategory('ADHERENCE');" ,
 		:order_id    => "#{order.order_id}",
 		:tt_pageStyleClass => "NoControls"} %>
 
@@ -263,6 +270,7 @@
 		{	:id          => "doses_missed_#{order.order_id}",
 		:helpText    => "Amount of Doses Missed #{order.drug_order.drug.name}",
 		:optional    => "true",
+        :tt_onLoad =>"showCategory('ADHERENCE');" ,
 		:order_id    => "#{order.order_id}",
 		:tt_pageStyleClass => "NoControls"} %>
 
@@ -276,11 +284,11 @@
 
 	<% end rescue [] %>
 	<%= touch_hidden_tag "Reason for poor adherence to antiretroviral therapy", @patient, nil, {
-	  :id => 'Reason_for_poor_adherence_to_antiretroviral_therapy'} %>
+	  :id => 'Reason_for_poor_adherence_to_antiretroviral_therapy'},:tt_onLoad =>"showCategory('ADHERENCE');"  %>
 
 	<label for='summary'>Adherence Report</label>
 	<%= text_field_tag :summary, nil,
-	  { :tt_onLoad => "adherenceReport();setAttributes();__$('keyboard').style.display = 'none';changeButton();",
+	  { :tt_onLoad => "showCategory('ADHERENCE');adherenceReport();setAttributes();__$('keyboard').style.display = 'none';changeButton();",
 	  :optional => "true",
 	  :tt_pageStyleClass => "NoControls",
 	  :tt_onUnload => 'removeButton();'} %>
@@ -515,23 +523,26 @@
 	<% if current_user_roles.include?('Nurse') and patient_present %>
 	  <%= touch_yes_no_tag "REFER TO ART CLINICIAN", @patient, nil,
 		{:id => "refer_to_clinician",
+         :tt_onLoad =>"showCategory('ADHERENCE');" ,
 		:helpText => "Refer patient to clinician?" } %>
 	<%else%>
-	  <%= touch_hidden_tag "REFER TO ART CLINICIAN", @patient, "NO", :id => "refer_to_clinician" %>
+	  <%= touch_hidden_tag "REFER TO ART CLINICIAN", @patient, "NO", :id => "refer_to_clinician",:tt_onLoad =>"showCategory('ADHERENCE');"  %>
 	<%end unless refer_to_clinician_already_asked %>
 
 	<%if @obs_ans.match(/Prescribe drugs: Yes/i) %>
-	  <%= touch_hidden_tag "Prescribe drugs", @patient, "YES", :id => "prescribe_drugs" %>
+	  <%= touch_hidden_tag "Prescribe drugs", @patient, "YES",:tt_onLoad =>"showCategory('ADHERENCE');" ,:id => "prescribe_drugs" %>
 	<%else%>
 	  <%= touch_yes_no_unknown_tag "Prescribe drugs", @patient, nil,
 		{:id => "prescribe_drugs",
 		:condition => "$('refer_to_clinician').value == 'NO'" ,
+        :tt_onLoad =>"showCategory('ADHERENCE');" ,
 		:helpText => "Prescribe drugs during this visit" } %>
 	<%end unless refer_to_clinician_already_asked %>
 
 	<%if @allergic_to_sulphur.match(/Allergic to sulphur:/i).blank? %>
 	  <%= touch_yes_no_unknown_tag "Allergic to sulphur", @patient, nil,
 		{ :id => "allergic_to_sulphur",
+        :tt_onLoad =>"showCategory('ADHERENCE');" ,
 		:condition => "$('refer_to_clinician').value == 'NO' && $('prescribe_drugs').value == 'YES'" ,
 		:helpText => "Is patient allergic to sulphur" } %>
 	<%end unless refer_to_clinician_already_asked %>

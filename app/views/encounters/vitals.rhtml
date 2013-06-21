@@ -161,7 +161,7 @@
 		<%= touch_numeric_tag "WEIGHT (KG)", @patient, nil,
 			{	:id => "weight",
 				:field_type => "number",
-				:tt_onLoad => "$('clearButton').style.display = 'inline';",
+				:tt_onLoad => "$('clearButton').style.display = 'inline'; showCategory('Vitals');",
 				:min => number_with_precision(@min_weight, :precision => 1),
 				:max => number_with_precision(@max_weight, :precision => 1),
 				:absoluteMin => 0,
@@ -183,7 +183,7 @@
 			<%= touch_numeric_tag "HEIGHT (CM)", @patient, nil,
 				{	:id => "height",
 					:field_type => "number",
-					:tt_onLoad => "$('clearButton').style.display = 'inline';",
+					:tt_onLoad => "$('clearButton').style.display = 'inline'; showCategory('Vitals');",
 				   	:min => number_with_precision(@min_height, :precision => 1),
 				   	:max => number_with_precision(@max_height, :precision => 1),
 				   	:absoluteMin => 10,
@@ -198,7 +198,7 @@
 	    <%= touch_numeric_tag "WEIGHT (KG)", @patient, nil,
 			{	:id => "weight",
 				:field_type => "number",
-				:tt_onLoad => "$('clearButton').style.display = 'inline';",
+				:tt_onLoad => "$('clearButton').style.display = 'inline';showCategory('Vitals');",
 				:min => number_with_precision(@min_weight, :precision => 1),
 				:max => number_with_precision(@max_weight, :precision => 1),
 				:absoluteMin => 0,
@@ -215,7 +215,7 @@
 			<%= touch_numeric_tag "HEIGHT (CM)", @patient, nil,
 				{	:id => "height",
 					:field_type => "number",
-					:tt_onLoad => "$('clearButton').style.display = 'inline';",
+					:tt_onLoad => "$('clearButton').style.display = 'inline'; showCategory('Vitals');",
 				   	:min => number_with_precision(@min_height, :precision => 1),
 				   	:max => number_with_precision(@max_height, :precision => 1),
 				   	:absoluteMin => 10,
@@ -232,6 +232,7 @@
         <%= touch_text_field_tag "SYSTOLIC BLOOD PRESSURE (?/Y)", @patient, nil,
 			{	:id => "systolic_blood_pressure",
 				:field_type => "number",
+                :tt_onLoad => "showCategory('Vitals');",
 				:helpText => "Systolic blood pressure (?/Y)",
 				:absoluteMin => 80,
 				:absoluteMax => 180,
@@ -245,7 +246,7 @@
 				:field_type => "number",
 				:helpText => "Diastolic blood pressure (X/?)",
 				:absoluteMin => 50,
-				:tt_onLoad => "$('clearButton').style.display = 'inline';",
+				:tt_onLoad => "$('clearButton').style.display = 'inline';showCategory('Vitals');",
 				:absoluteMax => 110,
 				:validationRule => "^([0-9]+)|Unknown$",
 				:validationMessage => "You must enter numbers only (for example 157)",
@@ -261,15 +262,16 @@
 	<% end %>
     
     <%= text_field_tag :showSummary, nil, 
-		{	:tt_onLoad => "$('clearButton').style.display = 'none';growthIndicators();__$('keyboard').style.display = 'none'",
-			:tt_onUnLoad => "$('clearButton').style.display = 'inline';", 
+		{	:tt_onLoad => "$('clearButton').style.display = 'none';growthIndicators();__$('keyboard').style.display = 'none';showCategory('Vitals');",
+			:tt_onUnLoad => "$('clearButton').style.display = 'inline';",
 			:helpText => "Summary",
 			:optional => "true", 
 			:tt_pageStyleClass => "NoControls" } %>
 
 	<% if @retrospective %>
 		<%= text_field "filter" , 'provider', 
-			{	:helpText => 'Staff who provided the information (Provider)', 
+			{	:helpText => 'Staff who provided the information (Provider)',
+                :tt_onLoad => "showCategory('Vitals');",
 				:ajaxURL => '/user/username?username=' } %>
     <% else %>
 		<%= hidden_field_tag "filter[provider]", nil %>

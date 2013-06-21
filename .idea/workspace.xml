@@ -2,17 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2be94db3-a290-43de-9539-b6c643e3718d" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/views/report/art_register.rhtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/views/report/missed_appointment_report.rhtml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controllers/application_controller.rb" afterPath="$PROJECT_DIR$/app/controllers/application_controller.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controllers/generic_clinic_controller.rb" afterPath="$PROJECT_DIR$/app/controllers/generic_clinic_controller.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controllers/generic_user_controller.rb" afterPath="$PROJECT_DIR$/app/controllers/generic_user_controller.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controllers/report_controller.rb" afterPath="$PROJECT_DIR$/app/controllers/report_controller.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/helpers/application_helper.rb" afterPath="$PROJECT_DIR$/app/helpers/application_helper.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/clinic/index.rhtml" afterPath="$PROJECT_DIR$/app/views/clinic/index.rhtml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/cohort_tool/tb_register_summary.html.erb" afterPath="$PROJECT_DIR$/app/views/cohort_tool/tb_register_summary.html.erb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/sessions/new.rhtml" afterPath="$PROJECT_DIR$/app/views/sessions/new.rhtml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/user/show.html.erb" afterPath="$PROJECT_DIR$/app/views/user/show.html.erb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/encounters/appointment.rhtml" afterPath="$PROJECT_DIR$/app/views/encounters/appointment.rhtml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/encounters/art_adherence.rhtml" afterPath="$PROJECT_DIR$/app/views/encounters/art_adherence.rhtml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/encounters/hiv_clinic_consultation.rhtml" afterPath="$PROJECT_DIR$/app/views/encounters/hiv_clinic_consultation.rhtml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/encounters/hiv_reception.rhtml" afterPath="$PROJECT_DIR$/app/views/encounters/hiv_reception.rhtml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/encounters/hiv_staging.rhtml" afterPath="$PROJECT_DIR$/app/views/encounters/hiv_staging.rhtml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/encounters/vitals.rhtml" afterPath="$PROJECT_DIR$/app/views/encounters/vitals.rhtml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/report/art_register.rhtml" afterPath="$PROJECT_DIR$/app/views/report/art_register.rhtml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/report/missed_appointment_report.rhtml" afterPath="$PROJECT_DIR$/app/views/report/missed_appointment_report.rhtml" />
     </list>
     <ignored path="National_EMR_System.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -34,41 +32,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="art_register.rhtml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/views/report/art_register.rhtml">
+      <file leaf-file-name="art_adherence.rhtml" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/views/encounters/art_adherence.rhtml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="16" column="31" selection-start="630" selection-end="630" vertical-scroll-proportion="-7.7419353">
-              <folding>
-                <marker date="1371733982000" expanded="true" signature="1400:1547" placeholder="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="report_controller.rb" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/controllers/report_controller.rb">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="197" column="183" selection-start="8401" selection-end="8401" vertical-scroll-proportion="0.6969697">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="missed_appointment_report.rhtml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/views/report/missed_appointment_report.rhtml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="254" column="86" selection-start="7492" selection-end="7492" vertical-scroll-proportion="0.0">
-              <folding>
-                <marker date="1371811154000" expanded="true" signature="1400:1547" placeholder="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="encounters_controller.rb" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/controllers/encounters_controller.rb">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="825" column="26" selection-start="38549" selection-end="38549" vertical-scroll-proportion="-0.48387095">
+            <state line="48" column="53" selection-start="932" selection-end="932" vertical-scroll-proportion="0.17470881">
               <folding />
             </state>
           </provider>
@@ -87,22 +54,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/app/views/cohort_tool/tb_register_summary.html.erb" />
-        <option value="$PROJECT_DIR$/app/helpers/application_helper.rb" />
-        <option value="$PROJECT_DIR$/app/views/sessions/new.rhtml" />
-        <option value="$PROJECT_DIR$/app/views/user/new_user_password.rhtml" />
-        <option value="$PROJECT_DIR$/app/views/user/new_login.rhtml" />
-        <option value="$PROJECT_DIR$/app/views/user/show.html.erb" />
-        <option value="$PROJECT_DIR$/app/controllers/generic_user_controller.rb" />
         <option value="$PROJECT_DIR$/config/database.yml" />
         <option value="$PROJECT_DIR$/app/controllers/clinic_controller.rb" />
         <option value="$PROJECT_DIR$/app/controllers/generic_report_controller.rb" />
         <option value="$PROJECT_DIR$/lib/patient_service.rb" />
         <option value="$PROJECT_DIR$/app/models/patient_state.rb" />
         <option value="$PROJECT_DIR$/app/controllers/generic_clinic_controller.rb" />
-        <option value="$PROJECT_DIR$/app/views/report/art_register.rhtml" />
         <option value="$PROJECT_DIR$/app/views/report/missed_appointment_report.rhtml" />
         <option value="$PROJECT_DIR$/app/controllers/report_controller.rb" />
+        <option value="$PROJECT_DIR$/app/views/report/art_register.rhtml" />
+        <option value="$PROJECT_DIR$/app/views/encounters/hiv_clinic_registration.rhtml" />
+        <option value="$PROJECT_DIR$/app/views/encounters/vitals.rhtml" />
+        <option value="$PROJECT_DIR$/app/views/encounters/hiv_staging.rhtml" />
+        <option value="$PROJECT_DIR$/app/views/encounters/hiv_clinic_consultation.rhtml" />
+        <option value="$PROJECT_DIR$/app/views/encounters/hiv_reception.rhtml" />
+        <option value="$PROJECT_DIR$/app/views/encounters/appointment.rhtml" />
+        <option value="$PROJECT_DIR$/app/views/encounters/art_adherence.rhtml" />
       </list>
     </option>
   </component>
@@ -201,7 +168,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="prescriptions" />
+              <option name="myItemId" value="encounters" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -536,7 +503,7 @@
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2489019" sideWeight="0.67016494" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298351" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -603,48 +570,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/views/dashboards/overview_tab.rhtml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="98" column="64" selection-start="4099" selection-end="4099" vertical-scroll-proportion="-22.791666">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/models/patient_state.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="49" selection-start="948" selection-end="969" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/controllers/generic_patients_controller.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="616" column="33" selection-start="25234" selection-end="25234" vertical-scroll-proportion="0.44612795">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/medication_service.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="81" column="9" selection-start="3054" selection-end="3057" vertical-scroll-proportion="0.7186964">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/controllers/generic_clinic_controller.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="178" column="73" selection-start="7391" selection-end="7391" vertical-scroll-proportion="0.9500832">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/controllers/clinic_controller.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="80" column="37" selection-start="3307" selection-end="3307" vertical-scroll-proportion="0.95114005">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/models/patient_program.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state line="74" column="65" selection-start="3488" selection-end="3488" vertical-scroll-proportion="0.1216">
@@ -666,15 +591,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/views/report/art_register.rhtml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="31" selection-start="630" selection-end="630" vertical-scroll-proportion="-7.7419353">
-          <folding>
-            <marker date="1371733982000" expanded="true" signature="1400:1547" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/patient_service.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state line="712" column="32" selection-start="33020" selection-end="33024" vertical-scroll-proportion="0.33333334">
@@ -689,32 +605,85 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/views/encounters/art_adherence.rhtml">
+    <entry file="file://$PROJECT_DIR$/app/views/report/art_register.rhtml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="550" column="0" selection-start="18705" selection-end="18705" vertical-scroll-proportion="0.9480069">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/controllers/encounters_controller.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="825" column="26" selection-start="38549" selection-end="38549" vertical-scroll-proportion="-0.48387095">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/views/report/missed_appointment_report.rhtml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="254" column="86" selection-start="7492" selection-end="7492" vertical-scroll-proportion="0.0">
+        <state line="31" column="12" selection-start="1373" selection-end="1373" vertical-scroll-proportion="0.065656565">
           <folding>
-            <marker date="1371811154000" expanded="true" signature="1400:1547" placeholder="..." />
+            <marker date="1371816601000" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1371816601000" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1371816601000" expanded="true" signature="-1:-1" placeholder="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/controllers/report_controller.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="197" column="183" selection-start="8401" selection-end="8401" vertical-scroll-proportion="0.6969697">
+        <state line="108" column="111" selection-start="4993" selection-end="4993" vertical-scroll-proportion="0.17676768">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/report/missed_appointment_report.rhtml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="35" column="24" selection-start="1583" selection-end="1583" vertical-scroll-proportion="0.84">
+          <folding>
+            <marker date="1371815947000" expanded="true" signature="-1:-1" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/controllers/encounters_controller.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="825" column="26" selection-start="38549" selection-end="38549" vertical-scroll-proportion="0.025252525">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/encounters/hiv_clinic_registration.rhtml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="888" column="149" selection-start="44062" selection-end="44062" vertical-scroll-proportion="0.19966722">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/encounters/vitals.rhtml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="263" column="28" selection-start="11367" selection-end="11367" vertical-scroll-proportion="0.40099832">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/encounters/hiv_staging.rhtml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="632" column="169" selection-start="23284" selection-end="23284" vertical-scroll-proportion="0.35964912">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/encounters/hiv_reception.rhtml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="99" column="82" selection-start="4783" selection-end="4783" vertical-scroll-proportion="0.9480069">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/encounters/appointment.rhtml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="231" column="7" selection-start="7723" selection-end="7723" vertical-scroll-proportion="0.9001664">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/encounters/hiv_clinic_consultation.rhtml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="218" column="172" selection-start="7908" selection-end="7908" vertical-scroll-proportion="0.44925123">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/encounters/art_adherence.rhtml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="48" column="53" selection-start="932" selection-end="932" vertical-scroll-proportion="0.17470881">
           <folding />
         </state>
       </provider>

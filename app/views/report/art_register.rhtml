@@ -29,11 +29,9 @@
             return '<button onMouseDown="press(\''+character+'\');" class="keyboardButton" id="'+id+'">' +"<span style='width:32px'>"+character+"</span>"+ "</button>";
         }
         function getButtonString(id,string){
-            return "<button \
-                            onMouseDown='press(this.id);' \
-                            class='keyboardButton' \
-                            id='"+id+"'>"+
-                    +     string +
+
+            return "<button onMouseDown='press(this.id);' class='keyboardButton'  id='"+ id +"'>"
+                    + string +
                     "</button>";
         }
 
