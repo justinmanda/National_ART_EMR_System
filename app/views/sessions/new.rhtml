@@ -10,8 +10,12 @@
   </script>
 
   <%= error_messages_for 'user' %>
-  
-<form id='sessions' action="/sessions/create" method='post'>
+  <div style="height: 100%; width: 100%; text-align: center; opacity: 0.15;
+          vertical-align: middle; position: absolute;" >
+    <img src="/images/mw.gif" style="height: 80%; margin: 2%;" />
+  </div>
+
+  <form id='sessions' action="/sessions/create" method='post'  >
 
     <label for="login">Username</label>
     <%= text_field_tag(:login, nil, :helpText => "Enter user name", 

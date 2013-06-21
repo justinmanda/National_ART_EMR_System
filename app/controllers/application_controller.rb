@@ -1362,13 +1362,15 @@ class ApplicationController < GenericApplicationController
 	end
 
   def what_app?
+
     if current_user.activities.include?('Manage Lab Orders') or current_user.activities.include?('Manage Lab Results') or
        current_user.activities.include?('Manage Sputum Submissions') or current_user.activities.include?('Manage TB Clinic Visits') or
        current_user.activities.include?('Manage TB Reception Visits') or current_user.activities.include?('Manage TB Registration Visits') or
        current_user.activities.include?('Manage HIV Status Visits') 
       'TB-ART'
     else
-      'BART'
+      'ART'
     end
+
   end 
 end

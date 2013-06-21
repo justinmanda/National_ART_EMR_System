@@ -1,6 +1,8 @@
 class GenericUserController < ApplicationController
 
   def login
+
+=begin
     if request.get?
       current_user.user_id = nil
     else
@@ -28,6 +30,7 @@ class GenericUserController < ApplicationController
         flash[:error] = "Invalid username or password"
       end      
     end
+=end
   end          
 
   def programs
@@ -531,4 +534,14 @@ class GenericUserController < ApplicationController
   	
   			redirect_to '/clinic' and return
   end
+
+  def new_login
+    render :layout => "menu"
+  end
+
+  def new_user_password
+    @username = params[:username]
+    render :layout =>  "menu"
+  end
+
 end

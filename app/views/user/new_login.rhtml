@@ -1,0 +1,171 @@
+
+<style>
+
+    div.keypad{
+        background-color:#FFF8DC;
+        border: 2px solid #9999FF;
+        border-radius: 15px 15px 15px 15px;
+        width:90%;
+        height:48%;
+        margin-top:30%;
+        margin-left:5%;
+        text-align: center;
+        z-index: 0;
+
+    }
+
+    table {
+        font-size: 40px;
+    }
+
+    input {
+        font-size: 24px;
+        padding: 10px;
+    }
+
+</style>
+
+<div style="position: absolute; width: 100%; height: 40%; vertical-align: middle;
+        text-align: center; ">
+
+  <h1 style="font-size: 42px; font-weight: normal;">
+    National EMR Login
+  </h1>
+
+
+
+  <table style="margin: auto; margin-top: 10px;" cellpadding="10">
+    <tr>
+      <td style="text-align:center " >
+        Enter username
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <input style="font-size:40px;" id="username" autofocus>
+      </td>
+    </tr>
+
+  </table>
+</div>
+
+<div class="keypad" id="keyboard">
+
+
+</div>
+
+<div style="text-align:right;vertical-align: middle; position: absolute;top:0px;  " >
+  <img src="/images/mw.gif" style="height: 80%; margin: 2%;" />
+</div>
+
+
+
+
+<script type="text/javascript">
+    <!--
+
+    setTimeout('load_init()', 300);
+    search = document.getElementById('username');
+
+    function getCharButtonSetID(character,id){
+        return '<button onMouseDown="presser(\''+character+'\');"  id="'+id+'">' +"<span style='width:50px'>"+character+"</span>"+ "</button>";
+    }
+    function getButtonString(id,string){
+        return "<button \
+                                onMouseDown='key_press(this.id);' \
+                                id='"+id+"'>"+
+                string +
+                "</button>";
+    }
+
+    function getButtons(chars){
+        var buttonLine = "";
+        for(var i=0; i<chars.length; i++){
+            character = chars.substring(i,i+1)
+            buttonLine += getCharButtonSetID(character,character)
+        }
+        return buttonLine;
+    }
+
+
+
+    function showAlphaKeypad(){
+        var keyboard = document.getElementById('keyboard');
+
+
+        keyboard.innerHTML= "</br>" + getButtons("0123456789") + "</br>"
+        keyboard.innerHTML+= getButtons("qwertyuiop") + "</br>"
+        keyboard.innerHTML+= getButtons("asdfghjkl:") + "</br>"
+        keyboard.innerHTML+= getButtons("zxcvbnm,.?") + "</br>"
+        keyboard.innerHTML+= getButtonString('clear','<span>Clear</span>')
+        keyboard.innerHTML+= getButtonString('Space','<span>Space</span>')
+        keyboard.innerHTML+= getButtonString('back_space','<span>Bksp</span>')
+        document.getElementById('Space').style.width = '360px';
+
+
+
+    }
+
+    function presser(pressedChar){
+        search.value+= pressedChar
+    }
+    function key_press(pressedChar){
+
+        switch (pressedChar) {
+            case 'back_space':
+                search.value = search.value.substring(0,search.value.length-1);
+                return;
+            case 'Space':
+                search.value+= " "
+
+                return
+            case 'clear':
+                search.value = ""
+
+                return
+            case 'slash':
+                search.value+= "/"
+
+                return
+            case 'dash':
+                search.value+= "-"
+
+                return
+        }
+
+        search.value+= pressedChar
+    }
+
+    function verify_input()
+    {
+        if ((document.getElementById('username').value.length > 0) )
+            return true;
+        else
+            return false;
+    }
+    function submit()
+    {
+
+        if (verify_input())
+            window.location = "new_user_password?username=" + document.getElementById('username').value;
+        else
+        {
+            showMessage('You must enter a value to continue');
+            history.go(0)
+        }
+
+
+    }
+
+    function load_init()
+    {
+        var next = document.getElementById('finishButton');
+        next.innerHTML = '<span>Next</span>'
+        next.setAttribute('onClick','submit();')
+        showAlphaKeypad();
+    }
+    //-->
+
+</script>
+
+

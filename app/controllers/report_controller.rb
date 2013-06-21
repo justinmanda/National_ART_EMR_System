@@ -99,5 +99,108 @@ class ReportController < GenericReportController
 	@drugs
   render:layout=>"report"
   end
-  
+
+  def art_register
+
+    @data = []
+
+    program = Program.find_by_name('HIV PROGRAM').id
+
+    patients = PatientProgram.find(:all, :conditions => ["program_id = ? AND date_completed  IS NULL", program])
+
+    patients.each do |patient|
+
+      det_patient = Patient.find(patient.patient_id) rescue nil
+      unless det_patient.nil?
+
+        drug = ConceptName.find_by_concept_id(patient.current_regimen).name rescue nil
+        state = patient.patient_states.last.name rescue nil
+        start_date = patient.patient_states.last.start_date.strftime('%d/%b/%Y') rescue " "
+
+        detail = {
+            'name' => det_patient.name,
+            'gender' => det_patient.person.gender,
+            'age' => PatientService.cul_age(det_patient.person.birthdate , det_patient.person.birthdate_estimated ),
+            'reg_date' => patient.date_enrolled.to_date.strftime('%d/%b/%Y'),
+            'start_reason' =>PatientService.reason_for_art_eligibility(det_patient)  ,
+            'outcome' => state.nil? ? " ": state,
+            'outcome_date' => start_date,
+            'occupation' => PatientService.get_attribute(det_patient , 'Occupation'),
+            'formulation' => drug.nil? ? " " : drug
+        }
+        @data << detail
+      end
+      @data = @data.uniq
+
+    end
+
+  end
+
+  def missed_appointment_report
+
+    @data = []
+    appoinment = Concept.find_by_name('appointment date').concept_id
+    last_appointments = Observation.find_by_sql("SELECT person_id, MAX(obs_datetime),obs_datetime ,value_datetime FROM obs WHERE concept_id = #{appoinment}
+              GROUP BY person_id ")
+
+    last_appointments.each do |last_app|
+
+      last_obs = Observation.find(:first, :conditions =>  ["person_id = ? AND obs_datetime > ?", last_app.person_id, last_app.obs_datetime])
+
+      unless last_obs.nil?
+        result = adherence(last_obs.person_id, last_app.value_datetime)
+        details ={
+            'name' => last_obs.encounter.patient.name,
+            'age' => PatientService.cul_age(last_obs.encounter.patient.person.birthdate , last_obs.encounter.patient.person.birthdate_estimated ),
+            'dosses_missed' => result['missed_dosses'],
+            'exp_tab_remaining' => result['expected_remaining'] ,
+            'booked_date' => last_app.obs_datetime.to_date.strftime('%d/%b/%Y') ,
+            'phone_number' => get_phone(last_app.person_id),
+            'overdue' => (Date.today.to_date - last_app.obs_datetime.to_date).to_i
+        }
+        @data << details
+      end
+
+    end
+
+
+  end
+
+  def get_phone(patient_id)
+
+    patient = Patient.find(patient_id)
+
+    phone = PatientService.get_attribute(patient, "Cell phone number")
+
+    if phone.nil?
+
+      phone = PatientService.get_attribute(patient, "Home phone number")
+
+      if phone.nil?
+        phone = PatientService.get_attribute(patient, "Office phone number")
+      end
+
+    end
+
+    return phone.nil? ? " " : phone
+
+  end
+
+  def adherence(patient_id, appointment_date)
+    #this method has great ability to be reused. We need to make use of it if dealing with adherence
+
+    dispense_concept = Concept.find_by_name('AMOUNT DISPENSED').concept_id
+    last_dispense_day = Observation.find_by_sql("SELECT MAX(obs_datetime)  obs_datetime, value_numeric, value_drug,order_id FROM
+                             obs WHERE person_id = #{patient_id} AND concept_id = #{dispense_concept} ").first
+
+    order = Order.find(last_dispense_day.order_id) rescue nil
+
+    expected_remaining = last_dispense_day.value_numeric - ((appointment_date.to_date - last_dispense_day.obs_datetime.to_date).to_i * order.drug_order.equivalent_daily_dose) rescue ''
+
+    dosses_missed = (((Date.today.to_date - last_dispense_day.obs_datetime.to_date).to_i * order.drug_order.equivalent_daily_dose) - last_dispense_day.value_numeric )  rescue ""
+
+    return results={ 'missed_dosses' => dosses_missed, 'expected_remaining' => expected_remaining }
+  end
+
+
 end
