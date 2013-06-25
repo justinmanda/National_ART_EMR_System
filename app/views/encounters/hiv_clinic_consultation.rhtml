@@ -153,6 +153,41 @@
 
   }
 
+  function condom_only(){
+      var answers = document.getElementById('fpm_used');
+      var selected_values = [];
+      for (i = 0 ; i < answers.options.length ; i++) {
+          if (answers.options[i].selected){
+              selected_values.push(answers.options[i].value);
+          }
+      }
+
+      if ((selected_values.indexOf('MALE CONDOMS') != -1)&&(selected_values.length == 1)){
+          return true;
+      }
+      else
+      {
+          return false;
+      }
+
+  }
+
+  function check_offer_contraceptive(){
+      var answer = document.getElementById('reason_not_using_contraceptive_specific').value;
+
+      var checklist = ['FOLLOWING WISHES OF SPOUSE','RELIGIOUS REASONS','AFRAID OF SIDE EFFECTS','NEVER THOUGHT ABOUT IT','INDIFFERENT']
+
+      if (checklist.indexOf(answer) != -1)
+      {
+          document.getElementById('reason_not_using_contraceptive').value = answer ;
+          return true;
+      }
+      else
+      {
+          return false;
+      }
+  }
+
 </script>
 
 <form action="/encounters/create" method='post'>
@@ -209,7 +244,67 @@
          :tt_pageStyleClass => "NoKeyboard",
          :helpText => "What method?" } %>
 
-    <%else%>
+            <% if @use_extended_family_planning == "true"  %>
+
+                <%= touch_select_tag "REASON FOR NO FAMILY PLANNING", @patient, options_for_select(@select_options['why_no_family_planning_method']),
+                                     { :id => "reason_not_using_contraceptive",
+                                       :tt_onLoad => "reason_not_using_contraceptive='',showCategory('CONSULTATION');",
+                                       :condition => '$("on_fpm").value == "NO"',
+                                       :multiple => false,
+                                       :helpText => "Main reason for not using family planning methods"
+
+                                     }
+                %>
+
+                <%= touch_select_tag "REASON FOR NO FAMILY PLANNING", @patient, options_for_select(@select_options['why_no_family_planning_method_specific']),
+                                     { :id => "reason_not_using_contraceptive_specific",
+                                       :tt_onLoad => "reason_not_using_contraceptive_specific='',showCategory('CONSULTATION');",
+                                       :condition => '$("reason_not_using_contraceptive").value == "AT RISK OF UNPLANNED PREGNANCY"',
+                                       :multiple => false,
+                                       :helpText => "Reason for not using family planning methods (specific)",
+                                       :tt_pageStyleClass => "NoKeyboard"
+                                     }
+                %>
+
+                <%= touch_select_tag "Offer contraception", @patient,
+                                     options_for_select([['Accepted','YES'],['Declined','NO'],['Discuss with spouse','Wants to discuss with spouse']]),
+                                     { :id => "offer_fpm",
+                                       :tt_onLoad => "offer_fpm = false, showCategory('CONSULTATION');",
+                                       :condition => "check_offer_contraceptive()",
+                                       :helpText => "Offer patient contraception"
+                                     }
+                %>
+
+                <%= touch_select_tag "FAMILY PLANNING METHOD", @patient, options_for_select(@select_options['family_planning_methods_int']),
+                                     {:id => "fpm_used_intervened",
+                                      :tt_onLoad => "fpm_used_intervened='',showCategory('CONSULTATION');",
+                                      :condition => '$("offer_fpm").value == "YES"',
+                                      :multiple => true,
+                                      :tt_pageStyleClass => "NoKeyboard",
+                                      :helpText => "What method? (Intervention)" }
+                %>
+
+                <%=  touch_select_tag "OFFER DUAL PROTECTION", @patient,
+                                      options_for_select([['Accepted','YES'],['Declined','NO'],['Discuss with spouse','Wants to discuss with spouse']]),
+                                      { :id => "dual_method",
+                                        :tt_onLoad => "dual_method='',showCategory('CONSULTATION');",
+                                        :condition => "condom_only();",
+                                        :helpText => "Offer dual protection"
+                                      }
+                %>
+
+                <%= touch_select_tag "FAMILY PLANNING METHOD", @patient, options_for_select(@select_options['dual_options']),
+                                     { :id => "other_method",
+                                       :condition => '$("dual_method").value == "YES"',
+                                       :tt_onLoad => "other_method ='',showCategory('CONSULTATION');",
+                                       :multiple => true,
+                                       :tt_pageStyleClass => "NoKeyboard",
+                                       :helpText => "Select other contraceptive method"
+                                     }
+                %>
+            <% end %>
+
+<%else%>
 
         <%= touch_hidden_tag "CURRENTLY USING FAMILY PLANNING METHOD" , @patient, @currently_using_family_planning_methods.to_s , {:id => "on_fpm"},:tt_onLoad => "showCategory('CONSULTATION');" %>
 

@@ -89,6 +89,8 @@ class EncountersController < GenericEncountersController
                             AND DATE(obs_datetime) = ?",@patient.id,
             ConceptName.find_by_name("Allergic to sulphur").concept_id,session_date])).to_s.strip.squish rescue ''
 
+      @use_extended_family_planning = CoreService.get_global_property_value('extended.family.planning') rescue false
+
       @obs_ans = Observation.find(Observation.find(:first,
           :order => "obs_datetime DESC,date_created DESC",
           :conditions => ["person_id = ? AND concept_id = ? AND DATE(obs_datetime) = ?",
@@ -137,8 +139,48 @@ class EncountersController < GenericEncountersController
 		@tb_patient = is_tb_patient(@patient)
 		@art_patient = PatientService.art_patient?(@patient)
 		@recent_lab_results = patient_recent_lab_results(@patient.id)
-		
-		if (params[:encounter_type].upcase rescue '') == 'APPOINTMENT'
+
+    if @use_extended_family_planning && is_child_bearing_female(@patient)
+      @select_options['why_no_family_planning_method'] = [
+          ['Not sexually active', 'NOT SEXUALLY ACTIVE'],
+          ['Patient wants to get pregnant','PATIENT WANTS TO GET PREGNANT'],
+          ['Not needed for medical reasons', 'NOT NEEDED FOR MEDICAL REASONS'],
+          ['At risk of unplanned pregnancy', 'AT RISK OF UNPLANNED PREGNANCY']
+      ]
+
+      @select_options['why_no_family_planning_method_specific'] = [
+          ['Following wishes of spouse', 'FOLLOWING WISHES OF SPOUSE'],
+          ['Religious reasons', 'RELIGIOUS REASONS'],
+          ['Afraid of side effects','AFRAID OF SIDE EFFECTS'],
+          ['Never thought about it','NEVER THOUGHT ABOUT IT'],
+          ['Indifferent (Does not mind getting pregnant )', 'INDIFFERENT']
+      ]
+
+      @select_options['family_planning_methods_int'] = [
+          ['Oral contraceptive pills', 'ORAL CONTRACEPTIVE PILLS'],
+          ['Depo-Provera', 'DEPO-PROVERA'],
+          ['IUD-Intrauterine device/loop', 'INTRAUTERINE CONTRACEPTION'],
+          ['Contraceptive implant', 'CONTRACEPTIVE IMPLANT'],
+          ['Female condoms', 'FEMALE CONDOMS'],
+          ['Male condoms', 'MALE CONDOMS'],
+          ['Tubal ligation', 'TUBAL LIGATION']
+      ]
+
+
+      if @retrospective
+
+        @select_options['why_no_family_planning_method_specific'] << ['Other', 'OTHER'] << ['Unknown', 'UNKNOWN']
+
+      end
+
+      @select_options['dual_options'] = [
+          ['Oral contraceptive pills', 'ORAL CONTRACEPTIVE PILLS'],
+          ['Depo-Provera', 'DEPO-PROVERA'],
+          ['IUD-Intrauterine device/loop', 'INTRAUTERINE CONTRACEPTION'],
+          ['Contraceptive implant', 'CONTRACEPTIVE IMPLANT']]
+    end
+
+    if (params[:encounter_type].upcase rescue '') == 'APPOINTMENT'
 			@todays_date = session_date
 			logger.info('========================== Suggesting appointment date =================================== @ '  + Time.now.to_s)
 			@suggested_appointment_date = suggest_appointment_date

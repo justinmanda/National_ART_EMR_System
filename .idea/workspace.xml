@@ -2,15 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2be94db3-a290-43de-9539-b6c643e3718d" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controllers/generic_sessions_controller.rb" afterPath="$PROJECT_DIR$/app/controllers/generic_sessions_controller.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controllers/generic_user_controller.rb" afterPath="$PROJECT_DIR$/app/controllers/generic_user_controller.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/layouts/menu.rhtml" afterPath="$PROJECT_DIR$/app/views/layouts/menu.rhtml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/patients/patient_merge.rhtml" afterPath="$PROJECT_DIR$/app/views/patients/patient_merge.rhtml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/sessions/new.rhtml" afterPath="$PROJECT_DIR$/app/views/sessions/new.rhtml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/user/new_login.rhtml" afterPath="$PROJECT_DIR$/app/views/user/new_login.rhtml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/user/new_user_password.rhtml" afterPath="$PROJECT_DIR$/app/views/user/new_user_password.rhtml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vendor/plugins/restful_authentication/generators/authenticated/templates/controller.rb" afterPath="$PROJECT_DIR$/vendor/plugins/restful_authentication/generators/authenticated/templates/controller.rb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controllers/clinic_controller.rb" afterPath="$PROJECT_DIR$/app/controllers/clinic_controller.rb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controllers/encounters_controller.rb" afterPath="$PROJECT_DIR$/app/controllers/encounters_controller.rb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/encounters/hiv_clinic_consultation.rhtml" afterPath="$PROJECT_DIR$/app/views/encounters/hiv_clinic_consultation.rhtml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/properties/creation.html.erb" afterPath="$PROJECT_DIR$/app/views/properties/creation.html.erb" />
     </list>
     <ignored path="National_EMR_System.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -32,22 +27,20 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="generic_user_controller.rb" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/controllers/generic_user_controller.rb">
+      <file leaf-file-name="hiv_clinic_consultation.rhtml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/views/encounters/hiv_clinic_consultation.rhtml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="540" column="28" selection-start="18602" selection-end="18630" vertical-scroll-proportion="0.0">
+            <state line="316" column="100" selection-start="13012" selection-end="13012" vertical-scroll-proportion="-20.666666">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="new.rhtml" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/views/sessions/new.rhtml">
+      <file leaf-file-name="encounters_controller.rb" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/controllers/encounters_controller.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="130" column="93" selection-start="4242" selection-end="4242" vertical-scroll-proportion="0.29950082">
-              <folding>
-                <marker date="1372143302000" expanded="true" signature="395:501" placeholder="..." />
-              </folding>
+            <state line="164" column="43" selection-start="9047" selection-end="9047" vertical-scroll-proportion="0.816">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -65,10 +58,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/app/views/encounters/hiv_clinic_registration.rhtml" />
-        <option value="$PROJECT_DIR$/app/views/encounters/vitals.rhtml" />
-        <option value="$PROJECT_DIR$/app/views/encounters/hiv_staging.rhtml" />
-        <option value="$PROJECT_DIR$/app/views/encounters/hiv_clinic_consultation.rhtml" />
         <option value="$PROJECT_DIR$/app/views/encounters/hiv_reception.rhtml" />
         <option value="$PROJECT_DIR$/app/views/encounters/appointment.rhtml" />
         <option value="$PROJECT_DIR$/app/views/encounters/art_adherence.rhtml" />
@@ -81,6 +70,10 @@
         <option value="$PROJECT_DIR$/app/controllers/generic_sessions_controller.rb" />
         <option value="$PROJECT_DIR$/app/views/layouts/menu.rhtml" />
         <option value="$PROJECT_DIR$/app/views/sessions/new.rhtml" />
+        <option value="$PROJECT_DIR$/app/controllers/clinic_controller.rb" />
+        <option value="$PROJECT_DIR$/app/views/properties/creation.html.erb" />
+        <option value="$PROJECT_DIR$/app/views/encounters/hiv_clinic_consultation.rhtml" />
+        <option value="$PROJECT_DIR$/app/controllers/encounters_controller.rb" />
       </list>
     </option>
   </component>
@@ -166,10 +159,6 @@
               <option name="myItemId" value="app" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -185,25 +174,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sessions" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="National_EMR_System" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="National_EMR_System" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
+              <option name="myItemId" value="controllers" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -581,41 +552,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/controllers/generic_clinic_controller.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="18" selection-start="108" selection-end="110" vertical-scroll-proportion="0.078947365" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/helpers/application_helper.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="438" column="80" selection-start="18406" selection-end="18406" vertical-scroll-proportion="0.952" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vendor/plugins/restful_authentication/generators/authenticated/templates/controller.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="33" column="44" selection-start="1187" selection-end="1187" vertical-scroll-proportion="0.39086294" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/controllers/generic_application_controller.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="14" selection-start="83" selection-end="85" vertical-scroll-proportion="0.080213904" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/controllers/application_controller.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/controllers/admin_controller.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/controllers/sessions_controller.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/.rvm/rubies/ruby-1.8.7-p371/lib/ruby/site_ruby/1.8/rubygems/gemcutter_utilities.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state line="33" column="6" selection-start="935" selection-end="935" vertical-scroll-proportion="0.92385787" />
@@ -651,19 +587,68 @@
         <state line="7" column="29" selection-start="212" selection-end="212" vertical-scroll-proportion="0.14354067" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/controllers/generic_user_controller.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="540" column="28" selection-start="18602" selection-end="18630" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/views/sessions/new.rhtml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="130" column="93" selection-start="4242" selection-end="4242" vertical-scroll-proportion="0.29950082">
           <folding>
-            <marker date="1372143302000" expanded="true" signature="395:501" placeholder="..." />
+            <marker date="1372143302000" expanded="true" signature="-1:-1" placeholder="..." />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/controllers/generic_user_controller.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="540" column="28" selection-start="18602" selection-end="18630" vertical-scroll-proportion="0.64">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/programs/new.html.erb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="98" column="66" selection-start="3692" selection-end="3692" vertical-scroll-proportion="0.6505824">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/programs/update.html.erb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="128" column="79" selection-start="4755" selection-end="4755" vertical-scroll-proportion="0.8502496">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/properties/creation.html.erb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="71" selection-start="354" selection-end="354" vertical-scroll-proportion="0.24429968">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/controllers/clinic_controller.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="71" column="90" selection-start="3312" selection-end="3312" vertical-scroll-proportion="0.7413793">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/controllers/generic_clinic_controller.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="23" column="95" selection-start="704" selection-end="704" vertical-scroll-proportion="0.504">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/encounters/hiv_clinic_consultation.rhtml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="316" column="100" selection-start="13012" selection-end="13012" vertical-scroll-proportion="-20.666666">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/controllers/encounters_controller.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="164" column="43" selection-start="9047" selection-end="9047" vertical-scroll-proportion="0.816">
+          <folding />
         </state>
       </provider>
     </entry>

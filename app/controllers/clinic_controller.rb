@@ -68,7 +68,8 @@ class ClinicController < GenericClinicController
         ["Use Filing Numbers", "/properties/creation?value=use_filing_numbers"],
         ["Show Lab Results", "/properties/creation?value=show_lab_results"],
         ["Set Appointment Limit", "/properties/set_appointment_limit"],
-				["Export Cohort Data", "/properties/export_cohort_data"]
+				["Export Cohort Data", "/properties/export_cohort_data"],
+        ["Extended Family Planning","/properties/creation?value=extended_family_planning"]
       ]
     else
       @settings = []
