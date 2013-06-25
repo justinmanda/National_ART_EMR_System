@@ -1,171 +1,242 @@
+<html>
 
-<style>
+    <head>
 
-    div.keypad{
-        background-color:#FFF8DC;
-        border: 2px solid #9999FF;
-        border-radius: 15px 15px 15px 15px;
-        width:90%;
-        height:48%;
-        margin-top:30%;
-        margin-left:5%;
-        text-align: center;
-        z-index: 0;
+      <script type="text/javascript">
+          <!--
 
-    }
+          function getCharButtonSet(character,id){
+              return '<button onMouseDown="presser(\''+character+'\');"  id="'+id+'">' +"<span style='width:50px'>"+character+"</span>"+ "</button>";
+          }
+          function getButton_String(id,string){
 
-    table {
-        font-size: 40px;
-    }
-
-    input {
-        font-size: 24px;
-        padding: 10px;
-    }
-
-</style>
-
-<div style="position: absolute; width: 100%; height: 40%; vertical-align: middle;
-        text-align: center; ">
-
-  <h1 style="font-size: 42px; font-weight: normal;">
-    National EMR Login
-  </h1>
-
-
-
-  <table style="margin: auto; margin-top: 10px;" cellpadding="10">
-    <tr>
-      <td style="text-align:center " >
-        Enter username
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <input style="font-size:40px;" id="username" autofocus>
-      </td>
-    </tr>
-
-  </table>
-</div>
-
-<div class="keypad" id="keyboard">
-
-
-</div>
-
-<div style="text-align:right;vertical-align: middle; position: absolute;top:0px;  " >
-  <img src="/images/mw.gif" style="height: 80%; margin: 2%;" />
-</div>
-
-
-
-
-<script type="text/javascript">
-    <!--
-
-    setTimeout('load_init()', 300);
-    search = document.getElementById('username');
-
-    function getCharButtonSetID(character,id){
-        return '<button onMouseDown="presser(\''+character+'\');"  id="'+id+'">' +"<span style='width:50px'>"+character+"</span>"+ "</button>";
-    }
-    function getButtonString(id,string){
-        return "<button \
+              return "<button \
                                 onMouseDown='key_press(this.id);' \
                                 id='"+id+"'>"+
-                string +
-                "</button>";
-    }
+                      string +
+                      "</button>";
+          }
 
-    function getButtons(chars){
-        var buttonLine = "";
-        for(var i=0; i<chars.length; i++){
-            character = chars.substring(i,i+1)
-            buttonLine += getCharButtonSetID(character,character)
+          function getButton(chars){
+
+              var buttonLine = "";
+              for(var i=0; i<chars.length; i++){
+                  character = chars.substring(i,i+1)
+                  buttonLine += getCharButtonSet(character,character)
+              }
+              return buttonLine;
+          }
+
+
+
+          function showAlphaKeypad(){
+
+              var keyboard = document.getElementById('keyboard');
+
+
+              keyboard.innerHTML=  getButton("0123456789") + "</br>"
+              keyboard.innerHTML+= getButton("qwertyuiop") + "</br>"
+              keyboard.innerHTML+= getButton("asdfghjkl:") + "</br>"
+              keyboard.innerHTML+= getButton("zxcvbnm,.?") + "</br>"
+              keyboard.innerHTML+= getButton_String('clear','<span>Clear</span>')
+              keyboard.innerHTML+= getButton_String('Space','<span>Space</span>')
+              keyboard.innerHTML+= getButton_String('back_space','<span>Bksp</span>')
+              document.getElementById('Space').style.width = '360px';
+
+
+
+          }
+
+          function presser(pressedChar){
+              if (document.getElementById('password_div').style.visibility == 'visible')
+                document.getElementById('password').value+= pressedChar
+              else
+                document.getElementById('username').value+= pressedChar
+          }
+          function key_press(pressedChar){
+
+              if (document.getElementById('password_div').style.visibility == 'visible')
+                  var name_input = document.getElementById('password') ;
+              else
+                  var name_input = document.getElementById('username');
+              switch (pressedChar) {
+                  case 'back_space':
+                      name_input.value = name_input.value.substring(0,name_input.value.length-1);
+                      return;
+                  case 'Space':
+                      name_input.value+= " "
+
+                      return
+                  case 'clear':
+                      name_input.value = ""
+
+                      return
+                  case 'slash':
+                      name_input.value+= "/"
+
+                      return
+                  case 'dash':
+                      name_input.value+= "-"
+
+                      return
+              }
+
+              name_input.value+= pressedChar
+          }
+
+          function verify_input()
+          {
+              if ((document.getElementById('username').value.length > 0) )
+                  return true;
+              else
+                  return false;
+          }
+          function submit()
+          {
+
+              if (verify_input())
+              {
+                  document.getElementById("username_div").style.visibility= 'hidden';
+                  document.getElementById("password_div").style.visibility= 'visible';
+                  var next = document.getElementById('finishButton');
+                  next.innerHTML = '<span>Finish</span>'
+                  next.setAttribute('onClick','submit_password();')
+                  document.getElementById('password').focus();
+              }
+              else
+              {
+                  showMessage('You must enter a value to continue');
+
+              }
+
+
+          }
+
+          function submit_password()
+          {
+              if ((document.getElementById('password').value.length > 0) )
+              {
+                 window.location = "/sessions/create?login=" +document.getElementById('username').value
+                         +"&password=" + document.getElementById('password').value ;
+              }
+              else
+              {
+                  showMessage('You must enter a value to continue');
+              }
+          }
+
+          function load_init()
+          {
+              var next = document.getElementById('finishButton');
+              next.innerHTML = '<span>Next</span>'
+              next.setAttribute('onClick','submit();')
+              showAlphaKeypad();
+          }
+          //-->
+
+      </script>
+
+
+
+
+      <style>
+
+        div.main{
+
+            height: 100%;
+            width: 100%;
+            text-align: center;
+            vertical-align: middle;
+            position: absolute;
         }
-        return buttonLine;
-    }
+
+        div.keypad{
+            background-color:#FFF8DC;
+            border: 2px solid #9999FF;
+            border-radius: 15px 15px 15px 15px;
+            width:90%;
+            height: 45%;
+            margin-top:5px;
+            margin-left:5%;
+            text-align: center;
 
 
-
-    function showAlphaKeypad(){
-        var keyboard = document.getElementById('keyboard');
-
-
-        keyboard.innerHTML= "</br>" + getButtons("0123456789") + "</br>"
-        keyboard.innerHTML+= getButtons("qwertyuiop") + "</br>"
-        keyboard.innerHTML+= getButtons("asdfghjkl:") + "</br>"
-        keyboard.innerHTML+= getButtons("zxcvbnm,.?") + "</br>"
-        keyboard.innerHTML+= getButtonString('clear','<span>Clear</span>')
-        keyboard.innerHTML+= getButtonString('Space','<span>Space</span>')
-        keyboard.innerHTML+= getButtonString('back_space','<span>Bksp</span>')
-        document.getElementById('Space').style.width = '360px';
-
-
-
-    }
-
-    function presser(pressedChar){
-        search.value+= pressedChar
-    }
-    function key_press(pressedChar){
-
-        switch (pressedChar) {
-            case 'back_space':
-                search.value = search.value.substring(0,search.value.length-1);
-                return;
-            case 'Space':
-                search.value+= " "
-
-                return
-            case 'clear':
-                search.value = ""
-
-                return
-            case 'slash':
-                search.value+= "/"
-
-                return
-            case 'dash':
-                search.value+= "-"
-
-                return
-        }
-
-        search.value+= pressedChar
-    }
-
-    function verify_input()
-    {
-        if ((document.getElementById('username').value.length > 0) )
-            return true;
-        else
-            return false;
-    }
-    function submit()
-    {
-
-        if (verify_input())
-            window.location = "new_user_password?username=" + document.getElementById('username').value;
-        else
-        {
-            showMessage('You must enter a value to continue');
-            history.go(0)
         }
 
 
-    }
+      </style>
 
-    function load_init()
-    {
-        var next = document.getElementById('finishButton');
-        next.innerHTML = '<span>Next</span>'
-        next.setAttribute('onClick','submit();')
-        showAlphaKeypad();
-    }
-    //-->
+    </head>
 
-</script>
+    <body onload="load_init();" >
+
+        <div class="main" >
 
 
+            <div id= "username_div" style="width: 100%; height: 37%;z-index: 1;text-align: center;opacity: 100  " >
+
+              <h1 style="font-size: 42px; font-weight: normal;">
+                National EMR Login
+              </h1>
+
+
+
+              <table style="margin: auto; margin-top: 10px;" cellpadding="10">
+                <tr>
+                  <td style="text-align:center; font-size: 38px " >
+                    Enter username
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <input style="font-size:40px;" id="username" autofocus>
+                  </td>
+                </tr>
+
+              </table>
+              <div style="text-align:center;vertical-align: middle;height: 45%;width: 100%; position: absolute;top:0px;opacity:0.15" >
+                <img src="/images/mw.gif" style="height: 80%; margin: 2%;" />
+              </div>
+
+            </div>
+
+
+          <div id="password_div" style="visibility:hidden;position:absolute;top:0px; width: 100%; height: 37%;z-index: 1;text-align: center;opacity: 100  " >
+
+            <h1 style="font-size: 42px; font-weight: normal;">
+              National EMR Login
+            </h1>
+
+
+
+            <table style="margin: auto; margin-top: 10px;" cellpadding="10">
+              <tr>
+                <td style="text-align:center; font-size: 38px " >
+                  Enter password
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input style="font-size:40px;" id="password" type="password"  autofocus>
+                </td>
+              </tr>
+
+            </table>
+            <div style="text-align:center;vertical-align: middle;height: 100%;width: 100%; position: absolute;top:0px;opacity:0.15" >
+              <img src="/images/mw.gif" style="height: 80%; margin: 2%;" />
+            </div>
+
+          </div>
+
+
+
+          <div class="keypad" id="keyboard" >
+                &nbsp
+            </div>
+
+
+        </div>
+
+    </body>
+
+</html>

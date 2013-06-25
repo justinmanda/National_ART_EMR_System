@@ -1,32 +1,273 @@
-  <%= javascript_include_tag "barcode" %>
-  <script>
-    var tt_cancel_destination = "/logout"
-    //barcodeFocusOnce = true;
-    //barcodeScanAction = gotoNextPage;
 
-    function inform() {
-      $('infoBar'+tstCurrentPage).innerHTML = "<%= welcome_message %>";  
-    }           
-  </script>
+  <html>
 
-  <%= error_messages_for 'user' %>
-  <div style="height: 100%; width: 100%; text-align: center; opacity: 0.15;
-          vertical-align: middle; position: absolute;" >
-    <img src="/images/mw.gif" style="height: 80%; margin: 2%;" />
+  <head>
+    <%= javascript_include_tag "barcode" %>
+    <script type="text/javascript">
+        <!--
+
+        function getCharButtonSet(character,id){
+            return '<button onMouseDown="presser(\''+character+'\');"  id="'+id+'">' +"<span style='width:50px'>"+character+"</span>"+ "</button>";
+        }
+        function getButton_String(id,string){
+
+            return "<button \
+                                onMouseDown='key_press(this.id);' \
+                                id='"+id+"'>"+
+                    string +
+                    "</button>";
+        }
+
+        function getButton(chars){
+
+            var buttonLine = "";
+            for(var i=0; i<chars.length; i++){
+                character = chars.substring(i,i+1)
+                buttonLine += getCharButtonSet(character,character)
+            }
+            return buttonLine;
+        }
+
+
+
+        function showAlphaKeypad(){
+
+            var keyboard = document.getElementById('keyboard');
+
+
+            keyboard.innerHTML=  getButton("0123456789") + "</br>"
+            keyboard.innerHTML+= getButton("qwertyuiop") + "</br>"
+            keyboard.innerHTML+= getButton("asdfghjkl:") + "</br>"
+            keyboard.innerHTML+= getButton("zxcvbnm,.?") + "</br>"
+            keyboard.innerHTML+= getButton_String('clear','<span>Clear</span>')
+            keyboard.innerHTML+= getButton_String('Space','<span>Space</span>')
+            keyboard.innerHTML+= getButton_String('back_space','<span>Bksp</span>')
+            document.getElementById('Space').style.width = '360px';
+
+
+
+        }
+
+        function presser(pressedChar){
+            if (document.getElementById('password_div').style.visibility == 'visible')
+                document.getElementById('password').value+= pressedChar
+            else
+                document.getElementById('username').value+= pressedChar
+        }
+        function key_press(pressedChar){
+
+            if (document.getElementById('password_div').style.visibility == 'visible')
+                var name_input = document.getElementById('password') ;
+            else
+                var name_input = document.getElementById('username');
+            switch (pressedChar) {
+                case 'back_space':
+                    name_input.value = name_input.value.substring(0,name_input.value.length-1);
+                    return;
+                case 'Space':
+                    name_input.value+= " "
+
+                    return
+                case 'clear':
+                    name_input.value = ""
+
+                    return
+                case 'slash':
+                    name_input.value+= "/"
+
+                    return
+                case 'dash':
+                    name_input.value+= "-"
+
+                    return
+            }
+
+            name_input.value+= pressedChar
+        }
+
+        function verify_input()
+        {
+            if ((document.getElementById('username').value.length > 0) )
+                return true;
+            else
+                return false;
+        }
+        function submit()
+        {
+
+            if (verify_input())
+            {
+                document.getElementById("username_div").style.visibility= 'hidden';
+                document.getElementById("password_div").style.visibility= 'visible';
+                document.getElementById("back_button").style.visibility = 'visible';
+                var next = document.getElementById('finishButton');
+                next.innerHTML = '<span>Finish</span>'
+                next.setAttribute('onClick','submit_password();')
+                document.getElementById('password').focus();
+            }
+            else
+            {
+                showMessage('You must enter a value to continue');
+
+            }
+
+
+        }
+
+        function submit_password()
+        {
+            if ((document.getElementById('password').value.length > 0) )
+            {
+                window.location = "/sessions/create?login=" +document.getElementById('username').value
+                        +"&password=" + document.getElementById('password').value ;
+            }
+            else
+            {
+                showMessage('You must enter a value to continue');
+            }
+        }
+
+        function back()
+        {
+            document.getElementById("username_div").style.visibility= 'visible';
+            document.getElementById("password_div").style.visibility= 'hidden';
+            document.getElementById("back_button").style.visibility = 'hidden';
+            var next = document.getElementById('finishButton');
+            next.innerHTML = '<span>Next</span>'
+            next.setAttribute('onClick','submit();')
+            document.getElementById('password').value = "";
+            document.getElementById('username').focus();
+        }
+
+        function load_init()
+        {
+            var next = document.getElementById('finishButton');
+            next.innerHTML = '<span>Next</span>'
+            next.setAttribute('onClick','submit();')
+            var butid = document.getElementById("buttons")
+            var button = document.createElement("button")
+            button.innerHTML="<span>Back</span>"
+            button.setAttribute("id", "back_button")
+            button.setAttribute("class","red left")
+            button.style.visibility = 'hidden'
+            button.setAttribute('onClick', 'back();')
+            butid.appendChild(button)
+
+            showAlphaKeypad();
+            <%unless flash[:error].nil?%>
+                showMessage('<%= flash[:error].to_s %>');
+            <% end %>
+
+
+        }
+        //-->
+
+    </script>
+
+
+
+
+    <style>
+
+        div{
+            -moz-user-select: none;
+        }
+        div.main{
+
+            height: 100%;
+            width: 100%;
+            text-align: center;
+            vertical-align: middle;
+            position: absolute;
+        }
+
+        div.keypad{
+            background-color:#FFF8DC;
+            border: 2px solid #9999FF;
+            border-radius: 15px 15px 15px 15px;
+            width:90%;
+            height: 45%;
+            margin-top:5px;
+            margin-left:5%;
+            text-align: center;
+
+
+        }
+
+
+    </style>
+
+  </head>
+
+  <body onload="load_init();" >
+
+  <div class="main" >
+
+
+    <div id= "username_div" style="width: 100%; height: 37%;z-index: 1;text-align: center;opacity: 100  " >
+
+      <h1 style="font-size: 42px; font-weight: normal;">
+        National EMR Login
+      </h1>
+
+
+
+      <table style="margin: auto; margin-top: 10px;" cellpadding="10">
+        <tr>
+          <td style="text-align:center; font-size: 38px " >
+            Enter username
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <input style="font-size:40px;" id="username" autofocus>
+          </td>
+        </tr>
+
+      </table>
+      <div style="text-align:center;vertical-align: middle;height: 45%;width: 100%; position: absolute;top:0px;opacity:0.15" >
+        <img src="/images/mw.gif" style="height: 80%; margin: 2%;" />
+      </div>
+
+    </div>
+
+
+    <div id="password_div" style="visibility:hidden;position:absolute;top:0px; width: 100%; height: 37%;z-index: 1;text-align: center;opacity: 100  " >
+
+      <h1 style="font-size: 42px; font-weight: normal;">
+        National EMR Login
+      </h1>
+
+
+
+      <table style="margin: auto; margin-top: 10px;" cellpadding="10">
+        <tr>
+          <td style="text-align:center; font-size: 38px " >
+            Enter password
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <input style="font-size:40px;" id="password" type="password"  autofocus>
+          </td>
+        </tr>
+
+      </table>
+      <div style="text-align:center;vertical-align: middle;height: 100%;width: 100%; position: absolute;top:0px;opacity:0.15" >
+        <img src="/images/mw.gif" style="height: 80%; margin: 2%;" />
+      </div>
+
+    </div>
+
+
+
+    <div class="keypad" id="keyboard" >
+      &nbsp
+    </div>
+
+
   </div>
 
-  <form id='sessions' action="/sessions/create" method='post'  >
+  </body>
 
-    <label for="login">Username</label>
-    <%= text_field_tag(:login, nil, :helpText => "Enter user name", 
-        :textCase => "lower", :field_type => "password", 
-        :tt_onLoad => "inform(); barcodeId = 'touchscreenInput0';") %><br>
-
-    <label for="password">Password</label>
-    <%= password_field_tag(:password, nil, :helpText => "Enter password", 
-        :textCase => "lower", :field_type => "password",
-        :tt_onLoad => "inform(); barcodeId = 'touchscreenInput1';") %><br>
-
-    <%= submit_tag value="Submit"%>
-</form>
-
+  </html>

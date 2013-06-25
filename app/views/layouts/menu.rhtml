@@ -2,6 +2,7 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
+
 	<script type="text/javascript" language="javascript"
     src="/touchscreentoolkit/lib/javascripts/touchScreenToolkit.js" defer  ></script>
     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
@@ -57,10 +58,14 @@
         </div>
         <div style="padding-left: 15px;font-size:1.2em;">
           <% unless flash[:notice].nil? %>
-            <p id="flash_notice" style="color: green"><%= flash[:notice] %></p>
+            <script>
+                //alert(<%= flash[:notice].to_s %>)
+            </script>
           <% end %>
           <% unless flash[:error].nil? %>
-            <p id="flash_error" style="color: red"><%= flash[:error] %></p>
+            <script>
+                //alert('<%= flash[:error].to_s %>') ;
+            </script>
           <% end %>
         </div>  
         <%= yield %>  

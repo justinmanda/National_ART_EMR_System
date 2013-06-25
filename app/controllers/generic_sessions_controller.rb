@@ -3,6 +3,7 @@ class GenericSessionsController < ApplicationController
 	skip_before_filter :location_required
 
 	def new
+    render :layout => "menu"
 	end
 
 
@@ -23,7 +24,7 @@ class GenericSessionsController < ApplicationController
 		else
 			note_failed_signin
 			@login = params[:login]
-			render :action => 'new'
+			redirect_to '/user'
 		end
 	end
 
@@ -66,7 +67,7 @@ class GenericSessionsController < ApplicationController
 		sign_out(current_user) if !current_user.blank?
 		self.current_location = nil
 		flash[:notice] = "You have been logged out."
-		redirect_back_or_default('/')
+		redirect_back_or_default('/user/new_login')
 	end
 
 	protected

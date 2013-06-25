@@ -2,6 +2,8 @@ class GenericUserController < ApplicationController
 
   def login
 
+    raise params.to_yaml
+
 =begin
     if request.get?
       current_user.user_id = nil
