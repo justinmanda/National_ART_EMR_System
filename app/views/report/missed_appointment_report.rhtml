@@ -237,16 +237,17 @@
 <img src= "/images/mw.gif" >
 <div style = "position:absolute; top:30px;left:200px; -moz-user-select:none;">
   <b>Facility : <%= Location.current_health_center.name %></b><br/>
+  <b>Duration : <%= @start_date.strftime('%d %B %Y')  %> to <%= @end_date.strftime('%d %B %Y')%> </b><br/>
   <b>Report Type : Missed Appointments Report</b><br/>
   <b>Total Registered : <%#= @data.length %> </b>
 </div>
 <br>
-<%#= raise @data.to_yaml %>
+<%= raise @data.to_yaml %>
 <div style = "margin-top: 30px; background-color:beige">
   <table  id="table_id" class="display" >
     <thead>
     <th>Name</th><th>Age</th><th>Dosses Missed</th><th>Remaining Tabs. Expected</th>
-    <th>Appointment date</th><th>Phone Number</th><th>Overdue Days</th>
+    <th>Appointment date</th><th>Phone Number</th><th>Overdue Days</th><th>Came Late</th>
     </thead>
     <tbody>
 
@@ -254,7 +255,7 @@
            <tr>
              <td><%=datum['name']%></td><td><%= datum['age'] %></td><td><%= datum['dosses_missed']%></td>
              <td><%= datum['exp_tab_remaining']%></td><td><%= datum['booked_date'] %></td><td><%= datum['phone_number']%></td>
-             <td><%= datum['overdue']  %></td>
+             <td><%= datum['overdue']  %></td><td><%= datum['came_late']%></td>
            </tr>
         <% end %>
 

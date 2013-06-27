@@ -126,7 +126,7 @@ class GenericClinicController < ApplicationController
       ["Drug dispensation","/report/drug_menu"],
       ["View appointments","/properties/select_date"],
       ["ART Register", "/report/art_register"],
-      ["Missed Appointments", "/report/missed_appointment_report"]
+      ["Missed Appointments", "/report/missed_appointment_duration"]
 
     ]
 
