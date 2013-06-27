@@ -31,8 +31,8 @@ class <%= controller_class_name %>Controller < ApplicationController
   def destroy
     logout_killing_session!
     flash[:notice] = "You have been logged out."
-    redirect_back_or_default('/user/new_login')
-  end
+    redirect_back_or_default('/')
+  endS
 
 protected
   # Track failed login attempts
