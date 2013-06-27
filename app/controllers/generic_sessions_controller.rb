@@ -2,11 +2,6 @@ class GenericSessionsController < ApplicationController
 	skip_before_filter :authenticate_user!, :except => [:location, :update]
 	skip_before_filter :location_required
 
-	def new
-    render :layout => "menu"
-	end
-
-
 	def create
 		user = User.authenticate(params[:login], params[:password])
 		sign_in(:user, user) if user
