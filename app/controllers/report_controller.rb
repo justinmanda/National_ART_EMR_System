@@ -157,15 +157,19 @@ class ReportController < GenericReportController
     last_appointments.each do |last_app|
 
       last_obs = Observation.find_by_sql("SELECT * FROM obs WHERE person_id = #{last_app.person_id}
-                                          AND DATE(obs_datetime) = DATE('#{last_app.value_datetime.to_date}')  LIMIT 1")
+                                          AND DATE(obs_datetime) = DATE('#{last_app.value_datetime.to_s}')  LIMIT 1")
 
-      if last_obs.nil?
+      if last_obs.blank?
+
         result = adherence(last_app.person_id, last_app.value_datetime)
         next_visit = Observation.find(:first, :conditions =>  ["person_id = ? AND obs_datetime > ?",
+
                                                                last_app.person_id, last_app.value_datetime]).nil? ? " " : "Yes"
+
+        patient = Patient.find(last_app.person_id)
         details ={
-            'name' => last_app.encounter.patient.name,
-            'age' => PatientService.cul_age(last_app.encounter.patient.person.birthdate , last_app.encounter.patient.person.birthdate_estimated ),
+            'name' => patient.name,
+            'age' => PatientService.cul_age(patient.person.birthdate , patient.person.birthdate_estimated ),
             'dosses_missed' => result['missed_dosses'],
             'exp_tab_remaining' => result['expected_remaining'] ,
             'booked_date' => last_app.obs_datetime.to_date.strftime('%d/%b/%Y') ,
