@@ -239,7 +239,7 @@
   <b>Facility : <%= Location.current_health_center.name %></b><br/>
   <b>Duration : <%= @start_date.strftime('%d %B %Y')  %> to <%= @end_date.strftime('%d %B %Y')%> </b><br/>
   <b>Report Type : Missed Appointments Report</b><br/>
-  <b>Total Registered : <%#= @data.length %> </b>
+  <b>Total Registered : <%= @data.length %> </b>
 </div>
 <br>
 <%#= raise @data.to_yaml %>
