@@ -1,6 +1,6 @@
 # Specifies gem version of Rails to use when vendor/rails is not present
 RAILS_GEM_VERSION = '2.3.5' unless defined? RAILS_GEM_VERSION
-BART_VERSION = '2.0 beta'
+ART_VERSION = '2.0 beta'
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
@@ -20,7 +20,7 @@ Rails::Initializer.run do |config|
 	}  
 end
 
-BART_SETTINGS = YAML.load_file(File.join(Rails.root, "config", "settings.yml"))[Rails.env] rescue nil
+ART_SETTINGS = YAML.load_file(File.join(Rails.root, "config", "settings.yml"))[Rails.env] rescue nil
 
 require 'will_paginate'
 require 'fixtures'
