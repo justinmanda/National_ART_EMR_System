@@ -10,13 +10,7 @@
       tstUsername = "<%= current_user.username unless current_user.nil? %>";
       tstCurrentDate = "<%= Time.now.strftime("%Y-%m-%d") %>";
     </script>
-   <style type="text/css">
-       .inputPage {
-           background: url(../images/mw-bk.jpg)no-repeat fixed center;
-           background-size: 30%;
-       }
-   </style>
-
+    <%= stylesheet_link_tag "background" %>
   </head>
   <body id="container">  
     <div id="content">
