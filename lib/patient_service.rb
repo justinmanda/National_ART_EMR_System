@@ -6,6 +6,16 @@ module PatientService
 	require 'dde_service'
 	require 'medication_service'
 
+  def self.search_demographics_from_remote(params)
+    return [] if params[:person][:names]['given_name'].blank?
+    dde_server = GlobalProperty.find_by_property("dde_server_ip").property_value rescue ""
+    dde_server_username = GlobalProperty.find_by_property("dde_server_username").property_value rescue ""
+    dde_server_password = GlobalProperty.find_by_property("dde_server_password").property_value rescue ""
+    uri = "http://#{dde_server_username}:#{dde_server_password}@#{dde_server}/people/find_demographics.json/"
+
+    return JSON.parse(RestClient.post(uri,params))
+  end
+
   def self.search_from_remote(params)
     return [] if params[:given_name].blank?
     dde_server = GlobalProperty.find_by_property("dde_server_ip").property_value rescue ""
@@ -686,6 +696,45 @@ module PatientService
   	services = Observation.find(:all, :conditions => ["DATE(date_created) = ? AND concept_id = ?", Date.today.to_date, ConceptName.find_by_name("SERVICES").concept_id], :order => "obs_datetime desc")
   end
 
+	def self.guardian_present?(patient_id, date=Date.today)
+      encounter_type_id = EncounterType.find_by_name("HIV Reception").id
+      concept_id  = ConceptName.find_by_name("Guardian present").concept_id
+      encounter = Encounter.find_by_sql("SELECT *
+                                        FROM encounter
+                                        WHERE patient_id = #{patient_id} AND DATE(date_created) = DATE('#{date.strftime("%Y-%m-%d")}') AND encounter_type = #{encounter_type_id}
+                                        AND voided = 0
+                                        ORDER BY date_created DESC").first rescue nil
+
+      guardian_present=encounter.observations.find_last_by_concept_id(concept_id).to_s unless encounter.nil?
+
+      return false if guardian_present.blank?
+      return false if guardian_present.match(/No/)
+      return true
+  end
+
+	def self.patient_and_guardian_present?(patient_id, date=Date.today)
+      patient_present = self.patient_present?(patient_id, date)
+      guardian_present = self.guardian_present?(patient_id, date)
+
+      return false if !patient_present || !guardian_present
+      return true
+  end
+
+  def self.patient_present?(patient_id, date=Date.today)
+      encounter_type_id = EncounterType.find_by_name("HIV Reception").id
+      concept_id  = ConceptName.find_by_name("Patient present").concept_id
+      encounter = Encounter.find_by_sql("SELECT *
+                                        FROM encounter
+                                        WHERE patient_id = #{patient_id} AND DATE(date_created) = DATE('#{date.strftime("%Y-%m-%d")}') AND encounter_type = #{encounter_type_id}
+                                        ORDER BY date_created DESC").last rescue nil
+
+      patient_present = encounter.observations.find_last_by_concept_id(concept_id).to_s unless encounter.nil?
+
+      return false if patient_present.blank?
+      return false if patient_present.match(/No/)
+      return true
+  end
+
   def self.patient_national_id_label(patient)
 	  patient_bean = get_patient(patient.person)
     return unless patient_bean.national_id
@@ -1192,14 +1241,18 @@ EOF
 
   def self.patient_to_be_archived(patient)
     active_identifier_type = PatientIdentifierType.find_by_name("Filing Number")
-=begin    PatientIdentifier.find_by_sql(["
+=begin    
+    PatientIdentifier.find_by_sql(["
       SELECT * FROM patient_identifier
       WHERE voided = 1 AND identifier_type = ? AND void_reason = ? ORDER BY date_created DESC",
         active_identifier_type.id,"Archived - filing number given to:#{patient.id}"]).first.patient rescue nil
 =end
 
 
-   PatientIdentifier.find_by_sql(["SELECT * FROM patient_identifier WHERE voided = 1 AND identifier_type = ? AND void_reason = 'Archived'  AND patient_id = ? ORDER BY date_created DESC",active_identifier_type.id,patient.id]).first.patient rescue nil
+    PatientIdentifier.find_by_sql(["SELECT * FROM patient_identifier WHERE voided = 1 
+     AND identifier_type = ? AND void_reason = 'Archived - filing number given to:#{patient.id}'  
+     ORDER BY date_created DESC",active_identifier_type.id]).first.patient rescue nil
+
   end
 
   def self.set_patient_filing_number(patient) #changed from set_filing_number after being moved from patient model
@@ -1262,7 +1315,7 @@ EOF
             patient_to_be_archived.id,PatientIdentifierType.find_by_name("Filing Number").id])
 				current_filing_numbers.each do | filing_number |
 					filing_number.voided = 1
-					filing_number.voided_by = current_user.id
+					filing_number.voided_by = User.current.id
 					filing_number.void_reason = "Archived - filing number given to:#{current_patient.id}"
 					filing_number.date_voided = Time.now()
 					filing_number.save
@@ -1449,13 +1502,18 @@ people = Person.find(:all, :include => [{:names => [:person_name_code]}, :patien
   end
 
   def self.search_by_identifier(identifier)
-    unless identifier.match(/#{CoreService.get_global_property_value("site_prefix")}-ARV/i)
+    unless identifier.match(/#{CoreService.get_global_property_value("site_prefix")}-ARV/i) || identifier.match(/-TB/i)
       identifier = identifier.gsub("-","").strip
     end
 
-    people = PatientIdentifier.find_all_by_identifier(identifier).map{|id|
+		#if identifier.match(/#{CoreService.get_global_property_value("site_prefix")}-TB/i)
+		#	people = PatientIdentifier.find_by_sql("SELECT * FROM patient_identifier WHERE identifier = #{identifier} AND ")
+		#else
+			people = PatientIdentifier.find_all_by_identifier(identifier).map{|id|
       id.patient.person
     } unless identifier.blank? rescue nil
+		#end
+   
     return people unless people.blank?
     create_from_dde_server = CoreService.get_global_property_value('create.from.dde.server').to_s == "true" rescue false
     if create_from_dde_server

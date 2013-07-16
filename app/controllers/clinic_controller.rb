@@ -69,6 +69,7 @@ class ClinicController < GenericClinicController
         ["Show Lab Results", "/properties/creation?value=show_lab_results"],
         ["Set Appointment Limit", "/properties/set_appointment_limit"],
 				["Export Cohort Data", "/properties/export_cohort_data"],
+        ["Confirm patient creation", "/properties/creation?value=confirm_before_creating_a_patient"],
         ["Extended Family Planning","/properties/creation?value=extended_family_planning"]
       ]
     else

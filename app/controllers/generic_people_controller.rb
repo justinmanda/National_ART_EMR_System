@@ -1,5 +1,7 @@
 class GenericPeopleController < ApplicationController
-    
+   
+  @@test  = nil
+ 
 	def index
 		redirect_to "/clinic"
 	end
@@ -10,6 +12,68 @@ class GenericPeopleController < ApplicationController
 
 	def identifiers
 	end
+  
+  def create_confirm
+    @search_results = {}                                                        
+    @patients = []
+     
+    (PatientService.search_demographics_from_remote(params[:user_entered_params]) || []).each do |data|            
+      national_id = data["person"]["data"]["patient"]["identifiers"]["National id"] rescue nil
+      national_id = data["person"]["value"] if national_id.blank? rescue nil    
+      national_id = data["npid"]["value"] if national_id.blank? rescue nil      
+      national_id = data["person"]["data"]["patient"]["identifiers"]["old_identification_number"] if national_id.blank? rescue nil
+                                                                              
+      next if national_id.blank?                                                
+      results = PersonSearch.new(national_id)                                   
+      results.national_id = national_id                                         
+      results.current_residence = data["person"]["data"]["addresses"]["city_village"]
+      results.person_id = 0                                                     
+      results.home_district = data["person"]["data"]["addresses"]["address2"]   
+      results.neighborhood_cell = data["person"]["data"]["addresses"]["neighborhood_cell"]   
+      results.traditional_authority =  data["person"]["data"]["addresses"]["county_district"]
+      results.name = data["person"]["data"]["names"]["given_name"] + " " + data["person"]["data"]["names"]["family_name"]
+      gender = data["person"]["data"]["gender"]                                 
+      results.occupation = data["person"]["data"]["occupation"]                 
+      results.sex = (gender == 'M' ? 'Male' : 'Female')                         
+      results.birthdate_estimated = (data["person"]["data"]["birthdate_estimated"]).to_i
+      results.birth_date = birthdate_formatted((data["person"]["data"]["birthdate"]).to_date , results.birthdate_estimated)
+      results.birthdate = (data["person"]["data"]["birthdate"]).to_date         
+      results.age = cul_age(results.birthdate.to_date , results.birthdate_estimated)
+      @search_results[results.national_id] = results                            
+    end if create_from_dde_server
+
+    (params[:people_ids] || []).each do |person_id|
+      patient = PatientService.get_patient(Person.find(person_id))
+
+      results = PersonSearch.new(patient.national_id || patient.patient_id)     
+      results.national_id = patient.national_id                                 
+      results.birth_date = patient.birth_date                                   
+      results.current_residence = patient.current_residence                     
+      results.guardian = patient.guardian                                       
+      results.person_id = patient.person_id                                     
+      results.home_district = patient.home_district                             
+      results.neighborhood_cell = patient.home_village                            
+      results.current_district = patient.current_district                       
+      results.traditional_authority = patient.traditional_authority             
+      results.mothers_surname = patient.mothers_surname                         
+      results.dead = patient.dead                                               
+      results.arv_number = patient.arv_number                                   
+      results.eid_number = patient.eid_number                                   
+      results.pre_art_number = patient.pre_art_number                           
+      results.name = patient.name                                               
+      results.sex = patient.sex                                                 
+      results.age = patient.age                                                 
+      @search_results.delete_if{|x,y| x == results.national_id }
+      @patients << results
+    end
+
+		(@search_results || {}).each do | npid , data |
+			@patients << data
+		end
+
+    @parameters = params[:user_entered_params]
+    render :layout => 'menu'
+  end
 
 	def create_remote
 
@@ -102,7 +166,13 @@ class GenericPeopleController < ApplicationController
     found_person = nil
     if params[:identifier]
       local_results = PatientService.search_by_identifier(params[:identifier])
-       
+
+			if local_results.blank? and (params[:identifier].match(/#{CoreService.get_global_property_value("site_prefix")}-ARV/i) || params[:identifier].match(/-TB/i))
+				flash[:notice] = "No matching person found with number #{params[:identifier]}"
+				redirect_to :action => 'find_by_tb_number' if params[:identifier].match(/-TB/i)
+				redirect_to :action => 'find_by_arv_number' if params[:identifier].match(/#{CoreService.get_global_property_value("site_prefix")}-ARV/i)
+			end
+
       if local_results.length > 1
         redirect_to :action => 'duplicates' ,:search_params => params
         return
@@ -149,7 +219,7 @@ class GenericPeopleController < ApplicationController
         end
       end
     end
-
+		
     @relation = params[:relation]
     @people = PatientService.person_search(params)
     @search_results = {}
@@ -232,12 +302,17 @@ class GenericPeopleController < ApplicationController
 		@found_person_id = params[:found_person_id] 
 		@relation = params[:relation]
 		@person = Person.find(@found_person_id) rescue nil
-		@current_hiv_program_state = PatientProgram.find(:first, :joins => :location, :conditions => ["program_id = ? AND patient_id = ? AND location.location_id = ?", Program.find_by_concept_id(Concept.find_by_name('HIV PROGRAM').id).id,@person.patient, 				Location.current_health_center]).patient_states.last.program_workflow_state.concept.fullname rescue ''
+		patient = @person.patient
+		#@outcome = patient.patient_programs.last.patient_states.last.program_workflow_state.concept.fullname rescue nil
+
+		@pp = PatientProgram.find(:first, :joins => :location, :conditions => ["program_id = ? AND patient_id = ?", Program.find_by_concept_id(Concept.find_by_name('HIV PROGRAM').id).id,@person.id]).patient_states.last.program_workflow_state.concept.fullname	rescue ""
+		
+		@current_hiv_program_state = PatientProgram.find(:first, :joins => :location, :conditions => ["program_id = ? AND patient_id = ? AND location.location_id = ?", Program.find_by_concept_id(Concept.find_by_name('HIV PROGRAM').id).id,@person.id, Location.current_health_center.location_id]).patient_states.last.program_workflow_state.concept.fullname rescue ''
 		@transferred_out = @current_hiv_program_state.upcase == "PATIENT TRANSFERRED OUT"? true : nil
 		defaulter = Patient.find_by_sql("SELECT current_defaulter(#{@person.patient.patient_id}, '#{session_date}') 
                                      AS defaulter 
                                      FROM patient_program LIMIT 1")[0].defaulter rescue 0
-		@defaulted = "#{defaulter}" == "0" ? nil : true
+		@defaulted = "#{defaulter}" == "0" ? nil : true if ! @pp.match(/patient\sdied/i)
 		@task = main_next_task(Location.current_location, @person.patient, session_date)		
 		@arv_number = PatientService.get_patient_identifier(@person, 'ARV Number')
 		@patient_bean = PatientService.get_patient(@person)  
@@ -247,7 +322,9 @@ class GenericPeopleController < ApplicationController
     @second_line_treatment_start_date = PatientService.date_started_second_line_regimen(@person.patient) rescue nil
     @duration_in_months = PatientService.period_on_treatment(@art_start_date) rescue nil
 		#@duration_in_months = ((Time.now.to_date - @art_start_date.to_date).to_i/28) unless @art_start_date.blank?
-    patient = @person.patient
+   
+
+
 		@second_line_duration_in_months = PatientService.period_on_treatment(@second_line_treatment_start_date) rescue nil
     @identifier_types = ["Legacy Pediatric id","National id","Legacy National id"]
 			identifier_types = PatientIdentifierType.find(:all,                         
@@ -264,8 +341,7 @@ class GenericPeopleController < ApplicationController
         @modifier = @results[1]["Range"] rescue nil
       end
         @reason_for_art = PatientService.reason_for_art_eligibility(patient)
-        @outcome = patient.patient_programs.last.patient_states.last.program_workflow_state.concept.fullname rescue nil
-                                                         
+               
 		render :layout => false
 	end
 
@@ -365,7 +441,96 @@ class GenericPeopleController < ApplicationController
 	end
 
  def create 
+
+   if confirm_before_creating and not params[:force_create] == 'true' and params[:relation].blank?
+     @parameters = params
+     birthday_params = params.reject{|key,value| key.match(/gender/) }
+     unless birthday_params.empty?                                               
+       if params[:person]['birth_year'] == "Unknown"   
+         birthdate = Date.new(Date.today.year - params[:person]["age_estimate"].to_i, 7, 1)
+       else                                                                      
+         year = params[:person]["birth_year"].to_i 
+         month = params[:person]["birth_month"].to_i 
+         day = params[:person]["birth_day"].to_i
+
+         month_i = (month || 0).to_i                                                 
+         month_i = Date::MONTHNAMES.index(month) if month_i == 0 || month_i.blank?   
+         month_i = Date::ABBR_MONTHNAMES.index(month) if month_i == 0 || month_i.blank?
+                                                     
+         if month_i == 0 || month == "Unknown"                                       
+           birthdate = Date.new(year.to_i,7,1)                                
+         elsif day.blank? || day == "Unknown" || day == 0                            
+           birthdate = Date.new(year.to_i,month_i,15)                         
+         else                                                                        
+           birthdate = Date.new(year.to_i,month_i,day.to_i)                   
+         end
+       end                                                                       
+     end                                                                         
+     
+     start_birthdate = (birthdate - 5.year)
+     end_birthdate   = (birthdate + 5.year)                                                                   
+
+     given_name_code = @parameters[:person][:names]['given_name'].soundex
+     family_name_code = @parameters[:person][:names]['family_name'].soundex
+     gender = @parameters[:person]['gender']
+     ta = @parameters[:person][:addresses]['county_district']
+     home_district = @parameters[:person][:addresses]['address2']       
+     home_village = @parameters[:person][:addresses]['neighborhood_cell']
+
+     people = Person.find(:all,:joins =>"INNER JOIN person_name pn 
+       ON person.person_id = pn.person_id
+       INNER JOIN person_name_code pnc ON pnc.person_name_id = pn.person_name_id
+       INNER JOIN person_address pad ON pad.person_id = person.person_id",
+       :conditions =>["(pad.address2 LIKE (?) OR pad.county_district LIKE (?)
+       OR pad.neighborhood_cell LIKE (?)) AND pnc.given_name_code LIKE (?)
+       AND pnc.family_name_code LIKE (?) AND person.gender = '#{gender}'
+       AND (person.birthdate >= ? AND person.birthdate <= ?)","%#{home_district}%",
+       "%#{ta}%","%#{home_village}%","%#{given_name_code}%","%#{family_name_code}%",
+       start_birthdate,end_birthdate],:group => "person.person_id")
+
+     if people
+       people_ids = []
+       (people).each do |person|
+         people_ids << person.id
+       end
+     end
+
     
+     #............................................................................
+     @dde_search_results = {}
+     (PatientService.search_demographics_from_remote(params) || []).each do |data|            
+       national_id = data["person"]["data"]["patient"]["identifiers"]["National id"] rescue nil
+       national_id = data["person"]["value"] if national_id.blank? rescue nil    
+       national_id = data["npid"]["value"] if national_id.blank? rescue nil      
+       national_id = data["person"]["data"]["patient"]["identifiers"]["old_identification_number"] if national_id.blank? rescue nil
+                                                                                
+       next if national_id.blank?                                                
+       results = PersonSearch.new(national_id)                                   
+       results.national_id = national_id                                         
+       results.current_residence = data["person"]["data"]["addresses"]["city_village"]
+       results.person_id = 0                                                     
+       results.home_district = data["person"]["data"]["addresses"]["address2"]   
+       results.neighborhood_cell = data["person"]["data"]["addresses"]["neighborhood_cell"]   
+       results.traditional_authority =  data["person"]["data"]["addresses"]["county_district"]
+       results.name = data["person"]["data"]["names"]["given_name"] + " " + data["person"]["data"]["names"]["family_name"]
+       gender = data["person"]["data"]["gender"]                                 
+       results.occupation = data["person"]["data"]["occupation"]                 
+       results.sex = (gender == 'M' ? 'Male' : 'Female')                         
+       results.birthdate_estimated = (data["person"]["data"]["birthdate_estimated"]).to_i
+       results.birth_date = birthdate_formatted((data["person"]["data"]["birthdate"]).to_date , results.birthdate_estimated)
+       results.birthdate = (data["person"]["data"]["birthdate"]).to_date         
+       results.age = cul_age(results.birthdate.to_date , results.birthdate_estimated)
+       @dde_search_results[results.national_id] = results                            
+       break
+     end if create_from_dde_server
+     #............................................................................
+
+     if not people_ids.blank? or not @dde_search_results.blank?
+       redirect_to :action => :create_confirm , :people_ids => people_ids , 
+        :user_entered_params => @parameters and return
+     end
+   end
+
    hiv_session = false
    if current_program_location == "HIV program"
      hiv_session = true
@@ -469,7 +634,18 @@ class GenericPeopleController < ApplicationController
         :identifier => "#{site_prefix}-ARV-#{params[:arv_number]}" and return
     end
   end
-  
+
+  def find_by_tb_number
+    if request.post?
+						if PatientIdentifier.site_prefix == "MPC"
+							prefix = "LL"
+						else
+							prefix = PatientIdentifier.site_prefix
+						end
+      redirect_to :action => 'search' ,
+        :identifier => "#{prefix}-TB #{params[:tb_number]}" and return
+    end
+  end
   # List traditional authority containing the string given in params[:value]
   def traditional_authority
     district_id = District.find_by_name("#{params[:filter_value]}").id
@@ -539,7 +715,7 @@ class GenericPeopleController < ApplicationController
 
     villages = Village.find(:all,:conditions => village_conditions, :order => 'name')
     villages = villages.map do |v|
-      '<li value=' + v.name + '>' + v.name + '</li>'
+      "<li value='" + v.name + "'>" + v.name + "</li>"
     end
     render :text => villages.join('') + "<li value='Other'>Other</li>" and return
   end
@@ -816,6 +992,31 @@ class GenericPeopleController < ApplicationController
     render :text => "" and return if people.blank?
     render :text => PatientService.remote_demographics(people.first).to_json rescue nil
     return
+  end
+
+  def area_graph_adults
+    @patient_bean = PatientService.get_patient(Person.find(params[:id]))
+    weight_obs = Observation.find(:all,:joins =>"INNER JOIN encounter USING(encounter_id)",
+      :conditions =>["patient_id=? AND encounter_type=?
+      AND concept_id=?",params[:id],EncounterType.find_by_name('Vitals').id,
+      ConceptName.find_by_name('WEIGHT (KG)').concept_id],
+      :group =>"Date(encounter_datetime)",
+      :order =>"encounter_datetime DESC")
+    
+    @start_date = weight_obs.last.obs_datetime.to_date rescue Date.today
+    @weights = [] ; weights = {} ; count = 1
+    (weight_obs || []).each do |weight|
+      next if weight.value_numeric.blank?
+      weights[weight.obs_datetime] = weight.value_numeric
+      break if count > 12  
+      count+=1  
+    end
+    (weights || {}).sort{|a,b|a[0].to_date <=> b[0].to_date}.each do |date,weight|
+      @weights << [date.to_date.strftime('%d.%b.%y') , weight]
+    end
+
+    @weights = @weights.to_json
+    render :partial => "area_chart_adults" and return
   end
 
 	private
