@@ -2,6 +2,10 @@ class GenericSessionsController < ApplicationController
 	skip_before_filter :authenticate_user!, :except => [:location, :update]
 	skip_before_filter :location_required
 
+	def new
+	end
+
+
 	def create
 		user = User.authenticate(params[:login], params[:password])
 		sign_in(:user, user) if user
@@ -19,7 +23,7 @@ class GenericSessionsController < ApplicationController
 		else
 			note_failed_signin
 			@login = params[:login]
-			redirect_to '/user'
+			render :action => 'new'
 		end
 	end
 
@@ -62,7 +66,7 @@ class GenericSessionsController < ApplicationController
 		sign_out(current_user) if !current_user.blank?
 		self.current_location = nil
 		flash[:notice] = "You have been logged out."
-		redirect_back_or_default('/user/new_login')
+		redirect_back_or_default('/')
 	end
 
 	protected

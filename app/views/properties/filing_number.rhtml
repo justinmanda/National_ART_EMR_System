@@ -1,0 +1,25 @@
+<style>
+  #space { display:inline; font-size:1.2em; }
+
+  #tt_page_identifier .touchscreenTextInput {
+    top: 46px;
+  }
+  .options {
+    display:none;
+  }
+
+</style>
+
+<script>
+  var tt_cancel_destination = "/clinic"; // /properties/"
+</script>
+
+<form method='post' action='/properties/filing_number'>
+  <input type='text' id='filing_number'
+	   name='filing_number'
+	   helpText='Filing number limit '
+	   field_type="number"
+	   min = 1
+	   max = 90
+	   tt_pageStyleClass = "Numeric NumbersOnly"/>
+</form>

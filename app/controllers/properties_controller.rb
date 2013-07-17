@@ -13,4 +13,22 @@ class PropertiesController < GenericPropertiesController
 			global_setting.save
 			redirect_to '/clinic' and return
 	end
+
+  def filing_number
+		 if request.post?
+			filing_limit = GlobalProperty.find_by_property("filing.number.limit") rescue nil
+			 if filing_limit.nil?
+						filing_limit = GlobalProperty.new
+						filing_limit.property = "filing.number.limit"
+            filing_limit.description = "Maximum number for archiving of files to begin"
+						filing_limit.property_value = params[:filing_number]
+						filing_limit.save
+			 else
+           filing_limit = GlobalProperty.find_by_property("filing.number.limit")
+           filing_limit.property_value = params[:filing_number]
+           filing_limit.save
+			 end
+      redirect_to '/clinic' and return
+    end
+	end
 end
