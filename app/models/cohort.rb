@@ -705,10 +705,11 @@ class Cohort
 	end
 
 	def transferred_out_patients
-    outcome = 'PATIENT TRANSFERRED (EXTERNAL FACILITY)' if ConceptName.find_all_by_name('PATIENT TRANSFERRED OUT').blank?
-    outcome = 'PATIENT TRANSFERRED OUT' if outcome.blank?
+    #PB--reversed the code below to the original code after fixing the metadata
+    #outcome = 'PATIENT TRANSFERRED (EXTERNAL FACILITY)' if ConceptName.find_all_by_name('PATIENT TRANSFERRED OUT').blank?
+    #outcome = 'PATIENT TRANSFERRED OUT' if outcome.blank?
 
-		self.outcomes_total(outcome, @@first_registration_date)
+    self.outcomes_total('PATIENT TRANSFERRED OUT', @@first_registration_date)
 	end
 
 	def art_defaulted_patients
