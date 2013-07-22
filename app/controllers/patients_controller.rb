@@ -5,7 +5,7 @@ class PatientsController < GenericPatientsController
     @patient_bean = PatientService.get_patient(@patient.person)
     @reason_for_art_eligibility = PatientService.reason_for_art_eligibility(@patient)
     @arv_number = PatientService.get_patient_identifier(@patient, 'ARV Number')
-	@exit_states = concept_set("EXIT FROM CARE").flatten.uniq!
+    @exit_states = concept_set("EXIT FROM CARE").flatten.uniq!
     render :template => 'dashboards/exitcare_dashboard.rhtml', :layout => false
   end
 
@@ -15,15 +15,15 @@ class PatientsController < GenericPatientsController
     @restricted.each do |restriction|
       @programs = restriction.filter_programs(@programs)
     end
-      render :template => 'dashboards/exitcare_tab', :layout => false
+    render :template => 'dashboards/exitcare_tab', :layout => false
   end
   def exitcare_history
     @patient = Patient.find(params[:patient_id])
     encounter_type = EncounterType.find_by_name("EXIT FROM HIV CARE").id
 
     @encounters = Encounter.find(:all,  
-                  :conditions => [" patient_id = ? AND encounter_type = ?", 
-                                  @patient.id, encounter_type]) 
+      :conditions => [" patient_id = ? AND encounter_type = ?",
+        @patient.id, encounter_type])
     @creator_name = {}
     @encounters.each do |encounter|
       id = encounter.creator
@@ -68,15 +68,15 @@ class PatientsController < GenericPatientsController
     label.draw_multi_text("Reason for starting: #{who_stage}", {:font_reverse => false})
     label.draw_multi_text("ART start date: #{art_start_date}",{:font_reverse => false})
     label.draw_multi_text("Other diagnosis:", {:font_reverse => true})
-# !!!! TODO
+    # !!!! TODO
     staging_conditions = ""
     count = 1
     initial_staging_conditions.each{|condition|
-     if staging_conditions.blank?
-       staging_conditions = "(#{count}) #{condition}" unless condition.blank?
-     else
-       staging_conditions+= " (#{count+=1}) #{condition}" unless condition.blank?
-     end
+      if staging_conditions.blank?
+        staging_conditions = "(#{count}) #{condition}" unless condition.blank?
+      else
+        staging_conditions+= " (#{count+=1}) #{condition}" unless condition.blank?
+      end
     }
     label.draw_multi_text("#{staging_conditions}", {:font_reverse => false})
 
@@ -100,35 +100,35 @@ class PatientsController < GenericPatientsController
 
     concept_id = Concept.find_by_name('AMOUNT DISPENSED').id
     previous_orders = Order.find(:all, :select => "obs.obs_datetime, drug_order.drug_inventory_id", :joins =>"INNER JOIN obs ON obs.order_id = orders.order_id LEFT JOIN drug_order ON orders.order_id = drug_order.order_id",
-        :conditions =>["obs.person_id = ? AND obs.concept_id = ?                    
+      :conditions =>["obs.person_id = ? AND obs.concept_id = ?
         	AND obs_datetime <=?",
-        	patient.id, concept_id, date.strftime('%Y-%m-%d 23:59:59')],
-        :order => "obs_datetime DESC")
+        patient.id, concept_id, date.strftime('%Y-%m-%d 23:59:59')],
+      :order => "obs_datetime DESC")
 
-	previous_date = nil
-	drugs = []
+    previous_date = nil
+    drugs = []
 
-	finished = false
+    finished = false
 
     previous_orders.each do |order|
-        drug = Drug.find(order.drug_inventory_id)
-      	next unless MedicationService.arv(drug)
-		next if finished
+      drug = Drug.find(order.drug_inventory_id)
+      next unless MedicationService.arv(drug)
+      next if finished
 
-		if previous_date.blank?
-			previous_date = order.obs_datetime.to_date
-		end
-		if previous_date == order.obs_datetime.to_date 
-			demographics.reg << (drug.concept.shortname || drug.concept.fullname)
-			previous_date = order.obs_datetime.to_date
-		else
-			if !drugs.blank?
-				finished = true
-			end
-		end
+      if previous_date.blank?
+        previous_date = order.obs_datetime.to_date
+      end
+      if previous_date == order.obs_datetime.to_date
+        demographics.reg << (drug.concept.shortname || drug.concept.fullname)
+        previous_date = order.obs_datetime.to_date
+      else
+        if !drugs.blank?
+          finished = true
+        end
+      end
     end
 
-	demographics.reg = demographics.reg.uniq.join(" + ")
+    demographics.reg = demographics.reg.uniq.join(" + ")
 
     label.draw_multi_text("Current ART drugs", {:font_reverse => true})
     label.draw_multi_text("#{demographics.reg}", {:font_reverse => false})
@@ -176,6 +176,12 @@ class PatientsController < GenericPatientsController
   	patient_bean = PatientService.get_patient(patient.person)
     visit = visits(patient, date)[date] rescue {}
 
+		owner = " :Patient visit"
+
+		if PatientService.patient_present?(patient.id) == false and PatientService.guardian_present?(patient.id) == true
+			owner = " :Guardian Visit"
+		end
+
     return if visit.blank? 
     visit_data = mastercard_visit_data(visit)
     arv_number = patient_bean.arv_number || patient_bean.national_id
@@ -186,7 +192,7 @@ class PatientsController < GenericPatientsController
     label.draw_text("#{seen_by(patient,date)}",597,250,0,1,1,1,false)
     label.draw_text("#{date.strftime("%B %d %Y").upcase}",25,30,0,3,1,1,false)
     label.draw_text("#{arv_number}",565,30,0,3,1,1,true)
-    label.draw_text("#{patient_bean.name}(#{patient_bean.sex})",25,60,0,3,1,1,false)
+    label.draw_text("#{patient_bean.name}(#{patient_bean.sex}) #{owner}",25,60,0,3,1,1,false)
     label.draw_text("#{'(' + visit.visit_by + ')' unless visit.visit_by.blank?}",255,30,0,2,1,1,false)
     label.draw_text("#{visit.height.to_s + 'cm' if !visit.height.blank?}  #{visit.weight.to_s + 'kg' if !visit.weight.blank?}  #{'BMI:' + visit.bmi.to_s if !visit.bmi.blank?} #{'(PC:' + pill_count[0..24] + ')' unless pill_count.blank?}",25,95,0,2,1,1,false)
     label.draw_text("SE",25,130,0,3,1,1,false)
@@ -223,6 +229,58 @@ class PatientsController < GenericPatientsController
       label.draw_text("#{data}",starting_index,starting_line,0,2,1,1,bold)
     } rescue []
     label.print(2)
+  end
+  
+  def baby_chart
+
+    @patient = Patient.find(params[:patient_id])
+    @baby = @patient
+
+    if (@baby.person.gender.downcase.match(/f/i))
+      file =  File.open(RAILS_ROOT + "/public/data/weight_for_age_girls.txt", "r")
+    else
+      file =  File.open(RAILS_ROOT + "/public/data/weight_for_age_boys.txt", "r")
+    end
+    @file = []
+
+    file.each{ |parameters|
+
+      line = parameters
+      line = line.split(" ").join(",")
+      @file << line
+
+    }
+
+    #get available weights
+
+    @weights = []
+    birthdate_sec = @patient.person.birthdate
+
+    ids = ConceptName.find(:all, :conditions => ["name IN (?)", ["WEIGHT", "BIRTH WEIGHT", "BIRTH WEIGHT AT ADMISSION", "WEIGHT (KG)"]]).collect{|concept|
+      concept.concept_id}
+
+    Observation.find(:all, :conditions => ["person_id = ? AND concept_id IN (?)",
+        @patient.id, ids]).each do |ob|
+      age = ((((ob.value_datetime.to_date rescue ob.obs_datetime.to_date) rescue ob.date_created.to_date) - birthdate_sec).days.to_i/(60*60*24)).to_s rescue nil
+      weight = ob.answer_string.to_i rescue nil
+      next if age.blank? || weight.blank?
+      weight = (weight > 100) ? weight/1000.0 : weight # quick check of weight in grams and that in KG's
+      @weights << age + "," + weight.to_s if !age.blank? && !weight.blank?
+
+    end
+
+    if !params[:cur_weight].blank?
+      wt = params[:cur_weight].to_f
+      weight = (wt > 100) ? wt/1000.0 : wt
+      age = (((session[:datetime].to_date rescue Date.today) - birthdate_sec).days.to_i/(60*60*24)).to_s rescue nil
+      @weights << age + "," + weight.to_s if !age.blank? && !weight.blank?
+    end
+    
+    if params[:tab]
+      render :template => "/patients/tab_baby_chart", :layout => false
+    else
+      render :template => "/patients/baby_chart", :layout => false
+    end
   end
 
 end
