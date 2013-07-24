@@ -167,10 +167,10 @@ class GenericPeopleController < ApplicationController
     if params[:identifier]
       local_results = PatientService.search_by_identifier(params[:identifier])
 
-			if local_results.blank? and (params[:identifier].match(/#{CoreService.get_global_property_value("site_prefix")}-ARV/i) || params[:identifier].match(/-TB/i))
+			if local_results.blank? and (params[:identifier].match(/#{Location.current_health_center.neighborhood_cell}-ARV/i) || params[:identifier].match(/-TB/i))
 				flash[:notice] = "No matching person found with number #{params[:identifier]}"
 				redirect_to :action => 'find_by_tb_number' if params[:identifier].match(/-TB/i)
-				redirect_to :action => 'find_by_arv_number' if params[:identifier].match(/#{CoreService.get_global_property_value("site_prefix")}-ARV/i)
+				redirect_to :action => 'find_by_arv_number' if params[:identifier].match(/#{Location.current_health_center.neighborhood_cell}-ARV/i)
 			end
 
       if local_results.length > 1
