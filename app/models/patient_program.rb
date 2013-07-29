@@ -52,6 +52,12 @@ class PatientProgram < ActiveRecord::Base
       # Find the state by name
       # Used upcase below as we were having problems matching the concept fullname with the state
       # I hope this will sort the problem and doesnt break anything
+      
+      # PB -- reverted the code below to its original state after fixing the metadata -----------
+      
+      #params[:state] = 'PATIENT TRANSFERRED (EXTERNAL FACILITY)' if ConceptName.find_all_by_name('PATIENT TRANSFERRED OUT').blank? and params[:state].upcase == "PATIENT TRANSFERRED OUT"
+      #params[:state] = 'PATIENT TRANSFERRED (WITHIN FACILITY)' if ConceptName.find_all_by_name('PATIENT TRANSFERRED IN').blank? and params[:state].upcase == "PATIENT TRANSFERRED IN"
+
       selected_state = self.program.program_workflows.map(&:program_workflow_states).flatten.select{|pws| pws.concept.fullname.upcase() == params[:state].upcase()}.first rescue nil
       state = self.patient_states.last rescue []
       if (state && selected_state == state.program_workflow_state)

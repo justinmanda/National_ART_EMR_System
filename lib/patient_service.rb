@@ -1502,7 +1502,7 @@ people = Person.find(:all, :include => [{:names => [:person_name_code]}, :patien
   end
 
   def self.search_by_identifier(identifier)
-    unless identifier.match(/#{CoreService.get_global_property_value("site_prefix")}-ARV/i) || identifier.match(/-TB/i)
+    unless identifier.match(/#{Location.current_health_center.neighborhood_cell}-ARV/i) || identifier.match(/-TB/i)
       identifier = identifier.gsub("-","").strip
     end
 

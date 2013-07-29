@@ -146,7 +146,7 @@ class DrugOrder < ActiveRecord::Base
     total_brought = amounts_brought.sum{|amount| amount.value_numeric}
     amounts_dispensed = Observation.all(:conditions => ['concept_id = ? AND order_id = ? AND encounter_id = ?', ConceptName.find_by_name("AMOUNT DISPENSED").concept_id, self.order_id, encounter.encounter_id])
     total_dispensed = amounts_dispensed.sum{|amount| amount.value_numeric}
-    self.quantity = total_dispensed + total_brought  
+    self.quantity = total_dispensed + total_brought
     self.save
     amounts_dispensed
   end

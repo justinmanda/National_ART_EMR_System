@@ -95,7 +95,7 @@ class GenericApplicationController < ActionController::Base
   end
 
   def site_prefix
-    site_prefix = CoreService.get_global_property_value("site_prefix") rescue false
+    site_prefix = Location.current_health_center.neighborhood_cell
     return site_prefix
   end
 

@@ -57,6 +57,7 @@ class ClinicController < GenericClinicController
   def properties_tab
     if current_program_location.match(/HIV program/i) or current_program_location.match(/TB program/i)
       @settings = [
+        ["Set filing limit","/properties/filing_number"],
         ["Set Clinic Days","/properties/clinic_days"],
         ["View Clinic Holidays","/properties/clinic_holidays"],
         ["Ask Pills remaining at home","/properties/creation?value=ask_pills_remaining_at_home"],
@@ -66,10 +67,10 @@ class ClinicController < GenericClinicController
         ["Staging Format", "/properties/staging_properties"],
         ["Use User Selected Task(s)", "/properties/creation?value=use_user_selected_activities"],
         ["Use Filing Numbers", "/properties/creation?value=use_filing_numbers"],
+        ["Confirm patient creation", "/properties/creation?value=confirm_before_creating_a_patient"],
         ["Show Lab Results", "/properties/creation?value=show_lab_results"],
         ["Set Appointment Limit", "/properties/set_appointment_limit"],
 				["Export Cohort Data", "/properties/export_cohort_data"],
-        ["Confirm patient creation", "/properties/creation?value=confirm_before_creating_a_patient"],
         ["Extended Family Planning","/properties/creation?value=extended_family_planning"]
       ]
     else

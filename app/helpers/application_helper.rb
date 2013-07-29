@@ -40,7 +40,7 @@ module ApplicationHelper
   end
 
   def site_prefix
-    site_prefix = get_global_property_value("site_prefix") rescue false
+    site_prefix = Location.current_health_center.neighborhood_cell
     return site_prefix
   end
 
@@ -120,8 +120,9 @@ module ApplicationHelper
   end
 
   def version
+    #"Bart Version: #{BART_VERSION}#{' ' + BART_SETTINGS['installation'] if BART_SETTINGS}, #{File.ctime(File.join(RAILS_ROOT, 'config', 'environment.rb')).strftime('%d-%b-%Y')}"
     style = "style='background-color:red;'" unless session[:datetime].blank?
-    "ART Version: #{ART_VERSION} - <span #{style}>#{(session[:datetime].to_date rescue Date.today).strftime('%A, %d-%b-%Y')}</span>"
+    "Bart Version: #{BART_VERSION} - <span #{style}>#{(session[:datetime].to_date rescue Date.today).strftime('%A, %d-%b-%Y')}</span>"
   end
   
   def welcome_message
@@ -182,6 +183,12 @@ module ApplicationHelper
     options_for_select(options)
   end
 
+	def concept_set_options_unknown(concept_name)
+		concept_id = concept_id = ConceptName.find_by_name(concept_name).concept_id
+    set = ConceptSet.find_all_by_concept_set(concept_id, :order => 'sort_weight')
+    options = set.map{|item|next if item.concept.blank? ; [item.concept.fullname, item.concept.fullname] } - [["Unknown", "Unknown"]]
+    options_for_select(options)
+	end
 
   def selected_concept_set_options(concept_name, exclude_concept_name)
     concept_id = concept_id = ConceptName.find_by_name(concept_name).concept_id
@@ -328,7 +335,7 @@ module ApplicationHelper
        current_user.activities.include?('Manage HIV Status Visits')             
       'TB-ART'                                                                  
     else                                                                        
-      'ART'
+      'BART'                                                                    
     end                                                                         
   end 
 

@@ -11,7 +11,13 @@ class GenericRegimensController < ApplicationController
 		@patient = Patient.find(params[:patient_id] || session[:patient_id]) rescue nil
 		@patient_bean = PatientService.get_patient(@patient.person)
 		@programs = @patient.patient_programs.all
-		@hiv_programs = @patient.patient_programs.not_completed.in_programs('HIV PROGRAM')
+		#@hiv_programs = @patient.patient_programs.not_completed.in_programs('HIV PROGRAM')
+    @hiv_programs = []
+    @programs.each do |prog|
+        if prog.program.name.upcase == "HIV PROGRAM"
+          @hiv_programs << prog #unless ProgramWorkflowState.find_state(prog.patient_states.last.state).concept.fullname.match(/treatment stopped/i)
+        end
+    end
 
 		@reason_for_art_eligibility = PatientService.reason_for_art_eligibility(@patient)
 		@current_weight = PatientService.get_patient_attribute_value(@patient, "current_weight")
@@ -25,6 +31,7 @@ class GenericRegimensController < ApplicationController
 		@current_regimens_for_programs = current_regimens_for_programs
     @regimen_formulations = []
 		@tb_regimen_formulations = []
+		
     (@current_regimens_for_programs || {}).each do |patient_program_id , regimen_id|
       @regimen_formulations = formulation(@patient,regimen_id) if PatientProgram.find(patient_program_id).program.name.match(/HIV PROGRAM/i)
 			@hiv_regimen_map = regimen_id if PatientProgram.find(patient_program_id).program.name.match(/HIV PROGRAM/i)
@@ -32,9 +39,14 @@ class GenericRegimensController < ApplicationController
     end
 		@current_regimen_names_for_programs = current_regimen_names_for_programs
 		
-		@current_hiv_program_state = PatientProgram.find(:first, :joins => :location, :conditions => ["patient_id = ? AND program_id = ? AND location.location_id = ? AND date_completed IS NULL", @patient.id, Program.find_by_concept_id(Concept.find_by_name('HIV PROGRAM').id).id, Location.current_health_center]).patient_states.current.first.program_workflow_state.concept.fullname rescue ''		
+		@current_hiv_program_state = PatientProgram.find(:first, :joins => :location, 
+                                 :conditions => ["patient_id = ? AND program_id = ? AND location.location_id = ? AND date_completed IS NULL",
+                                  @patient.id, Program.find_by_concept_id(Concept.find_by_name('HIV PROGRAM').id).id, Location.current_health_center]).patient_states.current.first.program_workflow_state.concept.fullname rescue ''
 		session_date = session[:datetime].to_date rescue Date.today
+    #raise Location.current_health_center.id.to_yaml
 
+    #raise PatientProgram.find(:first, :joins => :location,
+    #                          :conditions => ["patient_id = ? AND program_id = ? AND location.location_id = ? AND date_completed IS NULL", @patient.id, Program.find_by_concept_id(Concept.find_by_name('HIV PROGRAM').id).id, Location.current_health_center.id]).to_yaml
 		pre_hiv_clinic_consultation = Encounter.find(:first,:order => "encounter_datetime DESC,date_created DESC",
 		    :conditions =>["DATE(encounter_datetime) = ? AND patient_id = ? AND encounter_type = ?",
 		    session_date.to_date, @patient.id, EncounterType.find_by_name('PART_FOLLOWUP').id])
@@ -532,29 +544,33 @@ class GenericRegimensController < ApplicationController
 
 			next if concept == 'NO'
 
-      params[:cpt_duration] =  params[:duration] if params[:cpt_duration].blank?
-			auto_cpt_ipt_expire_date = session[:datetime] + params[:cpt_duration].to_i.days rescue Time.now + params[:cpt_duration].to_i.days
+      if ! params[:cpt_duration].blank?
+        #params[:cpt_duration] =  params[:duration]
+        auto_cpt_ipt_expire_date = session[:datetime] + params[:cpt_duration].to_i.days rescue Time.now + params[:cpt_duration].to_i.days
+      end
 			if concept_name == 'CPT STARTED'
-				drug = Drug.find_by_name('Cotrimoxazole (480mg tablet)')
-			else
-				if params[:ipt_mgs].to_i == 300  
+				if params[:cpt_mgs] == "960"
+					drug = Drug.find_by_name('Cotrimoxazole (960mg)')
+				else
+					drug = Drug.find_by_name('Cotrimoxazole (480mg tablet)')
+				end
+      else
+				if params[:ipt_mgs] == "300"
 						drug = Drug.find_by_name('INH or H (Isoniazid 300mg tablet)')	
 				else
 						drug = Drug.find_by_name('INH or H (Isoniazid 100mg tablet)')
-				end
-				
+				end	
 			end
 			
 			weight = @current_weight = PatientService.get_patient_attribute_value(@patient, "current_weight")
 			regimen_id = Regimen.all(:conditions =>  ['min_weight <= ? AND max_weight >= ? AND concept_id = ?', weight, weight, drug.concept_id]).first.regimen_id
+
+			#raise regimen_id.to_yaml
+
+			orders = RegimenDrugOrder.all(:conditions => {:regimen_id => regimen_id})
 			
-			orders = RegimenDrugOrder.all(:conditions => {:regimen_id => regimen_id})			
-			# orders = RegimenDrugOrder.all(:conditions => {:regimen_id => Regimen.find_by_concept_id(drug.concept_id).regimen_id})
-			if prescribe_arvs == false || prescribe_tb_drugs == false
-					auto_cpt_ipt_expire_date = session[:datetime] + params[:cpt_duration].to_i.days rescue Time.now + params[:cpt_duration].to_i.days
-			end
+					#raise auto_cpt_ipt_expire_date.to_yaml
 					orders.each do |order|
-						drug = Drug.find(order.drug_inventory_id) if concept_name != 'CPT STARTED'
 						regimen_name = (order.regimen.concept.concept_names.typed("SHORT").first || order.regimen.concept_names.typed("FULLY_SPECIFIED").first).name
 						DrugOrder.write_order(
 						encounter,
