@@ -167,10 +167,10 @@ class GenericPeopleController < ApplicationController
     if params[:identifier]
       local_results = PatientService.search_by_identifier(params[:identifier])
 
-			if local_results.blank? and (params[:identifier].match(/#{CoreService.get_global_property_value("site_prefix")}-ARV/i) || params[:identifier].match(/-TB/i))
+			if local_results.blank? and (params[:identifier].match(/#{Location.current_health_center.neighborhood_cell}-ARV/i) || params[:identifier].match(/-TB/i))
 				flash[:notice] = "No matching person found with number #{params[:identifier]}"
 				redirect_to :action => 'find_by_tb_number' if params[:identifier].match(/-TB/i)
-				redirect_to :action => 'find_by_arv_number' if params[:identifier].match(/#{CoreService.get_global_property_value("site_prefix")}-ARV/i)
+				redirect_to :action => 'find_by_arv_number' if params[:identifier].match(/#{Location.current_health_center.neighborhood_cell}-ARV/i)
 			end
 
       if local_results.length > 1
@@ -213,12 +213,12 @@ class GenericPeopleController < ApplicationController
           redirect_to search_complete_url(found_person.id, params[:relation]) and return
         elsif national_id_replaced.to_s == "true"
           #creating patient's footprint so that we can track them later when they visit other sites
-          DDEService.create_footprint(PatientService.get_patient(found_person).national_id, Location.find(session[:location_id]).name)
+          DDEService.create_footprint(PatientService.get_patient(found_person).national_id, 'National-ART')
           print_and_redirect("/patients/national_id_label?patient_id=#{found_person.id}", next_task(found_person.patient)) and return
           redirect_to :action => 'confirm', :found_person_id => found_person.id, :relation => params[:relation] and return
         else
           #creating patient's footprint so that we can track them later when they visit other sites
-          DDEService.create_footprint(PatientService.get_patient(found_person).national_id, Location.find(session[:location_id]).name)
+          DDEService.create_footprint(PatientService.get_patient(found_person).national_id, 'National-ART')
           redirect_to :action => 'confirm',:found_person_id => found_person.id, :relation => params[:relation] and return
         end
       end
@@ -238,10 +238,26 @@ class GenericPeopleController < ApplicationController
       next if national_id.blank?
       results = PersonSearch.new(national_id)
       results.national_id = national_id
-      results.current_residence =data["person"]["data"]["addresses"]["city_village"]
+
+      unless data["person"]["data"]["addresses"]["city_village"].match(/hashwithindifferentaccess/i)
+        results.current_residence = data["person"]["data"]["addresses"]["city_village"]
+      else                                                                      
+        results.current_residence = nil                                         
+      end rescue results.current_residence
+                                                                                
+      unless data["person"]["data"]["addresses"]["address2"].match(/hashwithindifferentaccess/i)
+        results.home_district = data["person"]["data"]["addresses"]["address2"] 
+      else                                                                      
+        results.home_district = nil                                             
+      end rescue results.home_district                                      
+                                                                                
+      unless data["person"]["data"]["addresses"]["county_district"].match(/hashwithindifferentaccess/i)
+        results.traditional_authority =  data["person"]["data"]["addresses"]["county_district"]
+      else                                                                      
+        results.traditional_authority = nil                                     
+      end rescue results.traditional_authority
+
       results.person_id = 0
-      results.home_district = data["person"]["data"]["addresses"]["address2"]
-      results.traditional_authority =  data["person"]["data"]["addresses"]["county_district"]
       results.name = data["person"]["data"]["names"]["given_name"] + " " + data["person"]["data"]["names"]["family_name"]
       gender = data["person"]["data"]["gender"]
       results.occupation = data["person"]["data"]["occupation"]
@@ -437,10 +453,10 @@ class GenericPeopleController < ApplicationController
 
           print_and_redirect("/patients/national_id_label?patient_id=#{person.id}", next_task(person.patient)) and return
           #creating patient's footprint so that we can track them later when they visit other sites
-          DDEService.create_footprint(PatientService.get_patient(person).national_id, Location.find(session[:location_id]).name)
+          DDEService.create_footprint(PatientService.get_patient(person).national_id, 'National-ART')
         end
         #creating patient's footprint so that we can track them later when they visit other sites
-        DDEService.create_footprint(PatientService.get_patient(person).national_id, Location.find(session[:location_id]).name)
+        DDEService.create_footprint(PatientService.get_patient(person).national_id, 'National-ART')
       end
       redirect_to search_complete_url(params[:person][:id], params[:relation]) and return unless params[:person][:id].blank? || params[:person][:id] == '0'
 
@@ -568,7 +584,7 @@ class GenericPeopleController < ApplicationController
 
     #If we are creating from DDE then we must create a footprint of the just created patient to
     #enable future                                                              
-    DDEService.create_footprint(PatientService.get_patient(person).national_id, Location.find(session[:location_id]).name) 
+    DDEService.create_footprint(PatientService.get_patient(person).national_id, 'National-ART') 
 
     #for now BART2 will use BART1 for patient/person creation until we upgrade BART1 to 2
     #if GlobalProperty.find_by_property('create.from.remote') and property_value == 'yes'
