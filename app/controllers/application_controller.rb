@@ -1366,9 +1366,9 @@ class ApplicationController < GenericApplicationController
        current_user.activities.include?('Manage Sputum Submissions') or current_user.activities.include?('Manage TB Clinic Visits') or
        current_user.activities.include?('Manage TB Reception Visits') or current_user.activities.include?('Manage TB Registration Visits') or
        current_user.activities.include?('Manage HIV Status Visits') 
-      'TB-ART'
+      'MOH TB-ART'
     else
-      'BART'
+      'MOH ART'
     end
   end 
 
