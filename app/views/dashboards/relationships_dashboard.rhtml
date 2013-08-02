@@ -20,9 +20,7 @@
             </tr>
             <tr>
               <td>
-                <h1 id='project_name'>
-                  <span style="font-size: 55px;"><img src='/images/mw.gif' style="height:50%" ><br>MOH ART</span>
-                </h1>
+                <h1 id='project_name'><%=what_app?%></h1>
             <span id='patient_name'><%= @patient_bean.name rescue "" %></span>
             <span id='patient_id'><%= @patient_bean.national_id_with_dashes rescue "" %></span>
             <span id='patient_residence'><%= @patient_bean.current_residence rescue "" %></span>
@@ -64,7 +62,7 @@
                   <option value='/patients/guardians?patient_id=<%= @patient.id %>'>Guardians</option>
                 </select>
                 <select id="links">
-                  <option value='/relationships/search?patient_id=<%= @patient.id -%>'>New Guardian</option>
+                  <optgroup value='/relationships/search?patient_id=<%= @patient.id -%>' label="New Guardian"></optgroup>
                 </select>
               </td>
             </tr>

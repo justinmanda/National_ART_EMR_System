@@ -399,7 +399,7 @@ class GenericPatientsController < ApplicationController
       @source = nil
     end
 
-    render :layout => false
+    render :layout => "menu"
     
   end
 
@@ -616,6 +616,7 @@ class GenericPatientsController < ApplicationController
     @encounters = @patient.encounters.find_by_date(session_date)
     @prescriptions = @patient.orders.unfinished.prescriptions.all
     @programs = @patient.patient_programs.all
+    #raise @programs.patient_states.to_yaml
     @alerts = alerts(@patient, session_date) rescue nil
     # This code is pretty hacky at the moment
     @restricted = ProgramLocationRestriction.all(:conditions => {:location_id => Location.current_health_center.id })
@@ -625,7 +626,16 @@ class GenericPatientsController < ApplicationController
       @prescriptions = restriction.filter_orders(@prescriptions)
       @programs = restriction.filter_programs(@programs)
     end
-
+   @program_state =  []
+   @programs.each do | prog |
+    
+    patient_states = PatientState.find(:all,
+				:joins => "INNER JOIN patient_program p ON p.patient_program_id = patient_state.patient_program_id",
+				:conditions =>["patient_state.voided = 0 AND p.voided = 0 AND p.program_id = ? AND start_date <= ? AND p.patient_id =?",
+					prog.program_id, session_date, @patient.id],:order => "patient_state_id ASC")
+     @program_state << [prog.to_s,  patient_states.last.to_s, prog.program_id, prog.date_enrolled]
+    end
+    
     render :template => 'dashboards/overview_tab', :layout => false
   end
 
@@ -791,7 +801,7 @@ class GenericPatientsController < ApplicationController
     @patient_bean = PatientService.get_patient(@patient.person)
 		@guardian_phone_number = PatientService.get_attribute(Person.find(@patient.person.relationships.first.person_b), 'Cell phone number') rescue nil
 		@patient_phone_number = PatientService.get_attribute(@patient.person, 'Cell phone number')
-    render :layout => false
+    #render :layout => false
   end
 
   def patient_details
@@ -1043,7 +1053,7 @@ end
       adherence = adh.value_numeric ||= adh.value_text
       if (adherence.to_f >= 95 || adherence.to_f <= 105)
         drug_name = adh.order.drug_order.drug.concept.shortname rescue adh.order.drug_order.drug.name
-        alerts << "Adherence: #{drug_name} (#{adh.value_numeric}%)"
+        alerts << "Adherence: #{drug_name} (#{adherence}%)"
       end
     end 
 
@@ -1980,12 +1990,13 @@ end
 				patient_visits[visit_date].pills << [drug_name,obs.value_numeric] rescue []
             
 			elsif concept_name.upcase == 'WHAT WAS THE PATIENTS ADHERENCE FOR THIS DRUG ORDER'
+        
 				drug = Drug.find(obs.order.drug_order.drug_inventory_id) rescue nil
 				#tb_medical = MedicationService.tb_medication(drug) unless drug.nil?
 				#next if tb_medical == true
-				next if obs.value_numeric.blank?
+				next if  obs.to_s.split(':')[1].to_i.blank?
 				patient_visits[visit_date].adherence = [] if patient_visits[visit_date].adherence.blank?
-				patient_visits[visit_date].adherence << [Drug.find(obs.order.drug_order.drug_inventory_id).name,(obs.value_numeric.to_s + '%')]
+				patient_visits[visit_date].adherence << [Drug.find(obs.order.drug_order.drug_inventory_id).name,(obs.to_s.split(':')[1] + '%')]
 			elsif concept_name == 'CLINICAL NOTES CONSTRUCT' || concept_name == 'Clinical notes construct'
 				patient_visits[visit_date].notes+= '<br/>' + obs.value_text unless patient_visits[visit_date].notes.blank?
 				patient_visits[visit_date].notes = obs.value_text if patient_visits[visit_date].notes.blank?

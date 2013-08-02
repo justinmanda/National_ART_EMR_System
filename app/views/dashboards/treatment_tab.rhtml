@@ -71,12 +71,7 @@
                   <th>End date</th>
                   <th style="text-align:right;">Amount dispensed</th>
                 </tr>
-                <% @historical.each do |order| 
-  									i = order.drug_order.drug rescue nil
-  									if i.blank?
-  										raise order.id.to_s
-  									end              
-                %>
+                <% @historical.each do |order| %>
                     <!--div class="void"><img src="/images/cancel_flat_small.png"/></div-->
                       <%
                          amounts_dispensed = Observation.all(:conditions => ['concept_id = ? AND order_id = ?', 
