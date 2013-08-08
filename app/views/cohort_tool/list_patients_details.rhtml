@@ -257,13 +257,14 @@
 							<th>Outcome Status</th>
 							<th>&nbsp;<br></th>
 					</tr>
+                                        
 			 </thead>
 			  <tbody>
 							<% session[:mastercard_ids] = [] %>
 							<% session[:mastercard_counter] = 0 %>
 							<% @report.each do |data_row| %>
 									<% session[:mastercard_ids] << data_row.person_id %>
-
+                                                                        <%#= raise session[:pre_art]["earliest_start_date"].to_yaml %>
 									<tr>
 										  <td align='center'><%= data_row.arv_number %></td>
 										  <td><%= data_row.name %></td>
@@ -274,9 +275,9 @@
 													  <td align='center'><%= data_row.age_in_months %> Months</td>
 										  <% end %>
 
-										  <td align='center'><%= session[:cohort]["Earliest_start_dates"][data_row.patient_id] %></td>
-										  <td><%= "#{session[:cohort]["start_reason"][data_row.patient_id	.to_s]}" %></td>
-										  <td><%= "#{session[:cohort]["outcomes"][data_row.patient_id.to_s]}" %></td>
+										  <td align='center'><%= session[:cohort]["Earliest_start_dates"][data_row.patient_id] rescue session[:pre_art]["earliest_start_date"][data_row.patient_id.to_i]  rescue "None" %></td>
+										  <td><%= "#{session[:cohort]["start_reason"][data_row.patient_id.to_s] rescue "None"}" %></td>
+										  <td><%= "#{session[:cohort]["outcomes"][data_row.patient_id.to_s] rescue session[:pre_art]["outcomes"][data_row.patient_id.to_s]}" %></td>
 										  <td align='center' class="create_button"><%= link_to_onmousedown "View",{:controller =>"patients", :action => 'mastercard',
 										  :patient_id => "#{data_row.person_id}" ,:source =>"out_of_range_arv_number", :quarter => "#{@report_quarter}",
 										  :arv_start_number => "#{params[:arv_start_number]}",:arv_end_number => "#{params[:arv_end_number]}"}%></td>

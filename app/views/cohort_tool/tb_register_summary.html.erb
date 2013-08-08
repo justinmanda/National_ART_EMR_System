@@ -37,8 +37,7 @@ Summary of Registered Tuberculosis Cases from <%=@start_date.strftime('%d %B %Y'
 							<table border = 1 cellspacing = 0 cellpadding =0 width= 100% >
 								<tr>
 									<th ><font size = 5 >Grouping</font></th><th ><font size = 5 >Description</font></th>
-									<th ><font size= 5 >Total Count</font></th>
-                              <tr>
+									<th ><font size= 5 >Total Count</th></font><tr>
 								<tr><th rowspan=2>By Gender</th><th>Females Registered</th><td><%=link_to @total["Females"],:action => "tb_register_summary_specifics", :grp=>"by gender females",:start=>@start_date,:end=> @end_date%></td></tr>
 								<tr><th>Males Registered</th><td><%=link_to @total["Males"],:action => "tb_register_summary_specifics", :grp=>"by gender males",:start=>@start_date,:end=> @end_date%></td></tr>
 								<tr><th rowspan=2>By TB Classification</th><th>Pulmonary TB Cases</th><td><%= link_to @total["pulmonary"] ,:action => "tb_register_summary_specifics", :grp=>"by tbclass pul",:start=>@start_date,:end=> @end_date %></td></tr>
@@ -60,7 +59,7 @@ Summary of Registered Tuberculosis Cases from <%=@start_date.strftime('%d %B %Y'
 					<th >
 							<table border = 1 cellspacing = 0 cellpadding =0 width= 100% >
 								<tr><th ><font size = 5 >Grouping</font></th><th ><font size = 5 >Description</font></th>
-									<th ><font size= 5 >Total Count</font></th><tr>
+									<th ><font size= 5 >Total Count</th></font><tr>
 								<tr><th rowspan=6>By Treatment Outcome</th>
 								<th>Cured </th><td><%= link_to @total["cured"], :action => "tb_register_summary_specifics", :grp=>"cured",:start=>@start_date,:end=> @end_date %></td></tr>
 								<tr><th>Tx Complete </th><td><%= link_to @total["complete"], :action => "tb_register_summary_specifics", :grp=>"treatment complete",:start=>@start_date,:end=> @end_date %></td></tr>
