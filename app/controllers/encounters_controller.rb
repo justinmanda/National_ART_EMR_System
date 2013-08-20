@@ -54,7 +54,7 @@ class EncountersController < GenericEncountersController
       end
     end
 
-
+    @appointment_days = appointment_dates(@patient)
 		if session[:datetime]
 			@retrospective = true 
 		else

@@ -103,7 +103,30 @@ class ReportController < GenericReportController
   def art_register
 
     @data = []
-
+    #Added code to full data from flat tables
+    Patient.find_by_sql(
+    "Select * from flat_table1
+     where patient_id IN (Select distinct(patient_id) from flat_cohort_table)
+    ").each { |tab1|
+      tab2 = Encounter.find_by_sql("
+        Select * from flat_cohort_table where patient_id = #{tab1.patient_id}
+        order by earliest_start_date desc limit 1").first
+        patient = Patient.find(tab1.patient_id)
+        detail = {
+            'name' => tab1.given_name + " " + tab1.family_name,
+            'gender' => tab1.gender,
+            'age' => PatientService.cul_age(tab1.dob.to_date, tab1.dob_estimated ),
+            'reg_date' => (tab2.earliest_start_date rescue ''),
+            'arv_number' => PatientService.get_patient_identifier(patient, 'ARV Number'),
+            'start_reason' => tab1.reason_for_eligibility ,
+            'outcome' => (tab2.hiv_program_state rescue ''),
+            'outcome_date' => (tab2.hiv_program_state_v_date rescue ''),
+            'occupation' => tab1.occupation,
+            'formulation' => tab2.regimen_category
+      }
+      @data << detail
+    }
+=begin
     program = Program.find_by_name('HIV PROGRAM').id
 
     patients = PatientProgram.find(:all, :conditions => ["program_id = ? AND date_completed  IS NULL", program])
@@ -128,11 +151,13 @@ class ReportController < GenericReportController
             'occupation' => PatientService.get_attribute(det_patient , 'Occupation'),
             'formulation' => drug.nil? ? " " : drug
         }
+
         @data << detail
       end
-      @data = @data.uniq
+=end
+     # @data = @data.uniq
 
-    end
+   # end
 
   end
 
@@ -142,10 +167,10 @@ class ReportController < GenericReportController
   def missed_appointment_report
 
     @data = []
+    @report = "Missed appointments"
+    @start_date = params[:start_date].to_date
 
-    @start_date = (params[:start_month].to_s + "/" + params[:start_day].to_s + "/" + params[:start_year].to_s).to_date
-
-    @end_date = (params[:end_month].to_s + "/" + params[:end_day].to_s + "/" + params[:end_year].to_s).to_date
+    @end_date = params[:end_date].to_date
 
 
     appoinment = Concept.find_by_name('appointment date').concept_id
@@ -159,26 +184,35 @@ class ReportController < GenericReportController
       last_obs = Observation.find_by_sql("SELECT * FROM obs WHERE person_id = #{last_app.person_id}
                                           AND DATE(obs_datetime) = DATE('#{last_app.value_datetime.to_date}')  LIMIT 1")
 
-      if last_obs.nil?
+       first_obs = Observation.find_by_sql("SELECT person_id, obs_datetime FROM obs
+                                            WHERE person_id = #{last_app.person_id}
+                                            AND voided = 0 order by obs_datetime ASC LIMIT 1").first
+      patient = Patient.find(last_app.person_id)
+
+
+      unless last_obs.blank?
         result = adherence(last_app.person_id, last_app.value_datetime)
         next_visit = Observation.find(:first, :conditions =>  ["person_id = ? AND obs_datetime > ?",
-                                                               last_app.person_id, last_app.value_datetime]).nil? ? " " : "Yes"
+                                                               last_app.person_id, last_app.value_datetime])
+
+        next_visit = next_visit.nil? ? "No" : next_visit.obs_datetime.to_date
         details ={
-            'name' => last_app.encounter.patient.name,
-            'age' => PatientService.cul_age(last_app.encounter.patient.person.birthdate , last_app.encounter.patient.person.birthdate_estimated ),
+            'patient_id' => last_app.person_id,
+            'name' => patient.name,
+            'age' => PatientService.cul_age(patient.person.birthdate , patient.person.birthdate_estimated ),
             'dosses_missed' => result['missed_dosses'],
             'exp_tab_remaining' => result['expected_remaining'] ,
             'booked_date' => last_app.obs_datetime.to_date.strftime('%d/%b/%Y') ,
             'phone_number' => get_phone(last_app.person_id),
             'overdue' => (Date.today.to_date - last_app.obs_datetime.to_date).to_i,
-            'came_late' => next_visit
+            'came_late' => next_visit,
+            'date_registered' => first_obs.obs_datetime.to_date,
+            'last_visit_date' => last_app.obs_datetime.to_date
         }
         @data << details
       end
 
     end
-
-
   end
 
   def get_phone(patient_id)

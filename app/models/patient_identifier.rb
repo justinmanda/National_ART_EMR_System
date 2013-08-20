@@ -27,7 +27,7 @@ class PatientIdentifier < ActiveRecord::Base
   end
 
   def self.site_prefix
-    site_prefix = Location.current_health_center.neighborhood_cell
+    site_prefix = GlobalProperty.find_by_property("site_prefix").property_value rescue ''
     return site_prefix
   end
 

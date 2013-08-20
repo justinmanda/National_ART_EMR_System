@@ -194,6 +194,7 @@ dateToday = session[:datetime].to_date rescue Date.today
       :min => 20,
       :max => 45,
       :units => 'Celcuis',
+      :tt_onLoad => "showCategory('Vitals')",
       :validationRule => "([0-9]+\\.[0-9])|Unknown$",
       :validationMessage => "You must enter a decimal between 0 and 9 (for example: 36<b>.6</b>)",
       :tt_pageStyleClass => "Numeric NumbersOnlyWithDecimal",
@@ -204,7 +205,7 @@ dateToday = session[:datetime].to_date rescue Date.today
     <%= touch_numeric_tag "WEIGHT (KG)", @patient, nil,
       {	:id => "weight",
       :field_type => "number",
-      :tt_onLoad => "$('clearButton').style.display = 'inline';",
+      :tt_onLoad => "$('clearButton').style.display = 'inline';showCategory('Vitals');",
       :min => number_with_precision(@min_weight, :precision => 1),
       :max => number_with_precision(@max_weight, :precision => 1),
       :absoluteMin => 0,
@@ -226,7 +227,7 @@ dateToday = session[:datetime].to_date rescue Date.today
       <%= touch_numeric_tag "HEIGHT (CM)", @patient, nil,
         {	:id => "height",
         :field_type => "number",
-        :tt_onLoad => "$('clearButton').style.display = 'inline';",
+        :tt_onLoad => "$('clearButton').style.display = 'inline';showCategory('Vitals');",
         :min => number_with_precision(@min_height, :precision => 1),
         :max => number_with_precision(@max_height, :precision => 1),
         :absoluteMin => 10,
@@ -241,7 +242,7 @@ dateToday = session[:datetime].to_date rescue Date.today
     <%= touch_numeric_tag "WEIGHT (KG)", @patient, nil,
       {	:id => "weight",
       :field_type => "number",
-      :tt_onLoad => "$('clearButton').style.display = 'inline';",
+      :tt_onLoad => "$('clearButton').style.display = 'inline';showCategory('Vitals');",
       :min => number_with_precision(@min_weight, :precision => 1),
       :max => number_with_precision(@max_weight, :precision => 1),
       :absoluteMin => 0,
@@ -258,7 +259,7 @@ dateToday = session[:datetime].to_date rescue Date.today
       <%= touch_numeric_tag "HEIGHT (CM)", @patient, nil,
         {	:id => "height",
         :field_type => "number",
-        :tt_onLoad => "$('clearButton').style.display = 'inline';",
+        :tt_onLoad => "$('clearButton').style.display = 'inline';showCategory('Vitals');",
         :min => number_with_precision(@min_height, :precision => 1),
         :max => number_with_precision(@max_height, :precision => 1),
         :absoluteMin => 10,
@@ -278,6 +279,7 @@ dateToday = session[:datetime].to_date rescue Date.today
       :helpText => "Systolic blood pressure (?/Y)",
       :absoluteMin => 80,
       :absoluteMax => 180,
+      :tt_onLoad => "showCategory('Vitals');",
       :validationRule => "^([0-9]+)|Unknown$",
       :validationMessage => "You must enter numbers only (for example 157)",
       :tt_pageStyleClass => "KeyboardNumeric NumbersOnly" } %>
@@ -290,6 +292,7 @@ dateToday = session[:datetime].to_date rescue Date.today
       :absoluteMin => 50,
       :tt_onLoad => "$('clearButton').style.display = 'inline';",
       :absoluteMax => 110,
+      :tt_onLoad => "showCategory('Vitals');",
       :validationRule => "^([0-9]+)|Unknown$",
       :validationMessage => "You must enter numbers only (for example 157)",
       :tt_pageStyleClass => "Keyboard Numeric NumbersOnly"} %>
@@ -304,18 +307,19 @@ dateToday = session[:datetime].to_date rescue Date.today
   <% end %>
 
   <%= text_field_tag :showSummary, nil,
-    {	:tt_onLoad => "growthIndicators();  $('clearButton').style.display = 'none';  ",
+    {	:tt_onLoad => "growthIndicators();  $('clearButton').style.display = 'none';showCategory('Vitals');",
     :tt_onUnLoad => " $('clearButton').style.display = 'inline';",
     :helpText => "Summary",
     :optional => "true"
   } %>
 
   <% if @retrospective %>
-    <%= text_field "filter" , 'provider',
-      {	:helpText => 'Staff who provided the information (Provider)',
-      :ajaxURL => '/user/username?username='} %>
-  <% else %>
-    <%= hidden_field_tag "filter[provider]", nil %>
+      <% if !@appointment_days.blank? %>
+    <p><label for="filter_provider">Staff who provided the information (Provider)</label></br>
+    <%= text_field "filter" , 'provider', :helpText => 'Staff who provided the information (Provider)', :ajaxURL => '/user/username?username=' %></p>
+     <% else %>
+      <%= hidden_field_tag "filter[provider]", nil %>
+     <% end %>
   <%end%>
 
   <%= submit_tag "Finish" %>

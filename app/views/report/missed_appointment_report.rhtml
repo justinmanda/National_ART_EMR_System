@@ -1,235 +1,228 @@
 <html>
 <head>
-<%= javascript_include_tag "prototype" %>
-<%= javascript_include_tag 'jquery' %>
-<%= stylesheet_link_tag 'extra_buttons' %>
-<%= javascript_include_tag 'jquery_data_table.js' %>
-<%= stylesheet_link_tag 'jquery.dataTables' %>
-<%=javascript_include_tag "jquery.table2CSV.min" %>
-<script type="text/javascript" charset="utf8" src="/javascripts/jquery.dataTables.min.js"></script>
+<!--html>
+  <head>
+    <title>Queen Elizabeth OPD Routine Report</title-->
+<script type="text/javascript">
+  tt_cancel_destination = '/people';
+</script>
+	<%= javascript_include_tag "prototype" %>
+    <%= javascript_include_tag 'jquery' %>
+    <%= stylesheet_link_tag 'extra_buttons' %>
+	<%= javascript_include_tag 'jquery_data_table.js' %>
+	<%= stylesheet_link_tag 'jquery.dataTables' %>
+	<script type="text/javascript" charset="utf8" src="/javascripts/jquery.dataTables.min.js"></script>
+	<script src="/javascripts/jquery.table2CSV.min.js" type="text/javascript"></script>
+	<link href="/stylesheets/opd_cohort.css" media="screen" rel="stylesheet" type="text/css" />
 <script>
-    jQuery(document).ready(function($) {
-        $('#table_id').dataTable({
-            "bAutoWidth": true,
-            "bPaginate": false,
-            "bProcessing": true,
-            "sScrollY": "390px",
-            "bInfo": true
+		jQuery(document).ready(function($) {
+	 	$('#table_id').dataTable({
+		"bAutoWidth": false,
+		"sScrollY": "374px",
+		"bPaginate": true,
+		"bFilter": true,
+		"bProcessing": true
+		//"sPaginationType": "full_numbers"
+		//"sPageButton": "paginate_button",
 
-        });
-        search_box = $('#table_id').dataTable()
-        search = document.getElementsByTagName("input")[0];
-        search.setAttribute("id","search");
-        document.getElementById('search').setAttribute("onclick","showKeyboard();");
-        document.getElementById("find").style.display = 'none';
+		//"bInfo":false
+     	});
+     	search = document.getElementsByTagName("input")[0];
+ 	 	search.setAttribute("id","search");
+ 	 	document.getElementById('search').setAttribute("onclick","showKeyboard();");
+ 	 	keyboard = document.getElementsByClassName("keypad")[0]
+ 	 	document.getElementById('table_id_paginate').style.visibility = 'hidden';//removing the div that shows next and previous buttons
+ 	 	search_box = $('#table_id').dataTable()
+ 	 	//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-        //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-        keyboard = document.getElementsByClassName("keypad")[0]
-        function getCharButtonSetID(character,id){
-            return '<button onMouseDown="press(\''+character+'\');" class="keyboardButton" id="'+id+'">' +"<span style='width:32px'>"+character+"</span>"+ "</button>";
-        }
-        function getButtonString(id,string){
-            return "<button \
-                            onMouseDown='press(this.id);' \
-                            class='keyboardButton' \
-                            id='"+id+"'>"+
-                        string +
-                    "</button>";
-        }
+		function getCharButtonSetID(character,id){
+			return '<button onMouseDown="press(\''+character+'\');" class="keyboardButton" id="'+id+'">' +"<span style='width:32px'>"+character+"</span>"+ "</button>";
+		}
+		function getButtonString(id,string){
+			return "<button \
+			onMouseDown='press(this.id);' \
+			class='keyboardButton' \
+			id='"+id+"'>"+
+			string +
+			"</button>";
+		}
 
-        function getButtons(chars){
-            var buttonLine = "";
-            for(var i=0; i<chars.length; i++){
-                character = chars.substring(i,i+1)
-                buttonLine += getCharButtonSetID(character,character)
-            }
-            return buttonLine;
-        }
+		function getButtons(chars){
+			var buttonLine = "";
+			for(var i=0; i<chars.length; i++){
+			character = chars.substring(i,i+1)
+			buttonLine += getCharButtonSetID(character,character)
+			}
+			return buttonLine;
+		}
 
-        showAlphaKeypad();
+		showAlphaKeypad();
 
-        function showAlphaKeypad(){
-            document.getElementById("keypad").style.height = "280";
-            keyboard.innerHTML= getButtons("0123456789") + "</br>"
-            keyboard.innerHTML+= getButtons("QWERTYUIOP") + "</br>"
-            keyboard.innerHTML+= getButtons("ASDFGHJKL:") + "</br>"
-            keyboard.innerHTML+= getButtons("ZXCVBNM,.?")
-            keyboard.innerHTML+= getButtonString('backspace','<span>Bksp</span>')
-            keyboard.innerHTML+= getButtonString('Space','<span>Space</span>')
-            keyboard.innerHTML+= getButtonString('clear','<span>Clear</span>')
-        }
+		function showAlphaKeypad(){
+			document.getElementById("keypad").style.height = "280";
+			keyboard.innerHTML = getButtons("QWERTYUIOP") + "</br>"
+			keyboard.innerHTML+= getButtons("ASDFGHJKL:") + "</br>"
+			keyboard.innerHTML+= getButtons("ZXCVBNM,.?")
+			keyboard.innerHTML+= getButtonString('backspace','<span>Bksp</span>')
+			keyboard.innerHTML+= getButtonString('Space','<span>Space</span>')
+			keyboard.innerHTML+= getButtonString('clear','<span>Clear</span>')
+			//keyboard.innerHTML+= getButtonString('num','<span>Num</span>')
+		}
 
-        function showNumericKeypad(){
-            document.getElementById("keypad").style.height = "145";
-            keyboard.innerHTML = getButtons("123")
-            keyboard.innerHTML+= getButtons("456")
-            keyboard.innerHTML+= getButtons("7890")
-            keyboard.innerHTML+= getButtonString('space','<span>Space</span>')
-            keyboard.innerHTML+= getButtonString('clear','<span>Clear</span>')
-            keyboard.innerHTML+= getButtonString('backspace','<span>Bksp</span>')
-            keyboard.innerHTML+= getButtonString('abc','<span>abc</span>')
-            keyboard.innerHTML+= getButtonString('dash','<span>-</span>')
-            keyboard.innerHTML+= getButtonString('slash','<span>/</span>')
-        }
+		function showNumericKeypad(){
+			document.getElementById("keypad").style.height = "145";
+			keyboard.innerHTML = getButtons("123")
+			keyboard.innerHTML+= getButtons("456")
+			keyboard.innerHTML+= getButtons("7890")
+			keyboard.innerHTML+= getButtonString('space','<span>Space</span>')
+			keyboard.innerHTML+= getButtonString('clear','<span>Clear</span>')
+			keyboard.innerHTML+= getButtonString('backspace','<span>Bksp</span>')
+			keyboard.innerHTML+= getButtonString('abc','<span>abc</span>')
+			keyboard.innerHTML+= getButtonString('dash','<span>-</span>')
+			keyboard.innerHTML+= getButtonString('slash','<span>/</span>')
+		}
 
-        data_table_length =document.getElementsByName('table_id_length')[0];
-        data_table_length.setAttribute("style","font-size:0px;");
+		data_table_length =document.getElementsByName('table_id_length')[0];
+		data_table_length.setAttribute("style","font-size:20px;");
 
-        table_length = document.getElementById("table_id_length");
-        table_length.setAttribute("style","width:100px;");
-
-    })
+		table_length = document.getElementById("table_id_length");
+		table_length.setAttribute("style","width:100px;");
+		});
 </script>
 
 <script>
 
-    function showKeyboard(){
-        key = document.getElementById("keypad")
-        if(key.style.display == 'none' || key.style.display == ""){
-            key.style.display = "inline";
-            return
-        }
+ function showKeyboard(){
+   key = document.getElementById("keypad")
+   if(key.style.display == 'none' || key.style.display == ""){
+    key.style.display = "inline";
+    return
+   }
 
-        key.style.display = "none";
-    }
+    key.style.display = "none";
+ }
 
-    function press(pressedChar){
-        switch (pressedChar) {
-            case 'backspace':
-                search.value = search.value.substring(0,search.value.length-1);
-                search_box.fnFilter(search.value)
-                return;
-            case 'Space':
-                search.value+= " "
-                search_box.fnFilter(search.value)
-                return
-            case 'clear':
-                search.value = ""
-                search_box.fnFilter(search.value)
-                return
-            case 'num':
-                showNumericKeypad();
-                return
-            case 'slash':
-                search.value+= "/"
-                search_box.fnFilter(search.value)
-                return
-            case 'dash':
-                search.value+= "-"
-                search_box.fnFilter(search.value)
-                return
-            case 'abc':
-                showAlphaKeypad();
-                return
-        }
-        search.value+= pressedChar
+  function press(pressedChar){
+    switch (pressedChar) {
+      case 'backspace':
+        search.value = search.value.substring(0,search.value.length-1);
         search_box.fnFilter(search.value)
+        return;
+      case 'Space':
+        search.value+= " "
+        search_box.fnFilter(search.value)
+        return
+      case 'clear':
+        search.value = ""
+        search_box.fnFilter(search.value)
+        return
+      case 'num':
+        showNumericKeypad();
+        return
+      case 'slash':
+        search.value+= "/"
+        search_box.fnFilter(search.value)
+        return
+      case 'dash':
+        search.value+= "-"
+        search_box.fnFilter(search.value)
+        return
+      case 'abc':
+        showAlphaKeypad();
+        return
     }
-    //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    search.value+= pressedChar
+    search_box.fnFilter(search.value)
+  }
+//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 </script>
 
 <style>
 
-    #backspace{
-        position:absolute;
-        left:100px;
-        bottom:2px;
-    }
+#backspace{
+	position:absolute;
+	left:100px;
+	bottom:2px;
+}
 
-    #Space{
-        position:absolute;
-        left:220px;
-        bottom:2px;
-        width:200px;
-    }
+#Space{
+	position:absolute;
+	left:220px;
+	bottom:2px;
+	width:200px;
+}
 
-    #clear{
-        position:absolute;
-        left:470px;
-        bottom:2px;
-    }
-    #num{
-        position:absolute;
-        left:470px;
-        bottom:2px;
-        width:200px;
-    }
-    #keypad{
-        background-color: #FFFFFF;
-        border: 2px solid #9999FF;
-        border-radius: 15px 15px 15px 15px;
-        display: none;
-        height: 304px;
-        padding: 5px;
-        position: absolute;
-        right: 13px;
-        top: 194px;
-        width: 672px;
-    }
+#clear{
+	position:absolute;
+	left:470px;
+	bottom:2px;
+}
+
+#keypad{
+	background-color: #FFFFFF;
+	border: 2px solid #9999FF;
+	border-radius: 15px 15px 15px 15px;
+	padding: 5px;
+ 	position:absolute;
+ 	width:670px;
+ 	right:510px;
+ 	height:260px;
+ 	display:none;
+	right:4px;
+	top:270px;
+}
 </style>
+
+
+
 <style>
-    div {
-        -moz-user-select: none;
-    }
-    A{
-        text-decoration:none;
-        color:maroon;
-    }
-    A.visited{
-        color:maroon;
-    }
+	div {
+-moz-user-select: none;
+	}
+	.basic_span {
+		position:relative;
+		width:50%;
+		display:block;
+		float:left;
+	}
 
+	.logo {
+		float:left
+	}
 
-    .basic_span {
-        position:relative;
-        width:50%;
-        display:block;
-        float:left;
-    }
-
-    .logo {
-        float:left
-    }
-
-    #table_id {
-        width: 100%;
-        text-align:center;
-        font-size: 18px;
+	#table_id {
+    	width: 100%;
     }
 
     #table_id_filter{
-        position:absolute;
-        top:-10%;
-        right:1%;
-        margin-top:-40px;
+		position:absolute;
+		top:0px;
+		right:1%;
+		margin-top:-40px;
     }
 
     #table_id_filter input{
-        padding:0.5em;
+    	padding:0.5em;
     }
 
 
     .dataTables_length select {
-        font-size: 25px;
-    }
-    .horizontal_line hr{
-        position:absolute;
-        bottom:110px;
-    }
-    #table_id_info{
-        left: 10px;
-        position: absolute;
-        bottom: -25px;
-        font-weight:bold;
-    }
-    #table_id_length{
-        display:none;
-    }
-    #table_id_paginate{
-        display:none;
-    }
-    #num{ display:none; }
-    #char{ display:none; }
+   		font-size: 25px;
+	}
+	.horizontal_line hr{
+	 	position:absolute;
+	 	bottom:94px;
+	}
+	#table_id_info{
+	 	position:relative;
+	 	left:50%;
+	 	font-weight:bold;
+	 	top:80%;
+	}
+        #table_id_length {
+           width: 100% ! important;
+        }
+
 </style>
 </head>
 <body >
@@ -237,8 +230,12 @@
 <img src= "/images/mw.gif" >
 <div style = "position:absolute; top:30px;left:200px; -moz-user-select:none;">
   <b>Facility : <%= Location.current_health_center.name %></b><br/>
-  <b>Duration : <%= @start_date.strftime('%d %B %Y')  %> to <%= @end_date.strftime('%d %B %Y')%> </b><br/>
-  <b>Report Type : Missed Appointments Report</b><br/>
+  <% if  @report == "defaulted" %>
+         <b>End day : <%= @end_date.strftime('%d %B %Y')%> </b><br/>
+  <% else %>
+        <b>Duration : <%= @start_date.strftime('%d %B %Y')  %> to <%= @end_date.strftime('%d %B %Y')%> </b><br/>
+  <% end %>
+        <b>Report Type : <%= @report.humanize %> Report</b><br/>
   <b>Total Registered : <%= @data.length %> </b>
 </div>
 <br>
@@ -246,16 +243,37 @@
 <div style = "margin-top: 30px; background-color:beige">
   <table  id="table_id" class="display" >
     <thead>
-    <th>Name</th><th>Age</th><th>Dosses Missed</th><th>Remaining Tabs. Expected</th>
-    <th>Appointment date</th><th>Phone Number</th><th>Overdue Days</th><th>Came Late</th>
+    <th>Name</th><th>Age</th>
+    <th>Date registered </th>
+    <th>Phone Number</th>
+    <th>Last Visit Date</th>
+    <th>Appointment date</th><th>Overdue Days</th>
+    <th>Expected Remaining Tabs.</th><th>Dosses Missed</th>
+    <%# unless @report == "defaulted" %>
+        <th>Came Late</th>
+    <%# end %>
     </thead>
     <tbody>
 
         <% @data.each do |datum|%>
            <tr>
-             <td><%=datum['name']%></td><td><%= datum['age'] %></td><td><%= datum['dosses_missed']%></td>
-             <td><%= datum['exp_tab_remaining']%></td><td><%= datum['booked_date'] %></td><td><%= datum['phone_number']%></td>
-             <td><%= datum['overdue']  %></td><td><%= datum['came_late']%></td>
+             <td><%=datum['name']%></td><td><%= datum['age'] %></td>
+             <td>
+             <%= link_to "<span class='clinic_data_value' >#{datum['date_registered']}</span>", "/patients/show/#{datum['patient_id']}?session=#{datum['date_registered']}" -%>
+
+             </td>
+             
+             <td><%= datum['phone_number']%></td>
+             <td>
+             <%= link_to "<span class='clinic_data_value' >#{datum['last_visit_date']}</span>", "/patients/show/#{datum['patient_id']}?session=#{datum['last_visit_date']}" -%>
+
+             </td>
+             <td><%= datum['booked_date'] %></td><td><%= datum['overdue']  %></td>
+             <td><%= datum['exp_tab_remaining']%></td>
+             <td><%= datum['dosses_missed']%></td>
+             <%# unless @report == "defaulted" %>
+                <td><%= datum['came_late']%></td>
+             <%# end %>
            </tr>
         <% end %>
 
@@ -272,3 +290,22 @@
 </div>
 </body>
 </html>
+<script>
+	jQuery(document).ready(function($) {
+		data_table_length =document.getElementsByName('table_id_length')[0];
+		data_table_length.setAttribute("style","font-size:20px;");
+
+		table_length = document.getElementById("table_id_length");
+		table_length.setAttribute("style","width:100px;");
+
+		<%if @data.length > 100 %>
+  		var elements = <%=  @data.length%>
+		var x = 200
+		while(x < elements){
+			data_table_length.innerHTML+="<option value='" + x + "'>" + x + "</option>";
+			x+=100
+		}
+		data_table_length.innerHTML+="<option value='" + x + "'>" + x + "</option>";
+		<% end %>
+		});
+</script>
