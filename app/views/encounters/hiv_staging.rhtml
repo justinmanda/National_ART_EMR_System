@@ -699,9 +699,11 @@
 		:condition => '$("new_cd4_percent_available").value == "YES" || $("new_lymphocyte_count_available").value == "YES" || ($("new_cd4_count_available").value == "YES" && transferInPatient() == false)',
 		:helpText => "CD4 or Lymphocyte count location"} %>
 	<% end %>
-
+<% session_date = session[:datetime].to_date rescue nil
+    if session_date.blank? %>
 	<%= touch_text_area_tag("CLINICAL NOTES CONSTRUCT", @patient, nil,
 	  {	:optional => true,:helpText => "Clinical notes (optional)"}, time=DateTime.now()) %>
+    <% end %>
 
 	<%= touch_hidden_tag "WHO STAGES CRITERIA PRESENT", @patient, "", :id => "calculated_who_stage_4" %>
 	<%= touch_hidden_tag "WHO STAGE", @patient, "", :id => "who_stage" %>
@@ -710,9 +712,9 @@
 	<label for='summary'>Summary</label>
 	<%= text_field_tag :summary, nil, { :tt_onLoad => "summary();__$('keyboard').style.display = 'none';showCategory('Hiv Staging');", :optional => "true", :tt_pageStyleClass => "NoControls" } %>
 
-	<% session_date = session[:datetime].to_date rescue nil
+	
 
-	if session_date %>
+	<%if session_date %>
 	  <p><label for="filter_provider">Staff who provided the information (Provider)</label></br>
 	  <%= text_field "filter" , 'provider', :helpText => 'Staff who provided the information (Provider)', :ajaxURL => '/user/username?username=' %></p>
 	<% else %>

@@ -1136,13 +1136,14 @@ element.setAttribute("onmousedown", "gotoNextPage()")
 	<% end %>
 
   <% end %>
-
+ <% session_date = session[:datetime].to_date rescue nil
+    if session_date.blank? %>
   <%= touch_text_area_tag "CLINICAL NOTES CONSTRUCT", @patient, nil,
 	{	:id => "clinical_notes",
 	:optional => true,
 	:helpText => "Clinical notes (optional)"
   }, time=DateTime.now() %>
-
+ <% end %>
   <% initial_date = "#{session[:datetime].strftime('%Y-%m-%d')}" rescue "#{(Date.today).strftime('%Y-%m-%d')}" %>
 
   <%

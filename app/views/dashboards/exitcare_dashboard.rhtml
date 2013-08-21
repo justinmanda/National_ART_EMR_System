@@ -32,7 +32,7 @@
               <th colspan=2>Patient Programs Dashboard</th>
             </tr>
             <h1 id='project_name'>
-              <span style="font-size: 55px;"><img src='/images/mw.gif' style="height:50%" ><br>MOH ART</span>
+              <span style="font-size: 55px;"><img src="/images/mw.gif" style="height:60%; "><br><%=what_app?%></span>
             </h1>
 
             <span id='patient_name'><%= @patient_bean.name rescue "" %></span>
@@ -76,11 +76,14 @@
               <option value='/patients/exitcare_history?patient_id=<%= @patient.id %>'>History</option>
             </select>
 			<select id="links">
+                                 <%#= raise @exit_states.to_yaml  %>
 				<% for exit_state in @exit_states do %>
 					<% if exit_state.to_s.upcase == "PATIENT TRANSFERRED OUT"%>
-						<option value='/programs/exitcare?patient_id=<%= @patient.id -%>&exit_state=<%= exit_state%>'>Transferred out</option>
+						<optgroup value='/programs/exitcare?patient_id=<%= @patient.id -%>&exit_state=<%= exit_state%>' label="Transferred out"></optgroup>
+					<% elsif exit_state.to_s.upcase == "PATIENT TRANSFERRED (EXTERNAL FACILITY)"%>
+						<optgroup value='/programs/exitcare?patient_id=<%= @patient.id -%>&exit_state=<%= exit_state%>' label="Transferred out"></optgroup>
 					<% else %>
-						<option value='/programs/exitcare?patient_id=<%= @patient.id -%>&exit_state=<%= exit_state%>'><%= exit_state%></option>
+						<optgroup value='/programs/exitcare?patient_id=<%= @patient.id -%>&exit_state=<%= exit_state%>' label='<%= exit_state%>'></optgroup>
 					<% end %>
 				<% end %>
 			</select>

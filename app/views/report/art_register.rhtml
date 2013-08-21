@@ -243,15 +243,17 @@
 <div style = "margin-top: 30px; background-color:beige">
   <table  id="table_id" class="display" >
     <thead>
+    <th>ARV number</th>
     <th>Name</th><th>Gender</th><th>Age</th><th>Registration Date</th><th>ART Start Reason</th>
-    <th>Outcome Status</th><th>Outcome Date</th><th>Occupation</th><th>Drug Formulation</th>
+    <th>Outcome Status</th><th>Outcome Date</th><th>Drug Formulation</th>
     </thead>
     <tbody>
         <% @data.each do |patient|%>
             <tr>
-              <td><%= patient['name']  %></td><td><%= patient['gender']%></td><td><%= patient['age'] %></td>
+              <td> <%= patient['arv_number']  %></td>
+              <td align="left"><%= patient['name']  %></td><td><%= patient['gender']%></td><td><%= patient['age'] %></td>
               <td><%=patient['reg_date'] %></td><td><%= patient['start_reason']%></td><td><%= patient['outcome'] %>
-            </td><td><%=patient['outcome_date'] %></td><td><%= patient['occupation'] %></td>
+            </td><td><%=patient['outcome_date'] %></td>
               <td><%= patient['formulation'] %></td>
             </tr>
 

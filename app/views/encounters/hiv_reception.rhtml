@@ -40,28 +40,45 @@
   <%= hidden_field_tag "encounter[patient_id]", @patient.id %>
   <%= hidden_field_tag "encounter[encounter_datetime]", DateTime.now() %>
   <%= hidden_field_tag "encounter[provider_id]", current_user.user_id %>
+<%  session_date = session[:datetime].to_date rescue nil
 
+%>
   <% if session[:guardian_added] == nil  %>
     <% if Person.find(@patient.patient_id).relationships.first.blank? %>
        <label for='guardian_present'>Guardian Present</label>
-        <%= select_tag "observations[][value_text]", relationship_options(@patient),
+       <%  if session_date %>
+          <%= select_tag "observations[][value_text]", relationship_options(@patient),
           {:id => "guardian_present",
            :multiple => false,
            :optional => false,
-           :tt_onLoad =>"showCategory('REGISTRATION');",
            :tt_onUnLoad => "forcePatientPresentYes(),setTimeout(cleanup_guardian_options() , 500)" } %>
+        <% else %>
+          <%= select_tag "observations[][value_text]", options_for_select([['Yes','YES'],['No','NO']]),
+          {:id => "guardian_present",
+           :multiple => false,
+           :optional => false,
+           :tt_onUnLoad => "forcePatientPresentYes(),setTimeout(cleanup_guardian_options() , 500)" } %>
+       <% end %>
+
         <%= hidden_field_tag("observations[][value_coded_or_text]", nil) %>
         <%= hidden_field_tag("observations[][concept_name]", "GUARDIAN PRESENT") %>
         <%= hidden_field_tag("observations[][patient_id]", @patient.id) %>
         <%= hidden_field_tag("observations[][obs_datetime]", DateTime.now()) %>
     <% else %>
       <label for='guardian_present'>Guardian Present (<%=@patient_bean.guardian rescue ''%>)</label>
-        <%= select_tag "observations[][value_text]", relationship_options(@patient),
+        <%  if session_date %>
+          <%= select_tag "observations[][value_text]", relationship_options(@patient),
           {:id => "guardian_present",
            :multiple => false,
            :optional => false,
-           :tt_onLoad =>"showCategory('REGISTRATION'); hide_new_relationship_button()",
-           :tt_onUnLoad => 'forcePatientPresentYes()'} %>
+           :tt_onUnLoad => "forcePatientPresentYes(),setTimeout(cleanup_guardian_options() , 500)" } %>
+        <% else %>
+          <%= select_tag "observations[][value_text]", options_for_select([['Yes','YES'],['No','NO']]),
+          {:id => "guardian_present",
+           :multiple => false,
+           :optional => false,
+           :tt_onUnLoad => "forcePatientPresentYes(),setTimeout(cleanup_guardian_options() , 500)" } %>
+       <% end %>
         <%= hidden_field_tag("observations[][value_coded_or_text]", nil) %>
         <%= hidden_field_tag("observations[][concept_name]", "GUARDIAN PRESENT") %>
         <%= hidden_field_tag("observations[][patient_id]", @patient.id) %>
@@ -88,13 +105,14 @@
     <% end %>
   <% end %>
 
-  <% session_date = session[:datetime].to_date rescue nil
+  <%
     if session_date %>
-
+      <% if !@appointment_days.blank? %>
     <p><label for="filter_provider">Staff who provided the information (Provider)</label></br>
-<%= text_field "filter" , 'provider', :helpText => 'Staff who provided the information (Provider)', :ajaxURL => '/user/username?username=' %></p>
-    <% else %>
+    <%= text_field "filter" , 'provider', :helpText => 'Staff who provided the information (Provider)', :ajaxURL => '/user/username?username=' %></p>
+     <% else %>
       <%= hidden_field_tag "filter[provider]", nil %>
+     <% end %>
     <%end%>
   <%= submit_tag "Finish" %>
 </form>

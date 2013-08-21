@@ -1,0 +1,565 @@
+
+
+<style type="text/css">
+
+
+  #myCanvas {
+    margin: 0px;
+  }
+
+  #chartBorder{
+    border-style: solid;
+    border-width: 1px;
+    height: 256px;
+    width: 780px;
+    margin-top: 10px;
+    margin-bottom: 30px;
+    margin-left: 35px;
+    margin-right: 0px;
+  }
+
+  #info{
+    position: absolute;
+    height:	490px;
+    border-radius: 5px;
+    padding-top: 10px;
+    padding-bottom: 30px;
+    margin: 40px;
+    margin-top: 80px;
+    margin-right: 0.35%;
+    top: 0px;
+    background: CornflowerBlue;
+  }
+
+  #boundary{
+    width: 835px;
+    height:300px;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    padding-left: 20px;
+    padding-right: 35px;
+    margin: 30px;
+    margin-top: 10px;
+    border-radius: 6px;
+  }
+
+  #y-label{
+    color: white;
+    position: absolute;
+    -moz-transform: rotate(-90deg);
+    text-align: center;
+    vertical-align: middle;
+    left: 15px;
+    top:462px;
+  }
+
+  #y-axis-cal{
+    color: white;
+    position: absolute;
+    text-align: left;
+    left: 72px;
+    padding-left: 0px;
+    margin-top: 4px;
+  }
+
+  #y2-axis-cal{
+    color: white;
+    position: absolute;
+    text-align: right;
+    padding-right: 0px;
+    left: 895px;
+    margin-top: 4px;
+  }
+
+  #x-years{
+    width: 100%;
+    position: absolute;
+    color: white;
+    font-size: 13px;
+    margin-left: 15px;
+  }
+
+  .y_cal{
+    min-height: 10px;
+    text-align: right;
+  }
+
+  .x5{
+    margin-right: -15px;
+  }
+
+  #z-labels{
+    position: absolute;
+    background: black;
+    width: 30px;
+    display: none;
+    font-size: 1.0em;
+    left: 919px;
+    margin-top: 10px;
+    padding-right: 2px;
+  }
+
+  .z-data{
+    background: white;
+    margin: 1px;
+    height: 15.125px;
+    width: 30px;
+  }
+
+  .sentinel{
+    height: 10px;
+  }
+
+  #header{
+    height: 10px;
+    position: absolute;
+    top: 20px;
+    margin-left: 8%;
+    font-size: 1.8em;
+    text-decoration: underline;
+    font-weight: bold;
+  }
+
+
+
+</style>
+<script src="/javascripts/jquery-1.3.2.min.js" type="text/javascript"></script>
+
+<div id = "boundary">
+
+  <div id = "y-axis-cal">
+
+  </div>
+
+  <div id="y-label">
+    Weight (kg)
+  </div>
+
+  <div id = "y2-axis-cal">
+  </div>
+
+  <div id = "z-labels">
+
+  </div>
+
+  <div id = "chartBorder" >
+
+    <canvas id="myCanvas" width="780" height="256"></canvas><br/>
+
+    <div id = "x-axis-cal" width = "780" height = "15" style ="display:none; max-width: 900; overflow: hidden; color: white; vertical-align: top; font-size: 0.7em;">
+      <span></span>
+    </div>
+
+    <div id ="x-years" >
+
+    </div>
+
+    <div width = "780" style ="position: relative; padding-bottom: 1px; margin-top: 25px; color: white; text-align: center;" >
+				Age (completed months)
+    </div>
+
+    <div width = "780" style ="position: relative; margin-top: 15px; color: white; text-align: center;" >
+
+    </div>
+
+
+    <input id ="L" type="hidden"/>
+
+    <input id ="M" type="hidden"/>
+
+    <input id ="S" type="hidden"/>
+
+  </div>
+
+</div>
+
+<div id ="info">
+
+</div>
+
+
+</div>
+
+<script type="text/javascript">
+
+  CanvasRenderingContext2D.prototype.dashedLine = function(x1, y1, x2, y2, dashLen) {
+    if (dashLen == undefined) dashLen = 2;
+
+    this.beginPath();
+    this.moveTo(x1, y1);
+
+    var dX = x2 - x1;
+    var dY = y2 - y1;
+    var dashes = Math.floor(Math.sqrt(dX * dX + dY * dY) / dashLen);
+    var dashX = dX / dashes;
+    var dashY = dY / dashes;
+
+    var q = 0;
+    while (q++ < dashes) {
+      x1 += dashX;
+      y1 += dashY;
+      this[q % 2 == 0 ? 'moveTo' : 'lineTo'](x1, y1);
+    }
+    this[q % 2 == 0 ? 'moveTo' : 'lineTo'](x2, y2);
+
+    this.stroke();
+    this.closePath();
+  };
+
+  var objCanvas = document.getElementById("myCanvas");
+  var objContext = objCanvas.getContext("2d");
+  var intGridWidth = Math.floor(objCanvas.width/60);
+  var intGridHeight = Math.floor(objCanvas.height/32);
+  var check = false;
+  var result = "";
+
+  var file = "<%= @file.join(":") %>"
+  var weights = "<%= @weights.join(":")%>"
+  weights = weights.split(":")
+  weights_arr = []
+  weights_hash = {}
+
+  for (var i = 0; i < weights.length; i ++){
+    weights_arr.push(weights[i].split(",")[0])
+    weights_hash[weights[i].split(",")[0]] = weights[i].split(",")[1]
+  }
+
+
+
+  var aUrl = "/patients/chart_values?user_id=<%= params[:user_id]%>&type=standard_curve&field_type=file&gender=M&age=0"
+
+  function request(file, type, params_type, age){
+    //hack into the requested line
+    var file_array = file.split(":")
+    var request_line = "";
+    var header = file_array[0]
+    return_string = [age];
+
+    for ( line = 0; line < file_array.length; line ++){
+      if (file_array[line].split(",")[0] == age){
+        request_line = file_array[line]
+      }
+    }
+
+    if (type == "standard_curve"){
+      pars = params_type.split(",");
+      for(i = 0; i < pars.length; i++){
+        line_arr = request_line.split(",");
+        header_arr = header.split(",");
+        index = header_arr.indexOf(pars[i]);
+        return_string.push(line_arr[index]);
+      }
+    }
+    return_string = return_string.join(",")
+
+    return return_string
+  }
+
+  function drawBackground(){
+
+    for (var i = 1; i < objCanvas.width / intGridWidth; i++ )
+    {
+      var x = Math.floor(i*intGridWidth)+0.5;
+      if(i%12 != 0){
+        objContext.dashedLine(x, 0, x, objCanvas.height);
+      }else{
+        objContext.moveTo(x, 0);
+        objContext.lineTo(x, objCanvas.height);
+        objContext.stroke();
+      }
+    }
+
+    for (var i = 1; i < (objCanvas.height / intGridHeight) ; i++)
+    {
+      var y = Math.floor(i*intGridHeight)+0.5
+      if(i%2 != 0){
+        objContext.dashedLine(0, y, objCanvas.width, y);
+      }else{
+        objContext.moveTo(0, y);
+        objContext.lineTo(objCanvas.width, y);
+        objContext.stroke();
+      }
+    }
+  }
+  curve();
+
+  function pad(num){
+    return (num < 10)? ((num == 0)? "&nbsp&nbsp": "0" + num) : num
+  }
+
+  function getMousePos(objCanvas, evt){
+
+    var objContext = objCanvas;
+    var dblTop = 0;
+    var dblLeft = 0;
+    while (objContext && objContext.tagName != 'BODY') {
+      dblTop += objContext.offsetTop;
+      dblLeft += objContext.offsetLeft;
+      objContext = objContext.offsetParent;
+    }
+
+    var dblX = evt.clientX - dblLeft + window.pageXOffset;
+    var dblY = evt.clientY - dblTop + window.pageYOffset;
+    return {
+      x: dblX,
+      y: dblY
+    };
+  }
+  function calculateHeight(L, M, S, Z){
+
+    if (L != 0){
+      return (M * ( Math.pow(( 1 + L * S * Z ), (1/L))));
+    }else if(L == 0){
+      return Math.pow(M, S * Z);
+    }else{
+
+    }
+  }
+
+  function standardCurve(z, fill){
+    var result = "";
+    var response = [];
+    for (age = 0; age <= 60; age++){
+      result = request(file, "standard_curve", "L,M,S", age);
+      response = result.split(",");
+      drawBabyCurve(response, z, fill);
+    }
+  }
+
+  function drawBabyCurve(response, zed, fill){
+    age = response[0];
+    L = response[1];
+    M = response[2];
+    S = response[3];
+
+    if (response.length > 0){
+
+      weight = calculateHeight(L, M, S, zed);
+
+      if(age == 0){
+        if (zed == 3 || zed == -3){
+          objContext.strokeStyle = '#ff0000';
+        }else if (zed == 2 || zed == -2){
+          objContext.strokeStyle = 'green';
+        }else if (zed == 0){
+          objContext.strokeStyle = 'black';
+        }
+      }
+
+      graphToPoint(age,  weight, fill);
+
+      //plot z-score value
+
+    }
+  }
+
+  function graphToPoint(age, weight, fill){
+
+    y_scale = objCanvas.height/32;
+    x_scale = objCanvas.width/60;
+
+    y = objCanvas.height - y_scale * weight;
+
+    x = x_scale * age;
+
+    if (age == 0 ){
+
+      objContext.moveTo(0, y);
+    }
+
+    objContext.lineTo(x,y);
+    if (fill != "false"){
+      objContext.stroke();
+    }
+
+  }
+
+  function updateChartGenderColorMatch(){
+
+    gender = "<%= @patient.person.gender%>";
+
+    document.getElementById("boundary").style.background = gender.match(/F/i)? "#CC0055": "#0066FF"; 
+  }
+
+  function babyWeightsCurve(){
+
+    y_scale = objCanvas.height/32;
+    x_scale = objCanvas.width/(60*30);
+
+    resetPath();
+
+    for(var a = 0; a < weights_arr.length; a++){
+
+      var y = objCanvas.height - y_scale * weights_hash[weights_arr[a]];
+      var x = x_scale * weights_arr[a];
+
+      if(a == 0){
+        objContext.moveTo(x, y);
+      }
+
+      objContext.lineTo(x, y);
+      objContext.lineWidth = 2.0;
+      objContext.strokeStyle = "indigo";
+      objContext.stroke();
+
+    }
+
+    resetPath();
+
+    for(var a = 0; a < weights_arr.length; a++){
+
+      var y = objCanvas.height - y_scale * weights_hash[weights_arr[a]];
+      var x = x_scale * weights_arr[a];
+
+      objContext.moveTo(x, y);
+      objContext.arc(x, y, 4, 0, 2 * Math.PI, false);
+      objContext.fillStyle = gender.match(/F/i)? "#CC0055": "#0066FF";
+      objContext.fill();
+      objContext.stroke();
+
+    }
+
+  }
+
+  function curve(){
+    objContext.clearRect(0, 0, objCanvas.width, objCanvas.height);
+
+    objContext.fillStyle = 'white';
+
+    objContext.fillRect(0, 0, objCanvas.width, objCanvas.height);
+
+    objContext.strokeStyle = "black";
+
+    var xaxisCalibrations = "";
+    var xaxisCalibrationsYears = "";
+    var zCalibrations = "";
+
+    for (ii = 0; ii < 60; ii ++){
+
+      xaxisCalibrations += " " + ((ii%12==0)? "<span style= 'font-weight: bold;'>" + pad(ii) + "</span>" : pad(ii));
+      tenth = ii%12;
+
+      if (tenth == 0 || ii == 59){
+        if (ii == 59){ii = 60}
+        xaxisCalibrationsYears += (ii == 0)? "<span style='margin-left: -15px; margin-right: 15%px;'> Birth </span>"  : "<span class = x" + ii/12 + " style ='margin-left: 10%; margin-right: 15px;'>" + (ii/12) + " year" + ((ii == 12)? "" : "s") + "</span>"
+      }
+
+    }
+
+    for (j = 0; j < 16; j ++){
+      gender = "<%=  @patient.person.gender rescue 'Male'%>"
+
+      if (gender.match(/F/i)){
+        zVal = {1 : "<span style='color:red;'>3</span>",
+          3 : "<span style='color:green;'>2</span>",
+          7 : "<span style=''>0</span>",
+          9 : "<span style='color:green;'>-2</span>",
+          10  : "<span style='color:red;'>-3</span>"
+        }
+      }else{
+        zVal = {2 : "<span style='color:red;'>3</span>",
+          4 : "<span style='color:green;'>2</span>",
+          7 : "<span style=''>0</span>",
+          9 : "<span style='color:green;'>-2</span>",
+          10  : "<span style='color:red;'>-3</span>"
+        }
+      }
+      if (zVal[j] != undefined){
+        zStr = zVal[j];
+      }else{zStr = ""}
+      zCalibrations += (j < 15) ? "<div class = 'z-data'>" +   zStr  + "</div>" : "<div class = 'z-data sentinel' style='height:29;'></div>"
+    }
+
+    document.getElementById("x-axis-cal").innerHTML = xaxisCalibrations;
+    document.getElementById("x-years").innerHTML = xaxisCalibrationsYears;
+    document.getElementById("z-labels").innerHTML = zCalibrations;
+
+
+    var yaxisCalibrations = "";
+
+    for (var n = 32; n >= 0; n --){
+
+      yaxisCalibrations += " " + ((n%2 == 0)? "<div class='y_cal' style = 'color=white;font-size:0.75em;'>" + n + "</div>" : "")
+
+    }
+
+    document.getElementById("y-axis-cal").innerHTML = yaxisCalibrations;
+    document.getElementById("y2-axis-cal").innerHTML = yaxisCalibrations;
+
+
+    var length = document.getElementById("boundary").offsetWidth;
+
+    document.getElementById("info").style.left =  length + 5 + "px";
+    document.getElementById("info").style.width =  19.5 + "%";
+    document.getElementById("info").style.overflowY = "auto";
+    document.getElementById("info").style.overflowX = "auto";
+    document.getElementById("info").style.display = "none";
+      
+    updateChartGenderColorMatch();
+      
+
+    //objContext.drawImage(objImage, 900, 450);
+
+    colorChart(3, -3, "yellow");
+    resetPath();
+    colorChart(2, -2, "yellowgreen");
+
+    resetPath();
+    standardCurve(3);
+    resetPath();
+    standardCurve(-3);
+    resetPath();
+    standardCurve(2);
+    resetPath();
+    standardCurve(-2);
+    resetPath();
+    standardCurve(0);
+    resetPath();
+    drawBackground();
+    resetPath();
+    babyWeightsCurve();
+  }
+
+  function colorChart(z1, z2, color){
+
+    objContext.fillStyle = color;
+
+    standardCurve(z1, "false");
+
+    result = request(file, "standard_curve", "L,M,S", 0);
+    response = result.split(",");
+    weight = calculateHeight(response[1], response[2], response[3], z1);
+
+    pH = objCanvas.height - weight*(objCanvas.height/32);
+
+    objContext.moveTo(0, pH);
+
+    result = request(file, "standard_curve", "L,M,S", 0);
+    response = result.split(",");
+    weight = calculateHeight(response[1], response[2], response[3], z2);
+    pW = objCanvas.height - weight*(objCanvas.height/32)
+    objContext.lineTo(0, pW)
+
+    standardCurve(z2, "false");
+
+    result = request(file, "standard_curve", "L,M,S", 60);
+    response = result.split(",");
+    weight = calculateHeight(response[1], response[2], response[3], z1);
+    pT = objCanvas.height - weight*(objCanvas.height/32)
+
+    objContext.lineTo(objCanvas.width, pT)
+    objContext.lineTo(0, pH)
+    objContext.closePath();
+
+    objContext.fill();
+
+  }
+
+  function resetPath(){
+    objContext.closePath();
+    objContext.beginPath();
+  }
+
+</script>
+
+

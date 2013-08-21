@@ -17,7 +17,7 @@ class ReportController < GenericReportController
 			:conditions =>["obs.concept_id = ? AND value_datetime >= ? AND value_datetime <=?",
 				concept_id, date.strftime('%Y-%m-%d 00:00:00'), date.strftime('%Y-%m-%d 23:59:59')],
 			:order => "obs.obs_datetime DESC")
-	
+
 		demographics = {}
 		(records || []).each do |r|
 			patient = PatientService.get_patient(Person.find(r.person_id))
@@ -99,5 +99,157 @@ class ReportController < GenericReportController
 	@drugs
   render:layout=>"report"
   end
-  
+
+  def art_register
+
+    @data = []
+    #Added code to full data from flat tables
+    Patient.find_by_sql(
+    "Select * from flat_table1
+     where patient_id IN (Select distinct(patient_id) from flat_cohort_table)
+    ").each { |tab1|
+      tab2 = Encounter.find_by_sql("
+        Select * from flat_cohort_table where patient_id = #{tab1.patient_id}
+        order by earliest_start_date desc limit 1").first
+        patient = Patient.find(tab1.patient_id)
+        detail = {
+            'name' => tab1.given_name + " " + tab1.family_name,
+            'gender' => tab1.gender,
+            'age' => PatientService.cul_age(tab1.dob.to_date, tab1.dob_estimated ),
+            'reg_date' => (tab2.earliest_start_date rescue ''),
+            'arv_number' => PatientService.get_patient_identifier(patient, 'ARV Number'),
+            'start_reason' => tab1.reason_for_eligibility ,
+            'outcome' => (tab2.hiv_program_state rescue ''),
+            'outcome_date' => (tab2.hiv_program_state_v_date rescue ''),
+            'occupation' => tab1.occupation,
+            'formulation' => tab2.regimen_category
+      }
+      @data << detail
+    }
+=begin
+    program = Program.find_by_name('HIV PROGRAM').id
+
+    patients = PatientProgram.find(:all, :conditions => ["program_id = ? AND date_completed  IS NULL", program])
+
+    patients.each do |patient|
+
+      det_patient = Patient.find(patient.patient_id) rescue nil
+      unless det_patient.nil?
+
+        drug = ConceptName.find_by_concept_id(patient.current_regimen).name rescue nil
+        state = patient.patient_states.last.name rescue nil
+        start_date = patient.patient_states.last.start_date.strftime('%d/%b/%Y') rescue " "
+
+        detail = {
+            'name' => det_patient.name,
+            'gender' => det_patient.person.gender,
+            'age' => PatientService.cul_age(det_patient.person.birthdate , det_patient.person.birthdate_estimated ),
+            'reg_date' => patient.date_enrolled.to_date.strftime('%d/%b/%Y'),
+            'start_reason' =>PatientService.reason_for_art_eligibility(det_patient)  ,
+            'outcome' => state.nil? ? " ": state,
+            'outcome_date' => start_date,
+            'occupation' => PatientService.get_attribute(det_patient , 'Occupation'),
+            'formulation' => drug.nil? ? " " : drug
+        }
+
+        @data << detail
+      end
+=end
+     # @data = @data.uniq
+
+   # end
+
+  end
+
+  def missed_appointment_duration
+    render :layout => "menu"
+  end
+  def missed_appointment_report
+
+    @data = []
+    @report = "Missed appointments"
+    @start_date = params[:start_date].to_date
+
+    @end_date = params[:end_date].to_date
+
+
+    appoinment = Concept.find_by_name('appointment date').concept_id
+
+    last_appointments = Observation.find_by_sql("SELECT person_id, obs_datetime ,value_datetime FROM obs
+                                WHERE concept_id = #{appoinment} AND DATE(value_datetime) BETWEEN DATE('#{@start_date }')
+                                AND DATE('#{@end_date}') AND voided = 0")
+
+    last_appointments.each do |last_app|
+
+      last_obs = Observation.find_by_sql("SELECT * FROM obs WHERE person_id = #{last_app.person_id}
+                                          AND DATE(obs_datetime) = DATE('#{last_app.value_datetime.to_date}')  LIMIT 1")
+
+       first_obs = Observation.find_by_sql("SELECT person_id, obs_datetime FROM obs
+                                            WHERE person_id = #{last_app.person_id}
+                                            AND voided = 0 order by obs_datetime ASC LIMIT 1").first
+      patient = Patient.find(last_app.person_id)
+
+
+      unless last_obs.blank?
+        result = adherence(last_app.person_id, last_app.value_datetime)
+        next_visit = Observation.find(:first, :conditions =>  ["person_id = ? AND obs_datetime > ?",
+                                                               last_app.person_id, last_app.value_datetime])
+
+        next_visit = next_visit.nil? ? "No" : next_visit.obs_datetime.to_date
+        details ={
+            'patient_id' => last_app.person_id,
+            'name' => patient.name,
+            'age' => PatientService.cul_age(patient.person.birthdate , patient.person.birthdate_estimated ),
+            'dosses_missed' => result['missed_dosses'],
+            'exp_tab_remaining' => result['expected_remaining'] ,
+            'booked_date' => last_app.obs_datetime.to_date.strftime('%d/%b/%Y') ,
+            'phone_number' => get_phone(last_app.person_id),
+            'overdue' => (Date.today.to_date - last_app.obs_datetime.to_date).to_i,
+            'came_late' => next_visit,
+            'date_registered' => first_obs.obs_datetime.to_date,
+            'last_visit_date' => last_app.obs_datetime.to_date
+        }
+        @data << details
+      end
+
+    end
+  end
+
+  def get_phone(patient_id)
+
+    patient = Patient.find(patient_id)
+
+    phone = PatientService.get_attribute(patient, "Cell phone number")
+
+    if phone.nil?
+
+      phone = PatientService.get_attribute(patient, "Home phone number")
+
+      if phone.nil?
+        phone = PatientService.get_attribute(patient, "Office phone number")
+      end
+
+    end
+
+    return phone.nil? ? " " : phone
+
+  end
+
+  def adherence(patient_id, appointment_date)
+    #this method has great ability to be reused. We need to make use of it if dealing with adherence
+
+    dispense_concept = Concept.find_by_name('AMOUNT DISPENSED').concept_id
+    last_dispense_day = Observation.find_by_sql("SELECT MAX(obs_datetime)  obs_datetime, value_numeric, value_drug,order_id FROM
+                             obs WHERE person_id = #{patient_id} AND concept_id = #{dispense_concept} ").first
+
+    order = Order.find(last_dispense_day.order_id) rescue nil
+
+    expected_remaining = last_dispense_day.value_numeric - ((appointment_date.to_date - last_dispense_day.obs_datetime.to_date).to_i * order.drug_order.equivalent_daily_dose) rescue ''
+
+    dosses_missed = (((Date.today.to_date - last_dispense_day.obs_datetime.to_date).to_i * order.drug_order.equivalent_daily_dose) - last_dispense_day.value_numeric )  rescue ""
+
+    return results={ 'missed_dosses' => dosses_missed, 'expected_remaining' => expected_remaining }
+  end
+
+
 end
