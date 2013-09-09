@@ -1,5 +1,10 @@
 class GenericClinicController < ApplicationController
   def index
+    (session || {}).each do |name , values|                                     
+      next unless name == 'patient_id'                                          
+      session[name] = nil                                                       
+    end
+ 
   	session[:cohort] = nil
     @facility = Location.current_health_center.name rescue ''
 
