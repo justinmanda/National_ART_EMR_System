@@ -85,18 +85,18 @@
         <%= hidden_field_tag("observations[][obs_datetime]", DateTime.now()) %>
     <% end %>
   <% else %>
-    <%= touch_hidden_tag("GUARDIAN PRESENT", @patient, "Yes", {:id=>"guardian_present"},:tt_onLoad =>"showCategory('REGISTRATION');") %>
+    <%= touch_hidden_tag("GUARDIAN PRESENT", @patient, "Yes", {:id=>"guardian_present"}) %>
   <% end %>
   <% session[:guardian_added] = nil %>
   <label for='patient_present'>Patient Present (<%=@patient_bean.name%>)</label>
-    <%= select_tag "observations[][value_coded_or_text]", options_for_select([['Yes','YES'],['No','NO']]), 
+    <%= select_tag "observations[][value_coded_or_text]", options_for_select([['Yes','YES'],['No','NO']]),
       {:id => 'patient_present',
-       :condition => "$('guardian_present').value == 'Yes'",
-       :tt_onLoad =>"showCategory('REGISTRATION'); hide_new_relationship_button()"} %>
+       :condition => "$('guardian_present').value == 'YES'",
+       :tt_onLoad => 'hide_new_relationship_button()'} %>
     <%= hidden_field_tag("observations[][value_text]", nil) %>
     <%= hidden_field_tag("observations[][concept_name]", "PATIENT PRESENT") %>
     <%= hidden_field_tag("observations[][patient_id]", @patient.id) %>
-    <%= hidden_field_tag("observations[][obs_datetime]", DateTime.now()) %>  
+    <%= hidden_field_tag("observations[][obs_datetime]", DateTime.now()) %>
   <%if @given_arvs_before and @patient_bean.arv_number.blank?
       show_arv_number = get_global_property_value('show_arv_number') rescue 'true'
       unless show_arv_number == 'false'
