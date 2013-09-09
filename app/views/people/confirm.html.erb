@@ -9,8 +9,12 @@
     <%= javascript_include_tag "jquery.flot" %>
     <%= javascript_include_tag "prototype" %>
 
+
     <% if Location.current_location.name.match(/HIV|ART/i) %>
       <style>
+        #buttonlinks {
+          display: none;
+        }
         #tab2 {
           background-color: white;
           border: 0 none;
@@ -20,6 +24,9 @@
       </style>
     <% else %>
       <style>
+        #buttonlinks {
+          display: none;
+        }
         #tab1 {
           background-color: white;
           border: 0 none;
@@ -82,7 +89,6 @@
   }
 
   function reSize(){
-    __$("buttonlinks").style.display = "none";
     __$("patient-dashboard-main").style.width = "100%";
   }
   function loadChart(){
