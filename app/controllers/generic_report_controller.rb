@@ -158,6 +158,16 @@ class GenericReportController < ApplicationController
    
   end
 
+  def outcome(patient_id, date)
+
+    state = PatientProgram.find_by_sql("SELECT current_state_for_program(p.patient_id, 1, '#{date}') AS state, c.name as status FROM patient p
+                                INNER JOIN  program_workflow_state pw ON pw.program_workflow_state_id = current_state_for_program(p.patient_id, 1, '#{date}')
+
+                                INNER JOIN concept_name c ON c.concept_id = pw.concept_id
+                                WHERE p.patient_id = #{patient_id}").first.status rescue ""
+		return state
+  end
+
   def referral
      @start_date = Date.new(params[:start_year].to_i,params[:start_month].to_i,params[:start_day].to_i) rescue nil
     @end_date = Date.new(params[:end_year].to_i,params[:end_month].to_i,params[:end_day].to_i) rescue nil

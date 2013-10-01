@@ -1254,7 +1254,7 @@ class CohortToolController < GenericCohortToolController
   end
 
   def patients_with_adherence_greater_than_hundred
-
+    @logo = CoreService.get_global_property_value('logo').to_s
 		min_range = params[:min_range]
 		max_range = params[:max_range]
 		missing_adherence = false
@@ -1262,7 +1262,7 @@ class CohortToolController < GenericCohortToolController
 		session[:list_of_patients] = nil
 
 		@patients = adherence_over_hundred(params[:quarter],min_range,max_range,missing_adherence)
-		Cohort.regimens_with_patient_ids(@first_registration_date)
+		#Cohort.regimens_with_patient_ids(@first_registration_date)
 		@quarter = params[:quarter] + ": (#{@patients.length})" rescue  params[:quarter]
 		if missing_adherence
 			@report_type = "Patient(s) with missing adherence"
@@ -1569,8 +1569,8 @@ class CohortToolController < GenericCohortToolController
 		adherences  = Hash.new(0)
 		adherence_concept_id = ConceptName.find_by_name("WHAT WAS THE PATIENTS ADHERENCE FOR THIS DRUG ORDER").concept_id
 
-		adherence_sql_statement= " SELECT worse_adherence_dif, pat_ad.person_id as patient_id, pat_ad.value_numeric AS adherence_rate_worse
-                            FROM (SELECT ABS(100 - Abs(value_numeric)) as worse_adherence_dif, obs_id, person_id, concept_id, encounter_id, order_id, obs_datetime, location_id, value_numeric
+		adherence_sql_statement= " SELECT worse_adherence_dif, pat_ad.person_id as patient_id, pat_ad.value_text AS adherence_rate_worse
+                            FROM (SELECT ABS(100 - Abs(value_text)) as worse_adherence_dif, obs_id, person_id, concept_id, encounter_id, order_id, obs_datetime, location_id, value_text
                                   FROM obs q
                                   WHERE concept_id = #{adherence_concept_id} AND order_id IS NOT NULL
                                   ORDER BY q.obs_datetime DESC, worse_adherence_dif DESC, person_id ASC)pat_ad
@@ -1578,7 +1578,6 @@ class CohortToolController < GenericCohortToolController
                             GROUP BY patient_id "
 
 		adherence_rates = Observation.find_by_sql(adherence_sql_statement)
-
 		adherence_rates.each{|adherence|
 
 			rate = adherence.adherence_rate_worse.to_i
@@ -1618,8 +1617,8 @@ class CohortToolController < GenericCohortToolController
                                         ROUND(DATEDIFF(obs_inner_order.obs_datetime, oders.start_date)* obs_inner_order.equivalent_daily_dose, 0) AS expected_remaining,
                                         obs_inner_order.quantity AS quantity, obs_inner_order.encounter_id, obs_inner_order.order_id
                                FROM (SELECT latest_adherence.obs_datetime, latest_adherence.adherence_rate, latest_adherence.id, latest_adherence.patient_id, latest_adherence.order_id, drugOrder.drug_inventory_id, drugOrder.equivalent_daily_dose, drugOrder.quantity, latest_adherence.encounter_id
-                                    FROM (SELECT all_adherences.obs_datetime, all_adherences.value_numeric AS adherence_rate, all_adherences.obs_id as id, all_adherences.person_id as patient_id,all_adherences.order_id, all_adherences.encounter_id
-                                          FROM (SELECT obs_id, person_id, concept_id, encounter_id, order_id, obs_datetime, location_id, value_numeric
+                                    FROM (SELECT all_adherences.obs_datetime, all_adherences.value_text AS adherence_rate, all_adherences.obs_id as id, all_adherences.person_id as patient_id,all_adherences.order_id, all_adherences.encounter_id
+                                          FROM (SELECT obs_id, person_id, concept_id, encounter_id, order_id, obs_datetime, location_id, value_text
                                                 FROM obs Observations
                                                 WHERE concept_id = #{adherence_concept_id}
                                                 ORDER BY person_id ASC , Observations.obs_datetime DESC )all_adherences
@@ -1632,8 +1631,8 @@ class CohortToolController < GenericCohortToolController
                                     orders oders
                                On     oders.order_id = obs_inner_order.order_id) patients_with_adherence  "
 
-		worse_adherence_per_patient =" (SELECT worse_adherence_dif, pat_ad.person_id as patient_id, pat_ad.value_numeric AS adherence_rate_worse
-                                FROM (SELECT ABS(100 - Abs(value_numeric)) as worse_adherence_dif, obs_id, person_id, concept_id, encounter_id, order_id, obs_datetime, location_id, value_numeric
+		worse_adherence_per_patient =" (SELECT worse_adherence_dif, pat_ad.person_id as patient_id, pat_ad.value_text AS adherence_rate_worse
+                                FROM (SELECT ABS(100 - Abs(value_text)) as worse_adherence_dif, obs_id, person_id, concept_id, encounter_id, order_id, obs_datetime, location_id, value_text
                                       FROM obs q
                                       WHERE concept_id = #{adherence_concept_id} AND order_id IS NOT NULL
                                       ORDER BY q.obs_datetime DESC, worse_adherence_dif DESC, person_id ASC)pat_ad
@@ -1678,7 +1677,7 @@ class CohortToolController < GenericCohortToolController
 					"drug" => drug.name}
 			elsif  patients[patient.patient_id] then
 
-				patients[patient.patient_id]["age"].to_i < PatientService.patient_age_at_initiation(patient, rate.start_date.to_date).to_i ? patients[patient.patient_id]["age"] = patient.age_at_initiation(rate.start_date.to_date).to_s : ""
+				patients[patient.patient_id]["age"].to_i < PatientService.patient_age_at_initiation(patient, rate.start_date.to_date).to_i ? patients[patient.patient_id]["age"] = PatientService.patient_age_at_initiation(patient, rate.start_date.to_date).to_s : ""
 
 				patients[patient.patient_id]["drug"] = patients[patient.patient_id]["drug"].to_s + "<br>#{drug.name}"
 
