@@ -11,11 +11,6 @@ class ApplicationController < GenericApplicationController
     end
   end
 
-  def appointment_dates(patient)
-    clinic_days = CoreService.get_global_property_value('clinic.days') rescue []
-    clinic_days = CoreService.get_global_property_value('peads.clinic.days') rescue [] if PatientService.age(patient.person).to_i <= 14
-    return clinic_days
-  end
   # TB next form
 
   def continue_tb_treatment(patient,session_date)
@@ -1371,9 +1366,9 @@ class ApplicationController < GenericApplicationController
        current_user.activities.include?('Manage Sputum Submissions') or current_user.activities.include?('Manage TB Clinic Visits') or
        current_user.activities.include?('Manage TB Reception Visits') or current_user.activities.include?('Manage TB Registration Visits') or
        current_user.activities.include?('Manage HIV Status Visits') 
-      'MOH TB-ART'
+      'TB-ART'
     else
-      'MOH ART'
+      'BART'
     end
   end 
 

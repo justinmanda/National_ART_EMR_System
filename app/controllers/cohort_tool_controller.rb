@@ -138,50 +138,68 @@ class CohortToolController < GenericCohortToolController
      program = Program.find_by_name('HIV PROGRAM').id
      regimen_ids = CohortTool.patient_ids_with_regimens(end_date, program).join(",")
 
+     #raise regimen_ids.to_yaml
+     #raise CohortTool.defaulted_patients(end_date, regimen_ids).to_yaml
      session[:pre_art]["outcomes"] = {}
-     session[:pre_art]["total_reg"] = CohortTool.total_on_pre_art(Date.today, regimen_ids)
      
-     #@total_reg = CohortTool.total_on_pre_art
+     session[:pre_art]["total_reg"], session[:pre_art]["earliest_start_date"] = CohortTool.total_on_pre_art(Date.today, regimen_ids)
+     #raise session[:pre_art]["earliest_start_date"].to_yaml
      session[:pre_art]["registered"] = CohortTool.registered(start_date, end_date, regimen_ids)
 
-     session[:pre_art]["patients enrolled first time"] = CohortTool.patients_initiated_on_pre_art_first_time(session[:pre_art]["registered"].join(','), end_date, start_date)
+     session[:pre_art]["patients_enrolled_first_time"] = CohortTool.patients_initiated_on_pre_art_first_time(session[:pre_art]["registered"].join(','), end_date, start_date) rescue []
+     session[:pre_art]["patients_enrolled_first_time_ever"] = CohortTool.patients_initiated_on_pre_art_first_time(session[:pre_art]["total_reg"].join(','), end_date) rescue []
 
-     session[:pre_art]["patients enrolled first time ever"] = CohortTool.patients_initiated_on_pre_art_first_time(session[:pre_art]["total_reg"].join(','), end_date)
+     session[:pre_art]["patients_reinrolled"] = CohortTool.patients_reinitiated_on_pre_art(session[:pre_art]["registered"].join(','), end_date, start_date) rescue []
+     session[:pre_art]["patients_reinrolled_ever"] = CohortTool.patients_reinitiated_on_pre_art(session[:pre_art]["total_reg"].join(','), end_date) rescue []
+
+     #raise session[:pre_art]["patients_reinrolled_ever"].to_yaml
+
+     session[:pre_art]["patients_transferred_in"] = CohortTool.patients_transferred_in(session[:pre_art]["registered"].join(','), end_date, start_date) rescue []
+     session[:pre_art]["patients_transferred_in_ever"] = CohortTool.patients_transferred_in(session[:pre_art]["total_reg"].join(','), end_date) rescue []
 
 
     #Cumulative section
      session[:pre_art]["male_total"] = CohortTool.male_total(session[:pre_art]["total_reg"])
-     session[:pre_art]["non_pregnant_female_total"] = CohortTool.female_non_pregnant(session[:pre_art]["total_reg"])
-     session[:pre_art]["pregnant_female_total"] = CohortTool.pregnant_women(session[:pre_art]["total_reg"])
+     session[:pre_art]["pregnant_female_total"] = CohortTool.pregnant_women(regimen_ids, end_date)
+
+     session[:pre_art]["pregnant_female"] = CohortTool.pregnant_women(regimen_ids, end_date, start_date) rescue []
+
+    session[:pre_art]["non_pregnant_female"] = CohortTool.female_non_pregnant((session[:pre_art]["registered"] - session[:pre_art]["pregnant_female"]))
+     session[:pre_art]["non_pregnant_female_total"] = CohortTool.female_non_pregnant((session[:pre_art]["total_reg"] - session[:pre_art]["pregnant_female_total"]))
+     
      session[:pre_art]["less_2_months_infants"] = CohortTool.infants_less_than_2_months(session[:pre_art]["total_reg"])
      session[:pre_art]["infants_between_2_and_24_months"] = CohortTool.infants_between_2_and_24_months(session[:pre_art]["total_reg"])
      session[:pre_art]["infants_between_24months_and_14_years"] = CohortTool.infants_between_24months_and_14_years(session[:pre_art]["total_reg"])
      session[:pre_art]["adults"] = CohortTool.adults(session[:pre_art]["total_reg"])
 
-     session[:pre_art]["confirmed_on_pre_art"] = CohortTool.confirmed_on_pre_art(Date.today, start_date, regimen_ids)
+     session[:pre_art]["confirmed_on_pre_art"] = CohortTool.confirmed_on_pre_art(Date.today, start_date, regimen_ids) rescue []
      session[:pre_art]["exposed_on_pre_art"] = CohortTool.exposed_on_pre_art
 
      #Current quater section
       session[:pre_art]["male"] = CohortTool.male_total(session[:pre_art]["registered"])
-      session[:pre_art]["non_pregnant_female"] = CohortTool.female_non_pregnant(session[:pre_art]["registered"])
-      session[:pre_art]["pregnant_female"] = CohortTool.pregnant_women(session[:pre_art]["registered"]) rescue []
+      
+     
       session[:pre_art]["less_2_months_infants_quater"] = CohortTool.infants_less_than_2_months(session[:pre_art]["registered"])
       session[:pre_art]["infants_between_2_and_24_months_quater"] = CohortTool.infants_between_2_and_24_months(session[:pre_art]["registered"])
       session[:pre_art]["infants_between_24months_and_14_years_quater"] = CohortTool.infants_between_24months_and_14_years(session[:pre_art]["registered"])
       session[:pre_art]["adults_quater"] = CohortTool.adults(session[:pre_art]["registered"])
 
-      session[:pre_art]["confirmed_on_pre_art_quater"] = CohortTool.confirmed_on_pre_art(end_date, start_date, regimen_ids)
+      session[:pre_art]["confirmed_on_pre_art_quater"] = CohortTool.confirmed_on_pre_art(end_date, start_date, regimen_ids) rescue []
       session[:pre_art]["exposed_on_pre_art_quater"] = CohortTool.exposed_on_pre_art(end_date, start_date)
 
+
+      #raise CohortTool.outcomes_total('On antiretrovirals', end_date).to_yaml
+
       session[:pre_art]["defaulted"] = []
-      CohortTool.defaulted_patients(end_date, regimen_ids).each do |patient|
+      (CohortTool.defaulted_patients(end_date, regimen_ids) || []).each do |patient|
                   if session[:pre_art]["total_reg"].include?(patient)
                        session[:pre_art]["defaulted"] << patient
                        session[:pre_art]["outcomes"][patient.to_s] = "DEFAULTED"
                    end
                end
+      
       session[:pre_art]["alive_on_pre_art"] = []
-      CohortTool.confirmed_on_pre_art(end_date, nil, regimen_ids).each do |patient|
+      (CohortTool.confirmed_on_pre_art(end_date, nil, regimen_ids) rescue []).each do |patient|
                   if ! session[:pre_art]["defaulted"].include?(patient) and session[:pre_art]["total_reg"].include?(patient)
                        session[:pre_art]["alive_on_pre_art"] << patient
                        session[:pre_art]["outcomes"][patient.to_s] = "Pre-ART"
@@ -189,37 +207,33 @@ class CohortToolController < GenericCohortToolController
                 end
 
       session[:pre_art]["tranferred_out"] = []
-      CohortTool.outcomes_total('PATIENT TRANSFERRED OUT', end_date).each do |patient|
-                  if ! session[:pre_art]["defaulted"].include?(patient) and session[:pre_art]["total_reg"].include?(patient)
+      transfer_outs = CohortTool.outcomes_total('PATIENT TRANSFERRED OUT', end_date, regimen_ids)
+      #raise transfer_outs.to_yaml
+      session[:pre_art]["earliest_start_date"] << transfer_outs[1] rescue nil
+      (transfer_outs[0] || []).each do |patient|
+                  
                        session[:pre_art]["tranferred_out"] << patient
                        session[:pre_art]["outcomes"][patient.to_s] = "TRANSFERRED OUT"
-                     end
                   end
       session[:pre_art]["on_arvs"] = []
-      CohortTool.outcomes_total('ON ARVS', end_date).each do |patient|
-                  if ! session[:pre_art]["defaulted"].include?(patient) and session[:pre_art]["total_reg"].include?(patient)
+      on_arvs = CohortTool.outcomes_total('On antiretrovirals', end_date, nil, start_date)
+      session[:pre_art]["earliest_start_date"] << on_arvs[1] rescue nil
+      (on_arvs[0] || []).each do |patient|
+                  if ! session[:pre_art]["defaulted"].include?(patient) #and session[:pre_art]["total_reg"].include?(patient)
                        session[:pre_art]["on_arvs"] << patient
                        session[:pre_art]["outcomes"][patient.to_s] = "On ARV's"
                      end
                   end
       
       session[:pre_art]["died"] = []
-      CohortTool.outcomes_total('PATIENT DIED', end_date).each do |patient|
-                  if session[:pre_art]["total_reg"].include?(patient)
+      dead = CohortTool.outcomes_total('PATIENT DIED', end_date, regimen_ids)
+      #session[:pre_art]["earliest_start_date"] << dead[1] rescue nil
+      (dead[0] || []).each do |patient|
                        session[:pre_art]["died"] << patient
                        session[:pre_art]["outcomes"][patient.to_s] = "PATIENT DIED"
-                     end
+                   
                   end
 
-      #raise CohortTool.defaulted_patients(end_date).to_yaml
-    #logger.info("cohort")
-    #raise @less_2_months_infants.to_yaml
-		#if session[:cohort].blank?
-		  #@cohort = cohort.report(logger)
-		 # session[:cohort]= @cohort
-		#else
-			#@cohort = session[:cohort]
-		#end
     render :layout => "cohort"
   end
 
@@ -1001,7 +1015,7 @@ class CohortToolController < GenericCohortToolController
 	end
 	
   def list_patients_details
-    #raise session[:pre_art]["outcomes"].to_yaml
+    #raise session[:cohort].to_yaml
 		@logo = CoreService.get_global_property_value('logo').to_s
     @report = []
     @quarter = params[:quarter]
@@ -1020,10 +1034,10 @@ class CohortToolController < GenericCohortToolController
     if key.blank?
        key = session[:pre_art].keys.sort.select { |k|
           k.humanize.upcase == params[:field].humanize.upcase
-        }.first.to_s
-        data = session[:pre_art][key]
+        }.first.to_s rescue ""
+        data = session[:pre_art][key] rescue []
       (data || []).each do |patient_id|
-        patient = Patient.find(patient_id)
+        patient = Patient.find(patient_id) rescue Patient.find(patient_id.person_id)  rescue Patient.find(patient_id.patient_id)
         @report << PatientService.get_debugger_details(patient.person)
 
         #find start reason
@@ -1160,10 +1174,27 @@ class CohortToolController < GenericCohortToolController
 		@report_type = params[:report_type]
   end
   
+  def select_cohort_date
+  end
+
   def cohort
+    if params[:quarter] == 'Select date range'
+      redirect_to :action => 'select_cohort_date' and return
+    end
+    session[:pre_art] = []
 		@logo = CoreService.get_global_property_value('logo').to_s
-    @quarter = params[:quarter]
-    start_date,end_date = Report.generate_cohort_date_range(@quarter)
+
+    if params[:date] and not params[:date]['start'].blank? and not params[:date]['end'].blank?
+      @quarter = params[:date]['start'] + " to " + params[:date]['end']
+      start_date = params[:date]['start'].to_date
+      end_date = params[:date]['end'].to_date
+    end if not params[:date].blank?
+
+    if start_date.blank? and end_date.blank?
+      @quarter = params[:quarter]
+      start_date,end_date = Report.generate_cohort_date_range(@quarter)
+    end
+
     cohort = Cohort.new(start_date, end_date)
    	logger.info("cohort")
     #raise request.env["HTTP_CONNECTION"].to_yaml
@@ -1177,12 +1208,28 @@ class CohortToolController < GenericCohortToolController
     render :layout => 'cohort'
   end
 
+  def missed_appointment
+    @logo = CoreService.get_global_property_value('logo').to_s
+    @quarter = params[:quarter]
+    @start_date, @end_date = Report.generate_cohort_date_range(@quarter)
+
+    @missed_patients = Cohort.miss_appointment(@start_date, @end_date)
+    
+    render :layout => 'report'
+  end
+  
 	def survival_analysis
 		session[:field] = nil
 		session[:cohort]["outcomes"] = {} if session[:cohort]["outcomes"].blank?
     @quarter = params[:quarter]
 		@logo = params[:logo]
-		start_date,end_date = Report.generate_cohort_date_range(@quarter)
+    if @quarter.match(/to/i)
+      start_date,end_date = @quarter.split('to')
+      start_date = start_date.to_date
+      end_date = end_date.to_date
+    else
+		  start_date,end_date = Report.generate_cohort_date_range(@quarter)
+    end
     cohort = Cohort.new(start_date, end_date)
 
 		@survival_analysis, session[:views] = SurvivalAnalysis.report(cohort, session[:cohort])
@@ -1190,11 +1237,120 @@ class CohortToolController < GenericCohortToolController
 		render :layout => 'cohort'
 	end
 
+  def list_incomplete_details
+    @logo = CoreService.get_global_property_value('logo').to_s
+    @data = session[:specific][params[:date].to_date]
+    @report = {}
+    session[:incomplete][params[:date].to_date].each do |patient_id|
+          patient = Patient.find(patient_id)
+          @report[patient_id] =  PatientService.get_debugger_details(patient.person)
+    end
+    render :layout => 'patient_list'
+  end
+  
+  def incomplete_visits
+    @logo = CoreService.get_global_property_value('logo').to_s
+    @start_date = params[:start_date].to_date
+    @end_date = params[:start_date].to_date
+    @incomplete = {}
+    session[:specific] = {}
+    session[:incomplete] = {}
+
+    encounter_date =  params[:start_date].to_date
+    # Need to improve the code for performance
+    #while encounter_date <= params[:start_date].to_date
+    session[:specific][encounter_date] = {}
+    @incomplete[encounter_date] = []
+    session[:specific][encounter_date]["reception"] = []
+    session[:specific][encounter_date]["vitals"] = []
+    session[:specific][encounter_date]["registration"] = []
+    session[:specific][encounter_date]["consultation"] = []
+    session[:specific][encounter_date]["staging"] = []
+    session[:specific][encounter_date]["adherence"] = []
+    session[:specific][encounter_date]["treatment"] = []
+    session[:specific][encounter_date]["dispensing"] = []
+    session[:specific][encounter_date]["appointment"] = []
+
+    Encounter.find_by_sql("SELECT DISTINCT patient_id FROM encounter_type et
+      INNER JOIN encounter e ON et.encounter_type_id = e.encounter_type
+      WHERE encounter_datetime BETWEEN '#{encounter_date.to_date.strftime('%Y-%m-%d 00:00:00')}'
+      AND '#{encounter_date.to_date.strftime('%Y-%m-%d 23:59:59')}' 
+      AND et.name IN ('UPDATE HIV STATUS','HIV CLINIC REGISTRATION','HIV STAGING',
+      'HIV CLINIC CONSULTATION','ART ADHERENCE','DISPENSING')").each{|patient|
+
+      registration = check_encounter(patient.patient_id, encounter_date, "HIV CLINIC REGISTRATION")# rescue []
+      reception = check_encounter(patient.patient_id, encounter_date, "HIV RECEPTION")#  rescue []
+      vitals = "Non Applicable"
+      unless reception.blank?
+        vitals = check_encounter(patient.patient_id, encounter_date, "VITALS") if reception.to_s.match(/Patient present for consultation:  Yes/i)
+      else
+         @incomplete[encounter_date] << patient.patient_id
+         vitals = check_encounter(patient.patient_id, encounter_date, "VITALS")# rescue []
+         session[:specific][encounter_date]["reception"] << patient.patient_id
+      end
+      if registration.to_s.match(/Not Done/i)
+         #raise registration.to_yaml if registration.length < 2
+         @incomplete[encounter_date] << patient.patient_id #if registration.to_s.match(/Not Done/i)
+         session[:specific][encounter_date]["registration"]  << patient.patient_id #if registration.to_s.match(/Not Done/i)
+         staging = check_encounter(patient.patient_id, encounter_date, "HIV STAGING")# rescue []
+         @incomplete[encounter_date] << patient.patient_id if  staging.blank?
+         session[:specific][encounter_date]["staging"] << patient.patient_id if staging.blank?
+     elsif registration.blank?
+         adherence = check_encounter(patient.patient_id, encounter_date, "ART ADHERENCE") #rescue []
+         @incomplete[encounter_date] << patient.patient_id if  adherence.blank?
+         session[:specific][encounter_date]["adherence"] << patient.patient_id if adherence.blank?
+      else
+         staging = check_encounter(patient.patient_id, encounter_date, "HIV STAGING")# rescue []
+         @incomplete[encounter_date] << patient.patient_id if  staging.blank?
+         session[:specific][encounter_date]["staging"] << patient.patient_id if staging.blank?
+      end
+       session[:specific][encounter_date]["vitals"] << patient.patient_id if vitals.blank?
+
+       @incomplete[encounter_date] << patient.patient_id if vitals.blank?
+
+       consultation = check_encounter(patient.patient_id, encounter_date, "HIV CLINIC CONSULTATION") #rescue []
+       @incomplete[encounter_date] << patient.patient_id if  consultation.blank?
+       session[:specific][encounter_date]["consultation"] << patient.patient_id if consultation.blank?
+       unless consultation.blank?
+         
+         if consultation.to_s.match(/Prescribe drugs:  Yes/i)
+          
+           treatment = check_encounter(patient.patient_id, encounter_date, "TREATMENT") #rescue []
+           dispensing = check_encounter(patient.patient_id, encounter_date, "DISPENSING") #rescue []
+           appointment = check_encounter(patient.patient_id, encounter_date, "APPOINTMENT") #rescue []
+
+           @incomplete[encounter_date] << patient.patient_id if treatment.blank?
+           @incomplete[encounter_date] << patient.patient_id if dispensing.blank?
+           @incomplete[encounter_date] << patient.patient_id if appointment.blank?
+           session[:specific][encounter_date]["appointment"] << patient.patient_id if appointment.blank?
+           session[:specific][encounter_date]["dispensing"] << patient.patient_id if dispensing.blank?
+           session[:specific][encounter_date]["treatment"] << patient.patient_id if treatment.blank?
+            
+        end
+
+       end
+     }
+     
+     session[:incomplete][encounter_date] = @incomplete[encounter_date].uniq
+     #encounter_date += 1.days
+
+     #end
+    redirect_to "/cohort_tool/list_incomplete_details?date=#{encounter_date}"
+    #render :layout => 'patient_list'
+  end
+  
 	def children_survival
 		session[:field] = nil
     @quarter = params[:quarter]
+
 		@logo = params[:logo]
-		start_date,end_date = Report.generate_cohort_date_range(@quarter)
+    if @quarter.match(/to/i)
+      start_date,end_date = @quarter.split('to')
+      start_date = start_date.to_date
+      end_date = end_date.to_date
+    else
+		  start_date,end_date = Report.generate_cohort_date_range(@quarter)
+    end
     cohort = Cohort.new(start_date, end_date)
 		@children_survival_analysis, session[:children] = SurvivalAnalysis.childern_survival_analysis(cohort, session[:cohort])
 		render :layout => 'cohort'
@@ -1204,7 +1360,13 @@ class CohortToolController < GenericCohortToolController
 		session[:field] = nil
     @quarter = params[:quarter]
 		@logo = params[:logo]
-		start_date,end_date = Report.generate_cohort_date_range(@quarter)
+    if @quarter.match(/to/i)
+      start_date,end_date = @quarter.split('to')
+      start_date = start_date.to_date
+      end_date = end_date.to_date
+    else
+		  start_date,end_date = Report.generate_cohort_date_range(@quarter)
+    end
     cohort = Cohort.new(start_date, end_date)
    	logger.info("cohort")
    	@women_survival_analysis, session[:women] = SurvivalAnalysis.pregnant_and_breast_feeding(cohort, session[:cohort])
@@ -1266,6 +1428,7 @@ class CohortToolController < GenericCohortToolController
 		@quarter = params[:quarter] + ": (#{@patients.length})" rescue  params[:quarter]
 		if missing_adherence
 			@report_type = "Patient(s) with missing adherence"
+      #render :layout => 'patient_list' and return
 		elsif max_range.blank? and min_range.blank?
 			@report_type = "Patient(s) with adherence greater than 100%"
 		else
@@ -1786,7 +1949,7 @@ class CohortToolController < GenericCohortToolController
     			@total["other"] +=1
     	end
     	
-    	person["tbnumber"] = PatientIdentifier.identifier(enc.patient.id, PatientIdentifierType.find_by_name("District TB Number").id).identifier
+    	person["tbnumber"] = PatientIdentifier.identifier(enc.patient.id, PatientIdentifierType.find_by_name("District TB Number").id).identifier rescue ""
     	@data << person
   	
     end
@@ -2337,6 +2500,32 @@ class CohortToolController < GenericCohortToolController
     obs = Observation.find(:all,:conditions => ["person_id = ? AND value_coded != ? AND concept_id IN (?) AND obs_datetime > ? AND obs_datetime <= ?",patient_id,ConceptName.find_by_name("Negative").id ,sputum_concept_ids, registration_date, registration_date + add.days], :limit => 3)
   end
 
+  def check_encounter(patient_id, encounter_date, encounter)
+    start_date = encounter_date.to_date.strftime('%Y-%m-%d 00:00:00')
+    end_date = encounter_date.to_date.strftime('%Y-%m-%d 23:59:59')
+
+    e = EncounterType.find_by_name(encounter).id
+	  obs = Observation.find_by_sql("SELECT * FROM encounter e
+      INNER JOIN obs o ON e.encounter_id = o.encounter_id WHERE o.voided = 0
+      And e.encounter_type = #{e} AND o.person_id = #{patient_id}
+      AND o.obs_datetime >= '#{start_date}' AND o.obs_datetime <= '#{end_date}'")
+     
+    if encounter == "HIV CLINIC REGISTRATION" and obs.blank?
+      obs = Observation.find_by_sql("SELECT * FROM encounter e
+      INNER JOIN obs o ON e.encounter_id = o.encounter_id
+      WHERE o.voided = 0 AND e.encounter_type = #{e} AND o.person_id = #{patient_id}
+      AND o.obs_datetime < '#{encounter_date.to_date.strftime('%Y-%m-%d 00:00:00')}' LIMIT 1")
+
+      if !obs.blank?
+        obs = []
+      else
+        obs = "Not Done"
+      end
+
+    end
+
+    return obs
+  end
 
 end
 

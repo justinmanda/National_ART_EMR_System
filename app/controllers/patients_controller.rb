@@ -34,6 +34,45 @@ class PatientsController < GenericPatientsController
     render :template => 'dashboards/exitcare_tab', :layout => false
   end
 
+  def edit_tb_number
+    if request.post?
+      @number = params[:current]
+      @patient_id = params[:id]
+      numbers_array = params[:tb_number].chars.each_slice(4).map(&:join)
+      x = numbers_array.length - 1
+      year = numbers_array[0].to_i
+      surfix = ""
+      (1..x).each { |i| surfix = "#{surfix}#{numbers_array[i].squish}" }
+      if year > Date.today.year || surfix.to_i < 1
+        #flash[:notice] = "Date can not be greater than current year Or number can not be 0"
+        render :template => "people/find_by_tb_number" and return
+      end
+      if PatientIdentifier.site_prefix == "MPC"
+        prefix = "LL"
+      else
+        prefix = PatientIdentifier.site_prefix
+      end
+      tb_number = "#{prefix}-TB #{year} #{surfix.to_i}"
+      people = PatientIdentifier.find_by_sql("SELECT * FROM patient_identifier
+                WHERE REPLACE(identifier, ' ', '') = REPLACE('#{tb_number}', ' ', '') AND voided = 0 ")
+      if people.length > 0
+        flash[:notice] = "Patient found with number #{tb_number}" 
+        render :template => "people/find_by_tb_number" and return
+      else
+        people = PatientIdentifier.find_by_sql("SELECT * FROM patient_identifier
+                WHERE REPLACE(identifier, ' ', '') = REPLACE('#{@number}', ' ', '')
+                AND voided = 0 AND identifier_type = 7 AND patient_id = #{@patient_id}").first
+        people.identifier = tb_number
+        people.save!
+        redirect_to "/patients/tb_treatment_card?patient_id=#{@patient_id}" and return
+      end
+    else
+      @number = params[:number]
+      @patient_id = params[:id]
+      render :template => "people/find_by_tb_number"
+    end
+  end
+
   def patient_transfer_out_label(patient_id)
     date = session[:datetime].to_date rescue Date.today
     patient = Patient.find(patient_id)
@@ -188,7 +227,7 @@ class PatientsController < GenericPatientsController
     pill_count = visit.pills.collect{|c|c.join(",")}.join(' ') rescue nil
 
     label = ZebraPrinter::StandardLabel.new
-    label.draw_text("Printed: #{Date.today.strftime('%b %d %Y')}",597,280,0,1,1,1,false)
+    #label.draw_text("Printed: #{Date.today.strftime('%b %d %Y')}",597,280,0,1,1,1,false)
     label.draw_text("#{seen_by(patient,date)}",597,250,0,1,1,1,false)
     label.draw_text("#{date.strftime("%B %d %Y").upcase}",25,30,0,3,1,1,false)
     label.draw_text("#{arv_number}",565,30,0,3,1,1,true)

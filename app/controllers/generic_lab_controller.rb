@@ -7,6 +7,7 @@ class GenericLabController < ApplicationController
     (Lab.results(@patient, patient_ids) || []).map do | short_name , test_name , range , value , test_date |
       @results << [short_name.gsub('_',' '),"/lab/view?test=#{short_name}&patient_id=#{@patient.id}"]
     end
+    @enter_lab_results = GlobalProperty.find_by_property('enter.lab.results').property_value == 'true' rescue false
     render :layout => 'menu'
   end
 

@@ -2,12 +2,7 @@ class GenericPatientsController < ApplicationController
 	before_filter :find_patient, :except => [:void]
   
 	def show
-		return_uri = session[:return_uri]
-		if !return_uri.blank? || @patient.blank?
-			redirect_to return_uri.to_s
-			return
-		end
-		
+
 		current_state = tb_status(@patient).downcase
 		@show_period = false
 		@show_period = true if current_state.match(/currently in treatment/i)
@@ -627,6 +622,8 @@ class GenericPatientsController < ApplicationController
       @prescriptions = restriction.filter_orders(@prescriptions)
       @programs = restriction.filter_programs(@programs)
     end
+    
+=begin
    @program_state =  []
    @programs.each do | prog |
     
@@ -636,7 +633,7 @@ class GenericPatientsController < ApplicationController
 					prog.program_id, session_date, @patient.id],:order => "patient_state_id ASC")
      @program_state << [prog.to_s,  patient_states.last.to_s, prog.program_id, prog.date_enrolled]
     end
-    
+=end
     render :template => 'dashboards/overview_tab', :layout => false
   end
 
@@ -870,7 +867,7 @@ class GenericPatientsController < ApplicationController
   end
 
   def tb_treatment_card # to look at later - To test that is
-
+  @patient = Patient.find(params[:patient_id])
 	@variables = Hash.new()
 	@patient_bean = PatientService.get_patient(@patient.person)
 	@variables["hiv"] =  PatientService.patient_hiv_status(@patient.person) rescue nil
@@ -1054,7 +1051,7 @@ end
       adherence = adh.value_numeric ||= adh.value_text
       if (adherence.to_f >= 95 || adherence.to_f <= 105)
         drug_name = adh.order.drug_order.drug.concept.shortname rescue adh.order.drug_order.drug.name
-        alerts << "Adherence: #{drug_name} (#{adherence}%)"
+        alerts << "Adherence: #{drug_name} (#{adh.value_numeric}%)"
       end
     end 
 
@@ -1767,7 +1764,7 @@ end
       encounter = Encounter.find(:first,
 				:joins => "INNER JOIN obs ON encounter.encounter_id = obs.encounter_id",
 				:conditions =>["encounter_type=? AND encounter.patient_id = ? AND concept_id = ?
-                                 AND encounter.voided = 0",encounter_type , patient_obj.id , amount_dispensed_concept_id ],
+                                 AND encounter.voided = 0 AND value_drug != ?",encounter_type , patient_obj.id , amount_dispensed_concept_id, 297 ],
 				:order =>"encounter_datetime")
       first_treatment_encounters << encounter unless encounter.blank?
     end
@@ -1880,7 +1877,9 @@ end
   end
 
   def visits(patient_obj, encounter_date = nil)
-    patient_visits = {}
+    transfer_in_date = patient_obj.person.observations.recent(1).question("ART start date").all.collect{|o|
+			o.value_datetime }.last.to_date rescue []
+    patient_visits = {}  
     yes = ConceptName.find_by_name("YES")
     concept_names = ["APPOINTMENT DATE", "HEIGHT (CM)", 'WEIGHT (KG)',
 			"BODY MASS INDEX, MEASURED", "RESPONSIBLE PERSON PRESENT",
@@ -1902,7 +1901,17 @@ end
           patient_obj.patient_id,encounter_date.to_date, concept_ids],
         :order =>"obs_datetime").map{|obs| obs if !obs.concept.nil?}
     end
-		#raise observations.last.concept_id.to_s.to_yaml
+        hiv_program = Program.find_by_name("HIV program").id
+        tb_program = Program.find_by_name("TB program").id
+        patient_in_programs = PatientProgram.find_by_sql("
+                            SELECT * FROM patient_program
+                            WHERE patient_id = #{patient_obj.id}
+                            AND program_id IN (#{hiv_program}, #{tb_program})
+                            AND voided = 0")
+
+        return if patient_in_programs.blank?
+
+
 		gave_hash = Hash.new(0)
 		observations.map do |obs|
 			drug = Drug.find(obs.order.drug_order.drug_inventory_id) rescue nil
@@ -1914,7 +1923,13 @@ end
 			next if encounter_name.blank?
 			next if encounter_name.match(/REGISTRATION/i)
 			next if encounter_name.match(/HIV STAGING/i)
+      
 			visit_date = obs.obs_datetime.to_date
+
+      unless transfer_in_date.blank?
+        next patient_visits if transfer_in_date == visit_date
+      end
+
 			patient_visits[visit_date] = Mastercard.new() if patient_visits[visit_date].blank?
 
 				 
@@ -1997,7 +2012,8 @@ end
 				#next if tb_medical == true
 				next if  obs.to_s.split(':')[1].to_i.blank?
 				patient_visits[visit_date].adherence = [] if patient_visits[visit_date].adherence.blank?
-				patient_visits[visit_date].adherence << [Drug.find(obs.order.drug_order.drug_inventory_id).name,(obs.to_s.split(':')[1] + '%')]
+        #raise obs.order.drug_order.to_yaml
+				patient_visits[visit_date].adherence << [(Drug.find(obs.order.drug_order.drug_inventory_id).name rescue ''),((obs.to_s.split(':')[1] + '%') rescue '')]
 			elsif concept_name == 'CLINICAL NOTES CONSTRUCT' || concept_name == 'Clinical notes construct'
 				patient_visits[visit_date].notes+= '<br/>' + obs.value_text unless patient_visits[visit_date].notes.blank?
 				patient_visits[visit_date].notes = obs.value_text if patient_visits[visit_date].notes.blank?
@@ -2070,33 +2086,19 @@ end
 
 
 	def tb_status(patient, visit_date = Date.today)
-		  state = Concept.find(Observation.find(:first, :order => "obs_datetime DESC, date_created DESC", :conditions => ["person_id = ? AND concept_id = ? AND DATE(obs_datetime) <= ? AND value_coded IS NOT NULL", patient.id, ConceptName.find_by_name("TB STATUS").concept_id, visit_date.to_date ]).value_coded).fullname rescue "Unknown"
+	  state = Concept.find(Observation.find(:first, :order => "obs_datetime DESC, date_created DESC", :conditions => ["person_id = ? AND concept_id = ? AND DATE(obs_datetime) <= ? AND value_coded IS NOT NULL", patient.id, ConceptName.find_by_name("TB STATUS").concept_id, visit_date.to_date ]).value_coded).fullname rescue "Unknown"
 
-		#state = Concept.find(Observation.find(:first,
-        #:order => "obs_datetime DESC,date_created DESC",
-        #:conditions => ["person_id = ? AND concept_id = ? AND value_coded IS NOT NULL AND obs_datetime <= ?",
-          #patient.id, ConceptName.find_by_name("TB STATUS").concept_id, visit_date]).value_coded).fullname rescue "UNKNOWN"
-		programs = patient.patient_programs.all rescue []
+    program_id = Program.find_by_name('TB PROGRAM').id
+     patient_state = PatientState.find(:first,
+       :joins => "INNER JOIN patient_program p
+       ON p.patient_program_id = patient_state.patient_program_id",
+       :conditions =>["patient_state.voided = 0 AND p.voided = 0
+       AND p.program_id = ? AND DATE(start_date) <= DATE('#{visit_date}') AND p.patient_id =?",
+       program_id,patient.id],
+       :order => "start_date DESC")
 
-		programs.each do |prog|
-				tb_program = Program.find_by_name('TB PROGRAM').id
-				if prog.program.name.upcase == "TB PROGRAM"
-					state = ProgramWorkflowState.find_state(prog.patient_states.last.state).concept.fullname rescue state
-				end
-				#patient_program_id = PatientProgram.find_by_sql("SELECT  patient_program_id FROM patient_program
-				#								WHERE patient_id = #{patient.id}
-				#								AND program_id = #{tb_program}
-				#								AND voided = 0 LIMIT 1").first.patient_program_id  rescue state
-			
-				#state = PatientState.find_by_sql("SELECT state  FROM patient_state
-				#								WHERE patient_program_id = #{patient_program_id}
-				#								AND voided = 0
-				#								AND start_date <= '#{visit_date}'
-				#								ORDER BY start_date DESC").last.state  rescue state
-				#state = ProgramWorkflowState.find_state(state).concept.fullname rescue state
-		end
-
-		state
+    return state if patient_state.blank?
+    return ConceptName.find_by_concept_id(patient_state.program_workflow_state.concept_id).name
 
   end
 
@@ -2120,20 +2122,26 @@ end
 	def definitive_state_date(patient, program) #written to avoid causing conflicts in other methods
 		state_date = ""
 		programs = patient.patient_programs.all rescue []
+   
 		programs.each do |prog|
 			if prog.program.name.upcase == program and program == "HIV PROGRAM"
-				if ProgramWorkflowState.find_state(prog.patient_states.last.state).concept.fullname.downcase.match(/pre-art/i)
-						
-						state_date = prog.date_enrolled
-				end
+        program_state = ProgramWorkflowState.find_state(prog.patient_states.last.state).concept.fullname.downcase rescue nil
+				if ! program_state.blank?
+            if  program_state.match(/pre-art/i)
+                state_date = prog.date_enrolled
+            end
+        end
 			end
 			if prog.program.name.upcase == program and program != "HIV PROGRAM" and program != "ON ARV"
 				state_date = prog.date_enrolled
 			end
 			if prog.program.name.upcase == "HIV PROGRAM" and program == "ON ARV"
-				if ProgramWorkflowState.find_state(prog.patient_states.last.state).concept.fullname.downcase.match(/on antiretrovirals/i)
-						state_date = prog.date_enrolled
-				end
+        program_state = ProgramWorkflowState.find_state(prog.patient_states.last.state).concept.fullname.downcase rescue nil
+				if ! program_state.blank?
+            if program_state.match(/on antiretrovirals/i)
+                state_date = prog.date_enrolled
+            end
+        end
 			end
 		end
 		state_date
@@ -2155,7 +2163,7 @@ end
     pill_count = visit.pills.collect{|c|c.join(",")}.join(' ') rescue nil
 
     label = ZebraPrinter::StandardLabel.new
-    label.draw_text("Printed: #{Date.today.strftime('%b %d %Y')}",597,280,0,1,1,1,false)
+    #label.draw_text("Printed: #{Date.today.strftime('%b %d %Y')}",597,280,0,1,1,1,false)
     label.draw_text("#{seen_by(patient,date)}",597,250,0,1,1,1,false)
     label.draw_text("#{date.strftime("%B %d %Y").upcase}",25,30,0,3,1,1,false)
     label.draw_text("#{arv_number}",565,30,0,3,1,1,true)
@@ -3375,6 +3383,56 @@ end
     render :text => "true" and return
 		
 	end
+
+  def viral_load_already_done
+    patient_id = params[:patient_id]
+		enc = Encounter.new()
+
+		enc.encounter_type = EncounterType.find_by_name("REQUEST").id
+		enc.patient_id = 		patient_id
+		enc.creator = current_user.id
+		enc.location_id = Location.current_location
+
+		enc.save()
+
+		obs = Observation.new()
+		obs.person_id = patient_id
+		obs.creator = current_user.id
+		obs.location_id = Location.current_location
+    obs.value_text = "Done in the past six months"
+		obs.concept_id = Concept.find_by_name("Hiv viral load").concept_id
+		obs.encounter_id = enc.id
+		obs.obs_datetime = Time.now
+
+		obs.save()
+
+    render :text => "true" and return
+  end
+
+  def vl_not_done_due_to_adherence
+    patient_id = params[:patient_id]
+		enc = Encounter.new()
+
+		enc.encounter_type = EncounterType.find_by_name("REQUEST").id
+		enc.patient_id = 		patient_id
+		enc.creator = current_user.id
+		enc.location_id = Location.current_location
+
+		enc.save()
+
+		obs = Observation.new()
+		obs.person_id = patient_id
+		obs.creator = current_user.id
+		obs.location_id = Location.current_location
+    obs.value_text = "Not done due to adherence"
+		obs.concept_id = Concept.find_by_name("Hiv viral load").concept_id
+		obs.encounter_id = enc.id
+		obs.obs_datetime = Time.now
+
+		obs.save()
+
+    render :text => "true" and return
+  end
 
   def confirm_merge
     master = params[:master_id]

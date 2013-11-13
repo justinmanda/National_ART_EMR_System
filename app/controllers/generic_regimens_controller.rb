@@ -374,6 +374,7 @@ class GenericRegimensController < ApplicationController
 	end
 
 	def create
+		#raise params[:ipt_mgs].to_yaml
 		prescribe_tb_drugs = false   
 		prescribe_tb_continuation_drugs = false   
 		prescribe_arvs = false

@@ -122,14 +122,15 @@ class GenericPropertiesController < ApplicationController
       end
     else
       @privileges = Privilege.find(:all).collect{|r|r.privilege}
-      @activities = RolePrivilege.find(:all).collect{|r|r.privilege}
+      @activities = RolePrivilege.find(:all).collect{ |r|r.privilege.privilege }
     end
   end
 
   def selected_roles
-    render :text => RolePrivilege.find(:all,
-           :conditions =>["role = ?",
-           params[:role]]).collect{|r|r.privilege.privilege}.join(',') and return
+    render :text => "<li>" + RolePrivilege.find(:all, 
+      :conditions =>["role = ?", params[:role]]).collect { |r|
+        r.privilege.privilege
+    }.uniq.join("</li><li>") + "</li>"
   end
 
   def creation

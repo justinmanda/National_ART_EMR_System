@@ -3,7 +3,7 @@ class ProgramsController < GenericProgramsController
   def create_exit_from_care_encounter(given_params)
     states_to_create_encounter_for = []
     concept_set("EXIT FROM CARE").each{|concept| states_to_create_encounter_for << concept.uniq.to_s}
-
+   
     current_state = given_params[:current_state]
 
     if states_to_create_encounter_for.include? current_state
@@ -80,8 +80,8 @@ class ProgramsController < GenericProgramsController
         :start_date => initial_date,
         :creator => User.current.user_id)
       initial_patient_state.save
-    else
-      #ensure that initial state is known, so that we can assign
+    else 
+      #ensure that initial state is known, so that we can assign 
       #end date of the beginning of the on arv state
       current_patient_program.patient_states.each do |state|
         initial_patient_state = state if state.state == pre_art_state
@@ -92,7 +92,7 @@ class ProgramsController < GenericProgramsController
     #TODO check if the patient has any art dispensation, and get the date of the earliest start date
 
     date_of_first_dispensation = PatientService.date_of_first_dispensation(patient) rescue nil
-
+   
     if ! date_of_first_dispensation.nil?
       on_arv_state = current_patient_program.patient_states.build(
         :state => 7, #TODO find a better way of getting the this state rather than hard coding
@@ -135,8 +135,8 @@ class ProgramsController < GenericProgramsController
           exit_from_care_date = obs.value_datetime
         end
       end #end of obs loop
-
-
+			
+			
 
       if exit_from_care_type.to_s.upcase == "PATIENT DIED" #add patient_died state
         #show patient as died in patient_table
@@ -164,22 +164,22 @@ class ProgramsController < GenericProgramsController
           :state => 6, #TODO find a better way of getting the this state rather than hard coding
           :start_date => exit_from_care_date,
           :creator => User.current.user_id)
-        stopped_patient_state.save
+        stopped_patient_state.save      
       end
-
+			
       #update the the on_arvs state, append the exit from care date if the patient is on arvs
 			if ! on_arv_state.nil?
 				on_arv_state[:end_date] = exit_from_care_date.to_date
 				on_arv_state.save
 			end
 
-      #update the end date for the patient program
+      #update the end date for the patient program    
       current_patient_program.date_completed = exit_from_care_date
       current_patient_program.save
 
       #check for dispensation after the exit from care state
       next_dispensation_date = PatientService.date_dispensation_date_after(patient, exit_from_care_date.to_date)
-
+			
       if ! next_dispensation_date.nil?
         #reset the end date of the program
         current_patient_program.date_completed = 'NULL'
@@ -228,7 +228,7 @@ class ProgramsController < GenericProgramsController
   end
 
   def update_exitcare
-
+    
     patient_program = PatientProgram.find(params[:patient_program_id])
     #we don't want to have more than one open states - so we have to close the current active on before opening/creating a new one
 
@@ -241,11 +241,11 @@ class ProgramsController < GenericProgramsController
     state_concept = ConceptName.find_all_by_name(params[:current_state])
     state = ProgramWorkflowState.find(:first, :conditions => ["concept_id IN (?)",state_concept.map{|c|c.concept_id}] ).program_workflow_state_id
 =begin
-    program_workflow_state = ProgramWorkflowState.find(:first,
+    program_workflow_state = ProgramWorkflowState.find(:first, 
       :joins => "INNER JOIN program_workflow USING (program_workflow_id) INNER JOIN program USING (program_id)",
       :conditions => ["program_workflow.program_id = ? AND program_workflow_state.concept_id = ?",
                        patient_program.program_id, state_concept.id])
-
+    
     patient_state = patient_program.patient_states.build(
       :state => program_workflow_state.id,
       :start_date => params[:current_date])
@@ -254,10 +254,10 @@ class ProgramsController < GenericProgramsController
       :state => state,
       :start_date => params[:current_date])
     if patient_state.save
-
+     
       # Close and save current_active_state if a new state has been created
       current_active_state.save!
-
+      
 =begin
 if patient_state.program_workflow_state.concept.fullname.upcase == 'PATIENT TRANSFERRED OUT'
 encounter = Encounter.new(params[:encounter])
@@ -288,7 +288,7 @@ end
 
       updated_state = patient_state.program_workflow_state.concept.fullname
 
-
+     
       #disabled redirection during import in the code below
       # Changed the terminal state conditions from hardcoded ones to terminal indicator from the updated state object
       if patient_state.program_workflow_state.terminal == 1
