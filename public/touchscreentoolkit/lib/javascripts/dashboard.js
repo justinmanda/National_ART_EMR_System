@@ -581,7 +581,7 @@ function generateDashboard(){
     start.style.fontSize = "32px";
     start.style.right = "10px";
     start.style.zIndex = 100;
-    start.innerHTML = "<img src='/images/app.png' height='160' style='margin: 10px;' />";
+    start.innerHTML = "<img src='/images/app.png' height='131'/>";
 
     start.onclick = function(){
         if(__$('menu')){
