@@ -1,7 +1,7 @@
 module MedicationService
 
 	def self.arv(drug)
-		arv_drugs.map(&:concept_id).include?(drug.concept_id)
+		arv_drugs.map(&:concept_id).include?(drug.concept_id) rescue false
 	end
 
 	def self.arv_drugs
@@ -36,6 +36,23 @@ module MedicationService
 		regimens = Regimen.find(	:all,
 									:order => 'regimen_index',
 									:conditions => ['? >= min_weight AND ? < max_weight AND program_id = ?', weight, weight, program.program_id])
+
+		options = regimens.map { |r|
+			concept_name = (r.concept.concept_names.typed("SHORT").first ||	r.concept.concept_names.typed("FULLY_SPECIFIED").first).name
+			if r.regimen_index.blank?
+				["#{concept_name}", r.concept_id, r.regimen_index.to_i]
+			else
+				["#{r.regimen_index} - #{concept_name}", r.concept_id, r.regimen_index.to_i]
+			end
+		}.sort_by{| r | r[2]}.uniq
+
+		return options
+	end
+
+  def self.all_regimen_options(program)
+		regimens = Regimen.find(	:all,
+									:order => 'regimen_index',
+									:conditions => ['program_id = ?', program.program_id])
 
 		options = regimens.map { |r|
 			concept_name = (r.concept.concept_names.typed("SHORT").first ||	r.concept.concept_names.typed("FULLY_SPECIFIED").first).name
