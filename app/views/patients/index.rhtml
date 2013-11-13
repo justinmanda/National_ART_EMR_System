@@ -18,6 +18,11 @@
         color: black;
         font-weight: bold;
       }
+
+      #btnStart{
+        height: 154px ! important;
+        width: 111px ! important;
+      }
     </style>
   </head>
   <body><div id='content'>
@@ -35,9 +40,9 @@
             <span id='patient_residence'><%= @patient_bean.current_residence rescue "" %></span>
             <% @patient_age = @patient_bean.age rescue 0 %>
             <% if @patient_age < 2 %>
-               <span id='patient_age'><%= "#{@patient_bean.age_in_months} Months" rescue "" %></span>
+              <span id='patient_age'><%= "#{@patient_bean.age_in_months} Months" rescue "" %></span>
             <% else %>
-               <span id='patient_age'><%= @patient_bean.age rescue "" %></span>
+              <span id='patient_age'><%= @patient_bean.age rescue "" %></span>
             <% end %>
 
             <span id='patient_gender'><%= @patient_bean.sex rescue "" %></span>

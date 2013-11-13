@@ -1,6 +1,6 @@
 class GenericProgramsController < ApplicationController
   before_filter :find_patient, :except => [:void, :states]
-  
+
   def new
     session[:return_to] = nil
     session[:return_to] = params[:return_to] unless params[:return_to].blank?
@@ -12,7 +12,7 @@ class GenericProgramsController < ApplicationController
                                     ).map{|pat_program|
                                       [pat_program.program_name,pat_program.location_name] if pat_program.date_completed.blank?
                                     }
-    @enrolled_program_names = program_names.to_json                                
+    @enrolled_program_names = program_names.to_json
     @patient_program = PatientProgram.new
   end
 
@@ -33,18 +33,18 @@ class GenericProgramsController < ApplicationController
       redirect_to :controller => "patients" ,:action => "programs",
         :error => error,:patient_id => @patient.id  and return
     end
-    
+
     @patient_program = @patient.patient_programs.build(
       :program_id => params[:program_id],
       :date_enrolled => params[:initial_date],
-      :location_id => params[:location_id])      
+      :location_id => params[:location_id])
     @patient_state = @patient_program.patient_states.build(
       :state => params[:initial_state],
-      :start_date => params[:initial_date]) 
+      :start_date => params[:initial_date])
     if @patient_program.save && @patient_state.save
       redirect_to session[:return_to] and return unless session[:return_to].blank?
       redirect_to :controller => :patients, :action => :programs_dashboard, :patient_id => @patient.patient_id
-    else 
+    else
       flash.now[:error] = @patient_program.errors.full_messages.join(". ")
       render :action => "new"
     end
@@ -52,9 +52,9 @@ class GenericProgramsController < ApplicationController
 
   def status
     @program = PatientProgram.find(params[:id])
-    render :layout => false    
+    render :layout => false
   end
-  
+
   def void
     if params[:program]
       program = params[:program]
@@ -65,10 +65,17 @@ class GenericProgramsController < ApplicationController
       state = params[:state]
       @patient_state = PatientState.find(state)
       @patient_state.void
+      encounter = Encounter.find_by_sql("
+        SELECT encounter_id FROM obs WHERE concept_id = (SELECT concept_id FROM concept_name WHERE name = 'PATIENT TRACKING STATE')
+        AND value_numeric = #{state}").first rescue []
+        if not encounter.blank?
+          voided_encounter  = Encounter.find(encounter)
+          voided_encounter.void
+        end
     end
     head :ok
-  end  
-  
+  end
+
   def locations
     #@locations = Location.most_common_program_locations(params[:q] || '')
     if params[:transfer_type].blank? || params[:transfer_type].nil?
@@ -79,38 +86,38 @@ class GenericProgramsController < ApplicationController
         location_ids = LocationTagMap.find(:all,:conditions => ["location_tag_id = (?)",location_tag_id]).map{|e|e.location_id}
         @locations = Location.find(:all, :conditions=>["location.retired = 0 AND location_id IN (?) AND name LIKE ? AND name != ''", location_ids, "#{search}%"])
     end
-    @names = @locations.map do | location | 
+    @names = @locations.map do | location |
       next if generic_locations.include?(location.name)
-      "<li value='#{location.location_id}'>#{location.name}</li>" 
+      "<li value='#{location.location_id}'>#{location.name}</li>"
     end
     render :text => @names.join('')
   end
-  
+
   def workflows
     @workflows = ProgramWorkflow.all(:conditions => ['program_id = ?', params[:program]], :include => :concept)
     @names = @workflows.map{|workflow| "<li value='#{workflow.id}'>#{workflow.concept.fullname}</li>" }
     render :text => @names.join('')
   end
-  
+
   def states
     if params[:show_non_terminal_states_only].to_s == true.to_s
        @states = ProgramWorkflowState.all(:conditions => ['program_workflow_id = ? AND terminal = 0', params[:workflow]], :include => :concept)
     else
        @states = ProgramWorkflowState.all(:conditions => ['program_workflow_id = ?', params[:workflow]], :include => :concept)
     end
-    
+
     @names = @states.map{|state|
 
       name = state.concept.concept_names.typed("SHORT").first.name rescue state.concept.fullname
       next if name.blank?
 				 "<li value='#{state.id}'>#{name}</li>" unless name == params[:current_state]
     }
-    render :text => @names.join('')  
+    render :text => @names.join('')
   end
 
   def update
     flash[:error] = nil
-    
+
     if request.method == :post
 
       patient_program = PatientProgram.find(params[:patient_program_id])
@@ -129,7 +136,7 @@ class GenericProgramsController < ApplicationController
 		    # Close and save current_active_state if a new state has been created
 		   current_active_state.save
 
-        if patient_state.program_workflow_state.concept.fullname.upcase == 'PATIENT TRANSFERRED OUT' 
+        if patient_state.program_workflow_state.concept.fullname.upcase == 'PATIENT TRANSFERRED OUT'
           encounter = Encounter.new(params[:encounter])
           encounter.encounter_datetime = session[:datetime] unless session[:datetime].blank?
           encounter.save
@@ -137,15 +144,15 @@ class GenericProgramsController < ApplicationController
           (params[:observations] || [] ).each do |observation|
             #for now i do this
             obs = {}
-            obs[:concept_name] = observation[:concept_name] 
-            obs[:value_coded_or_text] = observation[:value_coded_or_text] 
+            obs[:concept_name] = observation[:concept_name]
+            obs[:value_coded_or_text] = observation[:value_coded_or_text]
             obs[:encounter_id] = encounter.id
             obs[:obs_datetime] = encounter.encounter_datetime || Time.now()
-            obs[:person_id] ||= encounter.patient_id  
+            obs[:person_id] ||= encounter.patient_id
             Observation.create(obs)
           end
 
-          observation = {} 
+          observation = {}
           observation[:concept_name] = 'TRANSFER OUT TO'
           observation[:encounter_id] = encounter.id
           observation[:obs_datetime] = encounter.encounter_datetime || Time.now()
@@ -153,11 +160,11 @@ class GenericProgramsController < ApplicationController
           #observation[:value_text] = params[:transfer_out_location_id]
           observation['value_text'] = Location.find(params[:transfer_out_location_id]).name.to_s rescue ""
           Observation.create(observation)
-        end  
+        end
 
         updated_state = patient_state.program_workflow_state.concept.fullname
-        
-                     
+
+
 		#disabled redirection during import in the code below
 		# Changed the terminal state conditions from hardcoded ones to terminal indicator from the updated state object
         if patient_state.program_workflow_state.terminal == 1
@@ -213,7 +220,7 @@ class GenericProgramsController < ApplicationController
          else
             render :text => "import suceeded" and return
          end
-        
+
       else
         #for import
         if params[:location].blank?
@@ -222,7 +229,7 @@ class GenericProgramsController < ApplicationController
             render :text => "import suceeded" and return
         end
       end
-      
+
     else
       patient_program = PatientProgram.find(params[:id])
       unless patient_program.date_completed.blank?
@@ -230,7 +237,7 @@ class GenericProgramsController < ApplicationController
           flash[:error] = "The patient has already completed this program!"
        else
           render :text => "import suceeded" and return
-       end   
+       end
       end
       @patient = patient_program.patient
       @patient_program_id = patient_program.patient_program_id
@@ -240,7 +247,7 @@ class GenericProgramsController < ApplicationController
       @names = @states.map{|state|
         concept = state.concept
         next if concept.blank?
-        concept.fullname 
+        concept.fullname
       }
 
       @names = @names.compact unless @names.blank?
@@ -258,7 +265,7 @@ class GenericProgramsController < ApplicationController
         @invalid_date_ranges = closed_states.join(',')
       end
     end
-    
+
   end
 
   # Looks for the most commonly used element in the database and sorts the results based on the first part of the string

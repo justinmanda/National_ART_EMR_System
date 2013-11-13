@@ -320,8 +320,9 @@ var adverse_events = <%= @adverse_events.to_json %>
 var regimen_index = '<%= @regimen_index %>';
 var regimen_id = null;
 var tb_regimen_id = null;
+var other_regimen = null;
 
-var reasons = ['Jandice/hepatitis','Anaemia < 8g/dl','History of psychiatric illness','Renal failure', 'Abacavir hypersensitivity', 'Other'] ;
+var reasons = ['Jandice/hepatitis','Anaemia < 8g/dl','Renal failure', 'Abacavir hypersensitivity', 'Lypodystrophy', 'Lactic Acidosis', 'Drug Rash', 'Other'] ;
 <% if @patient_bean.age < 12 %>
   reason += "Child under 12 years";
 <% end %>
@@ -330,6 +331,7 @@ var regimens = [];
 var realTime = '<%=  @retrospective  %>';
 
 function changeRegimen(){
+  id = document.getElementById("regimen_concept_id").value
 <% unless @found_symptoms.blank? %>
 element = document.getElementById('nextButton')
 element.setAttribute("onmousedown", "contraindicators()")
@@ -410,7 +412,12 @@ element.setAttribute("onmousedown", "gotoNextPage()")
 				var foundEvents = []
 				symptoms = '<%= @found_symptoms.join(',').humanize %>';
 				symptoms = symptoms.split(',');
-				selected = $('regimen_concept_id').options[$('regimen_concept_id').selectedIndex].text.split("-")[0][0];
+                                id = document.getElementById("regimen_concept_id").value
+                                if (other_regimen != "yes"){
+				 selected = $('regimen_concept_id').options[$('regimen_concept_id').selectedIndex].text.split("-")[0][0];
+                                } else {
+                                 selected = $('regimen_concept_id_all').options[$('regimen_concept_id_all').selectedIndex].text.split("-")[0][0];
+                                }
 				for (x=0; x < adverse_events[selected.toString()]["adverse"].length; x++){
 				  for (i = 0; i < symptoms.length; i++){
 					var re = new RegExp(symptoms[i].toString(), "i")
@@ -448,7 +455,7 @@ element.setAttribute("onmousedown", "gotoNextPage()")
 				newDiv.style.height = "500px";
 
 				var display = "<div><table><tr valign='top'><th></th><th class='title'>Regimen: </th>";
-				 display += "<th class='title'>Contraindicators Noticed: </th>";
+				 display += "<th class='title'>Contraindicators: </th>";
 				 display += "<th class='title'>Possible adverse event: </th>";
 				 display += "<th class='title'>Alternate Regimen 1: </th>";
 				 display += "<th class='title'>Alternate Regimen 2: </th></tr>";
@@ -656,6 +663,13 @@ element.setAttribute("onmousedown", "gotoNextPage()")
 	//$("regimen_concept_id").setAttribute("onmousedown", alert('yes'))
   }
 
+  function set_patient_posible_all_suggestions(programId) {
+	//var program_id = encodeURIComponent($('patient_program').value);
+	$('touchscreenInput'+tstCurrentPage).setAttribute('ajaxURL', "/regimens/suggest_all?patient_age=<%= @patient_bean.age %>&id=" + programId + "&search_string=");
+	listSuggestions(tstCurrentPage);
+	//$("regimen_concept_id").setAttribute("onmousedown", alert('yes'))
+  }
+
   function set_regimen_concept_id_for_regimen(patientProgram, conceptId) {
 	// It is really helpful to just set this
 	if (selectedValue("continue_existing_regimen") == "YES") {
@@ -668,8 +682,14 @@ element.setAttribute("onmousedown", "gotoNextPage()")
 	  $('tb_regimen_concept_id').innerHTML = "<option selected='selected'>" + value + "</option>";
 	}
 	//var concept_id = encodeURIComponent($('regimen_concept_id').value);
-	$('touchscreenInput'+tstCurrentPage).setAttribute('ajaxURL', "/regimens/dosing?patient_id=<%= @patient.patient_id %>&id=" + conceptId + "&search_string=");
+        if (other_regimen == "yes"){
+          $('touchscreenInput'+tstCurrentPage).setAttribute('ajaxURL', "/regimens/dosing_all?patient_id=<%= @patient.patient_id %>&id=" + conceptId + "&search_string=");
 	listSuggestions(tstCurrentPage);
+        } else{
+          $('touchscreenInput'+tstCurrentPage).setAttribute('ajaxURL', "/regimens/dosing?patient_id=<%= @patient.patient_id %>&id=" + conceptId + "&search_string=");
+	listSuggestions(tstCurrentPage);
+        }
+	
   }
 
   function set_regimen_concept_id_for_duration(regimenConceptId) {
@@ -677,6 +697,52 @@ element.setAttribute("onmousedown", "gotoNextPage()")
 	//var regimen_concept_id = encodeURIComponent($('regimen_concept_id').value);
 	$('touchscreenInput'+tstCurrentPage).setAttribute('ajaxURL', "/regimens/durations?id=" + regimenConceptId + "&search_string=");
 	listSuggestions(tstCurrentPage);
+  }
+
+  function buildPrescriptionPage_all(continueExistingRegimen, patientProgram, regimenConceptId, prescriptionContainer) {
+	$('touchscreenInput'+tstCurrentPage).setAttribute('type','hidden');
+	$('clearButton').style.display = 'none';
+	$('keyboard').style.display = 'none';
+	$('viewport').style.display = 'none';
+	$('helpText'+tstCurrentPage).innerHTML = "Select doses. Current patient weight:&nbsp;<%=@current_weight%>";
+
+	if(continueExistingRegimen == 'YES') {
+	  var reg_id = current_regimens_for_programs[patientProgram];
+	} else {
+	  var reg_id = encodeURIComponent(regimenConceptId);
+	}
+
+	current_page = $('page'+tstCurrentPage);
+
+	html = "&nbsp;<div id = '" + prescriptionContainer + "' class='prescription_container' ><table><tr>"
+	html += "<th>Drug name</th><th>Dose</th><th>Units</th><th>Daily dose</th>"
+	html += "</tr></table></div>"
+	current_page.innerHTML += html
+
+	new Ajax.Request("/regimens/formulations_all?patient_id=<%=@patient.id %>&id=" + reg_id ,{method:'get',onSuccess: function(transport){
+		formulations = JSON.parse(transport.responseText) || "";
+		if(formulations.length > 0 && formulations != "[[[]]]" && formulations != "[]"){
+		  formulations = formulations[0]
+		  prescription_container = $(prescriptionContainer);
+		  html = "<table>"
+		  html += "<tr><th>Drug name</th><th>Dose</th><th>Units</th><th>Daily dose</th></tr>"
+		  for (i = 0 ; i < formulations.length ; i++) {
+			data = formulations[i]
+			regimen_id = data[4]
+			html += "<tr><td>" + data[0] + "</td>"
+			html += "<td>" + data[1] + "</td>"
+			html += "<td>" + data[3] + "</td>"
+			html += "<td>" + data[2] + "</td></tr>"
+			$('touchscreenInput'+tstCurrentPage).value += data[0] + ':';
+			$('touchscreenInput'+tstCurrentPage).value += " " + data[1] ;
+			$('touchscreenInput'+tstCurrentPage).value += " " + data[3] ;
+			$('touchscreenInput'+tstCurrentPage).value += " " + data[2] ;
+		  }
+		  html += "</table>"
+		  prescription_container.innerHTML = html
+		}
+	  }});
+
   }
 
   function buildPrescriptionPage(continueExistingRegimen, patientProgram, regimenConceptId, prescriptionContainer) {
@@ -742,8 +808,13 @@ element.setAttribute("onmousedown", "gotoNextPage()")
   }
 
   function setRegimenId(regimen) {
+        
 	if(regimen == 'ART') {
-	  $('regimen').value = regimen_id
+          if (other_regimen == "yes"){
+              $('regimen_all').value = regimen_id
+          } else {
+             $('regimen').value = regimen_id
+          }
 	} else if(regimen == 'TB'){
 	  $('tb_regimen').value = regimen_id
 	} else {
@@ -821,6 +892,7 @@ element.setAttribute("onmousedown", "gotoNextPage()")
 	var prescription_container = $("previous_drugs_dispensed");
 	var html = "<table>"
 	html += "<tr><th>Drug name</th><th>Dose</th><th>Units</th><th>Daily dose</th></tr>"
+        
 	<% (@regimen_formulations || []).each do |data| %>
 		regimen_id = <%= data[4]%>
 		html += "<tr><td>" + "<%=data[0]%>" + "</td>"
@@ -843,7 +915,13 @@ element.setAttribute("onmousedown", "gotoNextPage()")
   function resetAttributes() {
 	$("backButton").setAttribute("onmousedown","gotoPage(" + tstCurrentPage +", null, true)");
 	$("previous_drugs_dispensed").style.cssText = "display: none;";
-	set_regimen_concept_id_for_regimen($('patient_program').value, $('regimen_concept_id').value);
+        id = document.getElementById("regimen_concept_id").value
+        if (other_regimen != "yes"){
+         set_regimen_concept_id_for_regimen($('patient_program').value, $('regimen_concept_id').value);
+        } else {
+          set_regimen_concept_id_for_regimen($('patient_program').value, $('regimen_concept_id_all').value);
+        }
+	
 	setRegimenId('ART');
   }
 
@@ -873,6 +951,33 @@ element.setAttribute("onmousedown", "gotoNextPage()")
 	  existingRegimen = 'false'
 	}
 	return existingRegimen;
+  }
+
+ function addButton(){
+    var button = document.createElement("button");
+    button.id = "addHere";
+    button.innerHTML = "<span>Select Other</span>";
+    button.style.cssFloat = "right";
+    
+    other_regimen = "no"
+
+    button.onclick = function(){
+      other_regimen = "yes"
+      concept =document.getElementById("regimen_concept_id");
+      concept.value = null
+      removeButton();
+      gotoNextPage();   
+    }
+
+    if(__$("buttons")){
+      __$("buttons").appendChild(button);
+    }
+  }
+
+ function removeButton(){
+    if(__$("addHere")){
+      __$("buttons").removeChild(__$("addHere"));
+    }
   }
 </script>
 <body>
@@ -1052,8 +1157,17 @@ element.setAttribute("onmousedown", "gotoNextPage()")
   <%= select_tag :regimen_concept_id, nil, {
 	:ajaxUrl => "",
 	:allowFreeText => 'false',
-	:tt_onLoad => "changeRegimen();set_patient_program_for_suggestions($('patient_program').value);setTimeout('setSelectedRow()',500);",
+	:tt_onLoad => "removeButton();addButton();changeRegimen();set_patient_program_for_suggestions($('patient_program').value);setTimeout('setSelectedRow()',500);",
 	:condition => 'hasReasonForART() == true && $("prescribe_arvs").value == "YES" && $("continue_existing_regimen").value != "YES"',
+	:optional => true,
+        :helpText => "Select ART regimen",
+	:tt_onUnload => "resetRegimen();removeButton();"}%>
+
+  <%= select_tag :regimen_concept_id_all, nil, {
+	:ajaxUrl => "",
+	:allowFreeText => 'false',
+	:tt_onLoad => "changeRegimen();set_patient_posible_all_suggestions($('patient_program').value);setTimeout('setSelectedRow()',500);",
+	:condition => 'other_regimen == "yes"',
 	:helpText => "Select ART regimen",
 	:tt_onUnload => "resetRegimen()"}%>
 
@@ -1062,8 +1176,17 @@ element.setAttribute("onmousedown", "gotoNextPage()")
 	:tt_onUnLoad => "setRegimenId('ART');" ,
 	:allowFreeText => true ,
 	:tt_onLoad => "set_regimen_concept_id_for_regimen($('patient_program').value, $('regimen_concept_id').value);buildPrescriptionPage($('continue_existing_regimen').value,$('patient_program').value,$('regimen_concept_id').value,'prescription_container');",
-	:condition => 'hasReasonForART() == true && $("prescribe_arvs").value == "YES" && $("continue_existing_regimen").value !="YES"',
+	:condition => 'other_regimen != "yes" && hasReasonForART() == true && $("prescribe_arvs").value == "YES" && $("continue_existing_regimen").value !="YES"',
 	:helpText => "Select formulations and doses"}%>
+
+    <%= text_field_tag :regimen_all, nil, {
+	:ajaxUrl => "",
+	:tt_onUnLoad => "setRegimenId('ART');" ,
+	:allowFreeText => true ,
+	:tt_onLoad => "set_regimen_concept_id_for_regimen($('patient_program').value, $('regimen_concept_id_all').value);buildPrescriptionPage_all($('continue_existing_regimen').value,$('patient_program').value,$('regimen_concept_id_all').value,'prescription_container');",
+	:condition => 'other_regimen == "yes" && hasReasonForART() == true && $("prescribe_arvs").value == "YES" && $("continue_existing_regimen").value !="YES"',
+	:helpText => "Select formulations and doses"}%>
+
 
 <%#= text_field_tag :duration, nil, {
 :ajaxURL => "",
@@ -1092,6 +1215,11 @@ element.setAttribute("onmousedown", "gotoNextPage()")
 	  :allowFreeText => 'false',
 	  :condition => 'prescribeAntiretroviralDrugs() == true',
 	  :helpText => "Prescribe CPT" } %>
+
+	<%= select_tag :cpt_mgs, options_for_select(["480","960"]), {
+	  :allowFreeText => 'false',
+	  :condition => "$('cpt_given').value == 'YES'",
+	  :helpText => "Prescribed cotramoxazole milligrams" } %>
   <% end %>
 
   <% if @patient_bean.age >= 2 && !@current_hiv_program_state.match(/On antiretrovirals/i) && !@current_hiv_program_state.match(/Patient transferred in/i) %>
@@ -1101,10 +1229,10 @@ element.setAttribute("onmousedown", "gotoNextPage()")
 	  :condition => "prescribeAntiretroviralDrugs() && $('prescribe_arvs').value != 'YES'",
 	  :helpText => "Prescribe IPT" } %>
 
-    <%= select_tag :ipt_mgs, options_for_select([["300","300"],["100", "100"]]), {
+    <%= select_tag :ipt_mgs, options_for_select(["300","100"]), {
 	  :allowFreeText => 'false',
 	  :condition => "prescribeAntiretroviralDrugs() && $('ipt_given').value == 'YES'",
-	  :helpText => "IPT grams" } %>
+	  :helpText => "IPT milligrams" } %>
   <%else%>
 	<%= touch_hidden_tag "ISONIAZID", @patient, "", :id => "ipt_given" %>
   <%end%>
@@ -1136,14 +1264,13 @@ element.setAttribute("onmousedown", "gotoNextPage()")
 	<% end %>
 
   <% end %>
- <% session_date = session[:datetime].to_date rescue nil
-    if session_date.blank? %>
+
   <%= touch_text_area_tag "CLINICAL NOTES CONSTRUCT", @patient, nil,
 	{	:id => "clinical_notes",
 	:optional => true,
 	:helpText => "Clinical notes (optional)"
   }, time=DateTime.now() %>
- <% end %>
+
   <% initial_date = "#{session[:datetime].strftime('%Y-%m-%d')}" rescue "#{(Date.today).strftime('%Y-%m-%d')}" %>
 
   <%

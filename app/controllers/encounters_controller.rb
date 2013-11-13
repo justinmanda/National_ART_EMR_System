@@ -180,6 +180,29 @@ class EncountersController < GenericEncountersController
           ['Contraceptive implant', 'CONTRACEPTIVE IMPLANT']]
     end
 
+    
+    concept_id = ConceptName.find_by_name('COMMON MALAWI ART SYMPTOM SET').concept_id
+    set = ConceptSet.find_all_by_concept_set(concept_id, :order => 'sort_weight')
+    @select_options['art_symptoms'] = set.map{|item|next if item.concept.blank? ; [item.concept.fullname, item.concept.fullname] }
+
+    concept_id = ConceptName.find_by_name('ADDITIONAL MALAWI ART SYMPTOM SET').concept_id
+    set = ConceptSet.find_all_by_concept_set(concept_id, :order => 'sort_weight')
+    set.map{|item|
+      next if item.concept.blank?
+      next if item.concept.fullname.upcase == "HEPATITIS"
+      @select_options['art_symptoms'] << [item.concept.fullname, item.concept.fullname]
+
+      }
+      @select_options['art_symptoms'] << ['Night Sweats', 'Night Sweats']
+
+      current_weight = PatientService.get_patient_attribute_value(@patient, "current_weight", session_date)
+      previous_weight = @patient.person.observations.before((session_date).to_date).question("WEIGHT (KG)").first.to_s.split(':')[1].squish rescue 0
+      @weight_loss = false
+      if current_weight.to_f < previous_weight.to_f
+        @weight_loss = true
+      end
+    # @select_options['art_symptoms'] << ['Weight loss / Failure to thrive / malnutrition', 'Weight loss / Failure to thrive / malnutrition']
+    #raise @select_options['art_symptoms'].to_yaml
 
 		if (params[:encounter_type].upcase rescue '') == 'APPOINTMENT'
 			@todays_date = session_date

@@ -374,7 +374,6 @@ class GenericRegimensController < ApplicationController
 	end
 
 	def create
-		#raise params[:ipt_mgs].to_yaml
 		prescribe_tb_drugs = false   
 		prescribe_tb_continuation_drugs = false   
 		prescribe_arvs = false
@@ -419,7 +418,7 @@ class GenericRegimensController < ApplicationController
 		auto_expire_date = session[:datetime] + params[:duration].to_i.days + arvs_buffer.days rescue Time.now + params[:duration].to_i.days + arvs_buffer.days
 		auto_tb_expire_date = session[:datetime] + params[:tb_duration].to_i.days rescue Time.now + params[:tb_duration].to_i.days
 		auto_tb_continuation_expire_date = session[:datetime] + params[:tb_continuation_duration].to_i.days rescue Time.now + params[:tb_continuation_duration].to_i.days
-		auto_cpt_ipt_expire_date = session[:datetime] + params[:duration].to_i.days rescue Time.now + params[:duration].to_i.days
+		auto_cpt_ipt_expire_date = session[:datetime] + params[:duration].to_i.days + arvs_buffer.days rescue Time.now + params[:duration].to_i.days + arvs_buffer.days
 
 
 		orders = RegimenDrugOrder.all(:conditions => {:regimen_id => params[:tb_regimen]})
@@ -480,6 +479,7 @@ class GenericRegimensController < ApplicationController
 			end if prescribe_tb_continuation_drugs
 		end
 
+    params[:regimen] = params[:regimen_all] if ! params[:regimen_all].blank?
 		reduced = false
 		orders = RegimenDrugOrder.all(:conditions => {:regimen_id => params[:regimen]})
 		ActiveRecord::Base.transaction do
@@ -546,7 +546,7 @@ class GenericRegimensController < ApplicationController
 
       if ! params[:cpt_duration].blank?
         #params[:cpt_duration] =  params[:duration]
-        auto_cpt_ipt_expire_date = session[:datetime] + params[:cpt_duration].to_i.days rescue Time.now + params[:cpt_duration].to_i.days
+        auto_cpt_ipt_expire_date = session[:datetime] + params[:cpt_duration].to_i.days + arvs_buffer.days rescue Time.now + params[:cpt_duration].to_i.days + arvs_buffer.days
       end
 			if concept_name == 'CPT STARTED'
 				if params[:cpt_mgs] == "960"
@@ -565,10 +565,10 @@ class GenericRegimensController < ApplicationController
 			weight = @current_weight = PatientService.get_patient_attribute_value(@patient, "current_weight")
 			regimen_id = Regimen.all(:conditions =>  ['min_weight <= ? AND max_weight >= ? AND concept_id = ?', weight, weight, drug.concept_id]).first.regimen_id
 
-			#raise regimen_id.to_yaml
 
-			orders = RegimenDrugOrder.all(:conditions => {:regimen_id => regimen_id})
-			
+			orders = RegimenDrugOrder.all(:conditions => {:regimen_id => regimen_id, :drug_inventory_id => drug.id})
+
+#=begin
 					#raise auto_cpt_ipt_expire_date.to_yaml
 					orders.each do |order|
 						regimen_name = (order.regimen.concept.concept_names.typed("SHORT").first || order.regimen.concept_names.typed("FULLY_SPECIFIED").first).name
@@ -585,6 +585,7 @@ class GenericRegimensController < ApplicationController
 						"#{drug.name}: #{order.instructions} (#{regimen_name})",
 						order.equivalent_daily_dose)
 					end
+#=end
 		end
 		
 		obs = Observation.create(
@@ -620,6 +621,17 @@ class GenericRegimensController < ApplicationController
 		render :layout => false
 	end
 
+  def suggest_all
+		session_date = session[:datetime].to_date rescue Date.today
+		patient_program = PatientProgram.find(params[:id])
+		@options = []
+		render :layout => false and return unless patient_program
+		#current_weight = PatientService.get_patient_attribute_value(patient_program.patient, "current_weight", session_date)
+		#regimen_concepts = patient_program.regimens(current_weight).uniq
+		@options = MedicationService.all_regimen_options(patient_program.program)
+		render :layout => false
+	end
+
 	def dosing
 		@patient = Patient.find(params[:patient_id] || session[:patient_id]) rescue nil
 		@criteria = Regimen.criteria(PatientService.get_patient_attribute_value(@patient, "current_weight")).all(:conditions => {:concept_id => params[:id]}, :include => :regimen_drug_orders)
@@ -629,8 +641,21 @@ class GenericRegimensController < ApplicationController
 		render :layout => false    
 	end
 
+  def dosing_all
+		@patient = Patient.find(params[:patient_id] || session[:patient_id]) rescue nil
+    @criteria = Regimen.find(:all,:order => 'regimen_index',:conditions => ['program_id = ? AND concept_id =?', 1, params[:id]],:include => :regimen_drug_orders)
+
+	#	@criteria = Regimen.criteria(PatientService.get_patient_attribute_value(@patient, "current_weight")).all(:conditions => {:concept_id => params[:id]}, :include => :regimen_drug_orders)
+    
+		@options = @criteria.map do |r|
+			[r.regimen_id, r.regimen_drug_orders.map(&:to_s).join('; ')]
+		end
+		render :layout => false
+	end
+
 	def formulations
     @patient = Patient.find(params[:patient_id] || session[:patient_id]) rescue nil
+    #@criteria = Regimen.find(:all,:order => 'regimen_index',:conditions => ['concept_id =?',params[:id]],:include => :regimen_drug_orders)
     @criteria = Regimen.criteria(PatientService.get_patient_attribute_value(@patient, "current_weight")).all(:conditions => {:concept_id => params[:id]}, :include => :regimen_drug_orders)
     @options = @criteria.map do | r |
       r.regimen_drug_orders.map do | order |
@@ -638,6 +663,18 @@ class GenericRegimensController < ApplicationController
       end
     end
     render :text => @options.to_json 
+	end
+
+  	def formulations_all
+    @patient = Patient.find(params[:patient_id] || session[:patient_id]) rescue nil
+    @criteria = Regimen.find(:all,:order => 'regimen_index',:conditions => ['concept_id =?',params[:id]],:include => :regimen_drug_orders)
+    #@criteria = Regimen.criteria(PatientService.get_patient_attribute_value(@patient, "current_weight")).all(:conditions => {:concept_id => params[:id]}, :include => :regimen_drug_orders)
+    @options = @criteria.map do | r |
+      r.regimen_drug_orders.map do | order |
+        [order.drug.name , order.dose, order.frequency , order.units , r.id ]
+      end
+    end
+    render :text => @options.to_json
 	end
 
 	# Look up likely durations for the regimen
@@ -735,6 +772,7 @@ class GenericRegimensController < ApplicationController
 
 
 	def formulation(patient,regimen_id)
+    #criteria =  Regimen.find(:all,:order => 'regimen_index',:conditions => ['concept_id =?',regimen_id],:include => :regimen_drug_orders)
 		criteria = Regimen.criteria(PatientService.get_patient_attribute_value(patient, "current_weight")).all(:conditions => {:concept_id => regimen_id}, :include => :regimen_drug_orders)
 		options = []
     criteria.map do | r | 
