@@ -610,4 +610,78 @@ module ApplicationHelper
     end
 
   end
+
+  def viral_load_check_without_lab_results(patient)
+
+    arv_start_date = PatientService.patient_art_start_date(patient).to_date rescue nil
+    return false if arv_start_date.blank?
+    period_on_art_in_months = PatientService.period_on_treatment(arv_start_date).to_i rescue 0
+    return false if (period_on_art_in_months < 6)
+    second_line_art_start_date = PatientService.date_started_second_line_regimen(patient).to_date rescue nil
+    return false unless second_line_art_start_date.blank?
+    today = Date.today
+
+    milestones = {
+                  6 => [6,8], 24 => [24,27], 48 => [48,51],
+                  72 => [72,75], 96 => [96,99], 120 => [120,123],
+                  144 => [144,147], 168 => [168,171], 192 => [192,195],
+                  216 => [216,219], 240 => [240,243], 260 => [260,263]
+                 }
+    #yes_concept_id = ConceptName.find_by_name('yes').concept_id
+    vl_request = Observation.find(:last, :conditions => ["person_id = ? AND concept_id = ?",
+            patient.patient_id, Concept.find_by_name("Viral load").concept_id])
+    latest_viral_results_date = vl_request.obs_datetime.to_date rescue nil
+
+    milestone_exceeded = true
+
+    milestones.each do |key, value|
+          grace_period = value.last - value.first
+          mile_stone_date = arv_start_date + key.months
+          mile_stone_grace_period = mile_stone_date + grace_period.months
+
+          if (vl_without_results_activated(arv_start_date, patient, period_on_art_in_months))
+            milestone_exceeded = false
+            return true
+          end
+
+          if (period_on_art_in_months >= key && period_on_art_in_months <= value.last)
+           milestone_exceeded = false
+            if (today >= mile_stone_date && today <=  mile_stone_grace_period)
+              return true if latest_viral_results_date.blank?
+               if (latest_viral_results_date >= mile_stone_date && latest_viral_results_date <= mile_stone_grace_period)
+                 return false
+               else
+                 return true
+               end
+            else
+              return false
+            end
+          end
+    end
+      return false if milestone_exceeded
+	end
+
+  def vl_without_results_activated(art_start_date, patient, period_on_art)
+     possible_ranges = [
+                         [6,23],[24,47],[48,71],[72,95],[96,119],[120,143],
+                         [144,167],[168,191],[192,215],[216,239],[240,259],
+                         [260,283]
+                      ]
+    possible_ranges.each do |key,value|
+      if (period_on_art >= key && period_on_art <= value)
+        first_date = art_start_date + key.months
+        second_date = art_start_date + value.months
+        vl_request = Observation.find(:last, :conditions => ["person_id = ? AND concept_id = ?
+            AND DATE(obs_datetime) >= ? AND DATE(obs_datetime) <= ?",
+            patient.patient_id, Concept.find_by_name("Viral load").concept_id, first_date, second_date])
+        answer_string = vl_request.answer_string.squish rescue nil
+        return false if answer_string.blank?
+        if (answer_string.match(/NOT DONE DUE TO ADHERENCE/i))
+          return true
+        else
+          return false
+        end
+      end
+    end
+  end
 end
