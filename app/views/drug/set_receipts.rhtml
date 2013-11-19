@@ -1,0 +1,466 @@
+
+<html>
+  <head>
+    <%= javascript_include_tag "prototype" %>
+    <%= javascript_include_tag 'jquery' %>
+    <%= stylesheet_link_tag 'extra_buttons' %>
+    <%= javascript_include_tag 'jquery_data_table.js' %>
+    <%= stylesheet_link_tag 'jquery.dataTables' %>
+    <%=javascript_include_tag "jquery.table2CSV.min" %>
+    <script type="text/css" charset="utf8" src="/stylesheets/keyboard.css"></script>
+
+
+    <script>
+      var keyboard;
+      var search;
+      var date = '<%= Date.today.strftime("%m/%Y") %>';
+      var response;
+      var response1;
+      var response2;
+      var shortNames = '<%= @drug_short_names %>';
+      
+      function getName(td) {
+        var aUrl = "/drug/get_name?value=" + td;
+
+        var httpRequest = new XMLHttpRequest();
+        httpRequest.onreadystatechange = function() {
+          set_name(httpRequest);
+        };
+
+        httpRequest.open('GET', aUrl, false);
+        httpRequest.send(null);
+       // if (response == "true")
+          return response;
+     // if (response == "false")
+         // return false;
+      }
+
+     function getShortName(td) {
+        var aUrl = "/drug/get_name?short=" + td;
+       var httpRequest = new XMLHttpRequest();
+        httpRequest.onreadystatechange = function() {
+          set_name(httpRequest);
+        };
+
+        httpRequest.open('GET', aUrl, false);
+        httpRequest.send(null);
+          return response;
+      }
+
+      function getSize(td) {
+        var aUrl = "/drug/get_name?pack_size=" + td;
+
+        var httpRequest = new XMLHttpRequest();
+        httpRequest.onreadystatechange = function() {
+          set_name(httpRequest);
+        };
+
+        httpRequest.open('GET', aUrl, false);
+        httpRequest.send(null);
+          return response;
+      }
+
+      function set_name(req) {
+        if (req.readyState == 4 && req.status == 200) {
+          response = req.responseText;
+        }
+      }
+
+      function addRow(td){
+        fullname = getName(td)
+        shortname = getShortName(td)
+        packsize = getSize(td)
+       // alert(shortname)
+
+        var table = document.getElementsByClassName('stocks')[0];
+        var newTr = document.createElement('tr');
+        var newTd = document.createElement('td');
+        newTd.setAttribute("width", "20%");
+        newTd.innerHTML = shortname;
+        newTr.appendChild(newTd);
+
+        var newTd = document.createElement('td');
+        newTd.setAttribute("width", "20%");
+        newTd.innerHTML = packsize;
+        newTd.setAttribute("align", "right");
+        newTd.setAttribute("width", "20%");
+        newTr.appendChild(newTd);
+
+        if (shortname == 'INH or H' || shortname == 'Cotrimoxazole'){
+              var newTd1 = document.createElement('td');
+              var newField = document.createElement('select');
+              newField.setAttribute('name', 'obs[' + fullname + '][expire_amount]');
+              newTd1.setAttribute("align", "center");
+              newField.setAttribute('class', 'selects');
+              newField.innerHTML = "<option></option><option value='30'>30 tabs</option><option value='60'>60 tabs</option><option value='90'>90 tabs</option><option value='100'>100 tabs</option><<option value='1000'>1000 tabs</option>"
+              newTd1.appendChild(newField)
+              newTr.appendChild(newTd1);
+        }
+        else{
+              var newTd1 = document.createElement('td');
+              var newField = document.createElement('input');
+              newField.setAttribute('type', 'text');
+              newField.setAttribute('name', 'obs[' + fullname + '][expire_amount]');
+              newTd1.setAttribute("align", "center");
+              newField.setAttribute("width", "20%");
+              newField.setAttribute('onClick', 'showMe(this)');
+              newField.setAttribute('class', 'inputs');
+              newTd1.appendChild(newField)
+              newTr.appendChild(newTd1);
+        }
+
+        var newTd1 = document.createElement('td');
+        var newField = document.createElement('input');
+        newField.setAttribute('type', 'text');
+        newField.setAttribute('name', 'obs[' + fullname + '][date]');
+        newField.setAttribute('onClick', 'showMe(this)')
+        newField.setAttribute('class', 'dates');
+        newTd1.appendChild(newField)
+        
+        
+        newTr.appendChild(newTd1);
+
+        var newTd1 = document.createElement('td');
+        var newField = document.createElement('input');
+        newField.setAttribute('type', 'text');
+        newField.setAttribute('name', 'obs[' + fullname + '][amount]');
+        newField.setAttribute('onClick', 'showMe(this)')
+        newField.setAttribute('class', 'inputs');
+        newTd1.appendChild(newField)
+        newTr.appendChild(newTd1);
+
+
+
+        var newTd1 = document.createElement('td');
+        newTd1.innerHTML = "<a href='#'><img src='/images/add.png' onclick='addRow(" + td +")'></a>"
+        newTr.appendChild(newTd1);
+        
+        var newTr1 = document.createElement('tr');
+        var newTd1 = document.createElement('td');
+        var newHr = document.createElement('hr');
+        newTd1.setAttribute('colspan', 6)
+        newTd1.appendChild(newHr)
+        newTr1.appendChild(newTd1)
+
+        table.appendChild(newTr);
+        table.appendChild(newTr1);
+      }
+
+      function showDrugs(){
+        html = "<form id='stock' name='stock' action='create_stock' method='post'><table width='98%' align= 'center' class='stocks'><th colspan=6 >Receipts</th>";
+        html += '<tr class="header"><td width="54%" colspan=2><b>Drug</b></td><td><span style="float:center">Pills Per Tin</span></td><td >Expiry<br> <span style="float:center">Date MM/YY</span></td><td width="40%" colspan=2><b>Total <br> Tins</b></td ></tr>'
+        html +="<input type='hidden' name='delivery_date' value='<%= @delivery_date %>'> <input type='hidden' name='identifier' value='<%= params[:identifier] %>' />";
+<% h = 0
+@list.each {|drug|
+  expiry = @expiring["#{drug}"].to_i rescue 0
+  if expiry <= 0
+    expiry = ""
+  else
+    expiry = "#{expiry} Expiring<br>In 3 Months"
+  end
+
+  name = @drug_short_names[drug]
+  name = name.gsub("(", "")
+  name = name.gsub(")", "")
+  splitted = name.split(" ")
+  i = 1
+  letters = " "
+  while (i < splitted.length) do
+    if splitted[i].upcase == "ISONIAZID"
+      i += 1
+      next
+    end
+    if splitted[i].upcase == "OR" or splitted[i].upcase == "H"
+      splitted[0] = "#{splitted[0]} #{splitted[i]}"
+    else
+      letters = "#{letters} #{splitted[i]}"
+    end
+    i += 1
+  end
+  drud_string = Drug.find_by_name("#{drug}").id
+  if splitted[0] == 'INH or H' || splitted[0] == 'Cotrimoxazole'
+
+    if h < 1
+    %>
+          html += '<tr><td width="20%" colspan=2>&nbsp;</td><td align="center"  width="32%">Pack Size</td><td align="center"> Expiry Date</td><td colspan=3 align="center"> Total Units</td></tr>'
+    <% end %>
+        html += '<tr><td width="20%">' + '<%= splitted[0] %></td>' + '<td align="right"  width="32%"><%= letters %></td><td class="newIunputs">'
+        html += "<select name='obs[" + '<%=  drug %>' + "][expire_amount]'  class='selects'>"
+        html += "<option></option><option value='30'>30 tabs</option><option value='60'>60 tabs</option><option value='90'>90 tabs</option><option value='100'>100 tabs</option><<option value='1000'>1000 tabs</option>/select>"
+
+        html += "</td><td><input name='obs[" + '<%=  drug %>' + "][date]' type='text' onclick='showMe(this)' class='inputs' ></td>";
+        html += "</td><td align='right'><input name='obs[" + '<%= drug %>' + "][amount]' type='text' onclick='showMe(this)' class='inputs' /><br><%= expiry %></td><td><img src='/images/add.png' onclick='addRow(" + <%= drud_string %> + ")></td></tr>";
+        html += "<tr><td colspan =5 ><hr></td></tr>"
+
+    <% h += 1
+  else %>
+        html += '<tr><td width="20%">' + '<%= splitted[0] %></td>' + '<td align="right"  width="32%"><%= letters %></td><td class="newIunputs">'
+        html += "<input name='obs[" + '<%=  drug %>' + "][expire_amount]' type='text' onclick='showMe(this)' class='inputs'>"
+       
+        html += "</td><td><input name='obs[" + '<%=  drug %>' + "][date]' type='text' onclick='showMe(this)' class='dates' ></td>";
+        html += "</td><td align='right'><input name='obs[" + '<%= drug %>' + "][amount]' type='text' onclick='showMe(this)' class='inputs' /><br><%= expiry %></td><td><a href='#'><img src='/images/add.png' onclick='addRow(" + '<%= drud_string %>' +")'></a></td></tr>";
+        html += "<tr><td colspan =6 ><hr></td></tr>"
+  <% end %>
+<%  } %>
+    html += '</table></form>';
+    document.getElementById('inputFrame'+tstCurrentPage).innerHTML = '<div id="summary">' + html + '</div>';
+    document.getElementById('nextButton').setAttribute("onmousedown", "submitMe();")
+  }
+
+  function submitMe(){
+    drug_form = document.getElementById('stock')
+    input = document.getElementsByClassName('inputs')
+    value = 0;
+    for (i = 0; i < input.length; i++){
+      if (input[i].value == ""){
+        input[i].value = 0
+      }
+    }
+    drug_form.submit()
+  }
+
+  function showMe(td){
+    search = td
+    keyboard = document.getElementById('keyboard');
+
+    if(keyboard.style.display == 'none' || keyboard.style.display == ""){
+      keyboard.style.display = "inline";
+    }
+    keyboard.setAttribute("tt_pageStyleClass", "Numeric NumbersWithUnknownAndDecimal");
+    //else
+    //{
+    // keyboard.style.display = "none";
+    //}
+    document.body.appendChild(keyboard);
+    showNumericKeypad()
+  }
+
+  function getCharButtonSetIDs(character,id){
+    return '<button onMouseDown="pressed(\''+character+'\');" class="keyboardButton" id="'+id+'">' +"<span style='width:32px'>"+character+"</span>"+ "</button>";
+  }
+  function getButtonStrings(id,string){
+    return "<button \
+                              onMouseDown='pressed(this.id);' \
+                              class='keyboardButton' \
+                              id='"+id+"'>"+
+      string +
+      "</button>";
+  }
+
+  function getButtons1(chars){
+    var buttonLine = "";
+    for(var i=0; i<chars.length; i++){
+      character = chars.substring(i,i+1)
+      buttonLine += getCharButtonSetIDs(character,character)
+    }
+    return buttonLine;
+  }
+
+  function showAlphaKeypad(){
+    //document.getElementById("keypad").style.height = "280";
+    keyboard.innerHTML= getButtons("0123456789") + "</br>"
+    keyboard.innerHTML+= getButtons("QWERTYUIOP") + "</br>"
+    keyboard.innerHTML+= getButtons("ASDFGHJKL:") + "</br>"
+    keyboard.innerHTML+= getButtons("ZXCVBNM,.?")
+    keyboard.innerHTML+= getButtonString('backspace','<span>Bksp</span>')
+    keyboard.innerHTML+= getButtonString('Space','<span>Space</span>')
+    keyboard.innerHTML+= getButtonString('clear','<span>Clear</span>')
+  }
+
+  function showNumericKeypad(){
+    //document.getElementById("keypad").style.height = "145";
+    keyboard.innerHTML = getButtons1("123")
+    keyboard.innerHTML+= getButtons1("456")
+    keyboard.innerHTML+= getButtons1("7890")
+   // keyboard.innerHTML+= getButtonStrings('/','<span>/</span>')
+   // keyboard.innerHTML+= getButtonStrings(':','<span>:</span>')
+    //keyboard.innerHTML+= getButtonStrings('-','<span>-</span>')
+    // keyboard.innerHTML+= getButtonString('space','<span>Space</span>')
+    keyboard.innerHTML+= getButtonStrings('clear','<span>Clear</span>')
+    keyboard.innerHTML+= getButtonStrings('backspace','<span>Bksp</span>')
+    keyboard.innerHTML+= getButtonStrings('enter','<span>Enter</span>')
+
+    // keyboard.innerHTML+= getButtonStrings('dash','<span>-</span>')
+    // keyboard.innerHTML+= getButtonString('slash','<span>/</span>')
+  }
+
+  function pressed(pressedChar){
+    if (search.name.match(/date/i)){
+
+      if (search.value.length == 5 && pressedChar != 'enter' &&   pressedChar != 'splash' && pressedChar != 'backspace' && pressedChar != 'space' && pressedChar != 'clear'){
+        var names = "obs[" + search.name.split(']')[0].split('[')[1] + "][expire_amount]"
+        document.getElementsByName(names)[0].next().focus()
+        return
+      }
+      if (search.value.length == 2){
+        if (search.value <= 12 && pressedChar != 'enter' &&  pressedChar != 'splash' && pressedChar != 'backspace' && pressedChar != 'space' && pressedChar != 'clear') {
+          search.value += "/"
+          search.value+= pressedChar
+          return
+        }
+        else if (search.value <= 12 && pressedChar != 'enter' &&  pressedChar == 'splash' && pressedChar != 'backspace' && pressedChar != 'space' && pressedChar != 'clear'){
+          search.value+= pressedChar
+          return
+        }
+        else if (pressedChar != 'enter' && pressedChar != 'splash' && pressedChar != 'backspace' && pressedChar != 'space' && pressedChar != 'clear'){
+          search.value = search.value.substring(0,search.value.length-1);
+          return
+        }
+
+      }
+    }
+    switch (pressedChar) {
+      case 'backspace':
+        search.value = search.value.substring(0,search.value.length-1);
+        //search_box.fnFilter(search.value)
+        return;
+      case 'Space':
+        search.value+= " "
+        //search_box.fnFilter(search.value)
+        return
+      case 'clear':
+        search.value = ""
+        //search_box.fnFilter(search.value)
+        return
+      case 'num':
+        showNumericKeypad();
+        return
+      case 'slash':
+        if (search.name.match(/date/i)){
+          return
+        }
+        search.value+= "/"
+        //search_box.fnFilter(search.value)
+        return
+      case 'dash':
+        search.value+= "-"
+        //search_box.fnFilter(search.value)
+        return
+      case 'abc':
+        showAlphaKeypad();
+        return
+      case 'enter':
+        keyboard.style.display = "none";
+        return
+    }
+    search.value+= pressedChar
+    //search_box.fnFilter(search.value)
+  }
+
+  //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    </script>
+    <style>
+      #keyboard {
+        position: absolute;
+        background-color: black;
+        width: 253px;
+        height: 47%;
+        left: 20%;
+        top: 12%;
+        z-index: 500;
+        opacity: 0.98;
+        align: center;
+        display:none;
+      }
+      .inputs {
+        height: 37px;
+        font-size: 18px;
+        text-align: right;
+      }
+      .dates {
+        height: 37px;
+        font-size: 18px;
+        text-align: center;
+      }
+      .scrollTable {
+        height: 700px ! important;
+        overflow:scroll ! important;
+      }
+
+      .selects{
+        height: 45px;
+        font-size: 20px;
+        width: 40%;
+      }
+
+      #stock {
+        height: 596px ! important;
+        overflow:auto ! important;
+      }
+      #summary {
+        padding: 0px;
+        font-size:1.2em;
+        margin-left: 60px;
+        height: 70px;
+        max-height: 70px;
+
+      }
+
+      #backspace, #clear {
+        position: static ! important;
+      }
+      th, .header {
+        text-align: center;
+        vertical-align: middle;
+        background-color: grey;
+        color: white;
+        height: 10%;
+        border-radius: 10px 10px 10px 10px;
+      }
+      .newIunputs {
+        text-align: center;
+        width: 45%;
+      }
+      #backspace{
+        position:absolute;
+        left:100px;
+        bottom:2px;
+      }
+
+      #Space{
+        position:absolute;
+        left:220px;
+        bottom:2px;
+        width:200px;
+      }
+
+      #clear{
+        position:absolute;
+        left:470px;
+        bottom:2px;
+      }
+      #num{
+        position:absolute;
+        left:470px;
+        bottom:2px;
+        width:200px;
+      }
+      #keypad{
+        background-color: #FFFFFF;
+        border: 2px solid #9999FF;
+        border-radius: 15px 15px 15px 15px;
+        display: none;
+        height: 304px;
+        padding: 5px;
+        position: absolute;
+        right: 13px;
+        top: 194px;
+        width: 672px;
+      }
+    </style>
+  <div id="container">
+    <form>
+
+
+      <%= text_field_tag :showSummary, nil,
+        {
+        :tt_onLoad => "showDrugs();$('clearButton').style.display = 'none';  ",
+        :tt_onUnLoad => " $('clearButton').style.display = 'inline';",
+        :optional => "true",
+        :id => "input",
+        :tt_pageStyleClass => "NoKeyboard"
+      } %>
+    </form>
+  </div>
+</html>
+

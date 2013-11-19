@@ -1,6 +1,7 @@
 <html>
 <head>
 <%= javascript_include_tag "prototype" %>
+<%= stylesheet_link_tag "cohort" %>
 <style>
 body{
   font-family: "Nimbus Sans L", "Arial Narrow", sans-serif;
@@ -55,6 +56,8 @@ table{
 #data_table_length{display:none;}
 #data_table_filter{display:none;}
 #data_table_info{display:none;}
+
+
 </style>
 
 <%#= stylesheet_link_tag "data_table" %>
@@ -71,7 +74,13 @@ table{
   }
   dataT();
 </script>
+  <style>
+  .logo {
+    float:left
+  }
+  </style>
 </head>
+ <%= image_tag(@logo, :class => "logo")%><br />
 <h2>Expiring drugs</h2><h3>From: <%= @start_date.strftime("%A, %Y %b %d")%> 
 <br/>To: <%=@end_date.strftime("%A, %Y %b %d")%></br></h3>
 <%#= render :partial => "header" %>
@@ -86,7 +95,7 @@ table{
     <th class="caldata">Expiry date</th>
   </tr>
  </thead>
- </tbody>
+ <tbody style='overflow:scroll; height: 100px;'>
   <%color = "blue"
     count = 1
     original_form_count = 0
@@ -96,9 +105,9 @@ table{
       else
         color = "blue"
       end
-      current_stock = values["current_stock"]
+      current_stock = (values["current_stock"] /60).round
       date_delivered = values["date_delivered"]
-      delivered_stock = values["delivered_stock"]
+      delivered_stock = (values["delivered_stock"] / 60).round
       expiry_date = values["expiry_date"]
       %>
       </script>

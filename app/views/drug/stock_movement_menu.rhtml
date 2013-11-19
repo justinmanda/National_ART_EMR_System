@@ -1,0 +1,86 @@
+<style>
+ .tt_controls_scan_delivery_barcode .keyboard {
+   display: none;
+ }
+
+ #tt_page_scan_delivery_barcode .touchscreenTextInput{
+   position:absolute;
+   top:80px;
+  }
+
+#Unknown { display: none; }
+</style>
+
+
+<script>
+  var tt_cancel_destination = '/clinic';  // /management';
+
+
+   var setFocusTimeout = 1000;
+    var checkForBarcodeTimeout = 1500;
+
+    function loadBarcodePage() {
+      focusForBarcodeInput();
+      moveNext();
+    }
+
+    function focusForBarcodeInput(){
+      var barcode = document.getElementById("touchscreenInput0");
+      if (barcode) {
+         barcode.focus();
+         //window.setTimeout("focusForBarcodeInput()", setFocusTimeout);
+      }
+      window.setTimeout("focusForBarcodeInput()", setFocusTimeout);
+    }
+
+
+    function moveNext(){
+      usertext = document.getElementById("touchscreenInput0");
+      if (usertext && usertext.value.match(/.+\$$/i) != null){
+        usertext.value=usertext.value.substring(0,usertext.value.length -1);
+        gotoNextPage();
+      }
+       window.setTimeout("moveNext()", checkForBarcodeTimeout);
+    }
+    window.addEventListener("load", loadBarcodePage, false);
+
+  <% options = "<option>" "" "</option>"
+    #raise @drugs.to_yaml
+    @formatted.each{|drug|
+      #raise drug[0].to_yaml
+      options += "<option value = '#{drug}'>#{@names[drug]}</option>"
+    }
+%>
+</script>
+
+  <form method='post' action="stoke_movement">
+
+   <select id='report_type'
+        name='report_type'
+        helpText='Chart Type'
+        pos='2' >
+          <option></option>
+          <option value='Stock Movement'>Stock Movement</option>
+           <option value='Months of Stock'>Months of Stock</option>
+           </select>
+
+  <%= select_tag "drug_name", options,
+       {:id => 'drug_name',
+      :helpText => 'Drug name',
+      :condition => '$("report_type").value == "Stock Movement"',
+      :tt_onLoad  => '',
+      :tt_pageStyleClass => "NoKeyboard NoInput small"} %>
+
+
+  <%= touch_date_tag "start_date", 'start_date', nil,
+    {:id => "start_date",
+    :helpText => "Start date",
+    :absoluteMax => Date.today} %>
+
+
+  <%= touch_date_tag "end_date", 'end_date', nil,
+    {:id => "end_date",
+    :helpText => "End date",
+    :maxDate => (Date.today + 30.year)} %>
+
+</form>

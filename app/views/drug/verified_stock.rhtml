@@ -14,150 +14,14 @@
       var keyboard
       var search
       var date = '<%= Date.today.strftime("%m/%Y") %>'
-      var response;
-      var response1;
-      var response2;
-      var shortNames = '<%= @drug_short_names %>';
-
-      function getName(td) {
-        var aUrl = "/drug/get_name?value=" + td;
-
-        var httpRequest = new XMLHttpRequest();
-        httpRequest.onreadystatechange = function() {
-          set_name(httpRequest);
-        };
-
-        httpRequest.open('GET', aUrl, false);
-        httpRequest.send(null);
-       // if (response == "true")
-          return response;
-     // if (response == "false")
-         // return false;
-      }
-
-     function getShortName(td) {
-        var aUrl = "/drug/get_name?short=" + td;
-       var httpRequest = new XMLHttpRequest();
-        httpRequest.onreadystatechange = function() {
-          set_name(httpRequest);
-        };
-
-        httpRequest.open('GET', aUrl, false);
-        httpRequest.send(null);
-          return response;
-      }
-
-      function getSize(td) {
-        var aUrl = "/drug/get_name?pack_size=" + td;
-
-        var httpRequest = new XMLHttpRequest();
-        httpRequest.onreadystatechange = function() {
-          set_name(httpRequest);
-        };
-
-        httpRequest.open('GET', aUrl, false);
-        httpRequest.send(null);
-          return response;
-      }
-
-      function set_name(req) {
-        if (req.readyState == 4 && req.status == 200) {
-          response = req.responseText;
-        }
-      }
-
-      function addRow(td){
-        fullname = getName(td)
-        shortname = getShortName(td)
-        packsize = getSize(td)
-       // alert(shortname)
-
-        var table = document.getElementsByClassName('stocks')[0];
-        var newTr = document.createElement('tr');
-        var newTd = document.createElement('td');
-        newTd.setAttribute("width", "20%");
-        newTd.innerHTML = shortname;
-        newTr.appendChild(newTd);
-
-        var newTd = document.createElement('td');
-        newTd.setAttribute("width", "20%");
-        newTd.innerHTML = packsize;
-        newTd.setAttribute("align", "right");
-        newTd.setAttribute("width", "20%");
-        newTr.appendChild(newTd);
-
-        if (shortname == 'INH or H' || shortname == 'Cotrimoxazole'){
-              var newTd1 = document.createElement('td');
-              var newField = document.createElement('select');
-              newField.setAttribute('name', 'obs[' + fullname + '][expire_amount]');
-              newTd1.setAttribute("align", "center");
-              newField.setAttribute('class', 'selects');
-              newField.innerHTML = "<option></option><option value='30'>30 tabs</option><option value='60'>60 tabs</option><option value='90'>90 tabs</option><option value='100'>100 tabs</option><<option value='1000'>1000 tabs</option>"
-              newTd1.appendChild(newField)
-              newTr.appendChild(newTd1);
-        }
-        else{
-              var newTd1 = document.createElement('td');
-              var newField = document.createElement('input');
-              newField.setAttribute('type', 'text');
-              newField.setAttribute('name', 'obs[' + fullname + '][expire_amount]');
-              newTd1.setAttribute("align", "center");
-              newField.setAttribute("width", "20%");
-              newField.setAttribute('onClick', 'showMe(this)');
-              newField.setAttribute('class', 'inputs');
-              newTd1.appendChild(newField)
-              newTr.appendChild(newTd1);
-        }
-
-        var newTd1 = document.createElement('td');
-        var newField = document.createElement('input');
-        newField.setAttribute('type', 'text');
-        newField.setAttribute('name', 'obs[' + fullname + '][date]');
-        newField.setAttribute('onClick', 'showMe(this)')
-        newField.setAttribute('class', 'dates');
-        newTd1.appendChild(newField)
-
-
-        newTr.appendChild(newTd1);
-
-        var newTd1 = document.createElement('td');
-        var newField = document.createElement('input');
-        newField.setAttribute('type', 'text');
-        newField.setAttribute('name', 'obs[' + fullname + '][amount]');
-        newField.setAttribute('onClick', 'showMe(this)')
-        newField.setAttribute('class', 'inputs');
-        newTd1.appendChild(newField)
-        newTr.appendChild(newTd1);
-
-
-
-        var newTd1 = document.createElement('td');
-        newTd1.setAttribute("id", "addrow")
-        newTd1.innerHTML = "<a href='#'><img src='/images/add.png' onclick='addRow(" + td +")'></a>"
-        newTr.appendChild(newTd1);
-
-        var newTr1 = document.createElement('tr');
-        var newTd1 = document.createElement('td');
-        var newHr = document.createElement('hr');
-        newTd1.setAttribute('colspan', 6)
-        newTd1.appendChild(newHr)
-        newTr1.appendChild(newTd1)
-
-        table.appendChild(newTr);
-        table.appendChild(newTr1);
-      }
-
+      
       function showDrugs(){
-        html = "<form id='stock' name='stock' action='edit_stock' method='post'><table width='98%' align= 'center' class='stocks'><th colspan=6 >Relocation/Disposing</th>";
-        html += '<tr><td>Relocation/Disposal Reason</td><td colspan=2><select name="reason" class="selects"><option value="Expired/Damaged">Expired/Damaged</option>'
-        html += '<option value="Given to other clinics">Given to other clinics</option><option value="Receipt from other clinics">Receipt from other clinics</option>'
-        html += '<option value="Given to other clinics">Given to other clinics</option></select></td>'
-        html += "<td>Date</td><td colspan=2><input name='delivery_time' type='text' onclick='showMe(this)' class='inputs'></td></tr>"
-        html += '<tr class="header"><td width="54%" colspan=2><b>Drug</b></td><td width="40%"><b>Total Usable Tins</b></td ><td colspan=3 >Earliest Expiry<br> <span style="float:left">Date MM/YY</span><span style="float:right">Units expiring that date</span></td></tr>'
+        html = "<form id='stock' name='stock' action='stock_report_edit' method='post'><table width='98%' align= 'center'><th colspan=5 >Supervision Verified Stocks</th>";
+        html += '<tr class="header"><td width="54%" colspan=2><b>Drug</b></td><td width="40%"><b>Total Usable Tins</b></td ><td colspan=2 >Earliest Expiry<br> <span style="float:left">Date MM/YY</span><span style="float:right">Units expiring that date</span></td></tr>'
         html +="<input type='hidden' name='delivery_date' value='<%= @delivery_date %>'>";
         html +="<input type='hidden' name='type' value='<%= params["verification type"] %>'>";
-  <%  h = 0
-  @list.each {|drug|
+  <% h = 0
+  @formatted.each {|drug|
   name = @drug_short_names[drug]
    name = name.gsub("(", "")
      name = name.gsub(")", "")
@@ -176,31 +40,29 @@
          end
          i += 1
        end
-       drud_string = Drug.find_by_name("#{drug}").id
+  drud_string = Drug.find_by_name("#{drug}").id
   if splitted[0] == 'INH or H' || splitted[0] == 'Cotrimoxazole'
-   
-    if h < 1
-    %>
-          html += '<tr><td width="20%" colspan=2>&nbsp;</td><td align="center"  width="32%">Pack Size</td><td align="center"> Expiry Date</td><td colspan=3 align="center"> Total Units</td></tr>'
+       if h < 1
+  %>
+                 html += '<tr><td width="20%" colspan=2>&nbsp;</td><td align="center"  width="32%">Pack Size</td><td align="center"> Expiry Date</td><td colspan=3 align="center"> Total Units</td></tr>'
     <% end %>
-       html += '<tr><td width="20%%"><%= splitted[0] %></td><td align="right"  width="32%"><%= letters %></td><td class="newIunputs">'
-        html += "<select name='obs[" + '<%=  drug %>' + "][amount]'  class='selects'>"
-        html += "<option></option><option value='30'>30 tabs</option><option value='60'>60 tabs</option><option value='90'>90 tabs</option><option value='100'>100 tabs</option><<option value='1000'>1000 tabs</option></select>"
-       html += "</td><td><input name='obs[<%=  drug %>][date]' type='text' onclick='showMe(this)' class='dates'></td>";
-       html += "</td><td align='right'><input name='obs[<%=  drug %>][expire_amount]' type='text' onclick='showMe(this)' class='inputs'><td id='addrow'><a href='#'><img src='/images/add.png' onclick='addRow(<%= drud_string %>);'></a></td></tr>";
-       html += "<tr><td colspan =6 ><hr></td></tr>"
-    <% h += 1
-    else%>
-       html += '<tr><td width="20%%"><%= splitted[0] %></td><td align="right"  width="32%"><%= letters %></td><td class="newIunputs">'
-       html += "<input name='obs[<%= drug %>][amount]' type='text' onclick='showMe(this)' class='inputs' />"
-       html += "</td><td><input name='obs[<%=  drug %>][date]' type='text' onclick='showMe(this)' class='dates'></td>";
-       html += "</td><td align='right'><input name='obs[<%=  drug %>][expire_amount]' type='text' onclick='showMe(this)' class='inputs'><td id='addrow'><a href='#'><img src='/images/add.png' onclick='addRow(<%= drud_string %>);'></a></td></tr>";
-       html += "<tr><td colspan =6 ><hr></td></tr>"
-    <% 
-    end
-    
-    %>
+        html += '<tr><td width="20%">' + '<%= splitted[0] %></td>' + '<td align="right"  width="32%"><%= letters %></td><td class="newIunputs">'
+        html += "<select name='obs[" + '<%=  drug %>' + "][expire_amount]'  class='selects'>"
+        html += "<option></option><option value='30'>30 tabs</option><option value='60'>60 tabs</option><option value='90'>90 tabs</option><option value='100'>100 tabs</option><<option value='1000'>1000 tabs</option>/select>"
 
+        html += "</td><td><input name='obs[" + '<%=  drug %>' + "][date]' type='text' onclick='showMe(this)' class='inputs' ></td>";
+        html += "</td><td align='right'><input name='obs[" + '<%= drug %>' + "][amount]' type='text' onclick='showMe(this)' class='inputs' /></td></tr>";
+        html += "<tr><td colspan =5 ><hr></td></tr>"
+
+    <% h += 1
+  else %>
+        html += '<tr><td width="20%">' + '<%= splitted[0] %></td>' + '<td align="right"  width="32%"><%= letters %></td><td class="newIunputs">'
+        html += "<input name='obs[" + '<%=  drug %>' + "][expire_amount]' type='text' onclick='showMe(this)' class='inputs'>"
+
+        html += "</td><td><input name='obs[" + '<%=  drug %>' + "][date]' type='text' onclick='showMe(this)' class='dates' ></td>";
+        html += "</td><td align='right'><input name='obs[" + '<%= drug %>' + "][amount]' type='text' onclick='showMe(this)' class='inputs' /></td></tr>";
+        html += "<tr><td colspan =6 ><hr></td></tr>"
+  <% end %>
   <%  } %>
       html += '</table></form>';
       document.getElementById('inputFrame'+tstCurrentPage).innerHTML = '<div id="summary">' + html + '</div>';
@@ -222,7 +84,7 @@
     function showMe(td){
       search = td
       keyboard = document.getElementById('keyboard');
-
+    
       if(keyboard.style.display == 'none' || keyboard.style.display == ""){
         keyboard.style.display = "inline";
       }
@@ -272,9 +134,6 @@
       keyboard.innerHTML = getButtons1("123")
       keyboard.innerHTML+= getButtons1("456")
       keyboard.innerHTML+= getButtons1("7890")
-      if (search.name == 'delivery_time'){
-        keyboard.innerHTML+= getButtonStrings('/','<span>/</span>')
-      }
      // keyboard.innerHTML+= getButtonStrings('/','<span>/</span>')
      // keyboard.innerHTML+= getButtonStrings(':','<span>:</span>')
      // keyboard.innerHTML+= getButtonStrings('-','<span>-</span>')
@@ -282,14 +141,14 @@
       keyboard.innerHTML+= getButtonStrings('clear','<span>Clear</span>')
       keyboard.innerHTML+= getButtonStrings('backspace','<span>Bksp</span>')
       keyboard.innerHTML+= getButtonStrings('enter','<span>Enter</span>')
-
+      
       // keyboard.innerHTML+= getButtonStrings('dash','<span>-</span>')
       // keyboard.innerHTML+= getButtonString('slash','<span>/</span>')
     }
 
    function pressed(pressedChar){
       if (search.name.match(/date/i)){
-
+        
         if (search.value.length == 5 && pressedChar != 'enter' &&   pressedChar != 'splash' && pressedChar != 'backspace' && pressedChar != 'space' && pressedChar != 'clear'){
           var names = "obs[" + search.name.split(']')[0].split('[')[1] + "][expire_amount]"
           document.getElementsByName(names)[0].next().focus()
@@ -364,7 +223,7 @@
         align: center;
         display:none;
       }
-     .inputs {
+            .inputs {
         height: 37px;
         font-size: 18px;
         text-align: right;
@@ -378,24 +237,11 @@
         height: 700px ! important;
         overflow:scroll ! important;
       }
-      #addrow{
-       /* background-color: #33FF00; */
-        -moz-border-radius: 15px;
-        -webkit-border-radius: 15px;
-        border: 5px solid #AAA;
-        border-collapse: collapse;
-        padding: 5px;
-      }
-      #addrow:hover {opacity: 0.6; }
+
       .selects{
         height: 45px;
         font-size: 20px;
         width: 40%;
-      }
-
-      .selects option {
-        width: 100%;
-        height: 37px;
       }
       .scrollTable {
         height: 700px ! important;
@@ -469,7 +315,7 @@
     </style>
   <div id="container">
     <form>
-
+      <img src="images/add.png">
       <%= text_field_tag :showSummary, nil,
         {
         :tt_onLoad => "showDrugs();$('clearButton').style.display = 'none';  ",

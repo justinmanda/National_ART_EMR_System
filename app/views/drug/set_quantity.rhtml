@@ -1,0 +1,216 @@
+
+<style>
+
+  #popup {
+    top: 50px;
+    height:80% ! important;
+  }
+
+  #ok {
+    float:right ! important;
+    width: 88px;
+  }
+
+  #cancel {
+    float:left ! important;
+    width: 88px;
+  }
+  #cover {
+    position: absolute;
+    background-color: black;
+    width: 100%;
+    height: 100%;
+    left: 0%;
+    top: 0%;
+    z-index: 500;
+    opacity: 0.5;
+    align: center;
+    display:none;
+  }
+  #alertPage{
+    top: 50%;
+    left: 40%;
+    margin-top: -200px;
+    margin-left: -250px;
+    position: absolute;
+    margin-right:auto;
+    width: 800px;
+    height: 280px;
+    padding-bottom: 10px;
+    font-size: 1em;
+    text-align: center;
+    background-color: white;
+    padding: 10px;
+    z-index: 999;
+    border: 5px outset tomato;
+    border-radius: 15px;
+    z-index: 900;
+  }
+  #contraindicators {
+    top: 50px;
+    overflow:auto;
+    height:44% ! important;
+  }
+  #tt_page_summary #viewport {
+    height: 480px;
+  }
+
+  #tt_page_summary .inputFrameClass {
+    height: 600px;
+    overflow: auto;
+  }
+
+  #summary_container {
+    bottom: 124px;
+    font-size: 20px;
+    left: 25px;
+    position: absolute;
+    z-index: 600;
+    border-radius: 10px 10px 10px 10px;
+    width: 47.2em;
+    border-style: solid;
+    border-width: 1px;
+    background-color: lightgrey;
+    display: none;
+    -moz-user-select: none;
+    height: 18em;
+  }
+
+  .summary {
+    font-size: 27px;
+    padding-left: 15px;
+  }
+
+  th, .header {
+    text-align: center;
+    vertical-align: middle;
+    background-color: grey;
+    color: white;
+    height: 10%;
+    border-radius: 10px 10px 10px 10px;
+    font-size: 29px;
+  }
+  td {
+    font-size: 20px;
+  }
+ .title{
+	font-weight:bold;
+	font-size:12px;
+	padding: 5px;
+  }
+</style>
+
+<script>
+  var response
+  expiring_drugs = []
+  function currentExpected(drug, dateOne, dateTwo) {
+    current_tins = document.getElementsByName("drug[][" + drug + "][tins]")[0].value
+    current_pills = document.getElementsByName("drug[][" + drug + "][pills]")[0].value
+    total_pill = current_pills * current_tins
+    
+    var aUrl = "/drug/calculate_dispensed?drug=" +  drug + "&start_date=" + dateOne + "&end_date=" + dateTwo;
+    var httpRequest = new XMLHttpRequest();
+    httpRequest.onreadystatechange = function() {
+      set_number(httpRequest);
+    };
+
+    httpRequest.open('GET', aUrl, false);
+    httpRequest.send(null);
+    expiring = [drug, total_pill, response]
+    expiring_drugs.push(expiring)
+
+    var ele = document.getElementById('cover')
+    ele.style.display = "inline";
+    document.body.appendChild(ele);
+
+    var newDiv = document.createElement('div');
+    newDiv.id = "alertPage";
+    newDiv.style.left = "32%";
+    newDiv.style.top = "30%";
+    newDiv.style.width = "628px";
+    newDiv.style.height = "261px";
+    var display = "<div><table width='100%'><tr valign='top'> <th class='title' colspan=2>" + drug + "</th></tr>";
+      display   += "<tr><td align= 'left' width='50%'>Tins Being Received </td><td width='50%'>:" + (total_pill / 60) + "</td></tr>";
+      display   += "<tr><td align= 'left' width='50%'>Tins Expiring Within 3 months </td><td width='50%'>:" + (response / 60) + "</td></tr></table></div>";
+    newDiv.innerHTML = '<div id="contraindicators">' + display + '</div>' ;
+    document.body.appendChild(newDiv);
+
+    var newBtn = document.createElement('button');
+    newBtn.className = "navButton red";
+    newBtn.id = "cancel";
+    newBtn.innerHTML = "<span>Cancel</span>";
+    newDiv.appendChild(newBtn);
+    newBtn.setAttribute('onclick', "document.getElementById('cover').style.display='none'; this.parentNode.style.display='none';")
+
+    var newBtn = document.createElement('button');
+    newBtn.className = "green navButton";
+    newBtn.id = "ok";
+    newBtn.innerHTML = "<span>Next</span>";
+    newDiv.appendChild(newBtn);
+    newBtn.setAttribute('onclick', "document.getElementById('cover').style.display='none'; this.parentNode.style.display='none';gotoNextPage();")
+    //expiring_drugs.push(expiring)
+  }
+
+  function set_number(req) {
+    if (req.readyState == 4 && req.status == 200) {
+      response = JSON.parse(req.responseText);
+    }
+  }
+
+  function showSelectedConditions() {
+    var html = "<table width='98%' align= 'center'><tr><th>Drug Name</th><th> Amount In Tins Being Received</td><th> Tins Expiring Within 3 Months</th></tr>";
+    for (i = 0; i < expiring_drugs.length; i ++){
+      html += "<tr  style='width:100%;'><td>" + expiring_drugs[i][0] + "</td><td align= 'center'>" + (expiring_drugs[i][1] / 60) + "</td><td align= 'center'>" + (expiring_drugs[i][2] / 60) + "</td></tr>";
+    }
+
+    html += "</table>"
+    $('inputFrame'+tstCurrentPage).innerHTML = '<div id="summary">' + html + '</div>' ;
+    $("clearButton").style.display = "none";
+  }
+
+</script>
+
+<form method='post' action='create_stock'>
+  <div id="cover" align="center">
+  </div>
+  <input type='hidden' name='identifier' value='<%= params[:identifier] %>' />
+
+  <%= touch_date_tag "encounter_date", 'encounter_date', nil,
+    {:id => "delivery_date",
+    :name => "delivery date",
+    :helpText => "Delivery Date",
+    :absoluteMax => Date.today,
+    :tt_onload    => "Delivery Date"} %>
+
+  <% params[:drug_name].each { |drug|  %>
+    <input type='hidden' name='drug[][name]' value='<%= drug %>' />
+
+    <%= text_field_tag "number_of_tins", nil, {:helpText => 'Number of tins for ' + drug,
+      :name => "drug[][" + drug + "][tins]",
+      :field_type => 'number', :absoluteMin => "1",
+      :min => "1", :tt_pageStyleClass => "Numeric NumbersOnly"}  %>
+
+    <%= text_field_tag "number_of_pills_per_tin", nil, {:helpText => 'Number of pills per tin for ' + drug,
+      :name => "drug[][" + drug + "][pills]",
+      :field_type => 'number', :absoluteMin => "1",
+      :min => "1", :tt_pageStyleClass => "Numeric NumbersOnly",
+      :tt_onUnload => 'currentExpected("' + drug.to_s + '", $("delivery_date").value, $("delivery_date").value)'
+    }
+  %>
+
+    <%= touch_date_tag "drug[][" + drug + "]['expiry_date']", 'expiry_date', nil,
+    {:id => "expiry_date",
+      :name => "drug[][" + drug + "][expiry_date]",
+      :helpText => "Expiry date for " + drug,
+
+      :maxDate => (Date.today + 30.years)} %>
+
+    <input type='hidden' name='drug[][" + drug + "][dispensed]' id="dispensed" />
+  <% } %>
+
+  <label for='summary'>Summary</label>
+  <%= text_field_tag :summary, nil, {
+    :tt_onLoad => "showSelectedConditions();__$('keyboard').style.display = 'none';",
+    :optional => "true",
+    :tt_pageStyleClass => "NoControls" } %>
+</form>

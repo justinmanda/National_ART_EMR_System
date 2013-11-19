@@ -5,24 +5,29 @@
     <%= stylesheet_link_tag 'extra_buttons' %>
     <%= javascript_include_tag 'jquery_data_table.js' %>
     <%= stylesheet_link_tag 'jquery.dataTables' %>
-    <%=javascript_include_tag "jquery.table2CSV.min" %>
+	<%=javascript_include_tag "jquery.table2CSV.min" %>
     <script type="text/javascript" charset="utf8" src="/javascripts/jquery.dataTables.min.js"></script>
     <script>
-       jQuery(document).ready(function($) {
+      jQuery(document).ready(function($) {
           $('#table_id').dataTable({
             "bAutoWidth": true,
             "bPaginate": false,
             "bProcessing": true,
-            "sScrollY": "490px",
-            "bInfo": false,
-            "bPaginate": false
+            "sScrollY": "400px",
+            "bInfo": true,
+            "bPaginate": false,
+			"bSort": true
           });
+
+     $('#logout').click(function() {
+		  history.go(-1);
+     })
     search_box = $('#table_id').dataTable()
     search = document.getElementsByTagName("input")[0];
     search.setAttribute("id","search");
     document.getElementById('search').setAttribute("onclick","showKeyboard();");
-    document.getElementById("find").innerHTML = "<span>Back</span>";
-    document.getElementById("find").style.cssFloat = "left";
+    //document.getElementById("find").innerHTML = "<span>Back</span>";
+    //document.getElementById("find").style.cssFloat = "left";
     //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     keyboard = document.getElementsByClassName("keypad")[0]
     function getCharButtonSetID(character,id){
@@ -177,6 +182,21 @@
         display:block;
         float:left;
       }
+	  .create_button a{
+		    background-color: #7784AE;
+			border-bottom: 1px outset black;
+			border-radius: 7px 7px 7px 7px;
+			border-style: outset;
+			border-top: 1px outset black;
+			color: #E8EAF1;
+			display: block;
+			padding: 10px 16px 10px 10px;
+			text-align: center;
+			text-decoration: none !important;
+		}
+	 a:hover {
+		  color: black;
+		}
 
       .logo {
         float:left
@@ -208,7 +228,7 @@
       #table_id_info{
         left: 10px;
         position: absolute;
-        top: 490px;
+        top: 455px;
         font-weight:bold;
       }
       #table_id_length{
@@ -219,83 +239,35 @@
       }
       #num{ display:none; }
       #char{ display:none; }
-      
-      .patient_link{
-        border-radius: 7px;
-        background-color: #669999;
-        border-bottom: 1px outset black;
-        border-style: outset;
-        border-top: 1px outset black;
-        color: white;
-        display: block;
-        padding: 10px 16px 10px 10px;
-        text-align: center;
-        text-decoration: none;
-        width: 100%;
-	}
-    </style>
-  </head>
-  <body >
-   <div >
-        <table style="border-bottom:2px solid black;">
-    <tr><td><table>
-    <tr>
-      <td><b style="font-size: 21px;margin-left:75px">Facility : <%= Location.current_health_center.name %></b></td></tr>
-    <tr>
-      <td><b style="font-size: 18px;margin-left:75px">Title: <%= @report_name.humanize %></b></td>
-    </tr>
-    <tr>
-      <td> <b style="font-size: 18px;margin-left:75px">Appointment Date : <%= @formatted_appointment_date %></b></td>
-    </tr>
-        </table>
-      </td>
 
-    </tr>
+</style>
+</head>
+<body>
+<br /><b style="margin-left:75px"><%= Location.current_health_center.name %></b><br />
+<b style="position:relative; top:0px;margin-left:75px"><%=params[:id].humanize.capitalize-%></b><br />
+<br /><b style="position: relative; display:block; font-weight:bold; top:-15px; padding-left:30px;margin-left:200px">&nbsp;</b>
+ <b style="position: relative; display:block; font-weight:bold; top:-15px; padding-left:30px;margin-left:200px">&nbsp;</b><br /><br />
+<div style="border: 3px solid #80890F">
+  <table name="table_id" id="table_id" class="display">
+			<thead>
+					<tr>
+
+                                          <th align="left">Drug Name</th>
+					</tr>
+			 </thead>
+                         <tbody>
+                           <% @drugs.each {|drug| %>
+                           <tr><td><%= drug %></td>
+                                </tr>
+                           <%  } %>
+
+                         </tbody>
   </table>
-
-   </div>
-    <div>
-      <table  id="table_id" class="display" >
-        <thead>
-    <tr>
-      <th class='tb_art'>Identifier</th>
-      <th class='tb'>First name</th>
-      <th class='tb'>Last name</th>
-      <th>Gender</th>
-      <th>Birthdate</th>
-      <th>Visit date</th>
-      <th>&nbsp;</th>
-    </tr>
-  </thead>
-  <tbody>
-  <%
-#    raise @patients.last.name
-    color = 'white'
-    @patients.each do |obs_id,patient|
-      color = color == "white" ? "lightblue" : "white"
-  %>
-<tr>
-  <td class='<%="color_#{color}" %>' onclick=''><%=patient[:identifier] || '&nbsp;'%></td>
-  <td class='<%="color_#{color}" %>' onclick=''><%=patient[:first_name] || '&nbsp;'%></td>
-  <td class='<%="color_#{color}" %>' onclick=''><%=patient[:last_name] || '&nbsp;'%></td>
-  <td class='<%="color_#{color}" %>' onclick=''><%=patient[:gender] || '&nbsp;'%></td>
-  <td class='<%="color_#{color}" %>' onclick=''><%=patient[:birthdate] %></td>
-  <td class='<%="color_#{color}" %>' onclick=''><%=patient[:visit_date].to_date.strftime('%Y-%m-%d') || '&nbsp;'%></td>
-  <td class='<%="color_#{color}" %>' onclick=''><input class='patient_link' type="button" onmousedown="document.location='/patients/show/<%=patient[:patient_id]%>'" value='Show' /></td>
-</tr>
-  <% end %>
-</tbody>
-      </table>
-    </div>
-    <div class="horizontal_line">
-      <hr width="100%" color="gray"/>
-    </div>
-    <div id="keypad">
+</div>
+ <div id="keypad">
       <span class="keypad">
       </span>
     </center>
-
   </div>
-
 </body>
 </html>

@@ -41,7 +41,7 @@ class Pharmacy < ActiveRecord::Base
     dispensed_encounter = EncounterType.find_by_name('DISPENSING')
     amount_dispensed_concept_id = ConceptName.find_by_name('AMOUNT DISPENSED').concept_id
     start_date = start_date.to_date.strftime('%Y-%m-%d 00:00:00')
-    end_date = end_date.to_date.strftime('%Y-%m-%d 23:59:59')
+    #end_date = end_date.to_date.strftime('%Y-%m-%d 23:59:59')
 
     Encounter.find(:first,:joins => "INNER JOIN obs USING(encounter_id)",
                    :select => "SUM(value_numeric) total_dispensed" ,
@@ -92,6 +92,7 @@ class Pharmacy < ActiveRecord::Base
       end  
     end
     delivery.save
+   # raise delivery.to_yaml
   end
 
   def self.total_delivered(drug_id, start_date = Date.today ,end_date = Date.today)
@@ -120,7 +121,7 @@ class Pharmacy < ActiveRecord::Base
      
     expiring_drugs_hash = {}
     (expiring_drugs || []).each do | expiring |
-      current_stock = self.current_stock_as_from(expiring.drug_id , self.first_delivery_date(expiring.drug_id),end_date)
+      current_stock = self.current_stock_as_from(expiring.drug_id , self.first_delivery_date(expiring.drug_id),expiring.encounter_date)
       next if current_stock <= 0
       expiring_drugs_hash["#{expiring.pharmacy_module_id}:#{Drug.find(expiring.drug_id).name}"] = {
         'delivered_stock' => expiring.value_numeric , 
@@ -130,6 +131,29 @@ class Pharmacy < ActiveRecord::Base
       }
     end
     expiring_drugs_hash 
+  end
+
+  def self.currently_expiring_drugs(start_date, drug_id)
+    pharmacy_encounter_type = PharmacyEncounterType.find_by_name('New deliveries')
+
+   end_date = start_date + 3.months
+    expiring_drugs = self.active.find(:all,
+                     :conditions => ["pharmacy_encounter_type = ?
+                     AND expiry_date >= ? AND expiry_date <= ? AND drug_id = ?",
+                     pharmacy_encounter_type.id , start_date , end_date, drug_id])
+
+    expiring_drugs_hash = {}
+    (expiring_drugs || []).each do | expiring |
+      current_stock = self.current_stock_as_from(expiring.drug_id , self.first_delivery_date(expiring.drug_id),expiring.encounter_date)
+      next if current_stock <= 0
+      expiring_drugs_hash["#{expiring.pharmacy_module_id}:#{Drug.find(expiring.drug_id).name}"] = {
+        'delivered_stock' => expiring.value_numeric ,
+        'date_delivered' => expiring.encounter_date ,
+        'expiry_date' => expiring.expiry_date ,
+        'current_stock' => current_stock
+      }
+    end
+    expiring_drugs_hash
   end
 
   def self.removed_from_shelves(start_date , end_date)
@@ -192,7 +216,7 @@ SELECT sum(value_numeric) FROM pharmacy_obs p
 INNER JOIN pharmacy_encounter_type t ON t.pharmacy_encounter_type_id = p.pharmacy_encounter_type
 AND pharmacy_encounter_type_id = #{encounter_type}                              
 WHERE p.voided=0 AND drug_id=#{drug_id}                                         
-AND p.encounter_date >='#{start_date} 00:00:00' AND p.encounter_date <='#{end_date} 23:59:59'
+AND p.encounter_date >='#{start_date} 00:00:00' AND p.encounter_date <='#{end_date}'
 GROUP BY drug_id ORDER BY encounter_date                                        
 EOF
                                                                              
@@ -206,7 +230,7 @@ SELECT sum(value_numeric) FROM pharmacy_obs p
 INNER JOIN pharmacy_encounter_type t ON t.pharmacy_encounter_type_id = p.pharmacy_encounter_type
 AND pharmacy_encounter_type_id = #{encounter_type}                              
 WHERE p.voided=0 AND drug_id=#{drug_id}                                         
-AND p.encounter_date >='#{start_date} 00:00:00' AND p.encounter_date <='#{end_date} 23:59:59'
+AND p.encounter_date >='#{start_date} 00:00:00' AND p.encounter_date <='#{end_date}'
 GROUP BY drug_id ORDER BY encounter_date                                        
 EOF
                                                                           
@@ -225,21 +249,41 @@ EOF
     return (receipts - (dispensed_drugs + relocated))                           
   end                                                                           
                                                                                 
-  def self.verify_stock_count(drug_id,start_date,end_date)                      
-    encounter_type_id = PharmacyEncounterType.find_by_name('Tins currently in stock').id
-    start_date = Pharmacy.active.find(:first,                                   
-      :conditions =>["pharmacy_encounter_type = ? AND encounter_date = ?",      
-      encounter_type_id,end_date],                                              
-      :order =>'encounter_date DESC,date_created DESC').value_numeric rescue 0  
+  def self.verify_closing_stock_count(drug_id,start_date,end_date)
+      encounter_type_id = PharmacyEncounterType.find_by_name('Tins currently in stock').id
+      start_date = Pharmacy.active.find(:first,
+        :conditions =>["pharmacy_encounter_type = ? AND  encounter_date > ? AND encounter_date <= ?
+                        AND drug_id = ? AND value_text = 'Supervision'",
+        encounter_type_id, start_date, end_date, drug_id],
+        :order =>'encounter_date DESC,date_created DESC').value_numeric rescue 0
+     #raise start_date.to_yaml
   end
 
-  def self.verified_stock(drug_id,date,pills)
+    def self.verify_stock_count(drug_id,start_date,end_date)
+    encounter_type_id = PharmacyEncounterType.find_by_name('Tins currently in stock').id
+    start_date = Pharmacy.active.find(:first,
+      :conditions =>["pharmacy_encounter_type = ? AND encounter_date <= ? AND drug_id = ? AND value_text = 'Supervision'",
+      encounter_type_id, start_date,drug_id],
+      :order =>'encounter_date DESC,date_created DESC').value_numeric rescue 0
+   #raise start_date.to_yaml
+  end
+
+  def self.verified_stock(drug_id,date,pills, earliest_expiry=nil, units=nil, type=nil)
     encounter_type = PharmacyEncounterType.find_by_name('Tins currently in stock').id
     encounter =  self.new()
     encounter.pharmacy_encounter_type = encounter_type
     encounter.drug_id = drug_id
     encounter.encounter_date = date
     encounter.value_numeric = pills.to_f
+    if ! earliest_expiry.blank?
+      encounter.expiry_date = earliest_expiry
+    end
+    if ! units.blank?
+      encounter.expiring_units = units
+    end
+    if ! type.blank?
+      encounter.value_text = type
+    end
     encounter.save
   end
 

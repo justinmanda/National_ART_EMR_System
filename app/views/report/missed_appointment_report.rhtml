@@ -18,9 +18,9 @@
 		jQuery(document).ready(function($) {
 	 	$('#table_id').dataTable({
 		"bAutoWidth": false,
-		"sScrollY": "374px",
-		"bPaginate": true,
-		"bFilter": true,
+		"sScrollY": "486px",
+		"bPaginate": false,
+		"bFilter": false,
 		"bProcessing": true
 		//"sPaginationType": "full_numbers"
 		//"sPageButton": "paginate_button",
@@ -193,7 +193,9 @@
 	#table_id {
     	width: 100%;
     }
-
+    #find{
+      display: none;
+    }
     #table_id_filter{
 		position:absolute;
 		top:0px;
@@ -227,16 +229,23 @@
 </head>
 <body >
 
-<img src= "/images/mw.gif" >
-<div style = "position:absolute; top:30px;left:200px; -moz-user-select:none;">
-  <b>Facility : <%= Location.current_health_center.name %></b><br/>
-  <% if  @report == "defaulted" %>
-         <b>End day : <%= @end_date.strftime('%d %B %Y')%> </b><br/>
-  <% else %>
-        <b>Duration : <%= @start_date.strftime('%d %B %Y')  %> to <%= @end_date.strftime('%d %B %Y')%> </b><br/>
-  <% end %>
-        <b>Report Type : <%= @report.humanize %> Report</b><br/>
-  <b>Total Registered : <%= @data.length %> </b>
+<div style = "height:9%;width:100%;">
+    <table style="border-bottom:2px solid black;">
+    <tr><td><table>
+    <tr>
+      <td><b style="font-size: 21px;margin-left:75px">Facility : <%= Location.current_health_center.name %></b></td></tr>
+    <tr>
+      <td><b style="font-size: 18px;margin-left:75px">Title: <%= @report.humanize %> Report</b></td>
+    </tr>
+    <tr>
+      <td> <b style="font-size: 18px;margin-left:75px">From : <%= @start_date.strftime(" %d %b %Y")%></b></td>
+    </tr><tr><td> <b style="font-size: 18px;margin-left:75px">To : <%=@end_date.strftime(" %d %b %Y") %></b> </td>
+    </tr>
+        </table>
+      </td>
+
+    </tr>
+  </table>
 </div>
 <br>
 <%#= raise @data.to_yaml %>

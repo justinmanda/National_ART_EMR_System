@@ -1,0 +1,165 @@
+<script>
+   function addButton(){
+    var button = document.createElement("button");
+    button.id = "addHere";
+    button.innerHTML = "<span>Select Other</span>";
+    button.style.cssFloat = "right";
+    __$("buttons").appendChild(button);
+   }
+   
+</script>
+<style>
+
+  #num , #Unknown { display:none; }
+
+  .dateselector {
+    position: fixed;
+    top: 195px;
+  }
+
+  #clearButton {
+    display: none;
+  }
+  #details {
+    display: none ! important;
+  }
+  #tabPageContainer{
+    hieght: 182% ! important;
+  }
+</style>
+<script type="text/javascript" language="javascript"
+src="/touchscreentoolkit/lib/javascripts/touchScreenToolkit.js" defer  ></script>
+<meta http-equiv='content-type' content='text/html;charset=UTF-8' />
+<%#= javascript_include_tag "jquery" %>
+<%= javascript_include_tag "Highcharts/js/jquery.min.js" %>
+<%= javascript_include_tag "jquery.flot" %>
+<%= javascript_include_tag "prototype" %>
+
+<style>
+  #buttonlinks {
+    display: none;
+  }
+
+  #mainContainer{
+   display: none;
+  }
+
+  #tabPageContainer {
+    height: 154% ! important;
+  }
+  #tabContainer2 {
+    display: none;
+  }
+  #tabContainer {
+    display: none;
+  }
+  div.transbox
+  {
+  width:400px;
+  height:180px;
+  margin:30px 50px;
+  background-color:#ffffff;
+  border:1px solid black;
+  opacity:0.6;
+  filter:alpha(opacity=60); /* For IE8 and earlier */
+  }
+</style>
+<% if Location.current_location.name.match(/HIV|ART/i) %>
+  <style>
+    #tab2 {
+      background-color: white;
+      border: 0 none;
+      color: black;
+      font-weight: bold;
+      display:none;
+    }
+  </style>
+<% else %>
+  <style>
+    #tab1 {
+      /*background-color: white;
+      border: 0 none;
+      color: black;  */
+      font-weight: bold;
+      font-size: 20px;
+
+      background-color: #7784AE;
+      border-bottom: 1px outset black;
+      border-radius: 7px 7px 7px 7px;
+      border-style: outset;
+      border-top: 1px outset black;
+      color: #E8EAF1;
+      display: block;
+      padding: 10px 16px 10px 10px;
+    }
+
+  </style>
+<% end %>
+
+<script type="text/javascript">
+  jQuery(document).ready(function() {
+    summary();
+    addButton();
+  });
+
+  var tt_cancel_destination = "/clinic";  // /management"
+
+  setTimeout("changeCancelButton()", 500);
+
+  function summary(){
+    try{
+<%
+dateToday = session[:datetime].to_date rescue Date.today
+%>
+      
+      document.getElementById('tabPageContainer').innerHTML = "<div id='summary' style='background: width:100%;'></div>" ;
+      //if (age <= 60){
+      // jQuery('#chart').empty();
+      // jQuery('#chart').load('/patients/baby_chart/100?patient_id=100&tab=true');
+      //}else{
+      
+      <%  if params[:report_type] == "Stock Movement" %>
+      jQuery('#summary').empty();
+      jQuery('#summary').load('/drug/stock_chart?start_date=<%= params[:start_date] %>&end_date=<%= params[:end_date] %>&drug_id=<%= params[:drug_id] %>');
+      <% else %>
+      jQuery('#summary').empty();
+      jQuery('#summary').load('/drug/months_of_stock?start_date=<%= params[:start_date] %>&end_date=<%= params[:end_date] %>');
+      <% end %>
+      //
+    }catch(exp){
+      setTimeout("summary()", 500);
+    }
+  
+  }
+  function changeCancelButton() {
+    cancelButton = document.getElementById('cancelButton');
+    cancelButton.setAttribute('onmousedown','javascript:history.back();');
+  }
+
+  function reSize(){
+    __$("patient-dashboard-main").style.width = "100%";
+  }
+
+  setTimeout('reSize()',500);
+</script>
+
+<form id = 'dashboard' method='post' action="/clinic">
+  <select id="tabs">
+
+    <option >
+        <%  if params[:report_type] == "Stock Movement" %>
+    <h1><%= @drug %></h1> Movement Chart : From <%= params[:start_date].to_date.strftime(" %d-%m-%Y") %> To <%= params[:end_date].to_date.strftime(" %d-%m-%Y") %>
+        <% else %>
+     Months Of Stock :  <%= @month_on_stock %>
+    
+        <% end %>
+      </option>
+  </select>
+  
+    <div id="button" style="top:0px">
+      <button id="finishButton" class="button navButton green" onclick="if (tt_cancel_destination) window.location = tt_cancel_destination;"><span>Finish</span></button>
+      <div id="tt_extraButtons"/>
+    </div>
+
+</form >
+

@@ -1,4 +1,5 @@
 <%= javascript_include_tag "prototype" %>
+<%= stylesheet_link_tag "cohort" %>
 
 <style>
   .negative_numbers a {
@@ -10,9 +11,33 @@
     color: navy;
     text-decoration: none;
   }
+  
   .logo {
     float:left
   }
+
+  .create_button a{
+    background-color: #7784AE;
+    border-bottom: 1px outset black;
+    border-radius: 7px 7px 7px 7px;
+    border-style: outset;
+    border-top: 1px outset black;
+    color: #E8EAF1;
+    display: block;
+    padding: 10px 16px 10px 10px;
+    text-align: center;
+    text-decoration: none !important;
+    font-size:13px;
+    }
+
+  div.scrollTableContainer {
+		border-style:solid;
+		height: 500px;
+	  }
+  #header{
+            width: 100%;
+            height: 9%;
+          }
 </style>
 
 <%= stylesheet_link_tag "stock_report" %>
@@ -32,22 +57,41 @@
 </script>
 
 <div id="general_dashboard">
-  <%= image_tag(@logo, :class => "logo")%><br />
-  <br /><b style="margin-left:75px"><%= @current_location_name %></b><br />
-  <b style="position:relative; top:0px;margin-left:75px">Drug stock report</b><br />
-  <b style="position:relative; top:0px;margin-left:75px">From : <%= @start_date.strftime("%A, %Y %b %d")%></b><br />
-  <b style="position:relative; top:0px;margin-left:75px">To : <%=@end_date.strftime("%A, %Y %b %d")%></b><br />
-<%#= render :partial => "header" %>
-  <br /><br />
-  <table class="main-table">
+  <div id="header">
+  <table style="border-bottom:2px solid black;">
+    <tr><td><table>
+    <tr>
+      <td><b style="font-size: 21px;margin-left:75px">Location : <%= @current_location_name %></b></td></tr>
+    <tr>
+      <td><b style="font-size: 18px;margin-left:75px">Title: Drug stock report</b></td>
+    </tr>
+    <tr>
+      <td> <b style="font-size: 18px;margin-left:75px">From : <%= @start_date.strftime(" %d %b %Y")%></b></td>
+    </tr><tr><td> <b style="font-size: 18px;margin-left:75px">To : <%=@end_date.strftime(" %d %b %Y") %></b> </td>
+    </tr>
+    <tr>
+      <td rowspan="2">
+        <b style="font-size: 18px;margin-left:75px"> Total Days: <%= @days %></b>
+      </td>
+    </tr>
+        </table>
+      </td>
+    
+    </tr>
+  </table>
+  </div>
+
+<div class="scrollTableContainer">
+    <table style="border-bottom:2px solid black;">
   <tr class="header">
     <td>
       <table>
         <tr>
-          <td colspan="2">&nbsp;</td>
+          <td colspan="3">&nbsp;</td>
         </tr>
         <tr>
           <td style="width:200px;">Item</td>
+          <td>&nbsp;</td>
           <td style="text-align:right;padding-right:5px;">Units</td>
         </tr>
       </table>
@@ -55,12 +99,9 @@
     <td>
       <table>
         <tr>
-          <td colspan="2" style="text-align:center;">Opening stock</td>
+          <td style="text-align:center;">Opening Stock<br>Verified <font style="color:blue">(a)</font></td>
         </tr>
-        <tr>
-          <td>Date</td>
-          <td style="text-align:right;">Verified</td>
-        </tr>
+       
       </table>
     </td>
     <td>
@@ -69,8 +110,9 @@
           <td colspan="2" style="text-align:center;">Total adjustments in interval</td>
         </tr>
         <tr>
-          <td style="vertical-align: bottom;">Received</td>
-          <td style="text-align:right;">Relocated <br />out/disposed</td>
+          <td style="vertical-align: bottom;">Received <font style="color:blue">(b)</font></td>
+          <td style="text-align:center;">Relocated <br />out/disposed <font style="color:blue">(c)</font></td>
+          
         </tr>
       </table>
     </td>
@@ -86,13 +128,12 @@
     </td>
     <td>
       <table>
-        <tr>
-          <td colspan="3" style="text-align:center;">Closing stoke</td>
+        <tr valign="top">
+          <td colspan="2" style="text-align:center;">Closing stock</td>
         </tr>
         <tr>
-          <td style="width:65px;">Date</td>
-          <td>Expected</td>
-          <td style="text-align:right;">Verified</td>
+          <td>Expected <font style="color:blue">(e)</font><br>e = a + b - c -d</td>
+          <td style="text-align:right;">Verified <font style="color:blue">(f)</font></td>
         </tr>
       </table>
     </td>
@@ -102,37 +143,95 @@
           <td>&nbsp;</td>
         </tr>
         <tr>
-          <td colspan="2" style="text-align:center;">Difference</td>
+          <td colspan="2" style="text-align:center;">Verified <br> minus
+            <br>Expected <font style="color:blue">(g)</font><br>f - e</td>
+        </tr>
+      </table>
+    </td>
+    <td>
+      <table>
+        <tr>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;">Average<br>Monthly<br>Consumption <font style="color:blue">(h)</font><br>d/<%= @month_on_stock %></td>
+        </tr>
+      </table>
+    </td>
+    <td>
+      <table>
+        <tr>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;">Months<br>Of<br>Stock <font style="color:blue">(i)</font><br> f/h</td>
+        </tr>
+      </table>
+    </td>
+     <td>
+      <table>
+        <tr>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;">Remarks</td>
         </tr>
       </table>
     </td>
   </tr>
   <%color = "blue"
+  session[:stocked_out]= []
+  session[:over_stocked] = []
+  session[:under_stocked] = []
+  session[:adequately_stocked] = []
     count = 1
     original_form_count = 0
-    @stock.each{|name,values|
+   @formatted.each{|formatted|
+      drug = @drug_array["#{formatted}"]
+      drug = formatted if drug.blank?
+      name = drug
+      values = @stock["#{drug}"]
+      values = @stock[drug] if values.blank?
+      next if values.blank?
       if color == "blue"
         color = "white"
       else
         color = "blue"
       end
-      
+     name = name.gsub("(", "")
+     name = name.gsub(")", "")
+     splitted = name.split(" ")
+      i = 1
+      letters = " "
+       while (i < splitted.length) do
+        if splitted[i].upcase == "ISONIAZID"
+          i += 1
+          next
+        end
+        if splitted[i].upcase == "OR" or splitted[i].upcase == "H"
+           splitted[0] = "#{splitted[0]} #{splitted[i]}"
+         else
+         letters = "#{letters} #{splitted[i]}"
+         end
+         i += 1
+       end
       %>
   <tr>
     <td class="color_<%=color%>">
       <table class="inner-data">
         <tr>
-          <td style="width:90px;"><%=name%></td>
-          <td style="text-align:right;width:40px;vertical-align: top;">tins (60 tabs)</td>
+          <td style="text-align:left;width:80px;vertical-align: top;"><%= splitted[0] %></td>
+        <td style="text-align:right;width:100px;vertical-align: top;"><%= letters %></td>
+          <td style="text-align:right;width:60px;vertical-align: top;">tins (60 tabs)</td>
         </tr>
       </table>
     </td>
     <td class="color_<%=color%> caldata" id="current_stock_<%=count%>">
       <table class="inner-data">
         <tr>
-          <td style="width:60px;text-align:left;"><%=values['start_date']%></td>
-          <td style="width:60px;" class='positive_numbers'>
-            <a href="/drug/stock_report_edit?date=<%=values['start_date']%>&drug_id=<%=values['drug_id']%>&edit_reason=opening_stock&start_date=<%=@start_date%>&end_date=<%=@end_date%>">
+          
+          <td style="width:60px;" class='positive_numbers create_button'>
+            <a href="/drug/stock_report_edit?date=<%=values['start_date']%>&drug_id=<%=values['start_pharmacy_id']%>&edit_reason=opening_stock&start_date=<%=@start_date%>&end_date=<%=@end_date%>">
               <%=(values['confirmed_opening'] / 60).round %>
             </a>
           </td>
@@ -142,15 +241,15 @@
     <td class="color_<%=color%> caldata" id="current_stock_<%=count%>">
       <table class="inner-data">
         <tr>
-          <td style="width:30px;text-align:left;color:green;">+<%= (values['receipts'] / 60).round %></td>
+          <td  style="width:30px;text-align:left;" >+<%= (values['receipts'] / 60).round %></td>
           <% relocated = (values['relocated'] / 60).round 
             if relocated < 0
           %>
-            <td style="width:100px;color:red;"  class='negative_numbers'>
+          <td style="width:100px;color:red;"  class='negative_numbers' align="center">
               <a href="/drug/stock_report_edit?drug_id=<%=values['drug_id']%>&edit_reason=relocated&max_date=<%=values['end_date']%>&start_date=<%=@start_date%>&end_date=<%=@end_date%>"><%=relocated %></a>
             </td>
           <%else%>
-            <td style="width:100px;color:red;" class='negative_numbers'>
+            <td style="width:100px;color:red;" class='negative_numbers' align="center">
               <a href="/drug/stock_report_edit?drug_id=<%=values['drug_id']%>&edit_reason=relocated&max_date=<%=values['end_date']%>&start_date=<%=@start_date%>&end_date=<%=@end_date%>">- <%=relocated %></a>
             </td>
           <%end%>
@@ -185,10 +284,10 @@
     <td class="color_<%=color%> caldata" id="dispensed_<%=count%>">
       <table class="inner-data">
         <tr>
-          <td style="text-align:left;width:40px;"><%=values['end_date'] %></td>
+          <!--td style="text-align:left;width:40px;"><%=values['end_date'].to_date.strftime(" %d-%b-%Y") %></td -->
           <td style="text-align:left;width:75px;padding-left:12px;"><%= expected %></td>
-          <td style="text-align:right;width:75px;" class='positive_numbers'>
-            <a href="/drug/stock_report_edit?date=<%=values['end_date']%>&drug_id=<%=values['drug_id']%>&edit_reason=closing_stock&start_date=<%=@start_date%>&end_date=<%=@end_date%>">
+          <td style="text-align:right;width:75px;" class='positive_numbers create_button'>
+            <a href="/drug/stock_report_edit?date=<%=values['end_date']%>&drug_id=<%=values['end_pharmacy_id']%>&edit_reason=closing_stock&start_date=<%=@start_date%>&end_date=<%=@end_date%>">
               <%=(values['confirmed_closing'] / 60).round %>
             </a>
           </td>
@@ -197,22 +296,75 @@
     </td>
     <td class="color_<%=color%> caldata" id="dispensed_<%=count%>">
       <%                                                                        
-        verified = (values['confirmed_closing'] / 60).round                     
-        difference = ((verified.to_f/expected.to_f)*100).round rescue 0
+        verified = (values['confirmed_closing'] / 60).round
+
+       # if verified > 0
+           # current = expected.to_f - verified.to_f
+       # end
+       difference = ((expected.to_f - verified.to_f)).round  rescue 0
+
+       # difference = ((verified.to_f/expected.to_f)*100).round  rescue 0
       %> 
       <table class="inner-data">
         <tr>
           <%if difference < 0 %>
-            <td style="text-align:center;color:red;"><%= difference %>&#37;</td>
+            <td style="text-align:center;"><%= difference.abs %></td>
           <%elsif difference == 0 %>
-            <td style="text-align:center;color:green;"><%= difference %>&#37;</td>
+            <td style="text-align:center;"><%= difference.abs %></td>
           <%else%>
-            <td style="text-align:center;color:green;">+<%= difference %>&#37;</td>
+            <td style="text-align:center;"><%= difference.abs %></td>
           <%end%>
         </tr>
       </table>
     </td>
 
+            <td class="color_<%=color%> caldata" id="dispensed_<%=count%>">
+<% average_consumption = (dispensed / @month_on_stock) rescue 0
+  months_of_stock = ((values['confirmed_closing'] / 60).round / average_consumption ) rescue 0  %>
+      <table class="inner-data">
+        <tr>
+
+            <td style="text-align:center;"><%= average_consumption %></td>
+
+        </tr>
+      </table>
+    </td>
+            <td class="color_<%=color%> caldata" id="dispensed_<%=count%>">
+
+      <table class="inner-data">
+        <tr>
+            <% if months_of_stock < 2 %>
+            <td style="text-align:center;color:red;"><%= months_of_stock  %></td>
+            <%  else %>
+            <td style="text-align:center;color:green;"><%= months_of_stock  %></td>
+            <%  end %>
+
+
+        </tr>
+      </table>
+    </td>
+    <td class="color_<%=color%> caldata" id="dispensed_<%=count%>">
+
+      <table class="inner-data">
+        <tr>
+            <% if months_of_stock <= 0
+             session[:stocked_out] <<  name %>
+            <td style="text-align:center;color:red;"><a href="/drug/list_stock?id=stocked_out">Stocked Out</a></td>
+            <%  elsif months_of_stock > 0 and months_of_stock <= 2
+            session[:under_stocked] << name %>
+            <td style="text-align:center;color:green;"><a href="/drug/list_stock?id=under_stocked">Understocked</a></td>
+            <% elsif months_of_stock > 2 and months_of_stock < 5
+            session[:adequately_stocked] << name %>
+            <td style="text-align:center;color:green;"><a href="/drug/list_stock?id=adequately_stocked">Adequately stocked</a></td>
+            <% else
+            session[:over_stocked] << name %>
+            <td style="text-align:center;color:green;"><a href="/drug/list_stock?id=over_stocked">Overstocked</a></td>
+            <%  end %>
+
+
+        </tr>
+      </table>
+    </td>
 
 
    </tr>
@@ -220,9 +372,10 @@
       original_form_count+=1
     }%>
 </table>
+ </div>
 </div>
 
 <script>
-  dataT();
+  //dataT();
 </script>
 

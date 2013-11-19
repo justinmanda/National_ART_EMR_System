@@ -1,0 +1,152 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Bart2 - Stock chart</title>
+    <style>
+
+      .highcharts-button {
+         display: none;
+      }
+
+    </style>
+		<%= javascript_include_tag "Highcharts/js/jquery.min.js" %>
+		<script type="text/javascript">
+
+		var stocks = JSON.parse('<%=@stocks%>');
+  function getDates() {
+    dates = [];
+    for(var i = 0; i < stocks.length; i++) {
+      dates.push(stocks[i][0]);
+    }
+    return dates;
+  }
+
+
+$(function () {
+        $('#container').highcharts({
+            chart: {
+                type: 'bar'
+            },
+            title: {
+                text: 'ARV Stock/Consumption'
+            },
+            subtitle: {
+                text: ''
+            },
+            xAxis: {
+                categories:  getDates(),
+                labels: {
+                formatter: false,
+                overflow: 'justify',
+                rotation: false,
+                lineColor: 'black',
+                 formatter: function() {
+                   return this.value
+                 },
+                 style: {
+                  color: 'black',
+                  fontSize: '13px'
+                  },
+                  staggerLines: 2
+               },
+            reversed: true
+            },
+            yAxis: {
+            align: 'left',
+            plotBands: [{ // mark the weekend
+                color: '#66CDAA',
+                from: 2,
+                to: 5
+            }],
+            tickInterval: 1,
+            startOnTick: false,
+            endOnTick: false,
+            min: 0,
+                title: {
+                    enabled: false
+                },
+                labels: {
+                    formatter: function() {
+
+                       return this.value;
+                    },
+                    style: {
+                  color: 'black',
+                  fontSize: '20px'
+                  },
+                  align: 'center'
+                }
+            },
+            tooltip: {
+                shared: true,
+                valueSuffix: ' '
+            },
+            plotOptions: {
+                area: {
+                    pointStart: 1940,
+                    marker: {
+                    enabled: false,
+                    symbol: 'circle',
+                    radius: 2,
+                    states: {
+                        hover: {
+                            enabled: true
+                        }
+                    }
+                    }
+                  }
+            },
+            series: dataG()
+            
+                
+        });
+    });
+
+ function dataG() {
+      var correctedWeights = [];
+
+      for(var i = 0; i < stocks.length; i++) {
+        correctedWeights.push(stocks[i][1]);
+      }
+      return [{name: 'Month(s)', showInLegend: false, data: correctedWeights, Color: 'red', pointWidth: 25}];
+    }
+    </script>
+  </head>
+  <body>
+
+<%= javascript_include_tag "Highcharts/js/highcharts" %>
+<%= javascript_include_tag "Highcharts/js/modules/exporting" %>
+<div id="container" style="width: 100%; height: 100%; margin: 0 auto">
+</div>
+  <style>
+    path {
+      stroke: "" ! important;
+    }
+
+  </style>
+<script>
+  function removeHighcharts() {
+/*    try {
+      document.getElementsByClassName('highcharts-button')[0].innerHTML = null;
+    }catch(e){}
+ */
+    tspan = document.getElementsByTagName('tspan');
+    for(var i = 0; i < tspan.length; i++){
+      if(tspan[i].innerHTML == 'Highcharts.com'){
+        tspan[i].innerHTML = null;
+        break;
+      }
+    }
+
+  }
+
+  setInterval("removeHighcharts();",300);
+</script>
+
+	</body>
+</html>
+
+
+
+

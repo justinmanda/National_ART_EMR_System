@@ -240,13 +240,14 @@ class GenericClinicController < ApplicationController
   end
 
   def management_tab
-    @reports = [
+       @reports = [
       ["Enter receipts<br />(from warehouse)","delivery"],
       ["Enter verified stock count<br />(supervision)","delivery?id=verification"],
       ["Print<br />Barcode","print_barcode"],
-      ["Expiring<br />drugs","date_select"],
-      ["Enter drug relocation<br />(in or out) / disposal","edit_stock"],
-      ["Stock<br />report","date_select"]
+      #["Expiring<br />drugs","date_select"],
+      ["Enter drug relocation<br />(in or out) / disposal","delivery?id=relocation"],
+      ["Stock<br />report","date_select"],
+      ["Stock <br />Charts","stock_movement_menu?goto=stoke_movement"]
     ]
     render :layout => false
   end
