@@ -2,7 +2,7 @@
   <head>
     <title>Patient Treatment Dashboard</title>
     <script type="text/javascript" language="javascript"
-    src="/touchscreentoolkit/lib/javascripts/touchScreenToolkit.js" defer  ></script>
+    src="/touchscreentoolkit/lib/javascripts/touchScreenToolkit.js" defer  ></script>    
     <meta http-equiv='content-type' content='text/html;charset=UTF-8' />
     <%#= javascript_include_tag "jquery" %>
     <%= javascript_include_tag "Highcharts/js/jquery.min.js" %>
@@ -42,6 +42,7 @@
         loadChart();
       });
 
+      var patientDash = "/patients/show/<%= params[:found_person_id] %>"
       tt_cancel_destination = "/clinic";
 
 <%if !@patient_bean.archived_filing_number.blank? && !@pp.match(/patient\sdied/i) %>
@@ -50,7 +51,7 @@
     tt_cancel_show = "javascript:confirmAction(1)";
 <% elsif @defaulted  %>
     tt_cancel_show = "javascript:confirmAction(2)";
-<% else %>
+<% else %> 
     tt_cancel_show = "<%=@task.url%>";
 
 <% end %>
@@ -71,7 +72,7 @@
          document.getElementById("btnNext").setAttribute("onclick","showPopup();")
   <% end %>
   }
-
+			
   function showPopup(){
     popup = document.getElementById('popup')
     if (typeof popup != 'undefined'){
@@ -80,9 +81,32 @@
     }
   }
 
+  function confirmOperations(message, responseAction, okOnly) {
+
+    if(!__$("tstMessageBar")){
+        var tstMessageBar = document.createElement("div");
+        tstMessageBar.id = "tstMessageBar";
+        tstMessageBar.className = "messageBar";
+
+        __$("content").appendChild(tstMessageBar);
+
+    }
+
+    __$("tstMessageBar").innerHTML = (message ? message : "Some important tasks are yet to be done. " +
+        "Are you sure you still want to continue?") + "<br/>" +
+    (okOnly ? "" : "<button onmousedown='hideMessage(); cancelOperation(\"" + responseAction + "\");'><span>Yes</span></button>") +
+    "<button onmousedown='hideMessage(); cancelOperation(\"" + patientDash + "\");'><span>" + (okOnly ? "OK" : "No") + "</span></button>";
+    __$("tstMessageBar").style.display = "block";
+
+}
+
+function cancelOperation(action){
+    window.location = action;
+}
+
   function confirmAction(status){
     if(status == 0) {
-      confirmOperation("Patient files in archive cabinets.Move to active cabinets?",
+      confirmOperations("Patient files in archive cabinets.Move to active cabinets?",
       "/patients/set_new_filing_number/<%=@person.patient.id %>");
     } else if(status == 1) {
       confirmOperation("Patient was transferred out. Do you wish to continue?",
@@ -91,7 +115,7 @@
       confirmOperation("Patient is a defaulter. Do you wish to continue?",
       "<%=@task.url%>");
     }
-
+    
     return;
   }
 
@@ -99,7 +123,7 @@
     __$("patient-dashboard-main").style.width = "100%";
   }
   function loadChart(){
-
+    
     try{
       <%
       dateToday = session[:datetime].to_date rescue Date.today
@@ -115,11 +139,11 @@
       }
     }catch(exp){
       setTimeout("loadChart()", 100);
-    }
-
-  }
-
-
+    }  
+  
+  } 
+  
+			
   setTimeout('reSize()',500);
     </script>
   </head>
@@ -280,11 +304,11 @@
               javascript:confirmAction(2);
         <% else %>
               window.location="<%= next_task(@person.patient)%>"
-        <% end %>
+        <% end %>	
   }
-
+			
   function viral_load_requested_today(){
-
+			
     jQuery.ajax({
       type: "POST",
       url: "/patients/viral_load_request",
@@ -292,7 +316,7 @@
       success: function(){
         window.location="<%= next_task(@person.patient)%>"
       }
-
+					
     });
   }
 
@@ -516,7 +540,7 @@
       font-weight: bold;
       font-size: 14pt;
     }
-
+    
   </style>
 
 

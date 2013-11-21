@@ -468,7 +468,6 @@ class GenericPeopleController < ApplicationController
 	end
 
   def create
-
     if confirm_before_creating and not params[:force_create] == 'true' and params[:relation].blank?
       @parameters = params
       birthday_params = params.reject{|key,value| key.match(/gender/) }
@@ -551,7 +550,7 @@ class GenericPeopleController < ApplicationController
         break
       end if create_from_dde_server
       #............................................................................
-
+      #if params
       if not people_ids.blank? or not @dde_search_results.blank?
         redirect_to :action => :create_confirm , :people_ids => people_ids ,
           :user_entered_params => @parameters and return
@@ -612,9 +611,53 @@ class GenericPeopleController < ApplicationController
       unless (params[:relation].blank?)
         redirect_to search_complete_url(person.id, params[:relation]) and return
       else
+      if  params[:guardian_present] == "YES"
+        new_encounter = {"encounter_datetime"=> (session[:datetime] rescue Date.today),
+        "encounter_type_name"=>"HIV RECEPTION",
+        "patient_id"=> person.id,
+        "provider_id"=> current_user.id}
 
+       encounter = Encounter.new(new_encounter)
+       encounter.encounter_datetime = session[:datetime] rescue Date.today
+       encounter.save
+
+      reason_obs = {}
+      reason_obs[:concept_name] = 'GUARDIAN PRESENT'
+      reason_obs[:encounter_id] = encounter.id
+      reason_obs[:obs_datetime] = encounter.encounter_datetime || Time.now()
+      reason_obs[:person_id] ||= encounter.patient_id
+      reason_obs['value_coded_or_text'] = "YES"
+      Observation.create(reason_obs)
+
+      reason_obs = {}
+      reason_obs[:concept_name] = 'PATIENT PRESENT'
+      reason_obs[:encounter_id] = encounter.id
+      reason_obs[:obs_datetime] = encounter.encounter_datetime || Time.now()
+      reason_obs[:person_id] ||= encounter.patient_id
+      reason_obs['value_coded_or_text'] = "YES"
+      Observation.create(reason_obs)
+      
+      redirect_to "/relationships/search?patient_id=#{person.id}&return_to=/people/redirections?person_id=#{person.id}" and return
+      else
+      redirect_to "/people/redirections?person_id=#{person.id}" and return
+     end
         #raise use_filing_number.to_yaml
-        if use_filing_number and hiv_session
+       
+      end
+    else
+      # Does this ever get hit?
+      redirect_to :action => "index"
+    end
+  end
+
+  def redirections
+        person = Person.find(params[:person_id])
+        hiv_session = false
+        if current_program_location == "HIV program"
+            hiv_session = true
+        end
+       if use_filing_number and hiv_session
+
           PatientService.set_patient_filing_number(person.patient)
           archived_patient = PatientService.patient_to_be_archived(person.patient)
           message = PatientService.patient_printing_message(person.patient,archived_patient,creating_new_patient = true)
@@ -626,12 +669,7 @@ class GenericPeopleController < ApplicationController
         else
           print_and_redirect("/patients/national_id_label?patient_id=#{person.id}", next_task(person.patient))
         end
-      end
-    else
-      # Does this ever get hit?
-      redirect_to :action => "index"
-    end
-  end 
+  end
 
   def set_datetime
     if request.post?

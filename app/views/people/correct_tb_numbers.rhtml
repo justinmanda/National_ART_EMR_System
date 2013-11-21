@@ -1,0 +1,52 @@
+<style>
+  .tt_controls_new_tb_registration_number #Unknown { display:block; }
+
+  #category{
+	height:auto ! important;
+	font-size:27px ! important;
+  }
+</style>
+
+<script>
+  function tb_number(){
+   inputElement = $('tt_page_new_tb_registration_number').getElementsByTagName("input")[0]
+    prefix = document.createElement("span")
+    style = document.createAttribute("style")
+    style.value = "position: absolute; z-index: 100; left: 47px; font-size: 44px;"
+    prefix.setAttributeNode(style)
+    inputElement.setAttribute("style","text-align:right;width:100%;")
+	<% if get_global_property_value("site_prefix") == "MPC" %>
+	   prefix.innerHTML = "LL-TB"
+	<% else %>
+	   prefix.innerHTML = "<%= get_global_property_value("site_prefix") rescue nil %>-TB"
+	<% end %>
+    inputElement.parentNode.insertBefore(prefix, inputElement)
+    style.value+= 'left:35px;'
+    prefix.setAttributeNode(style)
+
+  }
+</script>
+<% reasons = ["Assign New", "Reassigning", "Voiding Permanently"] %>
+
+<form method="post" action="correct_tb_numbers">
+<input type='hidden' name='patient_id' value='<%= @patient.id %>' />
+
+<%= touch_select_tag "REASON", '', options_for_select(reasons),
+        {:id => "edit_reason",
+         :multiple => false,
+         :name => 'name',
+         :optional => false,
+         :helpText => "Type Of Correction",
+         :tt_pageStyleClass => "NoKeyboard NoInput small"  } %>
+
+        <%= touch_identifier_tag @patient, "District TB Number", @identifier_value,
+            {:id => "tb_district_number",
+             :optional => false,
+             :name => 'number',
+             :condition => "$('edit_reason').value == 'Reassigning'",
+             :field_type => "number",
+             :tt_onLoad => "tb_number();$('clearButton').style.display = 'inline';",
+             :tt_pageStyleClass => "Numeric NumbersOnly",
+             :helpText => "New TB registration number" } %>
+
+</form>
