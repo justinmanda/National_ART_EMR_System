@@ -1,3 +1,195 @@
+<style>
+
+  #popup {
+    top: 50px;
+    height:80% ! important;
+  }
+
+  #reason_for_tb_treatment_change {
+    height:80%;
+    width:100%;
+    background:none repeat scroll 0 0 light-grey;
+    border-color: -moz-use-text-color -moz-use-text-color silver;
+    border-style: none none solid;
+    border-width: medium medium 1px;
+    font-family: "Nimbus Sans L","Arial Narrow",sans-serif;
+    font-size: 2.2em;
+    padding-left: 5px;
+
+  }
+
+  #main_head{
+    float: left;
+    width: 100%;
+    font-size: 32px;
+    font-weight:bold;
+  }
+
+  #reason_for_change{
+    height:311px;
+    width:100%;
+    border-style: none none solid;
+    border-width: medium medium 1px;
+    font-family: "Nimbus Sans L","Arial Narrow",sans-serif;
+    font-size: 2.2em;
+    padding-left: 5px;
+    color: black;
+    background-color:white;
+    border-radius: 20px ;
+    border-style:solid;
+    border-color:#ff0000 #0000ff;
+
+  }
+
+  .create_button {
+    background-color: #7784AE;
+    border-bottom: 1px outset black;
+    border-radius: 7px 7px 7px 7px;
+    border-style: outset;
+    border-top: 1px outset black;
+    color: #E8EAF1;
+    display: block;
+    padding: 10px 16px 10px 10px;
+    text-align: center;
+    text-decoration: none !important;
+    font-size:27px;
+    width: 138%
+  }
+
+  #ok {
+    float:right ! important;
+    width: 150px;
+  }
+
+  #cancel {
+    float:left ! important;
+    width: 150px;
+  }
+
+  #cover {
+    position: absolute;
+    background-color: black;
+    width: 100%;
+    height: 100%;
+    left: 0%;
+    top: 0%;
+    z-index: 500;
+    opacity: 0.5;
+    align: center;
+    display:none;
+  }
+
+  #newText{
+    top: 40%;
+    left: 40%;
+    margin-top: -200px;
+    margin-left: -250px;
+    position: absolute;
+    margin-right:auto;
+    width: 800px;
+    height: 38px;
+    padding-bottom: 10px;
+    font-size: 2em;
+    text-align: left;
+    background-color: white;
+    padding: 10px;
+    z-index: 999;
+    border: 5px outset blue;
+    border-radius: 15px;
+    z-index: 900;
+    display:none;
+  }
+
+  #alertPage{
+    top: 50%;
+    left: 40%;
+    margin-top: -200px;
+    margin-left: -250px;
+    position: absolute;
+    margin-right:auto;
+    width: 800px;
+    padding-bottom: 10px;
+    font-size: 1em;
+    text-align: center;
+    background-color: #7784AE;
+    padding: 10px;
+    z-index: 999;
+    border: 5px outset blue;
+    border-radius: 15px;
+    z-index: 900;
+  }
+
+  #remove {
+    float:right;
+  }
+</style>
+<script language="javascript">
+
+  function setValue(td){
+    window.location ='/clinic/programs?user_id=<%=  params[:user_id] %>&location_id=<%= session[:location_id] || params[:location_id] %>&program=' + td.value;
+    //alert(td.value)
+  }
+
+  function remove(){
+    var ele = document.getElementById('cover')
+    var alert = document.getElementById('alertPage');
+    document.body.removeChild(alert)
+    ele.style.display = "none";
+  }
+  function selectProgram(){
+
+    var ele = document.getElementById('cover')
+    ele.style.display = "inline";
+    document.body.appendChild(ele);
+
+    var newDiv = document.createElement('div');
+    newDiv.id = "alertPage";
+    newDiv.style.left = "32%";
+    newDiv.style.top = "30%";
+    newDiv.style.width = "487px";
+    newDiv.style.height = "312px";
+
+    var display = "<div height='80%'>"//<div id = 'reason_for_change'>"
+    //display +=	'<input type="checkbox" id="reason_for_change" class="create_button" name="Asthma program" value="ASTHMA PROGRAM" onmousedown="setValue(this)">'
+    //display +=	'<label for="reason_for_change">Asthma program</label>'
+
+    display += '<div id = "reason_for_change">'
+    display += '<fieldset data-role="controlgroup">'
+    display += '<legend>Choose a action:</legend>'
+    display += '<table cellspacing="10"><tr>'
+
+    display += '<td align="center"><a href="/people/find_by_arv_number"  class="create_button">Find by ARV number</a></td></tr>'
+
+    display += '<tr>'
+    display += '<td align="center"><a href="/people/find_by_tb_number"  class="create_button">Find by TB number</a></td></tr>'
+
+    display += '</table>'
+
+    display += '</fieldset>'
+    display += "<div id='remove'><a href='#' ><img src='/images/minus.png' onclick='remove();' width='70px' height='67px'></a></div>"
+    display += '</div>'
+
+    //display += "<select id='reason_for_change' size='6'>";
+    ///display += "<option value=''></option>"
+    ///display += "<option value='ASTHMA PROGRAM' onmousedown='setValue(this)' class='create_button'>Asthma program</option>"
+    ///display += "<option value='HYPERTENSION PROGRAM' onmousedown='setValue(this)' class='create_button'>Hypertension and Diabetes Program</option>"
+    //display += "<option value='EPILEPSY PROGRAM' onmousedown='setValue(this)' class='create_button'>Epilepsy program</option>"
+    //for (x=0; x < reasons.length; x++){
+    // display += "<option value='" + reasons[x] + "' onmousedown='removeObs(this)' class='reasons'>" + reasons[x] + "</option>";
+    //}
+    display += "</div>";
+    newDiv.innerHTML = '<div id="popup">' + display + '</div>' ;
+    document.body.appendChild(newDiv);
+
+  }
+
+  function resetRegimen(){
+    element = document.getElementById('nextButton')
+    element.setAttribute("onmousedown", "gotoNextPage()")
+  }
+</script>
+<div id="cover" align="center">
+</div>
 <html>
   <head>
     <title>Clinic</title>
@@ -57,8 +249,8 @@ on the rest of the stations %>
               <%# end %>
 
 <%# Hide Find by ARV Number button on non-HIV workstations %>
-              <% if @location =~ /HIV/ %>
-                <option value="/people/find_by_arv_number" ttSize="265px">Find By ARV Number</option>
+              <% if @location =~ /HIV/ or @location =~ /TB/ %>
+                <option value="javascript:selectProgram()" ttSize="265px">Find By?</option>
               <% end %>
               <% if development_environment? %>
                 <option value='/location?from=clinic' ttSize="100px">Swap Desk</option>
