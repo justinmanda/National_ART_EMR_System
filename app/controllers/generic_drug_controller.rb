@@ -146,15 +146,14 @@ class GenericDrugController < ApplicationController
 
   def create_stock
     params[:obs].each{ |delivered|
-      next delivered[1]["amount"] == 0
-      drug_id = Drug.find_by_name(delivered[0]).id rescue []
+     drug_id = Drug.find_by_name(delivered[0]).id rescue []
       delivery_date = params[:delivery_date].to_date
       date_value = delivered[1]['date'].split("/")
       current_century = Date.today.year.to_s.chars.each_slice(2).map(&:join)[0].to_i
       
       year = date_value[1]
       month = date_value[0]
-      expiry_date = "#{current_century}#{year}-#{month}-#{01}".to_date rescue Date.today
+      expiry_date = "#{current_century}#{year}-#{month}-#{01}".to_date
       expiry_date += 1.months
       expiry_date -= 1.days
       

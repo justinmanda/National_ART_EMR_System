@@ -57,10 +57,10 @@
     <% h += 1
   else %>
         html += '<tr><td width="20%">' + '<%= splitted[0] %></td>' + '<td align="right"  width="32%"><%= letters %></td><td class="newIunputs">'
-        html += "<input name='obs[" + '<%=  drug %>' + "][expire_amount]' type='text' onclick='showMe(this)' class='inputs'>"
+        html += "<input name='obs[" + '<%=  drug %>' + "][amount]' type='text' onclick='showMe(this)' class='inputs'>"
 
         html += "</td><td><input name='obs[" + '<%=  drug %>' + "][date]' type='text' onclick='showMe(this)' class='dates' ></td>";
-        html += "</td><td align='right'><input name='obs[" + '<%= drug %>' + "][amount]' type='text' onclick='showMe(this)' class='inputs' /></td></tr>";
+        html += "</td><td align='right'><input name='obs[" + '<%= drug %>' + "][expire_amount]' type='text' onclick='showMe(this)' class='inputs' /></td></tr>";
         html += "<tr><td colspan =6 ><hr></td></tr>"
   <% end %>
   <%  } %>
