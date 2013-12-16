@@ -1,3 +1,9 @@
+<style>
+  .touchscreenTextInput {
+    width:98% ! important;
+  }
+  #tt_page_art_number #viewPort {  width: 90%; }
+</style>
 
 <script>
   var tt_cancel_destination = "/patients/show/<%= @patient.patient_id %>"
@@ -50,12 +56,14 @@
           <%= select_tag "observations[][value_text]", relationship_options(@patient),
           {:id => "guardian_present",
            :multiple => false,
+           :tt_onLoad => "showCategory('RECEPTION');",
            :optional => false,
            :tt_onUnLoad => "forcePatientPresentYes(),setTimeout(cleanup_guardian_options() , 500)" } %>
         <% else %>
           <%= select_tag "observations[][value_text]", options_for_select([['Yes','YES'],['No','NO']]),
           {:id => "guardian_present",
            :multiple => false,
+           :tt_onLoad => "showCategory('RECEPTION');",
            :optional => false,
            :tt_onUnLoad => "forcePatientPresentYes(),setTimeout(cleanup_guardian_options() , 500)" } %>
        <% end %>
@@ -71,11 +79,13 @@
           {:id => "guardian_present",
            :multiple => false,
            :optional => false,
+           :tt_onLoad => "showCategory('RECEPTION');",
            :tt_onUnLoad => "forcePatientPresentYes(),setTimeout(cleanup_guardian_options() , 500)" } %>
         <% else %>
           <%= select_tag "observations[][value_text]", options_for_select([['Yes','YES'],['No','NO']]),
           {:id => "guardian_present",
            :multiple => false,
+           :tt_onLoad => "showCategory('RECEPTION');",
            :optional => false,
            :tt_onUnLoad => "forcePatientPresentYes(),setTimeout(cleanup_guardian_options() , 500)" } %>
        <% end %>
@@ -92,7 +102,7 @@
     <%= select_tag "observations[][value_coded_or_text]", options_for_select([['Yes','YES'],['No','NO']]),
       {:id => 'patient_present',
        :condition => "$('guardian_present').value == 'YES'",
-       :tt_onLoad => 'hide_new_relationship_button()'} %>
+       :tt_onLoad => 'hide_new_relationship_button();showCategory("RECEPTION");'} %>
     <%= hidden_field_tag("observations[][value_text]", nil) %>
     <%= hidden_field_tag("observations[][concept_name]", "PATIENT PRESENT") %>
     <%= hidden_field_tag("observations[][patient_id]", @patient.id) %>

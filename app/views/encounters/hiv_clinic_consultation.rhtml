@@ -11,15 +11,19 @@
     max-height: 70px;
 
   }
+
   input[type='checkbox'] {
     /* Double-sized Checkboxes */
     -ms-transform: scale(2); /* IE */
     -moz-transform: scale(2); /* FF */
     -webkit-transform: scale(2); /* Safari and Chrome */
     -o-transform: scale(2); /* Opera */
-    padding: 10px;
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 10px;
+    background: #555;
+    margin: 20px 80px;
+    position: relative;
+    border-radius: 3px;
   }
   td{
     font-size: 42px;
@@ -111,32 +115,32 @@
   }
 
   function addStage(outcome){
-	outcomes = outcome.id
-	theForm = document.getElementById("consultation");
-	try {
-	  removable = document.getElementById(outcome.id.replace(/ /g,"_").toLowerCase());
-	  document.getElementById(removable.id).parentNode.removeChild(removable);
-	}
-	catch(e){
+    outcomes = outcome.id
+    theForm = document.getElementById("consultation");
+    try {
+      removable = document.getElementById(outcome.id.replace(/ /g,"_").toLowerCase());
+      document.getElementById(removable.id).parentNode.removeChild(removable);
+    }
+    catch(e){
 
-	}
-	if (outcome.checked == 1){
-	  var dates = new Date();
-	  formatted = outcome.id.replace(/ /g,"_");
-	  appendObs("observations[][concept_name]", 'SYMPTOM PRESENT');
-	  appendObs("observations[][value_coded_or_text]", outcomes)
-	  appendObs("observations[][patient_id]", '<%= @patient.id %>')
-	  appendObs("observations[][obs_datetime]", dates);
-          setTbStatus(outcomes)
-	}
+    }
+    if (outcome.checked == 1){
+      var dates = new Date();
+      formatted = outcome.id.replace(/ /g,"_");
+      appendObs("observations[][concept_name]", 'SYMPTOM PRESENT');
+      appendObs("observations[][value_coded_or_text]", outcomes)
+      appendObs("observations[][patient_id]", '<%= @patient.id %>')
+      appendObs("observations[][obs_datetime]", dates);
+      setTbStatus(outcomes)
+    }
   }
   function appendObs(obs, value){
-	var newOption = document.createElement("input");
-	newOption.type = "hidden";
-	newOption.id = formatted.toLowerCase();
-	newOption.name = obs;
-	newOption.value = value;
-	theForm.appendChild(newOption);
+    var newOption = document.createElement("input");
+    newOption.type = "hidden";
+    newOption.id = formatted.toLowerCase();
+    newOption.name = obs;
+    newOption.value = value;
+    theForm.appendChild(newOption);
   }
 
   function showSymptoms(){
@@ -149,8 +153,8 @@
       if (cntrl == 1){
         html += '<tr>'
       }
-      html += "<td ><input id='" + '<%=  symptom[0] %>' + "'  name='obs[symptoms]["+ '<%=  symptom[0] %>' + "]' type='checkbox' class='inputs' onclick='addStage(this);'></td>";
-      html += '<td><%= symptom[0] %></td>';
+      html += "<td ><label><input id='" + '<%=  symptom[0] %>' + "'  name='obs[symptoms]["+ '<%=  symptom[0] %>' + "]' type='checkbox' class='inputs checkbox' onclick='addStage(this);'>";
+      html += '<%= symptom[0] %></label></td>';
       if (cntrl % 2 === 0){
         html += '</tr><tr>'
       }
@@ -165,32 +169,32 @@
 
   function getSelectedSymptoms() {
 
-     options = document.getElementsByClassName('inputs');
-     //var arr = Array.prototype.slice.call(options)
+    options = document.getElementsByClassName('inputs');
+    //var arr = Array.prototype.slice.call(options)
     var symptoms = new Array();
-   // inputs = document.getElementsByClassName('inputs')
-   // alert(inputs)
+    // inputs = document.getElementsByClassName('inputs')
+    // alert(inputs)
     //alert(options.toArray())
 <% @side_effects = concept_set('MALAWI ART DRUG INDUCED SYMPTOM SET') %>
     var myArray = "<%= @side_effects.to_a %>";
     var y = -1;
     var css = "even";
     for (var i=0; i < selected.length; i++) {
-        if (myArray.indexOf(selected[i]) != -1) {
-          y = y + 1;
-          symptoms +=  '<li id="' + y + '" class="' + css + '" onclick="null; updateTouchscreenInputForSelect(__$(\'optionValue\' + this.id));" onmousedown="" tag="odd" tstvalue="' + selected[i] + '" style="">'
-            + "<div style='display: table; border-spacing: 0px;' <div style='display: table-row'><div style='display: table-cell;'><img id='img" + y + "' alt='[ ]' src='/touchscreentoolkit/lib/images/unticked.jpg'></div><div id='optionValue" + y + "' style='display: table-cell; vertical-align: middle; text-align: left; padding-left: 15px;'>"
-            + selected[i]
-            + "</div></div>"
-            + "</li>";
-          if(css == "odd") {
-            css = "even";
-          } else {
-            css = "odd";
-          }
-
-          $("drug_induced_effects").innerHTML += "<option>" + selected[i] + "</option>";
+      if (myArray.indexOf(selected[i]) != -1) {
+        y = y + 1;
+        symptoms +=  '<li id="' + y + '" class="' + css + '" onclick="null; updateTouchscreenInputForSelect(__$(\'optionValue\' + this.id));" onmousedown="" tag="odd" tstvalue="' + selected[i] + '" style="">'
+          + "<div style='display: table; border-spacing: 0px;' <div style='display: table-row'><div style='display: table-cell;'><img id='img" + y + "' alt='[ ]' src='/touchscreentoolkit/lib/images/unticked.jpg'></div><div id='optionValue" + y + "' style='display: table-cell; vertical-align: middle; text-align: left; padding-left: 15px;'>"
+          + selected[i]
+          + "</div></div>"
+          + "</li>";
+        if(css == "odd") {
+          css = "even";
+        } else {
+          css = "odd";
         }
+
+        $("drug_induced_effects").innerHTML += "<option>" + selected[i] + "</option>";
+      }
       
     }
 
@@ -249,9 +253,9 @@
     if (symptom == undefined){
       return
     }
-        if ((symptom.toUpperCase() == "FEVER") || (symptom.toUpperCase() == "COUGH") || (symptom.toUpperCase() == "NIGHT SWEATS")){
-          x += 1
-        }
+    if ((symptom.toUpperCase() == "FEVER") || (symptom.toUpperCase() == "COUGH") || (symptom.toUpperCase() == "NIGHT SWEATS")){
+      x += 1
+    }
 
 <%  if @tb_programs_state.nil? %>
       if (x > 0){
@@ -444,7 +448,7 @@
           <%= touch_select_tag "FAMILY PLANNING METHOD", @patient, options_for_select(@select_options['dual_options']),
             { :id => "other_method",
             :condition => '$("dual_method").value == "YES"',
-            :tt_onLoad => "other_method ='',showCategory('CONSULTATION');",
+            :tt_onLoad => "other_method ='';showCategory('CONSULTATION');",
             :multiple => true,
             :tt_pageStyleClass => "NoKeyboard",
             :helpText => "Select other contraceptive method"
@@ -477,14 +481,14 @@
       :helpText => "Side effects (select all that apply)" } %>
   <% else %>
 
-    
+
     <%= text_field_tag :showSummary, nil,
       {
       :tt_onLoad => "showSymptoms();showCategory('CONSULTATION');$('clearButton').style.display = 'none';  ",
       :tt_onUnLoad => " $('clearButton').style.display = 'inline';",
       :optional => "true",
       :tt_pageStyleClass => "NoKeyboard",
-      :helpText => "Side symptoms (select all that apply)"
+      :helpText => "Symptoms (select all that apply)"
     } %>
 
     <%= touch_hidden_tag "TB STATUS", @patient, nil, {:id => "tb_status"}%>
@@ -499,15 +503,15 @@
         :tt_onLoad => "showCategory('CONSULTATION');getSelectedSymptoms()",
         :tt_onUnLoad => 'setTbStatus();'} %>
     <% end %>
-  
-      <%= touch_select_tag "Confirmed", @patient, options_for_select([['', ''],['Confirmed TB not on treatment', 'Confirmed TB not on treatment'],['Confirmed TB on treatment','Confirmed TB on treatment'],['Confirm later','Confirm later']]),
+
+    <%= touch_select_tag "Confirmed", @patient, options_for_select([['', ''],['Confirmed TB not on treatment', 'Confirmed TB not on treatment'],['Confirmed TB on treatment','Confirmed TB on treatment'],['Confirm later','Confirm later']]),
       {	:id => "tb_suspected",
       :condition => '$("tb_status").value.toUpperCase() == "TB SUSPECTED"',
       :helpText => "TB suspected, Please confirm?",
-      :tt_onLoad => "resetTbStatus();"} %>
+      :tt_onLoad => "showCategory('CONSULTATION');resetTbStatus();"} %>
   <% end %>
-  
- 
+
+
 
 
 
@@ -545,7 +549,7 @@
 
   <% if current_user_roles.include?('Nurse') and patient_present %>
     <%= touch_yes_no_tag "REFER TO ART CLINICIAN", @patient, nil,
-      {:id => "refer_to_clinician",
+      {:tt_onLoad => "showCategory('CONSULTATION');",:id => "refer_to_clinician",
       :helpText => "Refer patient to clinician?" } %>
   <%else%>
     <%= touch_hidden_tag "REFER TO ART CLINICIAN", @patient, "NO", :id => "refer_to_clinician" %>

@@ -122,6 +122,13 @@
           <div id="buttons" class="buttons" style="top:0px">
             <button id="logout" class="blue left" style="position :relative; float:right;"><span>Finish</span></button>
             <button id="find" class="green" style="width:200px;" style="position :relative; float:right;"><span>Mastercards</span></button>
+            <% if  params[:action] == 'cohort' %>
+            <button id="switch_view" class="button navButton blue" onclick="showReport();"><span>Survival Analysis</span></button>
+			<button id="switch_view_children" class="button navButton blue" onclick="showReportChildren();"><span>Children Survival Analysis</span></button>
+			<button id="switch_view_women" class="button navButton blue" onclick="showReportWomen();"><span>Women Survival Analysis</span></button>
+            <% else %>
+                    <button id="find" class="green" style="width:200px;" style="position :relative; float:right;"><span>Mastercards</span></button>
+            <% end %>
             <% if current_user.admin? %>
             <!--button id="staging" class="yellow"><span>Staging</span></button-->
             <% end %>

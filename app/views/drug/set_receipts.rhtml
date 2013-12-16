@@ -147,7 +147,7 @@
       }
 
       function showDrugs(){
-        html = "<form id='stock' name='stock' action='create_stock' method='post'><table width='98%' align= 'center' class='stocks'><th colspan=6 >Receipts</th>";
+        html = "<form id='stock' name='stock' action='create_stock' method='post'><table width='100%' align= 'center' class='stocks'><th colspan=6 >Receipts</th>";
         html += '<tr class="header"><td width="54%" colspan=2><b>Drug</b></td><td><span style="float:center">Pills Per Tin</span></td><td >Expiry<br> <span style="float:center">Date MM/YY</span></td><td width="40%" colspan=2><b>Total <br> Tins</b></td ></tr>'
         html +="<input type='hidden' name='delivery_date' value='<%= @delivery_date %>'> <input type='hidden' name='identifier' value='<%= params[:identifier] %>' />";
 <% h = 0
@@ -409,7 +409,7 @@
       }
       .newIunputs {
         text-align: center;
-        width: 45%;
+        width: 25%;
       }
       #backspace{
         position:absolute;

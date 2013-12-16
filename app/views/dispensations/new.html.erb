@@ -24,11 +24,12 @@
   <%= hidden_field_tag :patient_id, @patient.id %>
 
   <%= select_tag :drug_id, options_for_select(@options), 
-    {:helpText => "Dispense which prescribed drug?"} %> 
+    {:helpText => "Dispense which prescribed drug?",
+     :tt_onLoad => "showCategory('PHARMACY');"} %>
 
   <% # Set ajaxURL in the script, but need to start it blank %>
   <%= text_field_tag :quantity, nil, { 
-    #:tt_onLoad => "set_drug_for_quantity();",
+    :tt_onLoad => "showCategory('PHARMACY');",
     #:ajaxURL => "", 
     :field_type => 'number',
     :units => '',

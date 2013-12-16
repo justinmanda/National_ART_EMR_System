@@ -45,9 +45,9 @@ class GenericDrugController < ApplicationController
   other = [ "Cotrimoxazole (960mg)", "Cotrimoxazole (480mg tablet)", "INH or H (Isoniazid 300mg tablet)", "INH or H (Isoniazid 100mg tablet)"]
     regimen = Regimen.find(:all,:order => 'regimen_index',
       :conditions => ['program_id = ?', 1],
-      :include => :regimen_drug_orders)#.to_yaml
+      :include => :regimen_drug_orders)
     regimen = regimen.map do |r|
-			[r.regimen_drug_orders.map(&:to_s)[0].split(':')[0]]
+			[r.regimen_drug_orders.map(&:to_s)[0].split(':')[0]] rescue ""
 		end
     
     @names = {}
@@ -433,7 +433,7 @@ class GenericDrugController < ApplicationController
     #new_deliveries = Pharmacy.active.find(:first,
     # :conditions =>["pharmacy_encounter_type=? AND drug_id =? AND encounter_date >= ? AND encounter_date <= ?",encounter_type, params[:drug_id], params[:start_date], params[:end_date] ],
     #  :order => "encounter_date DESC,date_created DESC")
-    
+
     @stocks = []
     current_stock = {}
     @start_year = params[:start_date].to_date.year
@@ -448,30 +448,28 @@ class GenericDrugController < ApplicationController
 
     start_date = params[:start_date].to_date.strftime('%Y-%m-%d 00:00:00')
     end_date = params[:end_date].to_date.strftime('%Y-%m-%d 23:59:59')
+
+    n = params[:end_date].to_date
+    # raise Pharmacy.expected(params[:drug_id], params[:start_date], params[:end_date]).to_yaml
+
+      while n >= params[:start_date].to_date
+        new_deliveries = Pharmacy.expected(params[:drug_id], params[:start_date], n)
+        #raise new_deliveries.to_yaml
+        # new_deliveries = Pharmacy.active.find(:first,
+        # :conditions =>["pharmacy_encounter_type=? AND drug_id =? AND encounter_date >= ? AND encounter_date <= ?",encounter_type, params[:drug_id], params[:start_date], n ],
+        # :order => "encounter_date DESC,date_created DESC")
+        current_stock[n] = (new_deliveries / 60).round #rescue 0
+        n = n - 1.days
+      end
+
+    #new_deliveries.each{|delivery|
+    #  current_stock[delivery.encounter_date] = (delivery.value_numeric / 60 ).round #if current_stock[delivery.drug_id].blank?
+    # }
+
+    (current_stock || {}).sort{|a,b|a[0].to_date <=> b[0].to_date}.each do |date,weight|
+      @stocks << [date.to_date , weight]
+    end
     
-    Pharmacy.find_by_sql("
-                    SELECT obs_datetime, value_numeric FROM obs o
-                    INNER JOIN concept_name c ON c.concept_id = o.concept_id
-                    INNER JOIN encounter e ON e.encounter_id = o.encounter_id
-                    INNER JOIN encounter_type et ON et.encounter_type_id = e.encounter_type
-                    WHERE et.name = 'dispensing'
-                    AND c.name = 'amount dispensed' AND o.value_drug = #{params[:drug_id]}
-                    AND obs_datetime >= '#{start_date}' AND obs_datetime <= '#{end_date}'
-                    AND o.voided = 0 ORDER BY obs_datetime ASC").each{|dispensed|
-                      #raise  Pharmacy.expected(params[:drug_id], params[:start_date], dispensed.obs_datetime).to_yaml
-                      @stocks << [dispensed.obs_datetime.to_date.strftime('%Y-%m-%d') ,  ((Pharmacy.expected(params[:drug_id], params[:start_date], dispensed.obs_datetime) / 60).round)]
-                    }
-   encounter_type = PharmacyEncounterType.find_by_name('New deliveries').id    
-    Pharmacy.find_by_sql("
-                    SELECT * FROM pharmacy_obs p
-                    INNER JOIN pharmacy_encounter_type t ON t.pharmacy_encounter_type_id = p.pharmacy_encounter_type
-                    AND pharmacy_encounter_type_id = #{encounter_type}
-                    WHERE p.voided=0 AND drug_id=#{params[:drug_id]}
-                    AND p.encounter_date >='#{start_date} 00:00:00'
-                    AND p.encounter_date <='#{end_date}' ORDER BY encounter_date ASC").each{|received|
-                     # raise "here"
-                      @stocks << [received.encounter_date.to_date.strftime('%Y-%m-%d') ,  ((Pharmacy.expected(params[:drug_id], params[:start_date], received.encounter_date) / 60).round)]
-                    }
      @stocks = @stocks.sort_by{|atr| atr[0]}.to_json
     render :partial => "stoke_chart" and return
   end

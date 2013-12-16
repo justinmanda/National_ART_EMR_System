@@ -1205,7 +1205,7 @@ class CohortToolController < GenericCohortToolController
 			@cohort = session[:cohort]
 		end
 		session[:views]=nil; session[:chidren]; session[:nil]
-    render :layout => 'cohort'
+    render :layout => 'report'
   end
 
   def missed_appointment

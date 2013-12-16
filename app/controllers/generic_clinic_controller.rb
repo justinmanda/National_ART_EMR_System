@@ -128,6 +128,7 @@ class GenericClinicController < ApplicationController
       ["Supervision","/clinic/supervision_tab"],
       ["Data Cleaning Tools", "/clinic/data_cleaning_tab"],
       #["View appointments","/report/select_date"],
+      ["Pre-ART","/cohort_tool/cohort_menu?type=pre_art"],
       ["Drug dispensation","/report/drug_menu"],
       ["View appointments","/properties/select_date"],
       ["ART Register", "/report/art_register"],

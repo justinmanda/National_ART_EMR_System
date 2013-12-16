@@ -653,7 +653,7 @@
     <%= hidden_field_tag("programs[][date_enrolled]", session[:datetime] ) %>
     <%= hidden_field_tag("programs[][states][][state]", "Pre-ART (Continue)") %>
 
-    <%= touch_select_tag("EVER RECEIVED ART", @patient, options_for_select([['Yes','YES'],['No','NO']]), {:id => 'ever_received_art'}) %>
+    <%= touch_select_tag("EVER RECEIVED ART", @patient, options_for_select([['Yes','YES'],['No','NO']]), {:tt_onLoad => "showCategory('REGISTRATION');",:id => 'ever_received_art'}) %>
 
   <%#= touch_date_tag "DATE ART LAST TAKEN", @patient, nil,
   {	:id => "date_art_last_taken",
@@ -666,13 +666,14 @@
     <%= text_field_tag "year_art_last_taken", nil,
       { :helpText => 'Year ART last taken',
       :field_type => 'number',
+      :tt_onLoad => "showCategory('REGISTRATION');",
       :absoluteMin => "1890", :min => "1940", :absoluteMax => Date.today.year,
       :tt_pageStyleClass => "Numeric NumbersOnly",
       :condition => '$("ever_received_art").value == "YES"',
       :id => "year_art_last_taken" }  %>
 
     <%= select_tag "month_art_last_taken", month_name_options,
-      { :tt_onLoad => "__$('keyboard').style.display = 'none'",
+      { :tt_onLoad => "showCategory('REGISTRATION');__$('keyboard').style.display = 'none'",
       :helpText => 'Month ART last taken',
       :condition => '$("year_art_last_taken").value.toLowerCase() != "unknown" && $("ever_received_art").value == "YES"',
       :id => "month_art_last_taken" ,
@@ -682,7 +683,7 @@
       :field_type => 'number',
       :helpText => 'Day ART last taken',
       :condition => '($("year_art_last_taken").value !="Unknown") && ($("month_art_last_taken").value != "Unknown") && $("ever_received_art"). value == "YES"',
-      :tt_onLoad => "getDayOfMonthPicker($('year_art_last_taken').value, $('month_art_last_taken').value);$('nextButton').style.display = 'block';",
+      :tt_onLoad => "showCategory('REGISTRATION');getDayOfMonthPicker($('year_art_last_taken').value, $('month_art_last_taken').value);$('nextButton').style.display = 'block';",
       :tt_onUnLoad => 'updateTestDate();',
       :validationCode => 'checkTestDate(this);',
       :id => "day_art_last_taken" ,
@@ -694,22 +695,26 @@
     <%= touch_yes_no_unknown_tag "HAS THE PATIENT TAKEN ART IN THE LAST TWO MONTHS", @patient, nil,
       {	:id => "taken_art_in_last_two_months",
       :condition => '$("year_art_last_taken").value.toUpperCase() == "UNKNOWN"',
+      :tt_onLoad => "showCategory('REGISTRATION');",
       :helpText => "Taken ART in the last two months?" } %>
 
     <%= touch_yes_no_unknown_tag "HAS THE PATIENT TAKEN ART IN THE LAST TWO WEEKS", @patient, nil,
       {	:id => "taken_art_in_last_two_weeks",
       :condition => '$("taken_art_in_last_two_months").value == "YES" && $("year_art_last_taken").value.toUpperCase() == "UNKNOWN"',
+      :tt_onLoad => "showCategory('REGISTRATION');",
       :helpText => "Taken ART in the last two weeks?" } %>
 
     <%= touch_select_tag "LAST ART DRUGS TAKEN", @patient, options_for_select(@arv_drugs),
       {	:id => "last_art_drugs_taken",
       :multiple => true,
+      :tt_onLoad => "showCategory('REGISTRATION');",
       :condition => '$("ever_received_art").value == "YES"',
       :helpText => "Last ARV drugs taken" } %>
 
     <%= touch_yes_no_tag "Ever registered at ART clinic", @patient, nil,
       {	:id => "ever_registered_at_ART_clinic",
       :condition => "$('ever_received_art').value == 'YES'",
+      :tt_onLoad => "showCategory('REGISTRATION');",
       :helpText => "Ever registered at an ART clinic?" } %>
 
     <% session_date = session[:datetime].to_date rescue nil
@@ -718,6 +723,7 @@
     <%= touch_text_field_tag "ART NUMBER AT PREVIOUS LOCATION", @patient, nil,
       {	:id => "previous_art_number",
       :condition => '$("ever_registered_at_ART_clinic").value == "YES" && $("ever_received_art").value == "YES"',
+      :tt_onLoad => "showCategory('REGISTRATION');",
       :helpText => "ART number at previous location" } %>
       <% end %>
 
@@ -725,6 +731,7 @@
     <%= touch_yes_no_tag "HAS TRANSFER LETTER", @patient, nil,
       {	:id => "has_transfer_letter",
       :tt_onUnload=>  "$('programs__states__state').value = 'Patient transferred in'",
+      :tt_onLoad => "showCategory('REGISTRATION');",
       :condition => "$('ever_registered_at_ART_clinic').value == 'YES' && $('ever_received_art').value == 'YES'",
       :helpText => "Has staging information?" } %>
 
@@ -735,6 +742,7 @@
       {	:id => "stage_1_conditions",
       :multiple => true,
       :condition => 'showConditions()',
+      :tt_onLoad => "showCategory('REGISTRATION');",
       :optional => true,
       :helpText => "Stage 1 Conditions",
       :tt_pageStyleClass => "NoKeyboard NoInput small" } %>
@@ -743,6 +751,7 @@
       {	:id => "stage_2_conditions",
       :multiple => true,
       :optional => true,
+      :tt_onLoad => "showCategory('REGISTRATION');",
       :condition => 'showConditions()',
       :helpText => "Stage 2 Conditions",
       :tt_pageStyleClass => "NoKeyboard NoInput small"  } %>
@@ -752,6 +761,7 @@
       {	:id => "stage_3_conditions",
       :multiple => true,
       :optional => true,
+      :tt_onLoad => "showCategory('REGISTRATION');",
       :condition => 'showConditions()',
       :helpText => "Stage 3 Conditions",
       :tt_pageStyleClass => "NoKeyboard NoInput small"  } %>
@@ -761,6 +771,7 @@
       {	:id => "stage_4_conditions",
       :multiple => true,
       :optional => true,
+      :tt_onLoad => "showCategory('REGISTRATION');",
       :condition => 'showConditions()',
       :helpText => "Stage 4 Conditions",
       :tt_pageStyleClass => "NoKeyboard NoInput small"  } %>
@@ -799,7 +810,7 @@
       {	:id => "reason_for_art_eligibility",
       :condition => 'showConditions()',
       :helpText => "Reason for ART eligibility",
-      :tt_onLoad => "__$('keyboard').style.display = 'none';calculateWHOstage();",
+      :tt_onLoad => "showCategory('REGISTRATION');__$('keyboard').style.display = 'none';calculateWHOstage();",
       :tt_pageStyleClass => 'NoKeyboard' } %>
 
     <%= touch_hidden_tag "WHO STAGE", @patient, "", :id => "who_stage" %>
@@ -808,17 +819,20 @@
     <%= select_tag "new_cd4_count_available", options_for_select([['Yes','YES'],['No','NO']]),
       :id => 'new_cd4_count_available',
       :condition => 'showConditions()',
+      :tt_onLoad => "showCategory('REGISTRATION');",
       :helpText => "Initial CD4 Count available",
       :tt_pageStyleClass => 'NoKeyboard' %>
 
     <%= touch_location_tag "CD4 COUNT LOCATION", @patient, nil,
       {	:id => "cd4_count_location",
       :condition => '$("new_cd4_count_available").value == "YES" && showConditions()',
+      :tt_onLoad => "showCategory('REGISTRATION');",
       :helpText => "CD4 Count Location"} %>
 
     <%= touch_date_tag "CD4 COUNT DATETIME", @patient, nil,
       {	:id => "cd4_count_date",
       :condition => '$("new_cd4_count_available").value == "YES" && showConditions()',
+      :tt_onLoad => "showCategory('REGISTRATION');",
       :helpText => "CD4 Count Date",
       :max => "#{session[:datetime].to_date rescue Date.today}"} %>
 
@@ -828,7 +842,7 @@
       :helpText => "CD4 Count",
       :max => 1000 ,
       :min => 1 ,
-      :tt_onLoad => "updateCD4CountKeyPad();",
+      :tt_onLoad => "showCategory('REGISTRATION');updateCD4CountKeyPad();",
       :tt_onUnLoad => "updateCD4Count();"} %>
 
     <%= touch_hidden_tag "CD4 COUNT LESS THAN OR EQUAL TO 250", @patient, "", :id => "cd4_count_less_than_250" %>
@@ -838,13 +852,14 @@
       :id => 'new_cd4_percent_available',
       :condition => 'showConditions() == true',
       :helpText => "Initial CD4 percent available",
+      :tt_onLoad => "showCategory('REGISTRATION');",
       :tt_pageStyleClass => 'NoKeyboard' %>
 
     <%= touch_cd4_count_numeric_tag "CD4 PERCENT", @patient, nil,
       {	:id => "cd4_percent",
       :condition => '$("new_cd4_percent_available").value == "YES" && showConditions()',
       :helpText => "CD4 Percent",
-      :tt_onLoad => "updateCD4CountKeyPad();",
+      :tt_onLoad => "showCategory('REGISTRATION');updateCD4CountKeyPad();",
       :tt_onUnLoad => 'updateCD4Percent()'} %>
 
     <%= touch_hidden_tag "CD4 PERCENT LESS THAN 25", @patient, "", :id => "cd4_percent_less_than_25" %>
@@ -857,6 +872,7 @@
       <%= touch_location_tag "LOCATION OF ART INITIATION", @patient, nil,
         {	:id => "location_of_art_initialization",
         :condition => '$("ever_registered_at_ART_clinic").value == "YES" && $("ever_received_art").value == "YES"',
+        :tt_onLoad => "showCategory('REGISTRATION');",
         :helpText => "Location of ART initiation" } %>
 
 
@@ -864,6 +880,7 @@
         {	:helpText => 'Year started ART',
         :field_type => 'number',
         :absoluteMin => "1890", :min => "1940", :absoluteMax => Date.today.year,
+        :tt_onLoad => "showCategory('REGISTRATION');",
         :tt_pageStyleClass => "Numeric NumbersOnly",
         :condition => '$("ever_received_art").value == "YES" && $("ever_registered_at_ART_clinic").value == "YES" && showARTstartDate();',
         :id => "year_started_art" }  %>
@@ -874,7 +891,7 @@
         :id => "art_start_date_estimation",
         :allowFreeText => false,
         :tt_onUnLoad => "setUnkownStage();",
-        :tt_onLoad => "setReasonForStarting();",
+        :tt_onLoad => "showCategory('REGISTRATION');setReasonForStarting();",
         :condition => '$("year_started_art").value.toUpperCase() == "UNKNOWN" && showARTstartDate();',
         :ttMatchFromBeginning => "true")%>
 
@@ -883,7 +900,7 @@
       <%= select_tag "month_started_art", month_name_options,
         {	:helpText => 'Month started ART',
         :condition => '$("ever_received_art").value == "YES" && $("year_started_art").value.toLowerCase() != "unknown" && showARTstartDate();',
-        :tt_onLoad => "__$('keyboard').style.display = 'none';",
+        :tt_onLoad => "showCategory('REGISTRATION');__$('keyboard').style.display = 'none';",
         :tt_onUnLoad => "setUnkownStage();",
         :id => "month_started_art" ,
         :validationMessage => 'Please enter a valid date'}%>
@@ -891,7 +908,7 @@
       <%= text_field_tag "day_started_art",  nil,
         :field_type => 'number', :helpText => 'Day started ART',
         :condition => '$("ever_received_art").value == "YES" && ($("year_started_art").value !="Unknown") && ($("month_started_art").value != "Unknown") && showARTstartDate();',
-        :tt_onLoad => "getDayOfMonthPicker($('year_started_art').value, $('month_started_art').value);$('nextButton').style.display = 'block';",
+        :tt_onLoad => "showCategory('REGISTRATION');getDayOfMonthPicker($('year_started_art').value, $('month_started_art').value);$('nextButton').style.display = 'block';",
         :validationCode => "checkStartDate();",
         :id => "day_started_art" ,
         :tt_onUnLoad => "updateStartDate();setUnkownStage();",
@@ -911,6 +928,7 @@
       :helpText => "Initial Height (CM)",
       :units => 'cm',
       :validationRule => "^([0-9]+)|Unknown$",
+      :tt_onLoad => "showCategory('REGISTRATION');",
       :validationMessage => "You must enter numbers only (for example 157)",
       :tt_pageStyleClass => "Numeric NumbersOnly" } %>
     <%= hidden_field_tag("observations[][concept_name]", "HEIGHT (CM)") %>
@@ -927,6 +945,7 @@
       :absoluteMax => 250,
       :units => 'kg',
       :validationRule => "([0-9]+\\.[0-9])|Unknown$",
+      :tt_onLoad => "showCategory('REGISTRATION');",
       :validationMessage => "You must enter a decimal between 0 and 9 (for example: 54<b>.6</b>)",
       :tt_onUnLoad => "calculateBMI();",
       :tt_pageStyleClass => "Numeric NumbersOnlyWithDecimal"} %>
@@ -945,19 +964,23 @@
     <%  if @cell_number.to_i != 0 %>
       <%= touch_yes_no_unknown_tag "SEND SMS", @patient, nil,
         {	:id => "send_sms",
+        :tt_onLoad => "showCategory('REGISTRATION');",
         :helpText => 'Can we send you an SMS for HIV care follow-up?'} %>
     <% end %>
 
     <%= touch_yes_no_tag "FOLLOW UP AGREEMENT", @patient, nil,
       {	:id => "agrees_to_followup",
+      :tt_onLoad => "showCategory('REGISTRATION');",
       :helpText => "Can we follow-up with you for HIV care?" } %>
 
     <%= touch_select_tag "CONFIRMATORY HIV TEST TYPE", @patient, options_for_select([['HIV Rapid Test','HIV RAPID TEST'],['HIV PCR','HIV DNA polymerase chain reaction'],['Unknown','UNKNOWN']]),
       {	:id => "type_of_confirmatory_hiv_test",
+      :tt_onLoad => "showCategory('REGISTRATION');",
       :helpText => "Type of confirmatory HIV test" } %>
 
     <%= touch_location_tag "CONFIRMATORY HIV TEST LOCATION", @patient, nil,
       {	:id => "confirmatory_hiv_test_location",
+      :tt_onLoad => "showCategory('REGISTRATION');",
       :helpText => "Location of confirmatory HIV test"} %>
 
   <%#= touch_date_tag "CONFIRMATORY HIV TEST DATE", @patient, nil,
@@ -971,6 +994,7 @@
     <%= text_field_tag "year_confirmatory_hiv_test", nil,
       {	:helpText => 'Confirmatory HIV test year',
       :field_type => 'number',
+      :tt_onLoad => "showCategory('REGISTRATION');",
       :absoluteMin => "1890", :min => "1940", :absoluteMax => Date.today.year,
       :tt_pageStyleClass => "Numeric NumbersOnly",
       :condition => '$("ever_registered_at_ART_clinic").value == "YES"',
@@ -979,14 +1003,14 @@
     <%= select_tag "month_confirmatory_hiv_test", month_name_options,
       {	:helpText => 'Confirmatory HIV test month',
       :condition => '$("confirmatory_hiv_test_year").value.toLowerCase() != "unknown" && $("ever_registered_at_ART_clinic").value == "YES"',
-      :tt_onLoad => "__$('keyboard').style.display = 'none'",
+      :tt_onLoad => "showCategory('REGISTRATION');__$('keyboard').style.display = 'none'",
       :id => "confirmatory_hiv_test_month"} %>
 
     <%= text_field_tag "day_confirmatory_hiv_test",  nil,
       :field_type => 'number', :helpText => 'Confirmatory HIV test day',
       :tt_onUnLoad => "updateConfirmDate();",
       :condition => '($("confirmatory_hiv_test_year").value !="Unknown") && ($("confirmatory_hiv_test_month").value != "Unknown") && $("ever_registered_at_ART_clinic").value == "YES"',
-      :tt_onLoad => "getDayOfMonthPicker($('confirmatory_hiv_test_year').value, $('confirmatory_hiv_test_month').value);$('nextButton').style.display = 'block';",
+      :tt_onLoad => "showCategory('REGISTRATION');getDayOfMonthPicker($('confirmatory_hiv_test_year').value, $('confirmatory_hiv_test_month').value);$('nextButton').style.display = 'block';",
       :validationCode => "checkConfirmDate()",
       :id => "confirmatory_hiv_test_day" ,
       :validationMessage => "Confirmatory Test Date out of range #{@hiv_test_date.to_date rescue nil} and #{@todayDate.to_date rescue nil}"%>
