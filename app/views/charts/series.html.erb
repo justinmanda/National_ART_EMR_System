@@ -2,10 +2,14 @@
 
 <script language="javascript" type="text/javascript" src="/javascripts/flot/jquery.flot.min.js"></script>
 
+<script language="javascript" type="text/javascript" src="/javascripts/flot/jquery.flot.time.js"></script>
+
+<script language="javascript" type="text/javascript" src="/javascripts/flot/jquery.flot.axislabels.js"></script>
+
 <script language="javascript" type="text/javascript" src="/javascripts/flot/jquery.flot.pie.min.js"></script>
 <style>
   #chart_container {
-    width: 900px;
+    width: 98%;
     padding-left: 65px;
     padding-top: 20px;
   }
@@ -21,6 +25,31 @@ jQuery.noConflict();
 
 // example 1 - two basic series
 <%#raise @value.to_yaml%>
+
+var options = {
+  grid: { clickable: true },
+   xaxis: {
+          mode: "time",
+          color: "black",
+          timeformat: "%y/%m/%d",
+          position: "bottom",
+          axisLabel: "Weekday",
+          axisLabelUseCanvas: true,
+          axisLabelFontSizePixels: 12,
+          axisLabelFontFamily: 'Verdana, Arial',
+          axisLabelPadding: 5
+      },
+   tooltip : true,
+   tooltipOpts : {
+        content : getTooltip,
+        defaultTheme : false
+      }
+}
+
+function getTooltip(label, x, y) {
+    return  "x" ;
+}
+
 function drawGraph() {
 
   jQuery.plot(("#placeholder"),[
@@ -29,7 +58,7 @@ function drawGraph() {
   count = 0
   @values.split(";").map do |value|
      name = value.split(":")[0]
-     parameters = value.split(":")[1].split(",").collect{|x|[x.split('|')[0].to_date.year,x.split('|')[1].to_i]}
+     parameters = value.split(":")[1].split(",").collect{|x|[x.split('|')[0].to_date,x.split('|')[1].to_i]}
      count+=1 if vcount > 1
   %>
    {
@@ -42,7 +71,8 @@ function drawGraph() {
     <%= ","%>
     <%end%>
   <%end%>
- ]
+ ],options
+
 );
 
 }
@@ -50,9 +80,13 @@ function drawGraph() {
 function display(parameters) {
   var params = [] ; var complete_values = [];
   var par = parameters.split(",")
+ 
   for(i=0;i<par.length;i++) {
+     
     if (complete_values.length == 0) {
-      complete_values.push(parseFloat(par[i]))
+      date_values = par[i].split('-')
+      date_values = Date.UTC(date_values[0],(parseInt(date_values[1]) -1),date_values[2])//.getTime()
+      complete_values.push(date_values)
     }else{
       complete_values.push(parseFloat(par[i]))
       params.push(complete_values);
