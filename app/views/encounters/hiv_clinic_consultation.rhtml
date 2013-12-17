@@ -508,7 +508,8 @@
       {	:id => "tb_suspected",
       :condition => '$("tb_status").value.toUpperCase() == "TB SUSPECTED"',
       :helpText => "TB suspected, Please confirm?",
-      :tt_onLoad => "showCategory('CONSULTATION');resetTbStatus();"} %>
+      :tt_onLoad => "showCategory('CONSULTATION');",
+       :tt_onUnload => "resetTbStatus();"} %>
   <% end %>
 
 

@@ -15,9 +15,9 @@
 <script language="javascript">      
   jQuery.noConflict();
   jQuery(document).ready(function() { drawGraph(); })
-  
+ 
   var plot = null;
-  var data = [<% @results.each do |result| -%><%= "[#{result[0].to_time.to_f},#{result[1]},'#{result[0].to_date.strftime("%d-%b-%Y")}']" -%>, <% end %>];
+  var data = [<% @results.each do |result| -%><%= "[#{result[0].to_time.to_f},#{result[1]},'#{result[0].to_date.strftime("%d-%b-%Y")}', '#{result[2]}']" -%>, <% end %>];
   <% @results.each{|result| @graph_max = result[1].to_f if result[1].to_f > (@graph_max || 0)} %>
 
   function drawGraph() {
@@ -86,7 +86,7 @@
       jQuery("#placeholder_details_container").get(0).style.left = point.pageX + "px";
       jQuery("#placeholder_details_container").get(0).style.top = point.pageY + "px";
       jQuery("#placeholder_details_container").show(0);
-      jQuery("#placeholder_details").get(0).innerHTML = "Date: " + data[point.selectedIndex][2] + "<br/>Value: " + data[point.selectedIndex][1];
+      jQuery("#placeholder_details").get(0).innerHTML = "Date: " + data[point.selectedIndex][2] + "<br/>Value: " + data[point.selectedIndex][3] + data[point.selectedIndex][1];
     });
 
   }
