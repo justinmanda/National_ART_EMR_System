@@ -20,7 +20,7 @@
 </style>
 <script>
 
-jQuery.noConflict();                                                          
+jQuery.noConflict();
   jQuery(document).ready(function() { drawGraph(); })
 
 // example 1 - two basic series
@@ -33,7 +33,7 @@ var options = {
           color: "black",
           timeformat: "%y/%m/%d",
           position: "bottom",
-          axisLabel: "Weekday",
+          //axisLabel: "Weekday",
           axisLabelUseCanvas: true,
           axisLabelFontSizePixels: 12,
           axisLabelFontFamily: 'Verdana, Arial',
@@ -80,9 +80,9 @@ function drawGraph() {
 function display(parameters) {
   var params = [] ; var complete_values = [];
   var par = parameters.split(",")
- 
+
   for(i=0;i<par.length;i++) {
-     
+
     if (complete_values.length == 0) {
       date_values = par[i].split('-')
       date_values = Date.UTC(date_values[0],(parseInt(date_values[1]) -1),date_values[2])//.getTime()
@@ -99,10 +99,10 @@ function display(parameters) {
 var tt_cancel_destination = "/lab/view?test=<%=@test.gsub(' ','_')%>&patient_id=<%=@patient.id%>"
 </script>
 
-<div id = 'headdiv'>                                                            
+<div id = 'headdiv'>
 <h2><%=@patient_bean.name%>&nbsp;(<%=@patient_bean.sex%>)&nbsp;Age:&nbsp;<%=@patient_bean.age%></h2>
-<h3><%=@test.gsub('_',' ')%>:&nbsp;Results table</h3>                           
-</div> 
+<h3><%=@test.gsub('_',' ')%>:&nbsp;Results table</h3>
+</div>
 
 <div id = "chart_container">
 <div id="placeholder" class="graph" style="width:97%;height:500px;"></div>

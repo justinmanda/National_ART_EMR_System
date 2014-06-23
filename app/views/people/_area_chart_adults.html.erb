@@ -27,7 +27,19 @@
 $(function () {
         $('#container').highcharts({
             chart: {
-                type: 'area'
+                type: 'column',
+                className: 'skies',
+                borderWidth: 0,
+                plotShadow: true,
+                backgroundColor: 'lightyellow',
+                plotBackgroundColor: {
+                   linearGradient: [0, 0, 250, 500],
+                   stops: [
+                      [0, 'rgba(255, 255, 255, 1)'],
+                      [1, 'rgba(255, 255, 255, 0)']
+                   ]
+                },
+                plotBorderWidth: 1
             },
             title: {
                 text: ''
@@ -37,12 +49,17 @@ $(function () {
             },
             xAxis: {
                 categories:  getDates(),
+                lineColor: '#C0D0E0',
                 tickmarkPlacement: 'on',
                 title: {
                     enabled: false
                 }
             },
             yAxis: {
+                alternateGridColor: 'rgba(255, 255, 255, .5)',
+                lineColor: '#C0D0E0',
+                tickColor: '#C0D0E0',
+                tickWidth: 1,
                 title: {
                     text: 'Weight (KG)'
                 },
@@ -57,15 +74,15 @@ $(function () {
                 valueSuffix: ' (KG)'
             },
             plotOptions: {
-                area: {
-                    stacking: 'normal',
-                    lineColor: '#666666',
-                    lineWidth: 1,
-                    marker: {
-                        lineWidth: 1,
-                        lineColor: '#666666'
-                    }
-                }
+               column: {
+                color: "lightblue",
+                dataLabels: {
+                    color: "black",
+                    enabled: true
+                },
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
             },
             series: dataG()
         });

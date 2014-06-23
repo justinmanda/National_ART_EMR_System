@@ -19,18 +19,39 @@
 
 <%
       qtrs = ['']
-
-    @dates.each{|date|
+    if current_user.admin?
+      qtrs = ['' , 'Select date range']
+    end
+    @supervision_dates.each{|date|
         qtrs << date
     }
-    
+    types = [['Clinic' , 'Clinic'],['Supervision' , 'Supervision']]
+
+    clinic_qtrs = []
+    if current_user.admin?
+      clinic_qtrs = ['' , 'Select date range']
+    end
+    @clinic_dates.each{|date|
+        clinic_qtrs << date
+    }
     #raise @goto.to_yaml
   %>
 
 <form id="dates" action="<%=@goto%>" method="post">
   <% if @goto == "stock_report" %>
-    <%= select_tag 'quarter', options_for_select( qtrs ), {
+     <%= select_tag 'type', options_for_select( types ), {
+    :helpText => "Select Report Type",
+    :id => 'type',
+    :tt_onLoad => "__$('keyboard').style.display = 'none'"} %>
+
+    <%= select_tag 'quarter1', options_for_select( qtrs ), {
     :helpText => "Select Period",
+    :condition => "$('type').value == 'Supervision'",
+    :tt_onLoad => "__$('keyboard').style.display = 'none'"} %>
+
+    <%= select_tag 'quarter', options_for_select( clinic_qtrs ), {
+    :helpText => "Select Period",
+    :condition => "$('type').value == 'Clinic'",
     :tt_onLoad => "__$('keyboard').style.display = 'none'"} %>
 
    <input type="text"
@@ -38,11 +59,11 @@
           id="start_date"
           name="start_date"
           value=""
-          condition ="$('quarter').value == 'Select date range'"
+          condition ="$('quarter').value == 'Select date range' || $('quarter1').value == 'Select date range'"
           helpText="Select start date" >
 
    <input type="text" field_type="date" id="end_date" name="end_date" value=""
-          helpText="Select end date" maxDate="<%= (Date.today + 30.years) %>" condition ="$('quarter').value == 'Select date range'" />
+          helpText="Select end date" maxDate="<%= (Date.today + 30.years) %>" condition ="$('quarter').value == 'Select date range' || $('quarter1').value == 'Select date range'" />
  <% else %>
    <input type="text" field_type="date" id="start_date" name="start_date" value="" helpText="Select start date" >
 

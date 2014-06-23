@@ -19,6 +19,16 @@
 		next.setAttribute("onclick", "window.location='/patients/tb_treatment_card_page/" + "<%= @patient_bean.person_id%>'")	
 	}
 	setTimeout("nextPage();",300)
+        function correct(){
+		var butid = document.getElementById("buttons")
+		var button = document.createElement("button")
+		button.innerHTML="<span>Correct TB Number</span>"
+		button.setAttribute("id", "tb_number")
+		button.setAttribute("class","green")
+		butid.appendChild(button)
+                button.setAttribute("onclick", "window.location='/people/correct_tb_numbers/" + "<%= @patient_bean.person_id%>'")
+	}
+	setTimeout("correct();", 300)
 </script>
 
 
@@ -66,8 +76,12 @@ div.main{height:230px;overflow:scroll; margin: 10px;webkit-user-select: none;-we
 					<div class= "container">			
 						<div style = "margin-left:15px">
 					<table width =100%>
-
-						<tr><td width= 30%><b>District TB No</b><td>:<td> <%= @variables["patientId"] %></td></tr>
+                                                
+						<tr><td width= 30%><b>District TB No</b><td>:<td> <% if @variables["patientId"].blank? %>
+                                                                                                    None
+                                                                                                  <% else %>
+                                                                                                  <%= link_to  @variables["patientId"], "edit_tb_number?id=#{params[:patient_id]}&number=#{@variables["patientId"]}" %>
+                                                                                                  <% end %></td></tr>
 						<tr><td><b>Health Unit</b><td>:<td><%= Location.current_health_center.name %></td></tr>
 						<tr><td><b>Registr. Date</b><td>:<td><%= @variables["tbStart"] %></td></tr>
 					</table>
@@ -113,6 +127,6 @@ div.main{height:230px;overflow:scroll; margin: 10px;webkit-user-select: none;-we
 						</table>
 			</div>
 		</div>
-
+                
 
 

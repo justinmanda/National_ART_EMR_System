@@ -148,10 +148,10 @@
 
       function showDrugs(){
         html = "<form id='stock' name='stock' action='edit_stock' method='post'><table width='98%' align= 'center' class='stocks'><th colspan=6 >Relocation/Disposing</th>";
-        html += '<tr><td>Relocation/Disposal Reason</td><td colspan=2><select name="reason" class="selects"><option value="Expired/Damaged">Expired/Damaged</option>'
+        html += '<tr><td colspan=3>Relocation/Disposal Reason<br><select name="reason" class="selects"><option value="Expired/Damaged">Expired/Damaged</option>'
         html += '<option value="Given to other clinics">Given to other clinics</option><option value="Receipt from other clinics">Receipt from other clinics</option>'
-        html += '<option value="Given to other clinics">Given to other clinics</option></select></td>'
-        html += "<td>Date</td><td colspan=2><input name='delivery_time' type='text' onclick='showMe(this)' class='inputs'></td></tr>"
+        html += '</select></td>'
+        html += "<td colspan=4><span align='center' width='100%'>Date</span><br><span><select name='[year]' class='years' onchange='daysInMonth();'></select><select name='month' class='months'  onchange='daysInMonth();'></select><select name='[day]' class='day'></select></span> </td></tr>"
         html += '<tr class="header"><td width="54%" colspan=2><b>Drug</b></td><td width="40%"><b>Total Usable Tins</b></td ><td colspan=3 >Earliest Expiry<br> <span style="float:left">Date MM/YY</span><span style="float:right">Units expiring that date</span></td></tr>'
         html +="<input type='hidden' name='delivery_date' value='<%= @delivery_date %>'>";
         html +="<input type='hidden' name='type' value='<%= params["verification type"] %>'>";
@@ -217,6 +217,41 @@
       }
       drug_form.submit()
     }
+      function daysInMonth(){
+       select_yr = document.getElementsByClassName('years')[0].options
+       select_yr = select_yr[select_yr.selectedIndex].value
+
+       select_mn = document.getElementsByClassName('months')[0].options
+       select_mn = select_mn[select_mn.selectedIndex].value
+       days = new Date(select_yr, select_mn, 0).getDate();
+
+       select_obs = document.getElementsByClassName('day')
+       for (var i = 1; i <= days; i++){
+            select_obs[0].options[i - 1] = new Option(i, i)
+        }
+      }
+
+      function createYear(){
+        var mts = ["01","02","03","04","05","06","07","06","09","10","11","12"]
+        var dt = new Date();
+        select_obs = document.getElementsByClassName('years')
+        //alert(yrs)
+        for (var i=0; i < select_obs.length; i++){
+          var yr = dt.getFullYear() - 10;
+          for (var x=0; x <=40;x++){
+            select_obs[i].options[x] = new Option(yr, yr)
+            yr++
+          }
+
+        }
+        select_obs = document.getElementsByClassName('months')
+        for (var i = 0; i < select_obs.length; i++){
+          for (var x=0; x < mts.length; x++ ){
+            select_obs[i].options[x] = new Option(mts[x], mts[x])
+          }
+        }
+      }
+
 
     function showMe(td){
       search = td
@@ -396,6 +431,14 @@
         width: 100%;
         height: 37px;
       }
+
+
+      .years, .months, .day{
+        height: 45px;
+        font-size: 20px;
+        width: 185px;;
+      }
+
       .scrollTable {
         height: 700px ! important;
         overflow:scroll ! important;
@@ -471,7 +514,7 @@
 
       <%= text_field_tag :showSummary, nil,
         {
-        :tt_onLoad => "showDrugs();$('clearButton').style.display = 'none';  ",
+        :tt_onLoad => "showDrugs();$('clearButton').style.display = 'none';createYear();",
         :tt_onUnLoad => " $('clearButton').style.display = 'inline';",
         :optional => "true",
         :id => "input",

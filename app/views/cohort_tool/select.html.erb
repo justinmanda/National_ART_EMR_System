@@ -8,6 +8,13 @@
   .tt_controls_arv_end_number #num , #plus, #apostrophe, #star, #abc, #date, #slash, #minus, #comma, #percent, #decimal { display:none; }
 </style>
 
+ <% if @report_type == "incomplete_visit" %>
+ <form method='POST' action="incomplete_visits" >
+     <input type="text" field_type="date" id="start_date" name="start_date" value="" helpText="Select date" />
+
+   <!--input type="text" field_type="date" id="end_date" name="end_date" value=""
+          helpText="Select end date" maxDate="<%= (Date.today + 30.years) %>" /-->
+ <% else %>
 <form method='POST' action="reports" >
 <%if 'out_of_range_arv_number' == @report_type  then%>
  <%= text_field_tag :arv_start_number, params[:arv_start_number], {:field_type => 'number', :helpText => 'ARV Start Number', :allowFreeText => false }%>
@@ -16,7 +23,7 @@
 <%end%>
 Quarter: <%= select_tag :report, options_for_select(@cohort_quarters), {:helpText => "Select Quarter"} %>
 <%= hidden_field_tag :report_type, "#{@report_type}" %>
-
+<% end %>
 </form>
 
 

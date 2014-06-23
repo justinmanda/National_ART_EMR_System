@@ -20,31 +20,31 @@
         html += '<tr class="header"><td width="54%" colspan=2><b>Drug</b></td><td width="40%"><b>Total Usable Tins</b></td ><td colspan=2 >Earliest Expiry<br> <span style="float:left">Date MM/YY</span><span style="float:right">Units expiring that date</span></td></tr>'
         html +="<input type='hidden' name='delivery_date' value='<%= @delivery_date %>'>";
         html +="<input type='hidden' name='type' value='<%= params["verification type"] %>'>";
-  <% h = 0
-  @formatted.each {|drug|
+<% h = 0
+@formatted.each {|drug|
   name = @drug_short_names[drug]
-   name = name.gsub("(", "")
-     name = name.gsub(")", "")
-     splitted = name.split(" ")
-      i = 1
-      letters = " "
-       while (i < splitted.length) do
-        if splitted[i].upcase == "ISONIAZID"
-          i += 1
-          next
-        end
-        if splitted[i].upcase == "OR" or splitted[i].upcase == "H"
-           splitted[0] = "#{splitted[0]} #{splitted[i]}"
-         else
-         letters = "#{letters} #{splitted[i]}"
-         end
-         i += 1
-       end
-  drud_string = Drug.find_by_name("#{drug}").id
+  name = name.gsub("(", "") rescue ""
+  name = name.gsub(")", "") rescue ""
+  splitted = name.split(" ") rescue ""
+  i = 1
+  letters = " "
+  while (i < splitted.length) do
+    if splitted[i].upcase == "ISONIAZID"
+      i += 1
+      next
+    end
+    if splitted[i].upcase == "OR" or splitted[i].upcase == "H"
+      splitted[0] = "#{splitted[0]} #{splitted[i]}"
+    else
+      letters = "#{letters} #{splitted[i]}"
+    end
+    i += 1
+  end
+  drud_string = Drug.find_by_name("#{drug}").id rescue ""
   if splitted[0] == 'INH or H' || splitted[0] == 'Cotrimoxazole'
-       if h < 1
-  %>
-                 html += '<tr><td width="20%" colspan=2>&nbsp;</td><td align="center"  width="32%">Pack Size</td><td align="center"> Expiry Date</td><td colspan=3 align="center"> Total Units</td></tr>'
+    if h < 1
+    %>
+          html += '<tr><td width="20%" colspan=2>&nbsp;</td><td align="center"  width="32%">Pack Size</td><td align="center"> Expiry Date</td><td colspan=3 align="center"> Total Units</td></tr>'
     <% end %>
         html += '<tr><td width="20%">' + '<%= splitted[0] %></td>' + '<td align="right"  width="32%"><%= letters %></td><td class="newIunputs">'
         html += "<select name='obs[" + '<%=  drug %>' + "][expire_amount]'  class='selects'>"
@@ -63,152 +63,182 @@
         html += "</td><td align='right'><input name='obs[" + '<%= drug %>' + "][expire_amount]' type='text' onclick='showMe(this)' class='inputs' /></td></tr>";
         html += "<tr><td colspan =6 ><hr></td></tr>"
   <% end %>
-  <%  } %>
-      html += '</table></form>';
-      document.getElementById('inputFrame'+tstCurrentPage).innerHTML = '<div id="summary">' + html + '</div>';
-      document.getElementById('nextButton').setAttribute("onmousedown", "submitMe();")
-    }
+<%  } %>
+    html += '</table></form>';
+    document.getElementById('inputFrame'+tstCurrentPage).innerHTML = '<div id="summary">' + html + '</div>';
+    document.getElementById('nextButton').setAttribute("onmousedown", "submitMe();")
+  }
 
-    function submitMe(){
-      drug_form = document.getElementById('stock')
-      input = document.getElementsByClassName('inputs')
-      value = 0;
-      for (i = 0; i < input.length; i++){
-        if (input[i].value == ""){
-          input[i].value = 0
-        }
+  function submitMe(){
+    drug_form = document.getElementById('stock')
+    input = document.getElementsByClassName('inputs')
+    value = 0;
+    for (i = 0; i < input.length; i++){
+      if (input[i].value == ""){
+        input[i].value = 0
       }
-      drug_form.submit()
     }
+    drug_form.submit()
+  }
 
-    function showMe(td){
-      search = td
-      keyboard = document.getElementById('keyboard');
+  function showMe(td){
+    search = td
+    keyboard = document.getElementById('keyboard');
     
-      if(keyboard.style.display == 'none' || keyboard.style.display == ""){
-        keyboard.style.display = "inline";
-      }
-      keyboard.setAttribute("tt_pageStyleClass", "Numeric NumbersWithUnknownAndDecimal");
-      //else
-      //{
-      // keyboard.style.display = "none";
-      //}
-      document.body.appendChild(keyboard);
-      showNumericKeypad()
+    if(keyboard.style.display == 'none' || keyboard.style.display == ""){
+      keyboard.style.display = "inline";
     }
+    keyboard.setAttribute("tt_pageStyleClass", "Numeric NumbersWithUnknownAndDecimal");
+    //else
+    //{
+    // keyboard.style.display = "none";
+    //}
+    document.body.appendChild(keyboard);
+    showNumericKeypad()
+  }
 
-    function getCharButtonSetIDs(character,id){
-      return '<button onMouseDown="pressed(\''+character+'\');" class="keyboardButton" id="'+id+'">' +"<span style='width:32px'>"+character+"</span>"+ "</button>";
-    }
-    function getButtonStrings(id,string){
-      return "<button \
+  function getCharButtonSetIDs(character,id){
+    return '<button onMouseDown="pressed(\''+character+'\');" class="keyboardButton" id="'+id+'">' +"<span style='width:32px'>"+character+"</span>"+ "</button>";
+  }
+  function getButtonStrings(id,string){
+    return "<button \
                               onMouseDown='pressed(this.id);' \
                               class='keyboardButton' \
                               id='"+id+"'>"+
-        string +
-        "</button>";
-    }
+      string +
+      "</button>";
+  }
 
-    function getButtons1(chars){
-      var buttonLine = "";
-      for(var i=0; i<chars.length; i++){
-        character = chars.substring(i,i+1)
-        buttonLine += getCharButtonSetIDs(character,character)
-      }
-      return buttonLine;
+  function getButtons1(chars){
+    var buttonLine = "";
+    for(var i=0; i<chars.length; i++){
+      character = chars.substring(i,i+1)
+      buttonLine += getCharButtonSetIDs(character,character)
     }
+    return buttonLine;
+  }
 
-    function showAlphaKeypad(){
-      //document.getElementById("keypad").style.height = "280";
-      keyboard.innerHTML= getButtons("0123456789") + "</br>"
-      keyboard.innerHTML+= getButtons("QWERTYUIOP") + "</br>"
-      keyboard.innerHTML+= getButtons("ASDFGHJKL:") + "</br>"
-      keyboard.innerHTML+= getButtons("ZXCVBNM,.?")
-      keyboard.innerHTML+= getButtonString('backspace','<span>Bksp</span>')
-      keyboard.innerHTML+= getButtonString('Space','<span>Space</span>')
-      keyboard.innerHTML+= getButtonString('clear','<span>Clear</span>')
-    }
+  function showAlphaKeypad(){
+    //document.getElementById("keypad").style.height = "280";
+    keyboard.innerHTML= getButtons("0123456789") + "</br>"
+    keyboard.innerHTML+= getButtons("QWERTYUIOP") + "</br>"
+    keyboard.innerHTML+= getButtons("ASDFGHJKL:") + "</br>"
+    keyboard.innerHTML+= getButtons("ZXCVBNM,.?")
+    keyboard.innerHTML+= getButtonString('backspace','<span>Bksp</span>')
+    keyboard.innerHTML+= getButtonString('Space','<span>Space</span>')
+    keyboard.innerHTML+= getButtonString('clear','<span>Clear</span>')
+  }
 
-    function showNumericKeypad(){
-      //document.getElementById("keypad").style.height = "145";
-      keyboard.innerHTML = getButtons1("123")
-      keyboard.innerHTML+= getButtons1("456")
-      keyboard.innerHTML+= getButtons1("7890")
-     // keyboard.innerHTML+= getButtonStrings('/','<span>/</span>')
-     // keyboard.innerHTML+= getButtonStrings(':','<span>:</span>')
-     // keyboard.innerHTML+= getButtonStrings('-','<span>-</span>')
-      // keyboard.innerHTML+= getButtonString('space','<span>Space</span>')
-      keyboard.innerHTML+= getButtonStrings('clear','<span>Clear</span>')
-      keyboard.innerHTML+= getButtonStrings('backspace','<span>Bksp</span>')
-      keyboard.innerHTML+= getButtonStrings('enter','<span>Enter</span>')
+  function showNumericKeypad(){
+    //document.getElementById("keypad").style.height = "145";
+    keyboard.innerHTML = getButtons1("123")
+    keyboard.innerHTML+= getButtons1("456")
+    keyboard.innerHTML+= getButtons1("7890")
+    // keyboard.innerHTML+= getButtonStrings('/','<span>/</span>')
+    // keyboard.innerHTML+= getButtonStrings(':','<span>:</span>')
+    // keyboard.innerHTML+= getButtonStrings('-','<span>-</span>')
+    // keyboard.innerHTML+= getButtonString('space','<span>Space</span>')
+    keyboard.innerHTML+= getButtonStrings('clear','<span>Clear</span>')
+    keyboard.innerHTML+= getButtonStrings('backspace','<span>Bksp</span>')
+    keyboard.innerHTML+= getButtonStrings('enter','<span>Enter</span>')
       
-      // keyboard.innerHTML+= getButtonStrings('dash','<span>-</span>')
-      // keyboard.innerHTML+= getButtonString('slash','<span>/</span>')
+    // keyboard.innerHTML+= getButtonStrings('dash','<span>-</span>')
+    // keyboard.innerHTML+= getButtonString('slash','<span>/</span>')
+  }
+
+  function pressed(pressedChar){
+    new_value = search.value + pressedChar
+    if (search.name.match(/expire_amount/i)){
+    var names = "obs[" + search.name.split(']')[0].split('[')[1] + "][amount]"
+    document.getElementsByName(names)[0]
+      if (document.getElementsByName(names)[0].value == ""){
+        return
+      }
+      else if (parseInt(new_value) > parseInt(document.getElementsByName(names)[0].value)){
+        return
+      }
     }
 
-   function pressed(pressedChar){
-      if (search.name.match(/date/i)){
+    if (search.name.match(/date/i)){
         
-        if (search.value.length == 5 && pressedChar != 'enter' &&   pressedChar != 'splash' && pressedChar != 'backspace' && pressedChar != 'space' && pressedChar != 'clear'){
-          var names = "obs[" + search.name.split(']')[0].split('[')[1] + "][expire_amount]"
-          document.getElementsByName(names)[0].next().focus()
+      if (search.value.length == 5 && pressedChar != 'enter' &&   pressedChar != 'splash' && pressedChar != 'backspace' && pressedChar != 'space' && pressedChar != 'clear'){
+        var names = "obs[" + search.name.split(']')[0].split('[')[1] + "][expire_amount]"
+        document.getElementsByName(names)[0].next().focus()
+        return
+      }
+      
+      if (search.value.length == 1){
+        //alert(new_value)
+        if (new_value <= 12 && pressedChar != 'enter' &&  pressedChar != 'splash' && pressedChar != 'backspace' && pressedChar != 'space' && pressedChar != 'clear') {
+          search.value+= pressedChar
+          search.value += "/"
           return
         }
-        if (search.value.length == 2){
-          if (search.value <= 12 && pressedChar != 'enter' &&  pressedChar != 'splash' && pressedChar != 'backspace' && pressedChar != 'space' && pressedChar != 'clear') {
-            search.value += "/"
-            search.value+= pressedChar
-             return
-          }
-          else if (search.value <= 12 && pressedChar != 'enter' &&  pressedChar == 'splash' && pressedChar != 'backspace' && pressedChar != 'space' && pressedChar != 'clear'){
-            search.value+= pressedChar
-             return
-          }
-          else if (pressedChar != 'enter' && pressedChar != 'splash' && pressedChar != 'backspace' && pressedChar != 'space' && pressedChar != 'clear'){
-            search.value = search.value.substring(0,search.value.length-1);
-            return
-          }
+        else if (new_value <= 12 && pressedChar != 'enter' &&  pressedChar == 'splash' && pressedChar != 'backspace' && pressedChar != 'space' && pressedChar != 'clear'){
+          search.value+= pressedChar
+          return
+        }
+        else if (pressedChar != 'enter' && pressedChar != 'splash' && pressedChar != 'backspace' && pressedChar != 'space' && pressedChar != 'clear'){
+          // search.value = search.value.substring(0,search.value.length-1);
+          return
+        }
 
-        }
       }
-      switch (pressedChar) {
-        case 'backspace':
-          search.value = search.value.substring(0,search.value.length-1);
-          //search_box.fnFilter(search.value)
-          return;
-        case 'Space':
-          search.value+= " "
-          //search_box.fnFilter(search.value)
+
+      if  (search.value.length == 4 && pressedChar != 'enter' &&  pressedChar != 'splash' && pressedChar != 'backspace' && pressedChar != 'space' && pressedChar != 'clear'){
+        current_date = new Date()
+        current_month = current_date.getMonth() + 1
+
+        if ( parseInt(new_value.split('/')[1]) < parseInt(current_date.getFullYear().toString().substr(-2))){
+          showMessage("Year lower than current year!")
           return
-        case 'clear':
-          search.value = ""
-          //search_box.fnFilter(search.value)
-          return
-        case 'num':
-          showNumericKeypad();
-          return
-        case 'slash':
-          if (search.name.match(/date/i)){
+        }
+        else if (parseInt(new_value.split('/')[1]) == parseInt(current_date.getFullYear().toString().substr(-2))){
+          if (parseInt(new_value.split('/')[0]) < parseInt(current_month)){
+            showMessage("Month lower than current month for drugs expiring this year")
             return
           }
-          search.value+= "/"
-          //search_box.fnFilter(search.value)
-          return
-        case 'dash':
-          search.value+= "-"
-          //search_box.fnFilter(search.value)
-          return
-        case 'abc':
-          showAlphaKeypad();
-          return
-        case 'enter':
-          keyboard.style.display = "none";
-          return
+        }
       }
-      search.value+= pressedChar
-      //search_box.fnFilter(search.value)
     }
-    //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    switch (pressedChar) {
+      case 'backspace':
+        search.value = search.value.substring(0,search.value.length-1);
+        //search_box.fnFilter(search.value)
+        return;
+      case 'Space':
+        search.value+= " "
+        //search_box.fnFilter(search.value)
+        return
+      case 'clear':
+        search.value = ""
+        //search_box.fnFilter(search.value)
+        return
+      case 'num':
+        showNumericKeypad();
+        return
+      case 'slash':
+        if (search.name.match(/date/i)){
+          return
+        }
+        search.value+= "/"
+        //search_box.fnFilter(search.value)
+        return
+      case 'dash':
+        search.value+= "-"
+        //search_box.fnFilter(search.value)
+        return
+      case 'abc':
+        showAlphaKeypad();
+        return
+      case 'enter':
+        keyboard.style.display = "none";
+        return
+    }
+    search.value+= pressedChar
+    //search_box.fnFilter(search.value)
+  }
+  //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     </script>
     <style>
       #keyboard {
@@ -223,7 +253,7 @@
         align: center;
         display:none;
       }
-            .inputs {
+      .inputs {
         height: 37px;
         font-size: 18px;
         text-align: right;

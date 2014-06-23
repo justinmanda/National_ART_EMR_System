@@ -266,8 +266,8 @@
 <% @patients.each do |patient_id,attributes| %>
 
 <tr>
-   <td align='center'><%= link_to_onmousedown "#{attributes["id"]}",{:controller =>"patients", :action => 'mastercard',
-                           :patient_id => "#{attributes["id"]}" ,:source =>"", :quarter => ""}%></td>
+   <td align='center'><%= link_to_onmousedown "#{attributes["id"]}",{:controller =>"patients", :action => 'mastercard', 
+                           :patient_id => "#{attributes["id"]}" ,:source =>"", :quarter => ""}%></td> 
    <td align="center"><%=attributes["arv_number"]%></td>
    <td align="center"><%=attributes["national_id"]%></td>
    <td align="center"><%=attributes["gender"]%></td>

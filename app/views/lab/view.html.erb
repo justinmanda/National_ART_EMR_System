@@ -6,7 +6,7 @@
     padding-left: 5px;
     padding-right: 5px;
     width: 97%;
-    overflow: auto; 
+    overflow: auto;
   }
 
   #headdiv {
@@ -57,22 +57,22 @@
 
   function viewAll() {
     var  all = null;
-   
-    <% @all.map do |key , values | 
+
+    <% @all.map do |key , values |
       value_string = nil
       values.map do |value|
         value_string+=",#{value.join("|")}" unless value_string.blank?
         value_string = value.join("|") if value_string.blank?
       end
     %>
-     
+
       if(all){
         all+= "<%=key%>:<%=value_string%>;";
       }else{
         all = "<%=key%>:<%=value_string%>;";
       }
     <%end%>
-    
+
     submitForm = document.createElement("FORM");
     submitForm.setAttribute("type","hidden");
     submitForm.method = "POST";
@@ -121,17 +121,17 @@
   var tt_cancel_destination = "/lab/results/<%=@patient.id%>"
 
   function graph(type) {
-    count = 1 ; path = '';   
+    count = 1 ; path = '';
     while (document.getElementById(type + '_' + count) != null) {
       value = (document.getElementById(type + '_' + count).innerHTML);
       if (value) {
         path += (document.getElementById(count).innerHTML);
         path +=  ',' + (document.getElementById(type + '_' + count).innerHTML.replace(";", "").replace("&gt;","more_than").replace("&lt","less_than")) + ';';
       }
-      
+
       count++;
     }
-    
+
     submitForm = document.createElement("FORM");
     submitForm.setAttribute("type","hidden");
     submitForm.method = "POST";

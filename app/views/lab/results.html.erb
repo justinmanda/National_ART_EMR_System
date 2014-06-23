@@ -36,7 +36,7 @@
 <script>
 
   //var tt_cancel_destination = "/patients/show/<%=@patient.id%>"
-	var tt_cancel_destination = "<%= next_task(@patient) %>"
+  var tt_cancel_destination = "<%= next_task(@patient) %>"
 	 
   function setInnerHtmlData(id,result,path) {
     td = document.getElementById(id);
@@ -48,33 +48,35 @@
   }
 
   function setAttributes() {
+    <%#if @enter_lab_results %>
     divBtn = document.getElementById('buttons');
     divBtn.innerHTML += "<button onclick='newResults();' class='left button navButton' id='newResultsButton'><span>Enter results</span></button>"
+    <%#end%>
   }
 </script>
 
 <body onload="setTimeout('setAttributes();',100);">
 
-<div id = 'headdiv'>
-<h2><%=@patient_bean.name%>&nbsp;(<%=@patient_bean.sex%>)&nbsp;Age:&nbsp;<%=@patient_bean.age%></h2>
-<h3>Lab results</h3>
-</div>
+  <div id = 'headdiv'>
+    <h2><%=@patient_bean.name%>&nbsp;(<%=@patient_bean.sex%>)&nbsp;Age:&nbsp;<%=@patient_bean.age%></h2>
+    <h3>Lab results</h3>
+  </div>
 
-<div id = "lab_results">
-  <table id = 'results_table'>
-    <% count = @results.length + 3 unless @results.blank? 
-       count_up = 0
-       count = 0 if @results.blank?
+  <div id = "lab_results">
+    <table id = 'results_table'>
+      <% count = @results.length + 3 unless @results.blank?
+      count_up = 0
+      count = 0 if @results.blank?
     %>
-    <% while count_up < count %>
-      <tr>
-        <td id = "<%=count_up+= 1%>"></td>
-        <td id = "<%=count_up+= 1%>"></td>
-        <td id = "<%=count_up+= 1%>"></td>
-      </tr>
-    <%end unless @results.blank?%>
-  </table>
-</div>
+      <% while count_up < count %>
+        <tr>
+          <td id = "<%=count_up+= 1%>"></td>
+          <td id = "<%=count_up+= 1%>"></td>
+          <td id = "<%=count_up+= 1%>"></td>
+        </tr>
+      <%end unless @results.blank?%>
+    </table>
+  </div>
 
 </body>
 

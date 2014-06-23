@@ -54,7 +54,7 @@ class PatientProgram < ActiveRecord::Base
       # I hope this will sort the problem and doesnt break anything
       
       # PB -- reverted the code below to its original state after fixing the metadata -----------
-      
+      #raise params.to_yaml
       #params[:state] = 'PATIENT TRANSFERRED (EXTERNAL FACILITY)' if ConceptName.find_all_by_name('PATIENT TRANSFERRED OUT').blank? and params[:state].upcase == "PATIENT TRANSFERRED OUT"
       #params[:state] = 'PATIENT TRANSFERRED (WITHIN FACILITY)' if ConceptName.find_all_by_name('PATIENT TRANSFERRED IN').blank? and params[:state].upcase == "PATIENT TRANSFERRED IN"
 
@@ -67,8 +67,8 @@ class PatientProgram < ActiveRecord::Base
         if (state && state.end_date.blank?)
           state.end_date = params[:start_date]
           state.save!
-        end    
-        # Create the new state      
+        end
+        # Create the new state
         state = self.patient_states.new({
           :state => selected_state.program_workflow_state_id,
           :start_date => params[:start_date] || Date.today,
@@ -82,9 +82,10 @@ class PatientProgram < ActiveRecord::Base
 			complete(nil)
 		end
 
-      end  
+      end
     end
   end
+
   
   def complete(end_date = nil)
     self.date_completed = end_date

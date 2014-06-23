@@ -443,6 +443,10 @@ class ApplicationController < GenericApplicationController
             return task
           end
         when 'HIV STAGING'
+          staging = session["#{patient.id}"]["#{session_date.to_date}"][:stage_patient] rescue []
+          if ! staging.blank?
+             next if staging == "No"
+          end
           next unless continue_tb_treatment(patient,session_date)
           #checks if vitals have been taken already 
           vitals = PatientService.checks_if_vitals_are_need(patient,session_date,task,user_selected_activities)
@@ -453,6 +457,7 @@ class ApplicationController < GenericApplicationController
 
           next if enrolled_in_hiv_program == 'NO'
           next if patient.patient_programs.blank?
+          next unless PatientService.patient_hiv_status(patient).match(/Positive/i)
           next if not patient.patient_programs.collect{|p|p.program.name}.include?('HIV PROGRAM') 
 
           next unless PatientService.patient_hiv_status(patient).match(/Positive/i)
@@ -799,6 +804,10 @@ class ApplicationController < GenericApplicationController
     #9. Manage prescriptions - TREATMENT
     #10. Manage appointments - APPOINTMENT
     #11. Manage ART adherence - ART ADHERENCE
+    hiv_program_status = Patient.find_by_sql("
+											SELECT patient_id, current_state_for_program(patient_id, 1, '#{session_date}') AS state, c.name as status
+											FROM patient p INNER JOIN program_workflow_state pw ON pw.program_workflow_state_id = current_state_for_program(patient_id, 1, '#{session_date}')
+											INNER JOIN concept_name c ON c.concept_id = pw.concept_id where p.patient_id = '#{patient.id}'").first.status rescue "Unknown"
 
     encounters_sequentially = CoreService.get_global_property_value('list.of.clinical.encounters.sequentially')
 
@@ -902,6 +911,11 @@ class ApplicationController < GenericApplicationController
             end 
           end if clinician_or_doctor
         when 'HIV STAGING'
+         
+          staging = session["#{patient.id}"]["#{session_date.to_date}"][:stage_patient] rescue []
+          if ! staging.blank?
+             next if staging == "No"
+          end
           arv_drugs_given = false
           PatientService.drug_given_before(patient,session_date).each do |order|
             next unless MedicationService.arv(order.drug_order.drug)
@@ -914,7 +928,7 @@ class ApplicationController < GenericApplicationController
           elsif encounter_available.blank? and not user_selected_activities.match(/Manage HIV staging visits/i)
             task.url = "/patients/show/#{patient.id}"
             return task
-          end if reason_for_art.nil? or reason_for_art.blank?
+          end if reason_for_art.nil? or reason_for_art.blank? or hiv_program_status == "Pre-ART (Continue)"
         when 'HIV RECEPTION'
           encounter_hiv_clinic_registration = Encounter.find(:first,:conditions =>["patient_id = ? AND encounter_type = ?",
                                          patient.id,EncounterType.find_by_name('HIV CLINIC REGISTRATION').id],
@@ -1018,22 +1032,11 @@ class ApplicationController < GenericApplicationController
     return task
   end
 
-  def next_task(patient)
-    session_date = session[:datetime].to_date rescue Date.today
-    task = main_next_task(Location.current_location, patient,session_date)
-    begin
-      return task.url if task.present? && task.url.present?
-      return "/patients/show/#{patient.id}" 
-    rescue
-      return "/patients/show/#{patient.id}" 
-    end
-  end
-
   # Try to find the next task for the patient at the given location
   def main_next_task(location, patient, session_date = Date.today)
 
     if use_user_selected_activities
-      return next_form(location , patient , session_date) rescue return "/patients/show/#{patient.id}" 
+      return next_form(location , patient , session_date) rescue return "/patients/show/#{patient.id}"
     end
     all_tasks = Task.all(:order => 'sort_weight ASC')
     todays_encounters = patient.encounters.find_by_date(session_date)
@@ -1351,11 +1354,11 @@ class ApplicationController < GenericApplicationController
 			on_art_before = has_patient_been_on_art_before(patient)
 
 			if current_outcome.match(/Transferred out/i)
-				if on_art_before
+				#if on_art_before
 					require_registration = false
-				else
-					require_registration = true
-				end
+				#else
+				#	require_registration = true
+				#end
 			end
 		end
 		return require_registration

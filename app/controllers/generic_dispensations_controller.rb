@@ -13,6 +13,7 @@ class GenericDispensationsController < ApplicationController
 	end
 
   def create
+    
     if (params[:identifier])
       params[:drug_id] = params[:identifier].match(/^\d+/).to_s
       params[:quantity] = params[:identifier].match(/\d+$/).to_s
@@ -166,7 +167,22 @@ class GenericDispensationsController < ApplicationController
     observations.each do |ob|  
       @transfer_out_site = ob.to_s if ob.to_s.include?('Transfer out to')
     end
+    regimen_category_id = ConceptName.find_by_name('Regimen Category').concept_id
+    regimen = MedicationService.get_arv_regimen(@patient.id, session_date).to_s.upcase
+    if regimen != "UNKNOWN"
+       category = Observation.find(:all, :conditions => ["encounter_id = ? AND concept_id = ?", @encounter.id,regimen_category_id])
+       if category.blank?
+          obs = Observation.new(
+      :concept_id => regimen_category_id,
+      :person_id => @patient.person.person_id,
+      :encounter_id => @encounter.id,
+      :value_text => regimen,
+      :obs_datetime => session_date || Time.now())
 
+    obs.save
+       end
+    end
+   # raise regimen.to_s.to_yaml
     if complete
       unless params[:location]
         if (CoreService.get_global_property_value('auto_set_appointment') rescue false) && (@transfer_out_site.blank?)

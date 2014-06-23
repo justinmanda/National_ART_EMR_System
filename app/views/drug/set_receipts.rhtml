@@ -29,22 +29,22 @@
 
         httpRequest.open('GET', aUrl, false);
         httpRequest.send(null);
-       // if (response == "true")
-          return response;
-     // if (response == "false")
-         // return false;
+        // if (response == "true")
+        return response;
+        // if (response == "false")
+        // return false;
       }
 
-     function getShortName(td) {
+      function getShortName(td) {
         var aUrl = "/drug/get_name?short=" + td;
-       var httpRequest = new XMLHttpRequest();
+        var httpRequest = new XMLHttpRequest();
         httpRequest.onreadystatechange = function() {
           set_name(httpRequest);
         };
 
         httpRequest.open('GET', aUrl, false);
         httpRequest.send(null);
-          return response;
+        return response;
       }
 
       function getSize(td) {
@@ -57,7 +57,7 @@
 
         httpRequest.open('GET', aUrl, false);
         httpRequest.send(null);
-          return response;
+        return response;
       }
 
       function set_name(req) {
@@ -70,7 +70,7 @@
         fullname = getName(td)
         shortname = getShortName(td)
         packsize = getSize(td)
-       // alert(shortname)
+        // alert(shortname)
 
         var table = document.getElementsByClassName('stocks')[0];
         var newTr = document.createElement('tr');
@@ -87,40 +87,50 @@
         newTr.appendChild(newTd);
 
         if (shortname == 'INH or H' || shortname == 'Cotrimoxazole'){
-              var newTd1 = document.createElement('td');
-              var newField = document.createElement('select');
-              newField.setAttribute('name', 'obs[' + fullname + '][expire_amount]');
-              newTd1.setAttribute("align", "center");
-              newField.setAttribute('class', 'selects');
-              newField.innerHTML = "<option></option><option value='30'>30 tabs</option><option value='60'>60 tabs</option><option value='90'>90 tabs</option><option value='100'>100 tabs</option><<option value='1000'>1000 tabs</option>"
-              newTd1.appendChild(newField)
-              newTr.appendChild(newTd1);
+          var newTd1 = document.createElement('td');
+          var newField = document.createElement('select');
+          newField.setAttribute('name', 'obs[' + fullname + '][expire_amount]');
+          newTd1.setAttribute("align", "center");
+          newField.setAttribute('class', 'selects');
+          newField.innerHTML = "<option></option><option value='30'>30 tabs</option><option value='60'>60 tabs</option><option value='90'>90 tabs</option><option value='100'>100 tabs</option><<option value='1000'>1000 tabs</option>"
+          newTd1.appendChild(newField)
+          newTr.appendChild(newTd1);
         }
         else{
-              var newTd1 = document.createElement('td');
-              var newField = document.createElement('input');
-              newField.setAttribute('type', 'text');
-              newField.setAttribute('name', 'obs[' + fullname + '][expire_amount]');
-              newTd1.setAttribute("align", "center");
-              newField.setAttribute("width", "20%");
-              newField.setAttribute('onClick', 'showMe(this)');
-              newField.setAttribute('class', 'inputs');
-              newTd1.appendChild(newField)
-              newTr.appendChild(newTd1);
+          var newTd1 = document.createElement('td');
+          var newField = document.createElement('input');
+          newField.setAttribute('type', 'text');
+          newField.setAttribute('name', 'obs[' + fullname + '][expire_amount]');
+          newTd1.setAttribute("align", "center");
+          newField.setAttribute("width", "20%");
+          newField.setAttribute('onClick', 'showMe(this)');
+          newField.setAttribute('class', 'inputs');
+          newTd1.appendChild(newField)
+          newTr.appendChild(newTd1);
         }
 
         var newTd1 = document.createElement('td');
-        var newField = document.createElement('input');
+        newTd1.setAttribute('colspan', '2');
+        newTd1.setAttribute( 'align','center')
+        
+        var newField = document.createElement('select');
         newField.setAttribute('type', 'text');
-        newField.setAttribute('name', 'obs[' + fullname + '][date]');
-        newField.setAttribute('onClick', 'showMe(this)')
-        newField.setAttribute('class', 'dates');
+        newField.setAttribute('name', 'obs[' + fullname + '][month]');
+        //newField.setAttribute('onClick', 'showMe(this)')
+        newField.setAttribute('class', 'months');
         newTd1.appendChild(newField)
         
+        var newField = document.createElement('select');
+        newField.setAttribute('type', 'text');
+        newField.setAttribute('name', 'obs[' + fullname + '][year]');
+        //newField.setAttribute('onClick', 'showMe(this)')
+        newField.setAttribute('class', 'years');
+        newTd1.appendChild(newField)    
         
         newTr.appendChild(newTd1);
 
         var newTd1 = document.createElement('td');
+          newTd1.setAttribute( 'align','right')
         var newField = document.createElement('input');
         newField.setAttribute('type', 'text');
         newField.setAttribute('name', 'obs[' + fullname + '][amount]');
@@ -132,13 +142,13 @@
 
 
         var newTd1 = document.createElement('td');
-        newTd1.innerHTML = "<a href='#'><img src='/images/add.png' onclick='addRow(" + td +")'></a>"
+        //newTd1.innerHTML = "<a href='#'><img src='/images/add.png' onclick='addRow(" + td +")'></a>"
         newTr.appendChild(newTd1);
         
         var newTr1 = document.createElement('tr');
         var newTd1 = document.createElement('td');
         var newHr = document.createElement('hr');
-        newTd1.setAttribute('colspan', 6)
+        newTd1.setAttribute('colspan', 7)
         newTd1.appendChild(newHr)
         newTr1.appendChild(newTd1)
 
@@ -146,9 +156,30 @@
         table.appendChild(newTr1);
       }
 
+      function createYear(){
+        var mts = ["01","02","03","04","05","06","07","06","09","10","11","12"]
+        var dt = new Date();
+        select_obs = document.getElementsByClassName('years')
+        //alert(yrs)
+        for (var i=0; i < select_obs.length; i++){
+          var yr = dt.getFullYear();
+          for (var x=0; x <=40;x++){
+            select_obs[i].options[x] = new Option(yr, yr)
+            yr++
+          }
+           
+        }
+        select_obs = document.getElementsByClassName('months')
+        for (var i = 0; i < select_obs.length; i++){
+          for (var x=0; x < mts.length; x++ ){
+            select_obs[i].options[x] = new Option(mts[x], mts[x])
+          }
+        }
+      }
+
       function showDrugs(){
-        html = "<form id='stock' name='stock' action='create_stock' method='post'><table width='100%' align= 'center' class='stocks'><th colspan=6 >Receipts</th>";
-        html += '<tr class="header"><td width="54%" colspan=2><b>Drug</b></td><td><span style="float:center">Pills Per Tin</span></td><td >Expiry<br> <span style="float:center">Date MM/YY</span></td><td width="40%" colspan=2><b>Total <br> Tins</b></td ></tr>'
+        html = "<form id='stock' name='stock' action='create_stock' method='post'><table width='98%' align= 'center' class='stocks'><th colspan=7 >Receipts</th>";
+        html += '<tr class="header"><td colspan=2><b>Drug</b></td><td><span style="float:center">Pills Per Tin</span></td><td colspan=2>Expiry<br> <span style="float:center">Date MM/YY</span></td><td colspan=2><b>Total <br> Tins</b></td ></tr>'
         html +="<input type='hidden' name='delivery_date' value='<%= @delivery_date %>'> <input type='hidden' name='identifier' value='<%= params[:identifier] %>' />";
 <% h = 0
 @list.each {|drug|
@@ -182,24 +213,25 @@
 
     if h < 1
     %>
-          html += '<tr><td width="20%" colspan=2>&nbsp;</td><td align="center"  width="32%">Pack Size</td><td align="center"> Expiry Date</td><td colspan=3 align="center"> Total Units</td></tr>'
+          html += '<tr><td colspan=2>&nbsp;</td><td align="center">Pack Size</td><td align="center" colspan=2 > Expiry Date</td><td colspan=3 align="center"> Total Units</td></tr>'
     <% end %>
-        html += '<tr><td width="20%">' + '<%= splitted[0] %></td>' + '<td align="right"  width="32%"><%= letters %></td><td class="newIunputs">'
+        html += '<tr><td><%= splitted[0] %></td><td align="right" ><%= letters %></td><td class="newInputs">'
         html += "<select name='obs[" + '<%=  drug %>' + "][expire_amount]'  class='selects'>"
-        html += "<option></option><option value='30'>30 tabs</option><option value='60'>60 tabs</option><option value='90'>90 tabs</option><option value='100'>100 tabs</option><<option value='1000'>1000 tabs</option>/select>"
+        html += "<option></option><option value='30'>30 tabs</option><option value='60'>60 tabs</option><option value='90'>90 tabs</option><option value='100'>100 tabs</option><option value='1000'>1000 tabs</option></select>"
 
-        html += "</td><td><input name='obs[" + '<%=  drug %>' + "][date]' type='text' onclick='showMe(this)' class='inputs' ></td>";
-        html += "</td><td align='right'><input name='obs[" + '<%= drug %>' + "][amount]' type='text' onclick='showMe(this)' class='inputs' /><br><%= expiry %></td><td><img src='/images/add.png' onclick='addRow(" + <%= drud_string %> + ")></td></tr>";
-        html += "<tr><td colspan =5 ><hr></td></tr>"
+        html += "</td><td colspan=2 align='center'><select name='obs[" + '<%=  drug %>' + "][month]' class='months'></select> <select name='obs[" + '<%=  drug %>' + "][year]' class='years'></select></td>";
+        html += "</td><td align='right'><input name='obs[" + '<%= drug %>' + "][amount]' type='text' onclick='showMe(this)' class='inputs' /><br><%= expiry %>"
+        html += "</td><td><img src='/images/add.png' onclick='addRow(" + '<%= drud_string %>' + ")'></td></tr>";
+        html += "<tr><td colspan =7 ><hr></td></tr>"
 
     <% h += 1
   else %>
-        html += '<tr><td width="20%">' + '<%= splitted[0] %></td>' + '<td align="right"  width="32%"><%= letters %></td><td class="newIunputs">'
+        html += '<tr><td>' + '<%= splitted[0] %></td>' + '<td align="right"><%= letters %></td><td class="newInputs">'
         html += "<input name='obs[" + '<%=  drug %>' + "][expire_amount]' type='text' onclick='showMe(this)' class='inputs'>"
        
-        html += "</td><td><input name='obs[" + '<%=  drug %>' + "][date]' type='text' onclick='showMe(this)' class='dates' ></td>";
-        html += "</td><td align='right'><input name='obs[" + '<%= drug %>' + "][amount]' type='text' onclick='showMe(this)' class='inputs' /><br><%= expiry %></td><td><a href='#'><img src='/images/add.png' onclick='addRow(" + '<%= drud_string %>' +")'></a></td></tr>";
-        html += "<tr><td colspan =6 ><hr></td></tr>"
+        html += "</td><td colspan=2 align='center'><select name='obs[" + '<%=  drug %>' + "][month]' class='months'></select> <select name='obs[" + '<%=  drug %>' + "][year]' class='years'></select></td>";
+        html += "</td><td align='right'><input name='obs[" + '<%= drug %>' + "][amount]' type='text' onclick='showMe(this)' class='inputs' /><br><%= expiry %></td><td><a href='#'><img src='/images/add.png' onclick='addRow(" + '<%= drud_string %>' +");createYear()'></a></td></tr>";
+        html += "<tr><td colspan =7 ><hr></td></tr>"
   <% end %>
 <%  } %>
     html += '</table></form>';
@@ -272,8 +304,8 @@
     keyboard.innerHTML = getButtons1("123")
     keyboard.innerHTML+= getButtons1("456")
     keyboard.innerHTML+= getButtons1("7890")
-   // keyboard.innerHTML+= getButtonStrings('/','<span>/</span>')
-   // keyboard.innerHTML+= getButtonStrings(':','<span>:</span>')
+    // keyboard.innerHTML+= getButtonStrings('/','<span>/</span>')
+    // keyboard.innerHTML+= getButtonStrings(':','<span>:</span>')
     //keyboard.innerHTML+= getButtonStrings('-','<span>-</span>')
     // keyboard.innerHTML+= getButtonString('space','<span>Space</span>')
     keyboard.innerHTML+= getButtonStrings('clear','<span>Clear</span>')
@@ -285,6 +317,18 @@
   }
 
   function pressed(pressedChar){
+      new_value = search.value + pressedChar
+    if (search.name.match(/expire_amount/i)){
+    var names = "obs[" + search.name.split(']')[0].split('[')[1] + "][amount]"
+    document.getElementsByName(names)[0]
+      //if (document.getElementsByName(names)[0].value == ""){
+      //  return
+      //}
+     // else
+       // if (parseInt(new_value) > parseInt(document.getElementsByName(names)[0].value)){
+       // return
+      //}
+    }
     if (search.name.match(/date/i)){
 
       if (search.value.length == 5 && pressedChar != 'enter' &&   pressedChar != 'splash' && pressedChar != 'backspace' && pressedChar != 'space' && pressedChar != 'clear'){
@@ -292,21 +336,38 @@
         document.getElementsByName(names)[0].next().focus()
         return
       }
-      if (search.value.length == 2){
-        if (search.value <= 12 && pressedChar != 'enter' &&  pressedChar != 'splash' && pressedChar != 'backspace' && pressedChar != 'space' && pressedChar != 'clear') {
-          search.value += "/"
+      //new_value = search.value + pressedChar
+      if (search.value.length == 1){   
+        //alert(new_value)
+        if (new_value <= 12 && pressedChar != 'enter' &&  pressedChar != 'splash' && pressedChar != 'backspace' && pressedChar != 'space' && pressedChar != 'clear') {
           search.value+= pressedChar
+          search.value += "/"
           return
         }
-        else if (search.value <= 12 && pressedChar != 'enter' &&  pressedChar == 'splash' && pressedChar != 'backspace' && pressedChar != 'space' && pressedChar != 'clear'){
+        else if (new_value <= 12 && pressedChar != 'enter' &&  pressedChar == 'splash' && pressedChar != 'backspace' && pressedChar != 'space' && pressedChar != 'clear'){
           search.value+= pressedChar
           return
         }
         else if (pressedChar != 'enter' && pressedChar != 'splash' && pressedChar != 'backspace' && pressedChar != 'space' && pressedChar != 'clear'){
-          search.value = search.value.substring(0,search.value.length-1);
+          // search.value = search.value.substring(0,search.value.length-1);
           return
         }
 
+      }
+      if  (search.value.length == 4 && pressedChar != 'enter' &&  pressedChar != 'splash' && pressedChar != 'backspace' && pressedChar != 'space' && pressedChar != 'clear'){
+        current_date = new Date()
+        current_month = current_date.getMonth() + 1
+        
+        if ( parseInt(new_value.split('/')[1]) < parseInt(current_date.getFullYear().toString().substr(-2))){
+          showMessage("Year lower than current year!")
+          return
+        }
+        else if (parseInt(new_value.split('/')[1]) == parseInt(current_date.getFullYear().toString().substr(-2))){
+          if (parseInt(new_value.split('/')[0]) < parseInt(current_month)){
+            showMessage("Month lower than current month for drugs expiring this year")
+            return
+          }
+        }
       }
     }
     switch (pressedChar) {
@@ -343,16 +404,21 @@
         keyboard.style.display = "none";
         return
     }
+
+
     search.value+= pressedChar
     //search_box.fnFilter(search.value)
   }
-
+  function daysInMonth(month,year) {
+    var dd = new Date(year, month, 0);
+    return dd.getDate();
+  }
   //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     </script>
     <style>
       #keyboard {
         position: absolute;
-        background-color: black;
+        background-color: -moz-mac-menushadow;
         width: 253px;
         height: 47%;
         left: 20%;
@@ -362,6 +428,7 @@
         align: center;
         display:none;
       }
+
       .inputs {
         height: 37px;
         font-size: 18px;
@@ -377,7 +444,7 @@
         overflow:scroll ! important;
       }
 
-      .selects{
+      .selects, .years, .months{
         height: 45px;
         font-size: 20px;
         width: 40%;
@@ -407,9 +474,9 @@
         height: 10%;
         border-radius: 10px 10px 10px 10px;
       }
-      .newIunputs {
+      .newInputs {
         text-align: center;
-        width: 25%;
+        /* width: 45%; */
       }
       #backspace{
         position:absolute;
@@ -454,7 +521,7 @@
 
       <%= text_field_tag :showSummary, nil,
         {
-        :tt_onLoad => "showDrugs();$('clearButton').style.display = 'none';  ",
+        :tt_onLoad => "showDrugs();$('clearButton').style.display = 'none';createYear();  ",
         :tt_onUnLoad => " $('clearButton').style.display = 'inline';",
         :optional => "true",
         :id => "input",

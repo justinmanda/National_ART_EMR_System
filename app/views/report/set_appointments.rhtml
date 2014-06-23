@@ -13,8 +13,8 @@
             "bAutoWidth": true,
             "bPaginate": false,
             "bProcessing": true,
-            "sScrollY": "490px",
-            "bInfo": false,
+            "sScrollY": "400px",
+            "bInfo": true,
             "bPaginate": false
           });
     search_box = $('#table_id').dataTable()
@@ -236,24 +236,15 @@
     </style>
   </head>
   <body >
-   <div >
-        <table style="border-bottom:2px solid black;">
-    <tr><td><table>
-    <tr>
-      <td><b style="font-size: 21px;margin-left:75px">Facility : <%= Location.current_health_center.name %></b></td></tr>
-    <tr>
-      <td><b style="font-size: 18px;margin-left:75px">Title: <%= @report_name.humanize %></b></td>
-    </tr>
-    <tr>
-      <td> <b style="font-size: 18px;margin-left:75px">Appointment Date : <%= @formatted_appointment_date %></b></td>
-    </tr>
-        </table>
-      </td>
+    <%= image_tag(@logo, :class => "logo")%>
+    <br /><b style="margin-left:75px"><%= @current_location_name %></b><br />
 
-    </tr>
-  </table>
+      <b style="position:relative; top:0px;margin-left:75px"><%= @report_name.capitalize %></b><br />
 
-   </div>
+
+    <br /><b style="position: relative; display:block; font-weight:bold; top:-15px; padding-left:30px;margin-left:200px"> Appointment Date : <%= @formatted_appointment_date %></b>
+
+
     <div>
       <table  id="table_id" class="display" >
         <thead>

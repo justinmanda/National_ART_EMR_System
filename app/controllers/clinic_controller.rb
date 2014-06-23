@@ -49,7 +49,8 @@ class ClinicController < GenericClinicController
                  ['Missing Dispensations' , '/cohort_tool/select?report_type=prescriptions_without_dispensations'],
                  ['Multiple Start Reasons' , '/cohort_tool/select?report_type=patients_with_multiple_start_reasons'],
                  ['Out of range ARV number' , '/cohort_tool/select?report_type=out_of_range_arv_number'],
-                 ['Data Consistency Check' , '/cohort_tool/select?report_type=data_consistency_check']
+                 ['Data Consistency Check' , '/cohort_tool/select?report_type=data_consistency_check'],
+                 ['Incomplete Visits' , '/cohort_tool/select?report_type=incomplete_visit']
                ] 
     render :layout => false
   end
@@ -69,9 +70,10 @@ class ClinicController < GenericClinicController
         ["Use Filing Numbers", "/properties/creation?value=use_filing_numbers"],
         ["Confirm patient creation", "/properties/creation?value=confirm_before_creating_a_patient"],
         ["Show Lab Results", "/properties/creation?value=show_lab_results"],
+        ["Enter Lab Results", "/properties/creation?value=enter_lab_results"],
         ["Set Appointment Limit", "/properties/set_appointment_limit"],
 				["Export Cohort Data", "/properties/export_cohort_data"],
-        ["Extended Family Planning","/properties/creation?value=extended_family_planning"]
+        ["Extended Family Planning","/properties/creation?value=extended_family_planning"],
       ]
     else
       @settings = []

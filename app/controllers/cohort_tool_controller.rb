@@ -234,7 +234,7 @@ class CohortToolController < GenericCohortToolController
                    
                   end
 
-    render :layout => "cohort"
+    render :layout => 'report'
   end
 
 	def case_findings2
@@ -1185,13 +1185,15 @@ class CohortToolController < GenericCohortToolController
 		@logo = CoreService.get_global_property_value('logo').to_s
 
     if params[:date] and not params[:date]['start'].blank? and not params[:date]['end'].blank?
-      @quarter = params[:date]['start'] + " to " + params[:date]['end']
+      @quarter = params[:date]['start']. + " to " + params[:date]['end']
       start_date = params[:date]['start'].to_date
       end_date = params[:date]['end'].to_date
     end if not params[:date].blank?
 
     if start_date.blank? and end_date.blank?
       @quarter = params[:quarter]
+      @quarter = @quarter.split("to")[0].to_date.strftime("%d %b, %Y") + " to " +
+        @quarter.split("to")[1].to_date.strftime("%d %b, %Y") if @quarter.match("to")
       start_date,end_date = Report.generate_cohort_date_range(@quarter)
     end
 
@@ -1205,9 +1207,9 @@ class CohortToolController < GenericCohortToolController
 			@cohort = session[:cohort]
 		end
 		session[:views]=nil; session[:chidren]; session[:nil]
-    render :layout => 'report'
+    render :layout => 'cohort'
   end
-
+  
   def missed_appointment
     @logo = CoreService.get_global_property_value('logo').to_s
     @quarter = params[:quarter]
@@ -1222,7 +1224,7 @@ class CohortToolController < GenericCohortToolController
 		session[:field] = nil
 		session[:cohort]["outcomes"] = {} if session[:cohort]["outcomes"].blank?
     @quarter = params[:quarter]
-		@logo = params[:logo]
+		@logo = CoreService.get_global_property_value('logo').to_s
     if @quarter.match(/to/i)
       start_date,end_date = @quarter.split('to')
       start_date = start_date.to_date
@@ -1343,7 +1345,7 @@ class CohortToolController < GenericCohortToolController
 		session[:field] = nil
     @quarter = params[:quarter]
 
-		@logo = params[:logo]
+		@logo = CoreService.get_global_property_value('logo').to_s
     if @quarter.match(/to/i)
       start_date,end_date = @quarter.split('to')
       start_date = start_date.to_date
@@ -1359,7 +1361,7 @@ class CohortToolController < GenericCohortToolController
 	def women_survival
 		session[:field] = nil
     @quarter = params[:quarter]
-		@logo = params[:logo]
+		@logo = CoreService.get_global_property_value('logo').to_s
     if @quarter.match(/to/i)
       start_date,end_date = @quarter.split('to')
       start_date = start_date.to_date
@@ -1450,7 +1452,8 @@ class CohortToolController < GenericCohortToolController
                                 AND observation.person_id = obs.person_id) > 1                               
                                 AND date_created >= ? AND date_created <= ?
                                 AND obs.concept_id = ?
-                                AND obs.voided = 0 
+                                AND obs.voided = 0
+                 GROUP BY person_id, value_coded_name_id
                	 ORDER BY person_id ASC", art_eligibility_id, start_date, end_date, art_eligibility_id])
 
     patients_data = []
@@ -1550,8 +1553,10 @@ class CohortToolController < GenericCohortToolController
     missed_dispensations_data.each do |prescription|
 			patient      = Patient.find(prescription[:patient_id])
 			drug_id      = DrugOrder.find(prescription[:order_id]).drug_inventory_id
-			drug_name    = Drug.find(drug_id).name
+			drug_name    = Drug.find(drug_id).name rescue []
 
+      next if drug_name.blank?
+      
 			prescriptions_without_dispensations << {'person_id' => patient.id,
 				'arv_number' => PatientService.get_patient_identifier(patient, 'ARV Number'),
 				'national_id' => PatientService.get_national_id(patient),
@@ -1566,10 +1571,10 @@ class CohortToolController < GenericCohortToolController
     patient_died_concept    = ConceptName.find_by_name('PATIENT DIED').concept_id
 
     all_dead_patients_with_visits = "SELECT * 
-    FROM (SELECT observation.person_id AS patient_id, DATE(p.death_date) AS date_of_death, DATE(observation.date_created) AS date_started
+    FROM (SELECT observation.person_id AS patient_id, DATE(p.death_date) AS date_of_death, DATE(observation.obs_datetime) AS date_started
           FROM person p right join obs observation ON p.person_id = observation.person_id
-          WHERE p.dead = 1 AND DATE(p.death_date) < DATE(observation.date_created) AND observation.voided = 0
-          ORDER BY observation.date_created ASC) AS dead_patients_visits
+          WHERE p.dead = 1 AND DATE(p.death_date) < DATE(observation.obs_datetime) AND observation.voided = 0
+          ORDER BY observation.obs_datetime ASC) AS dead_patients_visits
     WHERE DATE(date_of_death) >= DATE('#{start_date}') AND DATE(date_of_death) <= DATE('#{end_date}')
     GROUP BY patient_id"
     patients = Patient.find_by_sql([all_dead_patients_with_visits])

@@ -1,5 +1,6 @@
 class GenericEncountersController < ApplicationController
   def create(params=params, session=session)
+    xpertassay = false
     if params[:change_appointment_date] == "true"
       session_date = session[:datetime].to_date rescue Date.today
       type = EncounterType.find_by_name("APPOINTMENT")                            
@@ -211,7 +212,13 @@ class GenericEncountersController < ApplicationController
       
       params[:observations] = observations unless observations.blank?
     end
-
+    if params['encounter']['encounter_type_name'].upcase == 'TB CLINIC VISIT'
+      (params[:observations] || []).each do |observation|
+        if observation['concept_name'].upcase == 'FURTHER EXAMINATION FOR TB REQUIRED' and observation['value_coded_or_text'] == "GeneXpert"
+          xpertassay = true
+        end
+      end
+    end
     if params['encounter']['encounter_type_name'].upcase == 'ART ADHERENCE'
       previous_hiv_clinic_consultation_observations = []
       art_adherence_observations = []
@@ -504,7 +511,10 @@ class GenericEncountersController < ApplicationController
 
     # Go to the next task in the workflow (or dashboard)
     # only redirect to next task if location parameter has not been provided
-		
+   
+		#if xpertassay == true
+     # redirect_to"/encounters/new/expertassy/?patient_id=#{@patient.id}" and return
+    #end
     if params[:location].blank?
 			#find a way of printing the lab_orders labels
 			if params['encounter']['encounter_type_name'].upcase == 'GIVE LAB RESULTS'
@@ -681,6 +691,23 @@ class GenericEncountersController < ApplicationController
 
 	def void
 		@encounter = Encounter.find(params[:id])
+    tb_reg = EncounterType.find_by_name("TB registration").id.to_i
+    patient_identifier_type_id = PatientIdentifierType.find_by_name("District TB Number").patient_identifier_type_id
+    tb_prog = Program.find_by_name("TB PROGRAM").id
+    if tb_reg == @encounter.encounter_type.to_i
+          void_prog = PatientProgram.find(:last, :conditions => ['DATE(date_enrolled) = ? AND patient_id = ? AND program_id = ?',
+                                          @encounter.encounter_datetime.to_date, @encounter.patient_id, tb_prog])
+          
+          if ! void_prog.blank?
+             void_prog.void
+          end
+          current_identifier = PatientIdentifier.find(:first, :conditions => ['patient_id = ? AND identifier_type = ?',
+                                           @encounter.patient_id, patient_identifier_type_id], :order => "date_created DESC")
+          if ! current_identifier.blank?
+            current_identifier.void
+          end
+
+    end
       state = Encounter.find_by_sql("
         SELECT * FROM obs WHERE concept_id = (SELECT concept_id FROM concept_name WHERE name = 'PATIENT TRACKING STATE')
         AND encounter_id = #{params[:id]}").first rescue []

@@ -16,6 +16,9 @@
     float:left
   }
 
+  a{
+    text-decoration: none ! important;
+  }
   .create_button a{
     background-color: #7784AE;
     border-bottom: 1px outset black;
@@ -122,7 +125,7 @@
           <td>&nbsp;</td>
         </tr>
         <tr>
-          <td colspan="2" style="text-align:center;">Dispensed</td>
+          <td colspan="2" style="text-align:center;">Dispensed<font style="color:blue">(d)</font><br></td>
         </tr>
       </table>
     </td>
@@ -230,10 +233,10 @@
       <table class="inner-data">
         <tr>
           
-          <td style="width:60px;" class='positive_numbers create_button'>
-            <a href="/drug/stock_report_edit?date=<%=values['start_date']%>&drug_id=<%=values['start_pharmacy_id']%>&edit_reason=opening_stock&start_date=<%=@start_date%>&end_date=<%=@end_date%>">
+          <td style="width:60px;" class='positive_numbers' align="center">
+            
               <%=(values['confirmed_opening'] / 60).round %>
-            </a>
+            
           </td>
         </tr>
       </table>
@@ -241,16 +244,16 @@
     <td class="color_<%=color%> caldata" id="current_stock_<%=count%>">
       <table class="inner-data">
         <tr>
-          <td  style="width:30px;text-align:left;" >+<%= (values['receipts'] / 60).round %></td>
+          <td  style="width:30px;text-align:center;" >+<%= (values['receipts'] / 60).round %></td>
           <% relocated = (values['relocated'] / 60).round 
             if relocated < 0
           %>
-          <td style="width:100px;color:red;"  class='negative_numbers' align="center">
-              <a href="/drug/stock_report_edit?drug_id=<%=values['drug_id']%>&edit_reason=relocated&max_date=<%=values['end_date']%>&start_date=<%=@start_date%>&end_date=<%=@end_date%>"><%=relocated %></a>
+          <td style="width:100px;"  class='' align="center">
+              <a style="color:black;" href="/drug/stock_report_edit?drug_id=<%=values['drug_id']%>&edit_reason=relocated&max_date=<%=values['end_date']%>&start_date=<%=@start_date%>&end_date=<%=@end_date%>"><%=relocated %></a>
             </td>
           <%else%>
-            <td style="width:100px;color:red;" class='negative_numbers' align="center">
-              <a href="/drug/stock_report_edit?drug_id=<%=values['drug_id']%>&edit_reason=relocated&max_date=<%=values['end_date']%>&start_date=<%=@start_date%>&end_date=<%=@end_date%>">- <%=relocated %></a>
+            <td style="width:100px;color:black;" class='' align="center">
+               <%=relocated %>
             </td>
           <%end%>
         </tr>
@@ -262,9 +265,9 @@
         <% dispensed = (values['dispensed'] / 60).round
            if dispensed < 0
         %>
-          <td style="text-align:center;color:red;"><%=dispensed %></td>
+          <td style="text-align:center;"><%=dispensed %></td>
         <%else%>
-          <td style="text-align:center;color:red;">- <%=dispensed %></td>
+          <td style="text-align:center;"> <%=dispensed %></td>
         <%end%>
         </tr>
       </table>
@@ -287,9 +290,9 @@
           <!--td style="text-align:left;width:40px;"><%=values['end_date'].to_date.strftime(" %d-%b-%Y") %></td -->
           <td style="text-align:left;width:75px;padding-left:12px;"><%= expected %></td>
           <td style="text-align:right;width:75px;" class='positive_numbers create_button'>
-            <a href="/drug/stock_report_edit?date=<%=values['end_date']%>&drug_id=<%=values['end_pharmacy_id']%>&edit_reason=closing_stock&start_date=<%=@start_date%>&end_date=<%=@end_date%>">
+            
               <%=(values['confirmed_closing'] / 60).round %>
-            </a>
+            
           </td>
         </tr>
       </table>

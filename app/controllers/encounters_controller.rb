@@ -13,6 +13,7 @@ class EncountersController < GenericEncountersController
       render :action => params[:encounter_type] and return
 		end
 
+    session[:return_uri] = params[:return_ip] if ! params[:return_ip].blank?
     
     @hiv_status = tb_art_patient(@patient,"hiv program") rescue ""
     @tb_status = tb_art_patient(@patient,"TB program") rescue ""
@@ -33,7 +34,39 @@ class EncountersController < GenericEncountersController
 											SELECT patient_id, current_state_for_program(patient_id, 1, '#{session_date}') AS state, c.name as status
 											FROM patient p INNER JOIN program_workflow_state pw ON pw.program_workflow_state_id = current_state_for_program(patient_id, 1, '#{session_date}')
 											INNER JOIN concept_name c ON c.concept_id = pw.concept_id where p.patient_id = '#{@patient.patient_id}'").first.status rescue "Unknown"
-	
+    @ask_staging = false
+    @check_preart = false
+    @normal_procedure = false
+      if @current_hiv_program_status == "Pre-ART (Continue)"
+        current_date = session[:datetime].to_date rescue Date.today
+        if params[:repeat].blank?       
+
+       last_staging_date = Encounter.find_by_sql("
+         SELECT * FROM encounter
+          WHERE patient_id = #{@patient.id} AND encounter_type = #{EncounterType.find_by_name('HIV Staging').id}
+          AND encounter_datetime < '#{current_date}' AND voided=0 ORDER BY encounter_datetime DESC LIMIT 1").first.encounter_datetime.to_date rescue ""
+        
+        if ! last_staging_date.blank? 
+          month_gone = (current_date.year * 12 + current_date.month) - (last_staging_date.year * 12 + last_staging_date.month)
+          @ask_staging = true if month_gone <= 3
+          @normal_procedure =  true if month_gone > 3
+        end
+        #raise session["#{@patient.id}"]["#{current_date}"][:stage_patient].to_yaml
+        #session["#{@patient.id}"]["#{current_date}"][:stage_patient] = []
+        else
+          session["#{@patient.id}"] = {}
+          session["#{@patient.id}"]["#{current_date}"] = {}
+          
+          if params[:repeat] == "no"
+           session["#{@patient.id}"]["#{current_date}"][:stage_patient] = "Yes"
+          else
+           session["#{@patient.id}"]["#{current_date}"][:stage_patient] = "No"
+          end
+         
+          @check_preart = true
+        end
+     end
+    
 		if (params[:from_anc] == 'true')
       bart_activities = ['Manage Vitals','Manage HIV clinic consultations',
         'Manage ART adherence','Manage HIV staging visits','Manage HIV first visits',
@@ -54,7 +87,7 @@ class EncountersController < GenericEncountersController
       end
     end
 
-    #@appointment_days = appointment_dates(@patient)
+
 		if session[:datetime]
 			@retrospective = true 
 		else
@@ -143,28 +176,28 @@ class EncountersController < GenericEncountersController
     
     if @use_extended_family_planning && is_child_bearing_female(@patient)
       @select_options['why_no_family_planning_method'] = [
-          ['Not sexually active', 'NOT SEXUALLY ACTIVE'],
-          ['Patient wants to get pregnant','PATIENT WANTS TO GET PREGNANT'],
-          ['Not needed for medical reasons', 'NOT NEEDED FOR MEDICAL REASONS'],
-          ['At risk of unplanned pregnancy', 'AT RISK OF UNPLANNED PREGNANCY']
+        ['Not sexually active', 'NOT SEXUALLY ACTIVE'],
+        ['Patient wants to get pregnant','PATIENT WANTS TO GET PREGNANT'],
+        ['Not needed for medical reasons', 'NOT NEEDED FOR MEDICAL REASONS'],
+        ['At risk of unplanned pregnancy', 'AT RISK OF UNPLANNED PREGNANCY']
       ]
 
       @select_options['why_no_family_planning_method_specific'] = [
-          ['Following wishes of spouse', 'FOLLOWING WISHES OF SPOUSE'],
-          ['Religious reasons', 'RELIGIOUS REASONS'],
-          ['Afraid of side effects','AFRAID OF SIDE EFFECTS'],
-          ['Never thought about it','NEVER THOUGHT ABOUT IT'],
-          ['Indifferent (Does not mind getting pregnant )', 'INDIFFERENT']
+        ['Following wishes of spouse', 'FOLLOWING WISHES OF SPOUSE'],
+        ['Religious reasons', 'RELIGIOUS REASONS'],
+        ['Afraid of side effects','AFRAID OF SIDE EFFECTS'],
+        ['Never thought about it','NEVER THOUGHT ABOUT IT'],
+        ['Indifferent (Does not mind getting pregnant )', 'INDIFFERENT']
       ]
 
       @select_options['family_planning_methods_int'] = [
-          ['Oral contraceptive pills', 'ORAL CONTRACEPTIVE PILLS'],
-          ['Depo-Provera', 'DEPO-PROVERA'],
-          ['IUD-Intrauterine device/loop', 'INTRAUTERINE CONTRACEPTION'],
-          ['Contraceptive implant', 'CONTRACEPTIVE IMPLANT'],
-          ['Female condoms', 'FEMALE CONDOMS'],
-	        ['Male condoms', 'MALE CONDOMS'],
-          ['Tubal ligation', 'TUBAL LIGATION']
+        ['Oral contraceptive pills', 'ORAL CONTRACEPTIVE PILLS'],
+        ['Depo-Provera', 'DEPO-PROVERA'],
+        ['IUD-Intrauterine device/loop', 'INTRAUTERINE CONTRACEPTION'],
+        ['Contraceptive implant', 'CONTRACEPTIVE IMPLANT'],
+        ['Female condoms', 'FEMALE CONDOMS'],
+        ['Male condoms', 'MALE CONDOMS'],
+        ['Tubal ligation', 'TUBAL LIGATION']
       ]
 
 			if @retrospective
@@ -174,13 +207,13 @@ class EncountersController < GenericEncountersController
 			end						
 					
       @select_options['dual_options'] = [
-          ['Oral contraceptive pills', 'ORAL CONTRACEPTIVE PILLS'],
-          ['Depo-Provera', 'DEPO-PROVERA'],
-          ['IUD-Intrauterine device/loop', 'INTRAUTERINE CONTRACEPTION'],
-          ['Contraceptive implant', 'CONTRACEPTIVE IMPLANT']]
+        ['Oral contraceptive pills', 'ORAL CONTRACEPTIVE PILLS'],
+        ['Depo-Provera', 'DEPO-PROVERA'],
+        ['IUD-Intrauterine device/loop', 'INTRAUTERINE CONTRACEPTION'],
+        ['Contraceptive implant', 'CONTRACEPTIVE IMPLANT']]
     end
 
-    
+
     concept_id = ConceptName.find_by_name('COMMON MALAWI ART SYMPTOM SET').concept_id
     set = ConceptSet.find_all_by_concept_set(concept_id, :order => 'sort_weight')
     @select_options['art_symptoms'] = set.map{|item|next if item.concept.blank? ; [item.concept.fullname, item.concept.fullname] }
@@ -293,6 +326,16 @@ class EncountersController < GenericEncountersController
 				@patients << patient
 			end
 		end
+    #raise @patient.person.observations.to_s.to_yaml
+    if (params[:encounter_type].upcase rescue '') == 'TB_CLINIC_VISIT'
+      @remote_results = false
+      if @patient.person.observations.to_s.match(/Tuberculosis smear result:  Yes/i)
+          if @patient.person.observations.to_s.match(/Moderately positive/i) or @patient.person.observations.to_s.match(/Strongly positive/i) or  @patient.person.observations.to_s.match(/Weakly positive/i)
+            @suspected = true
+          end
+        
+      end
+    end
 
 		if (params[:encounter_type].upcase rescue '') == 'TB_REGISTRATION'
 
@@ -310,7 +353,7 @@ class EncountersController < GenericEncountersController
           @tb_classification = Concept.find(obs.value_coded).concept_names.typed("SHORT").first.name
 				end
 				if obs.concept_id == Concept.find_by_name('TB type').concept_id
-					@tb_type = Concept.find(obs.value_coded).concept_names.typed("SHORT").first.name
+					@tb_type = Concept.find(obs.value_coded).concept_names.typed("SHORT").first.name rescue obs.value_text
 				end
 			end
 
@@ -530,6 +573,7 @@ class EncountersController < GenericEncountersController
 				['',''],
 				['Sputum Test','TB sputum test'],
 				['X-Ray','X-Ray'],
+        ['GeneXpert','GeneXpert'],
 				['None','None']
 			],
       'tb_clinic_visit_type' => [
@@ -806,12 +850,12 @@ class EncountersController < GenericEncountersController
           
     number_of_bookings = {}
 
-      (bookings || []).sort.reverse.each do |date|
+    (bookings || []).sort.reverse.each do |date|
       next if not clinic_days.collect{|c|c.upcase}.include?(date.strftime('%A').upcase)
       limit = number_of_booked_patients(date.to_date).to_i rescue 0
       if clinic_appointment_limit == 0
-          recommended_date = date
-          break
+        recommended_date = date
+        break
       end
       if limit < clinic_appointment_limit
         recommended_date = date
@@ -819,12 +863,12 @@ class EncountersController < GenericEncountersController
       else
         number_of_bookings[date] = limit
       end
-     end
+    end
                                                                  
     
     (number_of_bookings || {}).sort_by { |dates,num| num }.each do |dates , num|   
       next if not clinic_days.collect{|c|c.upcase}.include?(dates.strftime('%A').upcase)
-        recommended_date = dates
+      recommended_date = dates
       break 
     end if recommended_date.blank?                                                                        
 
@@ -1478,7 +1522,7 @@ class EncountersController < GenericEncountersController
   end 
 
   def export_on_art_patients
-		@ids = params["ids"].split(",")
+    @ids = params["ids"].split(",")
 		@id_string = "'" + @ids.join("','") + "'"
 		@end_date = params["end_date"]
 		@start_date = params["start_date"]
@@ -1498,14 +1542,17 @@ class EncountersController < GenericEncountersController
       @patient_ids << patient.patient_id
       idf = patient.identifier
       result["#{idf}"] = patient.earliest_start_date
-      b4_visit_one << idf if patient.earliest_start_date.to_date <= anc_visit["#{idf}"].to_date
+      if ((patient.earliest_start_date.to_date <= anc_visit["#{idf}"].to_date) rescue false)
+        b4_visit_one << idf
+      end
     end
     if @patient_ids.length > 0
   		cpt_ids = Encounter.find_by_sql("SELECT e.patient_id, o.value_drug, e.encounter_type FROM encounter e
 			INNER JOIN obs o ON e.encounter_id = o.encounter_id AND e.voided = 0
 			WHERE e.encounter_type = (SELECT encounter_type_id FROM encounter_type WHERE name = 'DISPENSING')
 			AND o.value_drug IN (SELECT drug_id FROM drug WHERE name regexp 'cotrimoxazole')
-			AND e.patient_id IN (#{@patient_ids.join(',')})").collect{|e| PatientIdentifier.find(:first, :conditions => ["patient_id = ? AND identifier_type = ?", e.patient_id, PatientIdentifierType.find_by_name("National id").id]).identifier}.uniq rescue []
+			AND e.patient_id IN (#{@patient_ids.join(',')})").collect{|e| PatientIdentifier.find(:last, :conditions => ["patient_id = ? AND identifier_type = ? AND identifier IN (?)",
+            e.patient_id, PatientIdentifierType.find_by_name("National id").id, @ids]).identifier}.uniq rescue []
     else
       cpt_ids = []
     end
@@ -1514,6 +1561,36 @@ class EncountersController < GenericEncountersController
     result["arv_before_visit_one"] = b4_visit_one.join(",")
 
 		render :text => result.to_json
+  end
+
+  def art_summary
+
+    result = {}
+    @patient = PatientIdentifier.find_by_identifier(params[:national_id]).patient rescue nil
+
+    result["start_date"] = PatientProgram.find_by_sql("SELECT * FROM earliest_start_date
+	    WHERE patient_id = #{@patient.id}").first.earliest_start_date.to_date rescue ""
+
+    result["arv_number"] = PatientService.get_patient_identifier(@patient, 'ARV Number') rescue ""
+
+    result["last_date_seen"] =  @patient.encounters.find(:first, :order => ["encounter_datetime DESC"]).encounter_datetime.strftime("%d/%b/%Y") rescue ""
+
+    hiv_test = {}
+
+    @patient.encounters.find(:first, :order => ["encounter_datetime DESC"],
+      :conditions => ["encounter_type = ?", EncounterType.find_by_name("UPDATE HIV STATUS")]).observations.collect{|obs|
+      
+      c_name = ConceptName.find_by_concept_id(obs.concept_id).name.strip.upcase
+      next if c_name.match(/location/i)
+      hiv_test[c_name] = obs.answer_string.strip
+    } rescue {}
+
+    result["latest_hiv_test"] = hiv_test    
+   
+    result.delete_if{|key, value| value.blank?}
+    
+    render :text => result.to_json
+
   end
 
 

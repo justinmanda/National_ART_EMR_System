@@ -152,6 +152,19 @@ def self.duplicates(attributes)
 def self.merge(patient_id, secondary_patient_id)
     patient = Patient.find(patient_id, :include => [:patient_identifiers, :patient_programs, {:person => [:names]}])
     secondary_patient = Patient.find(secondary_patient_id, :include => [:patient_identifiers, :patient_programs, {:person => [:names]}])
+    sec_pt_arv_numbers = PatientIdentifier.find(:all, :conditions => ["patient_id =? AND identifier_type =?",
+      secondary_patient_id, PatientIdentifierType.find_by_name('ARV NUMBER').id]).map(&:identifier) rescue []
+
+    unless sec_pt_arv_numbers.blank?
+      sec_pt_arv_numbers.each do |arv_number|
+        ActiveRecord::Base.connection.execute("
+          UPDATE patient_identifier SET voided = 1, date_voided=NOW(),voided_by=#{User.current.user_id},
+          void_reason = 'merged with patient #{patient_id}'
+          WHERE patient_id = #{secondary_patient_id}
+          AND identifier = '#{arv_number}'")
+      end
+    end
+    
   ActiveRecord::Base.transaction do
     secondary_patient.patient_identifiers.each {|r|
       if patient.patient_identifiers.map(&:identifier).each{| i | i.upcase }.include?(r.identifier.upcase)

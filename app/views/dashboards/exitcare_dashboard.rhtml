@@ -82,7 +82,9 @@
 						<optgroup value='/programs/exitcare?patient_id=<%= @patient.id -%>&exit_state=<%= exit_state%>' label="Transferred out"></optgroup>
 					<% elsif exit_state.to_s.upcase == "PATIENT TRANSFERRED (EXTERNAL FACILITY)"%>
 						<optgroup value='/programs/exitcare?patient_id=<%= @patient.id -%>&exit_state=<%= exit_state%>' label="Transferred out"></optgroup>
-					<% else %>
+					<% elsif exit_state.to_s.upcase == "TREATMENT NEVER STARTED"%>
+						<optgroup value='/programs/exitcare?patient_id=<%= @patient.id -%>&exit_state=<%= exit_state%>' label="Never started"></optgroup>
+                                        <% else %>
 						<optgroup value='/programs/exitcare?patient_id=<%= @patient.id -%>&exit_state=<%= exit_state%>' label='<%= exit_state%>'></optgroup>
 					<% end %>
 				<% end %>

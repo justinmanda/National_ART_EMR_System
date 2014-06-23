@@ -1,3 +1,7 @@
 <% @options.each do |option| %>
-<li tstValue="<%= option[1] %>"><%= option[0] %></li>
+<% if  option[0].match(/MOH/i)%>
+  <li style="background: #00CD66;" val = "<%= option[0] %>" tstValue="<%= option[1]%>"><%= option[0]%></li>
+<% else %>
+  <li val = "<%= option[0] %>" tstValue="<%= option[1] %>"><%= option[0] %></li>
+<% end %>
 <% end %>

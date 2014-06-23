@@ -270,68 +270,7 @@ end -%>
         {:helpText => "Gender of index patient", 
          :condition => '$("referred_by").value == "Index Patient"'} %>
 
-      <%= touch_yes_no_tag "Sputum result", @patient, nil,
-		{	:id => "sputum_result",
-			:helpText => "With sputum results?" } %>
 
-	    <%= text_field_tag "sputum_microscopy_year", nil,
-		  {:helpText => 'Sputum microscopy year',
-		  :field_type => 'number',
-		  :absoluteMin => "1982",
-		  :min => "1982",
-		  :absoluteMax => Date.today.year,
-		  :tt_pageStyleClass => "Numeric NumbersOnly",
-		  :condition => '$("sputum_result").value.toLowerCase() == "yes"'}  %>
-
-  <label for='sputum_microscopy_month'>Sputum microscopy month</label>
-  <%= select_tag "sputum_microscopy_month", month_name_options,
-    {:helpText => 'Sputum microscopy month',
-	 :tt_onLoad => "__$('keyboard').style.display = 'none';",
-     :condition => '($("sputum_microscopy_year").value.toLowerCase() != "Unknown") && ($("sputum_result").value.toLowerCase() == "yes")'
-	}%>
-
-
-  <label for='sputum_microscopy_day'>Sputum microscopy day</label>
-  <%= text_field_tag "sputum_microscopy_day",  nil, :field_type => 'number',
-       :helpText => 'Sputum microscopy day',
-       :condition => '($("sputum_microscopy_year").value != "Unknown") && ($("sputum_microscopy_month").value != "Unknown") && ($("sputum_result").value.toLowerCase() == "yes")', :tt_onLoad => ";getDayOfMonthPicker($('sputum_microscopy_year').value, $('sputum_microscopy_month').value)",
-	   :tt_onUnload => "$('sputum_microscopy_date').value = compileDate()" %>
-
-  <%= touch_hidden_tag "SPUTUM MICROSCOPY DATE", @patient, "", :id => "sputum_microscopy_date", :value_datetime => true %>
-
-  
-  <%= select_tag "main_tests", options_for_select(["Sputum-AAFB", "Sputum-Culture"].unshift(" ")),
-		{	:helptext => 'Main tests',
-			:id => 'main_tests',
-			:tt_onUnLoad => 'updateLaborderUrl($("main_tests").value);',
-			:condition => '$("sputum_result").value.toLowerCase() == "yes"'} %>
-
-
-	<%= touch_select_tag "TESTS ORDERED", @patient, options_for_select([]),
-		{	:id => "lab_orders",
-			:tt_onLoad => "$('clearButton').style.display='block'",
-			:multiple => false,
-			:helpText => "First test",
-			:condition => '$("sputum_result").value.toLowerCase() == "yes"' } %>
-
-  <%= select_tag "$('lab_orders').value", options_for_select(@sputum_results),
-      {:id => "first_results",
-      :helpText => "Result",
-	  :tt_onUnLoad => "createHTML()",
-	  :condition => '$("sputum_result").value.toLowerCase() == "yes"'} %>
-
-  <%= touch_select_tag "TESTS ORDERED", @patient, options_for_select([]),
-		{	:id => "lab_orders2",
-			:tt_onLoad => "$('clearButton').style.display='block'",
-			:multiple => true,
-			:helpText => "Second test",
-			:condition => '$("sputum_result").value.toLowerCase() == "yes"'} %>
-
-    <%= select_tag "$('lab_orders2').value", options_for_select(@sputum_results),
-      {	:id => "second_results",
-		:helpText => "Result",
-		:tt_onUnLoad => "createSecondHTML()",
-		:condition => '$("sputum_result").value.toLowerCase() == "yes"'} %>
   
   	<%#= touch_select_tag "TESTS ORDERED", @patient, options_for_select([]),
 		{	:id => "lab_orders",
@@ -341,14 +280,14 @@ end -%>
 			:condition => '$("sputum_result").value.toLowerCase() == "yes"' } %>
 
     <% session_date = session[:datetime].to_date rescue nil
-    
-    if session_date %>
-      <% if !@appointment_days.blank? %>
+      if session_date %>
+
     <p><label for="filter_provider">Staff who provided the information (Provider)</label></br>
-    <%= text_field "filter" , 'provider', :helpText => 'Staff who provided the information (Provider)', :ajaxURL => '/user/username?username=' %></p>
-     <% else %>
+    <%= text_field "filter" , 'provider',
+         :helpText => 'Staff who provided the information (Provider)',
+         :ajaxURL => '/user/username?username=' %></p>
+    <% else %>
       <%= hidden_field_tag "filter[provider]", nil %>
-     <% end %>
     <%end%>
     </form>
 

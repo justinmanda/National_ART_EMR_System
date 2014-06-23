@@ -1,4 +1,5 @@
 module MedicationService
+  require 'csv'
 
 	def self.arv(drug)
 		arv_drugs.map(&:concept_id).include?(drug.concept_id) rescue false
@@ -136,4 +137,61 @@ module MedicationService
     options = set.map{|item|next if item.concept.blank? ; [item.concept.fullname, item.concept.concept_id] }
     return options
   end
+
+  def self.get_arv_regimen(patient_id, dispension_date)
+    possible_combinations = {}
+    csv_url =  RAILS_ROOT + "/doc/regimens_possible_combinations.csv"
+
+    CSV.foreach("#{csv_url}") do |row|
+      next if row[0].strip.match(/regimen/i)
+      regimen = row[0].strip.upcase
+      if possible_combinations[regimen].blank?
+        possible_combinations[regimen] = []
+      end
+      possible_combinations[regimen] << row[1].strip
+    end
+   
+    amount_dispensed_concept = ConceptName.find_by_name('Amount dispensed').concept
+    dispensed_drugs = []
+    dispensed_arvs_ids = Observation.find_by_sql("
+      SELECT drug_inventory_id FROM obs
+      INNER JOIN drug_order d ON d.order_id = obs.order_id
+      AND obs.voided = 0 AND obs.concept_id = #{amount_dispensed_concept.id}
+      WHERE obs.person_id = #{patient_id} AND obs.obs_datetime 
+      BETWEEN '#{dispension_date.to_date.strftime('%Y-%m-%d 00:00:00')}' 
+      AND '#{dispension_date.to_date.strftime('%Y-%m-%d 23:59:59')}' 
+      AND d.drug_inventory_id IN(SELECT drug_id FROM arv_drug);")  
+    
+    return if dispensed_arvs_ids.blank?
+ 
+    dispensed_regimen = 'Unknown'
+    dispensed_arvs_ids = dispensed_arvs_ids.map{|i|i.drug_inventory_id}.uniq
+
+    (possible_combinations || {}).each do |regimen, drug_ids|
+      (drug_ids).each do |ids|
+        arv_ids = ids.split(';')
+        if arv_ids.length == dispensed_arvs_ids.length
+          if (arv_ids - dispensed_arvs_ids) == []
+            dispensed_regimen = regimen
+          end
+        end
+      end 
+    end
+    return dispensed_regimen
+  end
+
+  def self.latest_arv_dispensed_date(patient_id)
+    amount_dispensed_concept = ConceptName.find_by_name('Amount dispensed').concept
+    
+    obs = Observation.find_by_sql("
+      SELECT MAX(obs_datetime) obs_datetime FROM obs
+      INNER JOIN drug_order d ON d.order_id = obs.order_id
+      AND obs.voided = 0 AND obs.concept_id = #{amount_dispensed_concept.id}
+      WHERE obs.person_id = #{patient_id} 
+      AND d.drug_inventory_id IN(SELECT drug_id FROM arv_drug);")  
+     
+    return if obs.blank?
+    return obs.first.obs_datetime
+  end
+
 end

@@ -70,6 +70,17 @@
     return new Date(intyear,intmonth,intday);
   }
 
+ function clearControls(){
+   document.getElementById('minus').style.display = "none";
+   document.getElementById('slash').style.display = "none"
+   document.getElementById('decimal').style.display = "none"
+   document.getElementById('plus').style.display = "none"
+   document.getElementById('comma').style.display = "none"
+   document.getElementById('star').style.display = "none"
+   document.getElementById('percent').style.display = "none"
+   document.getElementById('minus').style.display = "none"
+   document.getElementById('date').style.display = "none"
+ }
 </script>
 
 <style>
@@ -99,8 +110,24 @@ Skip logic
      :tt_pageStyleClass => "NoKeyboard",
      :helpText => "HIV Status" } %>
 
-  <%= text_field_tag "hiv_test_year", nil, {:helpText => 'HIV test year', :field_type => 'number', :absoluteMin => "1982", :min => "1982", :absoluteMax => Date.today.year, :tt_pageStyleClass => "Numeric NumbersOnly", :condition => '$("hiv_status").value != "UNKNOWN"'} %>
-
+<% if ! session[:datetime].blank? # retrospective entry%>
+  <%= text_field_tag "hiv_test_year", nil, {:helpText => 'HIV test year', 
+    :field_type => 'number',
+    :absoluteMin => "1982",
+    :min => "1982",
+    :tt_onLoad => "clearControls()",
+    :absoluteMax => Date.today.year,
+    :tt_pageStyleClass => "Numeric",
+    :condition => '$("hiv_status").value != "UNKNOWN"'} %>
+<%else%>
+    <%= text_field_tag "hiv_test_year", nil, {:helpText => 'HIV test year',
+    :field_type => 'number',
+    :absoluteMin => "1982",
+    :min => "1982",
+    :absoluteMax => Date.today.year,
+    :tt_pageStyleClass => "Numeric NumbersOnly",
+    :condition => '$("hiv_status").value != "UNKNOWN"'} %>
+<%end%>
   <%= select_tag "hiv_test_month", month_name_options, {:tt_onLoad => "__$('keyboard').style.display = 'none'",:helpText => 'HIV test month', :condition => '($("hiv_test_year").value.toLowerCase() != "unknown") && ($("hiv_status").value != "UNKNOWN")'}%>
 
   <%= text_field_tag "hiv_test_day", nil,
@@ -134,13 +161,13 @@ Skip logic
  <% unless Location.current_location.name == "TB HTC" %>
     <%= touch_yes_no_unknown_tag "Refer to HTC", @patient, nil,
       {:id => "refer_to_htc",
-      :condition => '$("hiv_status").value == "NEGATIVE" && updateTestDate()',
+      :condition => '$("hiv_status").value == "NEGATIVE" && updateTestDate()  && $("hiv_test_year").value != "Unknown"',
       :tt_pageStyleClass => "NoKeyboard",
       :helpText => "Patient has been -ve for more than 3 months. Refer patient to HTC?" } %>
 
 	<%= touch_yes_no_unknown_tag "Refer to HTC", @patient, nil,
       {:id => "refer_to_htc",
-      :condition => '$("hiv_status").value == "UNKNOWN"',
+      :condition => '$("hiv_status").value == "UNKNOWN" || $("hiv_test_year").value == "Unknown"',
       :tt_pageStyleClass => "NoKeyboard",
       :helpText => "Refer patient to HTC?" } %>
   <%end%>
@@ -153,14 +180,12 @@ Skip logic
 <%end%>
 
 <% session_date = session[:datetime].to_date rescue nil
-    
     if session_date %>
-      <% if !@appointment_days.blank? %>
+
     <p><label for="filter_provider">Staff who provided the information (Provider)</label></br>
-    <%= text_field "filter" , 'provider', :helpText => 'Staff who provided the information (Provider)', :ajaxURL => '/user/username?username=' %></p>
-     <% else %>
+<%= text_field "filter" , 'provider', :helpText => 'Staff who provided the information (Provider)', :ajaxURL => '/user/username?username=' %></p>
+    <% else %>
       <%= hidden_field_tag "filter[provider]", nil %>
-     <% end %>
     <%end%>
 <%= submit_tag "Finish" %>
    </form>

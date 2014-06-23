@@ -122,6 +122,6 @@ div{
     <a style="position:absolute; width:200px" id="number" onClick="closeSummary()">Close</a><br /><br /><br />
     <% unless @adherences.blank? %>
       <a style="position:absolute; width:200px" id="number" onclick='adhSummary();'><span>Summary</span></a><br /><br /><br />
-      <a style="position:absolute; width:200px" id="number" onclick="document.location='/cohort_tool/reports?report=<%=  @quarter %>&report_type=<%=  @type%>';"><span>Over 100% Adherence</span></a>
+      <a style="position:absolute; width:200px" id="number" onclick="document.location='/cohort_tool/reports?report=<%=  @quarter %>&report_type=<%=  @type %>';"><span>Over 100% Adherence</span></a>
     <% end %>
 </div>

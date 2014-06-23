@@ -28,6 +28,7 @@
       
       function hideLoadMsg() {
         document.getElementById('msgBox').style.display = "none";
+          document.getElementById('footer').style.display = "block";
       }
 
       function loadMsg() {
@@ -131,13 +132,14 @@
         position:absolute;
         overflow:hidden;
         -moz-user-select:none;
+        display: none;
       }
 
     </style>
 
   </head>
- 
   <body onload="hideLoadMsg();">
+   
     <div id="content">
       <iframe id="main" style="border: 0px solid #fff;"
               src="/patients/<%= (!@type.nil? ? "general_mastercard" : "mastercard_printable")
@@ -149,8 +151,8 @@
 		    <% if (@show_mastercard_counter.to_s == "true") || (@from_report.to_s == "true") %>
 		    		<% report_url = session[:report_url] if !session[:report_url].blank? %>
 		    <% end %>
-		   
-        <button onclick="window.location ='<%="#{report_url}"%>';" class="button navButton green"
+	
+        <button onclick="window.location ='<%="#{next_task(@patient)}"%>';" class="button navButton green"
           id="nextButton" style="float: right; margin-right: 10px;" ><span>Finish</span>
         </button>
 

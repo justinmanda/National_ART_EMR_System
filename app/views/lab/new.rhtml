@@ -93,6 +93,21 @@ function resetPad() {
     :validationMessage => "You must specify >, < or =" ,
     :tt_onLoad => "updateResultKeyPad();"%>
 
+<% unless params[:viral_load].blank? %>
+  <%= select_tag 'result_given',options_for_select(["","Yes","No"]),
+  {
+   :id => "result_given",
+   :helpText => 'Result given to patient?'} %>
+
+ <%= text_field_tag 'date_result_given', Date.today,
+      {:id => 'date_result_given',
+       :field_type => 'date',
+       :condition => '$("result_given").value.toLowerCase() =="yes"',
+       :helpText => "Date result given",
+       :max => "#{(Date.today).strftime('%Y-%m-%d')}",
+       :tt_pageStyleClass => "Date DatesOnly"} %>
+
+<%  end %>
 
 <%= hidden_field_tag "patient_id", @patient.id %>
 

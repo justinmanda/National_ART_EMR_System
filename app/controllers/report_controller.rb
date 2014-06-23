@@ -5,7 +5,7 @@ class ReportController < GenericReportController
     @current_location_name = Location.current_health_center.name
     @report_name = 'Appointments Report' #find means of making the report name dynamic
 		@select_date = params[:user_selected_date].to_date rescue Date.today
-    @formatted_appointment_date = @select_date.strftime(" %d %b %Y")
+    @formatted_appointment_date = @select_date.strftime('%A, %d - %b - %Y')
 		@patients = appointments_for_the_day(@select_date)
 		render :layout => 'report'
 	end
@@ -165,10 +165,9 @@ class ReportController < GenericReportController
 
     @data = []
     @report = "Missed appointments"
-    
-    @start_date = (params[:start_month].to_s + "/" + params[:start_day].to_s + "/" + params[:start_year].to_s).to_date rescue params[:start_date].to_date
+    @start_date = (params[:start_month].to_s + "/" + params[:start_day].to_s + "/" + params[:start_year].to_s).to_date
 
-    @end_date = (params[:end_month].to_s + "/" + params[:end_day].to_s + "/" + params[:end_year].to_s).to_date rescue params[:end_date].to_date
+    @end_date = (params[:end_month].to_s + "/" + params[:end_day].to_s + "/" + params[:end_year].to_s).to_date
 
 
     appoinment = Concept.find_by_name('appointment date').concept_id

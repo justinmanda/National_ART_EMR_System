@@ -127,7 +127,7 @@ background-position: 0% -30px;
   <% date = Date.today
   previous_outcome = ""
   #raise @visits.to_yaml
-   @visits.sort.map{|date,data| 
+   (@visits || []).sort.map{|date,data|
     unless data.reg.blank?
       outcome = 'ON ART' 
     end

@@ -1,8 +1,14 @@
 
-<% %>
+<%= javascript_include_tag 'miscellaneous.js'%>
+<%=  stylesheet_link_tag  'miscellaneous.css'%>
+
 <script>
 </script>
+<%= javascript_include_tag("miscellaneous")%>
+<%= stylesheet_link_tag("miscellaneous")%>
 <style type="text/css">
+
+
  #popup {
  	top: 50px;
 	height:80% ! important;
@@ -234,6 +240,9 @@
 
   #tt_page_duration_of_art_drugs .inputFrameClass {  height: 86%; }
 
+   #tt_page_select_tb_regimen .inputFrameClass {  height: 80%; }
+    #tt_page_select_tb_regimen .options {  height: 76%; }
+
   tr th {
 	background-color:gray;
 	padding:10px;
@@ -303,6 +312,29 @@
 	background-color:gray;
 	padding:10px;
   }
+
+  #confirm_cpt_mgs{
+        border-radius: 10px;
+        position: absolute;
+        background-color: #DCDCDC;
+        border: 3px solid black;
+        height: 32%;
+        z-index: 991;
+        left: 40%;
+        top:20%;
+        width: 53%;
+        left: 20%;
+      }
+  #protector{
+      position: absolute;
+      background-color: black;
+      width: 100%;
+      height: 102%;
+      left: 0%;
+      top: 0%;
+      z-index: 990;
+      opacity: 0.5;
+    }
 </style>
 
 <%= javascript_include_tag "prototype"%>
@@ -483,7 +515,7 @@ element.setAttribute("onmousedown", "gotoNextPage()")
 				display += "</table></td></tr>"; //Alt 2 */
 				//Selected Regimen
 				
-				display += "<tr><td colspan='6'><hr></td></tr><tr  class='" + chart_color +"'><td class='title" + chart_color +"'>Selected </td><td>" + $('regimen_concept_id').options[$('regimen_concept_id').selectedIndex].text + "</td><td><table>";
+				display += "<tr><td colspan='6'><hr></td></tr><tr  class='" + chart_color +"'><td class='title" + chart_color +"'>Selectedd </td><td>" + $('regimen_concept_id').options[$('regimen_concept_id').selectedIndex].text.replace('(MoH Recommended)', "") + "</td><td><table>";
 				for (x=0; x < adverse_events[selected.toString()]["contraindications"].length; x++){
 				   display += "<tr><td>" + adverse_events[selected.toString()]["contraindications"][x][0] + "</td></tr>"
 				}
@@ -665,7 +697,7 @@ element.setAttribute("onmousedown", "gotoNextPage()")
 
   function set_patient_posible_all_suggestions(programId) {
 	//var program_id = encodeURIComponent($('patient_program').value);
-	$('touchscreenInput'+tstCurrentPage).setAttribute('ajaxURL', "/regimens/suggest_all?patient_age=<%= @patient_bean.age %>&id=" + programId + "&search_string=");
+	$('touchscreenInput'+tstCurrentPage).setAttribute('ajaxURL', "/regimens/suggest_all?patient_age=<%= @patient_bean.age %>&current_weight=<%= @current_weight %>&id=" + programId + "&search_string=");
 	listSuggestions(tstCurrentPage);
 	//$("regimen_concept_id").setAttribute("onmousedown", alert('yes'))
   }
@@ -979,7 +1011,79 @@ element.setAttribute("onmousedown", "gotoNextPage()")
       __$("buttons").removeChild(__$("addHere"));
     }
   }
+
+  function show_confirm_cpt_mgs(){
+    protector = document.getElementById('protector')
+    protector.style.display = 'inline'
+    content = document.getElementById('content')
+    confirm_cpt = document.getElementById('confirm_cpt_mgs');
+    content.appendChild(confirm_cpt);
+    confirm_cpt.style.display = 'inline'
+  }
+
+  function confirm_cpt_mgs_no_button(){
+    confirm_cpt = document.getElementById('confirm_cpt_mgs');
+    confirm_cpt.style.display = 'none';
+    protector = document.getElementById('protector')
+    protector.style.display = 'none'
+  }
+
+  function confirm_cpt_mgs_yes_button(){
+    confirm_cpt = document.getElementById('confirm_cpt_mgs');
+    confirm_cpt.style.display = 'none';
+    protector = document.getElementById('protector')
+    protector.style.display = 'none'
+    gotoNextPage();
+  }
+
+  function set_cpt_options_events(){
+    available_cpt_options = document.getElementsByTagName('li');
+    current_weight = '<%= @current_weight %>'
+    for(i=0; i<available_cpt_options.length; i++){
+
+      available_cpt_options[i].onmouseup = function(){
+        if (this.innerHTML == '480'){
+         if (current_weight >= 30){
+          show_confirm_cpt_mgs();
+         }
+        }
+      }
+    }
+  }
+
+  function checkInput(){
+    if (document.getElementById('touchscreenInput' + tstCurrentPage).value.length > 0){
+      document.getElementById('touchscreenInput'+tstCurrentPage).value = "";
+    }
+  }
 </script>
+
+<%
+      options = [["240", "240"]]
+    if (@current_weight < 14)
+      options << ['120 <span class="moh_recommend">(MoH Recommended)</span>', '120']
+      options << ['480 <span class="moh_recommend">(MoH Recommended)</span>', '480']
+    else
+      options << ['120', '120']
+    end
+    
+    if (@current_weight >= 14) and (@current_weight < 30)
+      options << ['480 <span class="moh_recommend">(MoH Recommended)</span>', '480']
+      options << ['960', '960']
+    elsif (@current_weight >= 30)
+      options << ['480', '480']
+      options << ['960 <span class="moh_recommend">(MoH Recommended)</span>', '960']
+    end
+      options = options.sort_by{|key, value| value.to_i}
+      #options = options.sort_by{|key, value| value}
+
+ ipt_options = ["100"] if @current_weight < 10
+ ipt_options = ["100","150"] if @current_weight >= 10 and @current_weight < 14
+ ipt_options = ["100","150","200"] if @current_weight >= 14 and @current_weight < 20
+ ipt_options = ["100","150","200","250"] if @current_weight >= 20 and @current_weight < 25
+ ipt_options = ["100","150","200","250","300"] if @current_weight >= 25
+ pyridoxine_options = ["","25", "50"]
+%>
 <body>
    <div id="cover" align="center">
   </div>
@@ -995,7 +1099,7 @@ element.setAttribute("onmousedown", "gotoNextPage()")
 
 	<% if (@family_planning_methods.length != 0) || ( @patient_bean.sex == 'Female' && @patient_bean.age > 14 ) %>
 	  <%= text_field_tag :task_name, nil,
-		{   :tt_onLoad => "showResults();__$('keyboard').style.display = 'none'",
+		{   :tt_onLoad => "showResults();__$('keyboard').style.display = 'none';showCategory('Regimen');",
 		:optional => "true",
 		:tt_pageStyleClass => "NoControls",
 		:helpText => '' } %>
@@ -1008,7 +1112,8 @@ element.setAttribute("onmousedown", "gotoNextPage()")
 	  {	:optional => false,
 	  :id => 'prescribe_tb_drugs',
 	  :condition => 'isRegisteredForTB() == true',
-	  :helpText => "Prescribe TB Regimen?" } %>
+	  :helpText => "Prescribe TB Regimen?",
+          :tt_onLoad => "showCategory('Regimen');"} %>
 
   <%end%>
 
@@ -1017,7 +1122,8 @@ element.setAttribute("onmousedown", "gotoNextPage()")
 	  {	:textCase => "upper",
 	  :condition => '$("prescribe_tb_drugs").value == "YES"',
 	  :allowFreeText => 'false',
-	  :helpText => "Prescribe regimen for which TB program?" } %>
+	  :helpText => "Prescribe regimen for which TB program?",
+          :tt_onLoad => "showCategory('Regimen');"} %>
   <%else%>
 	<%= hidden_field_tag(:tb_patient_program, @tb_programs.first.patient_program_id) %>
   <%end%>
@@ -1028,7 +1134,7 @@ element.setAttribute("onmousedown", "gotoNextPage()")
 	  {	:textCase => "upper",
 	  :allowFreeText => 'false',
 	  :condition => 'current_regimens_for_programs[$("tb_patient_program").value] != null && $("prescribe_tb_drugs").value == "YES"',
-	  :tt_onLoad => 'showTbDrugs();setAttributes();',
+	  :tt_onLoad => 'showTbDrugs();setAttributes();showCategory("Regimen");',
 	  :tt_onUnLoad => 'resetAttributes();',
 	  :helpText => "Continue current TB regimen?" } %>
 
@@ -1040,7 +1146,7 @@ element.setAttribute("onmousedown", "gotoNextPage()")
 	<%= select_tag :tb_regimen_concept_id, nil,
 	  {	:ajaxUrl => "",
 	  :allowFreeText => 'false',
-	  :tt_onLoad => "set_patient_program_for_suggestions($('tb_patient_program').value);setTimeout('setSelectedRow()',500);",
+	  :tt_onLoad => "set_patient_program_for_suggestions($('tb_patient_program').value);setTimeout('setSelectedRow()',500);showCategory('Regimen');",
 	  :condition => '$("prescribe_tb_drugs").value == "YES" && $("tb_continue_existing_regimen").value != "YES"',
 	  :helpText => "#{initial_regimen_help_text}" } %>
 
@@ -1049,7 +1155,7 @@ element.setAttribute("onmousedown", "gotoNextPage()")
 	  :ajaxUrl => "",
 	  :tt_onUnLoad => "setRegimenId('TB');" ,
 	  :allowFreeText => true ,
-	  :tt_onLoad => "set_regimen_concept_id_for_regimen($('tb_patient_program').value, $('tb_regimen_concept_id').value);buildPrescriptionPage($('tb_continue_existing_regimen').value,  $('tb_patient_program').value, $('tb_regimen_concept_id').value, 'tb_prescription_container');",
+	  :tt_onLoad => "set_regimen_concept_id_for_regimen($('tb_patient_program').value, $('tb_regimen_concept_id').value);buildPrescriptionPage($('tb_continue_existing_regimen').value,  $('tb_patient_program').value, $('tb_regimen_concept_id').value, 'tb_prescription_container');showCategory('Regimen');",
 	  :condition => '$("prescribe_tb_drugs").value == "YES"',
 	  :helpText => "Select formulations and doses" } %>
 
@@ -1068,7 +1174,7 @@ element.setAttribute("onmousedown", "gotoNextPage()")
   %>
 	<%= select_tag :tb_duration, optionsString,
 	  {	:condition => '$("prescribe_tb_drugs").value == "YES"',
-	  :tt_onLoad => "__$('keyboard').style.display = 'none'",
+	  :tt_onLoad => "__$('keyboard').style.display = 'none';showCategory('Regimen');",
 	  :helpText => 'Duration' } %>
 
 
@@ -1079,12 +1185,13 @@ element.setAttribute("onmousedown", "gotoNextPage()")
 	  {	:optional => false,
 	  :id => 'prescribe_continuation_tb_drugs',
 	  :condition => 'isRegisteredForTB() == true',
-	  :helpText => "Prescribe Continuation TB Regimen?" } %>
+	  :helpText => "Prescribe Continuation TB Regimen?",
+          :tt_onLoad => "showCategory('Regimen');"} %>
 
 	<%= select_tag :tb_continuation_regimen_concept_id, nil,
 	  {	:ajaxUrl => "",
 	  :allowFreeText => 'false',
-	  :tt_onLoad => "set_patient_program_for_suggestions($('tb_patient_program').value);setTimeout('setSelectedRow()',500);",
+	  :tt_onLoad => "set_patient_program_for_suggestions($('tb_patient_program').value);setTimeout('setSelectedRow()',500);showCategory('Regimen');",
 	  :condition => '$("prescribe_continuation_tb_drugs").value == "YES"',
 	  :helpText => "Select TB regimen" } %>
 
@@ -1093,7 +1200,7 @@ element.setAttribute("onmousedown", "gotoNextPage()")
 	  :ajaxUrl => "",
 	  :tt_onUnLoad => "setRegimenId('TB Continuation');" ,
 	  :allowFreeText => true ,
-	  :tt_onLoad => "set_regimen_concept_id_for_regimen($('tb_patient_program').value, $('tb_continuation_regimen_concept_id').value);buildPrescriptionPage('NO',  $('tb_patient_program').value, $('tb_continuation_regimen_concept_id').value, 'tb_prescription_container');",
+	  :tt_onLoad => "set_regimen_concept_id_for_regimen($('tb_patient_program').value, $('tb_continuation_regimen_concept_id').value);buildPrescriptionPage('NO',  $('tb_patient_program').value, $('tb_continuation_regimen_concept_id').value, 'tb_prescription_container');showCategory('Regimen');",
 	  :condition => '$("prescribe_continuation_tb_drugs").value == "YES"',
 	  :helpText => "Select formulations and doses" } %>
 
@@ -1112,7 +1219,8 @@ element.setAttribute("onmousedown", "gotoNextPage()")
   %>
 	<%= select_tag :tb_continuation_duration, optionsString,
 	  {	:condition => '$("prescribe_continuation_tb_drugs").value == "YES"',
-	  :helpText => 'Duration of TB drugs' } %>
+	  :helpText => 'Duration of TB drugs',
+          :tt_onLoad => "showCategory('Regimen');"} %>
 
   <% end %>
 
@@ -1121,7 +1229,8 @@ element.setAttribute("onmousedown", "gotoNextPage()")
 	<%= select_tag :patient_program, options_for_select(@hiv_programs.map{|program| [program.program.name, program.patient_program_id] if PatientProgram.find(program.patient_program_id).date_completed == nil}), {
 	  :textCase => "upper",
 	  :allowFreeText => 'false',
-	  :helpText => "Prescribe regimen for which ARV program?"}%>
+	  :helpText => "Prescribe regimen for which ARV program?",
+          :tt_onLoad => "showCategory('Regimen');"}%>
   <%else%>
 	<%= hidden_field_tag(:patient_program, (@hiv_programs.first.patient_program_id rescue '')) %>
   <%end%>
@@ -1129,9 +1238,9 @@ element.setAttribute("onmousedown", "gotoNextPage()")
   <%= touch_yes_no_tag "PRESCRIBE ARVS", @patient, nil,
 	{:id => 'prescribe_arvs',
 	:allowFreeText => 'false',
-        :tt_onload => "showCategory('PHARMACY');",
 	:condition => 'hasReasonForART() == true && prescribeAntiretroviralDrugs() == true',
-	:helpText => "Prescribe ARVs?" } %>
+	:helpText => "Prescribe ARVs?",
+        :tt_onLoad => "showCategory('Regimen');"} %>
 
   <%#= select_tag :continue_existing_regimen, options_for_select([['',''],['Yes','YES'],['No','NO']], ''), {
 	:textCase => "upper",
@@ -1145,12 +1254,12 @@ element.setAttribute("onmousedown", "gotoNextPage()")
 	:helpText => "Continue current ARV drugs?"}%>
   <%= touch_hidden_tag "Reason antiretrovirals changed or stopped", @patient, nil, {
 	  :id => 'reason_antiretrovirals_changed_or_stopped'} %>
-
+	  
   <%= select_tag :continue_existing_regimen, options_for_select([['',''],['Yes','YES'],['No','NO']], ''), {
 	:textCase => "upper",
 	:allowFreeText => 'false',
 	:id => "continue_existing_regimen",
-	:tt_onLoad => 'showCategory("PHARMACY");showDrugs();setAttributes();changeButton();',
+	:tt_onLoad => 'showDrugs();setAttributes();changeButton();showCategory("Regimen");showRegimenChangeAlert()',
 	:tt_onUnLoad => 'resetAttributes();resetRegimen();',
 	:condition => 'existingRegimen();',
 	:helpText => "Continue current ARV drugs?"}%>
@@ -1158,16 +1267,15 @@ element.setAttribute("onmousedown", "gotoNextPage()")
   <%= select_tag :regimen_concept_id, nil, {
 	:ajaxUrl => "",
 	:allowFreeText => 'false',
-	:tt_onLoad => "removeButton();addButton();changeRegimen();set_patient_program_for_suggestions($('patient_program').value);setTimeout('setSelectedRow()',500);showCategory('PHARMACY');",
+	:tt_onLoad => "checkInput(); removeButton();addButton();changeRegimen();set_patient_program_for_suggestions($('patient_program').value);setTimeout('setSelectedRow();setTextToAppear(\" (MoH Recommended)\")',1000);showCategory('Regimen');",
 	:condition => 'hasReasonForART() == true && $("prescribe_arvs").value == "YES" && $("continue_existing_regimen").value != "YES"',
-	:optional => true,
-        :helpText => "Select ART regimen",
+	:helpText => "Select ART regimen",
 	:tt_onUnload => "resetRegimen();removeButton();"}%>
 
   <%= select_tag :regimen_concept_id_all, nil, {
 	:ajaxUrl => "",
 	:allowFreeText => 'false',
-	:tt_onLoad => "changeRegimen();set_patient_posible_all_suggestions($('patient_program').value);setTimeout('setSelectedRow()',500);showCategory('PHARMACY');",
+	:tt_onLoad => "checkInput(); changeRegimen();set_patient_posible_all_suggestions($('patient_program').value);setTimeout('setSelectedRow(); setTextToAppear(\" (MoH Recommended)\")',1000);showCategory('PHARMACY');",
 	:condition => 'other_regimen == "yes"',
 	:helpText => "Select ART regimen",
 	:tt_onUnload => "resetRegimen()"}%>
@@ -1204,7 +1312,7 @@ element.setAttribute("onmousedown", "gotoNextPage()")
 
   <%= select_tag :duration, optionsString, {
 	:condition => '$("prescribe_arvs").value == "YES" || $("cpt_given").value == "YES" || $("ipt_given").value == "YES"',
-	:tt_onLoad => "showCategory('PHARMACY');__$('keyboard').style.display = 'none'",
+	:tt_onLoad => "__$('keyboard').style.display = 'none';showCategory('PHARMACY');",
 	:helpText => 'Duration of prescribed drugs' } %>
 
   <!-- CPT & IPT-->
@@ -1214,38 +1322,73 @@ element.setAttribute("onmousedown", "gotoNextPage()")
 	<%= touch_yes_no_tag "Prescribe cotramoxazole", @patient, nil,
 	  {	:id => 'cpt_given',
 	  :allowFreeText => 'false',
-          :tt_onLoad => "showCategory('PHARMACY');",
 	  :condition => 'prescribeAntiretroviralDrugs() == true',
-	  :helpText => "Prescribe CPT" } %>
+	  :helpText => "Prescribe CPT",
+          :tt_onLoad => "showCategory('PHARMACY');"} %>
 
-	<%= select_tag :cpt_mgs, options_for_select(["480","960"]), {
+	<%= select_tag :cpt_mgs, options_for_select(options), {
 	  :allowFreeText => 'false',
 	  :condition => "$('cpt_given').value == 'YES'",
-          :tt_onLoad => "showCategory('PHARMACY');",
-	  :helpText => "Prescribed cotramoxazole milligrams" } %>
+	  :helpText => "Prescribed cotrimoxazole milligrams",
+          :tt_onLoad => "checkInput(); showCategory('Regimen'); setTextToAppear();",
+          :tt_onmousedown => "show_confirm_cpt_mgs()"} %>
   <% end %>
-
-  <% if @patient_bean.age >= 2 && !@current_hiv_program_state.match(/On antiretrovirals/i) && !@current_hiv_program_state.match(/Patient transferred in/i) %>
+ <% current = session[:datetime].to_date rescue Date.today
+ if current >= '2014-04-01'.to_date %>
+  <% if @patient_bean.age >= 5 && !@current_hiv_program_state.match(/On antiretrovirals/i) && !@current_hiv_program_state.match(/Patient transferred in/i) %>
 	<%= touch_yes_no_tag "ISONIAZID", @patient, nil,
 	  {	:id => 'ipt_given',
 	  :allowFreeText => 'false',
-          :tt_onLoad => "showCategory('PHARMACY');",
 	  :condition => "prescribeAntiretroviralDrugs() && $('prescribe_arvs').value != 'YES'",
-	  :helpText => "Prescribe IPT" } %>
+	  :helpText => "Prescribe IPT",
+          :tt_onLoad => "showCategory('PHARMACY');"} %>
 
-    <%= select_tag :ipt_mgs, options_for_select(["300","100"]), {
+    <%= select_tag :ipt_mgs, options_for_select(ipt_options), {
 	  :allowFreeText => 'false',
-          :tt_onLoad => "showCategory('PHARMACY');",
 	  :condition => "prescribeAntiretroviralDrugs() && $('ipt_given').value == 'YES'",
-	  :helpText => "IPT milligrams" } %>
+	  :helpText => "IPT milligrams",
+          :tt_onLoad => "showCategory('PHARMACY');"} %>
+
   <%else%>
 	<%= touch_hidden_tag "ISONIAZID", @patient, "", :id => "ipt_given" %>
-  <%end%>
+  <%end
+ else %>
+    <% if @patient_bean.age >= 2 && !@current_hiv_program_state.match(/On antiretrovirals/i) && !@current_hiv_program_state.match(/Patient transferred in/i) %>
+	<%= touch_yes_no_tag "ISONIAZID", @patient, nil,
+	  {	:id => 'ipt_given',
+	  :allowFreeText => 'false',
+	  :condition => "prescribeAntiretroviralDrugs() && $('prescribe_arvs').value != 'YES'",
+	  :helpText => "Prescribe IPT",
+          :tt_onLoad => "showCategory('PHARMACY');"} %>
 
-  <%= select_tag :cpt_duration, optionsString,
-	  {	:condition => '($("prescribe_arvs").value == "NO" || $("prescribe_arvs").value == "") && ($("cpt_given").value == "YES" || $("ipt_given").value == "YES")',
-	  :tt_onLoad => "showCategory('PHARMACY');__$('keyboard').style.display = 'none'",
+    <%= select_tag :ipt_mgs, options_for_select(ipt_options), {
+	  :allowFreeText => 'false',
+	  :condition => "prescribeAntiretroviralDrugs() && $('ipt_given').value == 'YES'",
+	  :helpText => "IPT milligrams",
+          :tt_onLoad => "showCategory('PHARMACY');"} %>
+  <%else%>
+	<%= touch_hidden_tag "ISONIAZID", @patient, "", :id => "ipt_given" %>
+  <%end %>
+  <% end %>
+
+     <%= touch_yes_no_tag "pyridoxine", @patient, nil,
+	  {	:id => 'pyridoxine',
+	  :allowFreeText => 'false',
+	  :condition => "prescribeAntiretroviralDrugs() && $('prescribe_arvs').value != 'YES' && $('ipt_given').value == 'YES'",
+	  :helpText => "Prescribe Pyridoxine",
+          :tt_onLoad => "showCategory('PHARMACY');"} %>
+
+  <%= select_tag :pyridoxine_value, options_for_select(pyridoxine_options), {
+	  :allowFreeText => 'false',
+	  :condition => "prescribeAntiretroviralDrugs() && $('pyridoxine').value == 'YES'",
+	  :helpText => "Pyridoxine Milligrams",
+          :tt_onLoad => "showCategory('PHARMACY');"} %>
+
+    <%= select_tag :cpt_duration, optionsString,
+	  {	:condition => '($("prescribe_arvs").value == "NO" || $("prescribe_arvs").value == "") && ($("cpt_given").value == "YES" || $("ipt_given").value == "YES"  || $("pyridoxine").value == "YES")',
+	  :tt_onLoad => "__$('keyboard').style.display = 'none';showCategory('PHARMACY');",
 	  :helpText => 'Duration' } %>
+
 
    <%#= select_tag :ipt_duration, optionsString,
 	  {	:condition => '$("prescribe_arvs").value == "NO" && $("ipt_given").value == "YES"',
@@ -1259,7 +1402,7 @@ element.setAttribute("onmousedown", "gotoNextPage()")
 		:condition => 'hasARTVisit() == true;',
 		:tt_pageStyleClass => "unknownButton",
                 :tt_onLoad => "showCategory('PHARMACY');",
-		:helpText => 'Number of condoms given'
+		:helpText => 'Number of condoms given',
 	  } %>
 	<% else %>
 	  <%= touch_numeric_tag "CONDOMS", @patient, nil,
@@ -1275,7 +1418,8 @@ element.setAttribute("onmousedown", "gotoNextPage()")
   <%= touch_text_area_tag "CLINICAL NOTES CONSTRUCT", @patient, nil,
 	{	:id => "clinical_notes",
 	:optional => true,
-	:helpText => "Clinical notes (optional)"
+	:helpText => "Clinical notes (optional)",
+        :tt_onLoad => "showCategory('Regimen');"
   }, time=DateTime.now() %>
 
   <% initial_date = "#{session[:datetime].strftime('%Y-%m-%d')}" rescue "#{(Date.today).strftime('%Y-%m-%d')}" %>
@@ -1348,4 +1492,30 @@ element.setAttribute("onmousedown", "gotoNextPage()")
 </form>
   <div id="previous_drugs_dispensed">
   </div>
+
+  <div id="confirm_cpt_mgs" style="display:none">
+        <div><br />
+          <center><span style="font-size: 2em; color: red">Children on 2nd line regimen 9P rountinely change to standard adult 2nd line regimen 7A once they weigh over 35Kg.<br />
+              Would you like to change?</span><br /><br /><br />
+            <button onclick="confirm_cpt_mgs_yes_button()" style="position:absolute; left:20%; min-width: 140px; bottom: 2%;" id="yes"><span>Yes</span></button>
+            <button onclick="confirm_cpt_mgs_no_button()" style="position:absolute; right:20%; min-width: 140px; bottom: 2%;" id="no"><span>No</span></button></center>
+     
+        </div>
+  </div>
+  
+  <div id="protector" style="display:none">
+
+  </div>
+  
 </body>
+<script>
+
+function showRegimenChangeAlert(){
+  <% if @current_weight %>
+	<% if @current_weight > 35 && @patient_bean.age <=14 && @current_regimen.upcase == '9P' %>
+		document.getElementById('confirm_cpt_mgs').style.display = 'inline'
+		document.getElementById('protector').style.display = 'inline'
+	<% end %>
+  <% end %>
+}
+</script>

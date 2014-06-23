@@ -275,7 +275,11 @@
 													  <td align='center'><%= data_row.age_in_months %> Months</td>
 										  <% end %>
 
-										  <td align='center'><%= session[:cohort]["Earliest_start_dates"][data_row.patient_id] %></td>
+										  <td align='center'>
+
+                                                                                    <%= link_to "<span class='clinic_data_value' >#{session[:cohort]["Earliest_start_dates"][data_row.patient_id] rescue session[:pre_art]["earliest_start_date"][data_row.patient_id.to_i] rescue 0}</span>", "/patients/show/#{data_row.person_id}?session=#{session[:cohort]["Earliest_start_dates"][data_row.patient_id] rescue session[:pre_art]["earliest_start_date"][data_row.patient_id.to_i] rescue 0}" -%>
+
+                                                                                  </td>
 										  <td><%= "#{session[:cohort]["start_reason"][data_row.patient_id	.to_s]}" %></td>
 										  <td><%= "#{session[:cohort]["outcomes"][data_row.patient_id.to_s]}" %></td>
 										 <td align='center' class="create_button"><%= link_to_onmousedown "View",{:controller =>"patients", :action => 'mastercard',

@@ -1,7 +1,9 @@
 <script>
   var tt_cancel_destination = "/patients/show/<%= @patient.patient_id %>"
   var hivTestedDate = "<%= @hiv_test_date %>"
+  var suspected = "<%= @suspected %>"
   var displayedDate
+  var suspected = '<%= @suspected.to_s %>'
   function showEnrollPatient() {
     if (tb_status.match(/treatment/i))
       return false;
@@ -11,7 +13,7 @@
 
   function assignTBstatus() {
       tb_status = $('tb_suspected').value;
-      if (tb_status == "YES") {
+      if ((tb_status == "YES") || (suspected == 'true')) {
         $('tb_status').value = "Confirmed TB NOT on treatment";
       }
   }
@@ -78,14 +80,14 @@
       tb_status = $('tb_status').value;
       tb_suspected = $('tb_suspected').value;
 
-      if (tb_status.length == 0 && $('tb_suspected').value == 0)
+      if ((tb_status.length == 0 && $('tb_suspected').value == 0) || (suspected == 'true'))
         $('tb_status').value = "Confirmed TB NOT on treatment";
         return
     }catch(e) {}
 
     try {
       tb_type = $('tb_type').value;
-      if (tb_type.length > 0 && $('set_tb_status')) {
+      if ((tb_type.length > 0 && $('set_tb_status')) || (suspected == 'true')) {
         $('set_tb_status').value = "Confirmed TB NOT on treatment"
         return
       }
@@ -228,7 +230,7 @@
    <%= touch_yes_no_unknown_tag "TB SUSPECTED", @patient, nil,
 			{	:id => "tb_suspected",
 			    :tt_onUnload => 'assignTBstatus();',
-				:condition => "$('xray').value != 'Consistent of TB' && $('any_tb_symptoms').value == 'YES' && $('interpret_xray').value == 'YES'",
+				:condition => "($('xray').value != 'Consistent of TB' && $('any_tb_symptoms').value == 'YES' && $('interpret_xray').value == 'YES') || suspected == 'true'",
 				:helpText => 'Does the patient have TB?'} %>
 				
 	<%= touch_select_tag "Further examination for TB required", @patient, options_for_select(@select_options['tb_investigation']),
@@ -329,14 +331,12 @@
 	<%end%>
 
   <% session_date = session[:datetime].to_date rescue nil                       
-    
     if session_date %>
-      <% if !@appointment_days.blank? %>
+
     <p><label for="filter_provider">Staff who provided the information (Provider)</label></br>
-    <%= text_field "filter" , 'provider', :helpText => 'Staff who provided the information (Provider)', :ajaxURL => '/user/username?username=' %></p>
-     <% else %>
+<%= text_field "filter" , 'provider', :helpText => 'Staff who provided the information (Provider)', :ajaxURL => '/user/username?username=' %></p>
+    <% else %>
       <%= hidden_field_tag "filter[provider]", nil %>
-     <% end %>
     <%end%>
   <%= submit_tag "Finish" %>    
 </form>

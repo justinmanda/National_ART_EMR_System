@@ -1,11 +1,22 @@
 <style>
   .tt_controls_tb_registration_number_at_previous_location #Unknown { display:block; }
   .tt_controls_weight_at_tb_initiation #Unknown { display:block; }
+  #tt_page_sputum_microscopy_month #viewport { height: 780px;}
+  #tt_page_sputum_microscopy_month .inputFrameClass { height: 595px;}
+
+ 
+
 
 </style>
 
 <script>
   var tt_cancel_destination = "/patients/show/<%= @patient.patient_id %>"
+
+
+   function compileDate(){
+    var tmpDate = $('sputum_microscopy_year').value + "-" + $('sputum_microscopy_month').value +"-" +$('sputum_microscopy_day').value;
+    return tmpDate;
+  }
   
   function summary() {
     var display = "<div><span class='title' style='font-size:40px;'>" + "Refer Patient to Clinician after taking vitals from this desk" + "</span></div>";
@@ -14,6 +25,67 @@
     $("clearButton").style.display = "none";
 
   }
+  var str; var tt;
+
+  function createHTML(){
+	tt = document.getElementById("lab_orders");
+	str = tt.value + " RESULTS";
+	tt = document.getElementById("first_results").value;
+	createForm(str, tt)
+  }
+
+  function createSecondHTML(){
+	tt = document.getElementById("lab_orders2")
+	str = tt.value + " RESULTS"
+	tt = document.getElementById("second_results").value;
+	createForm(str, tt)
+  }
+
+  function createForm(concept, value){
+	var submitForm = document.getElementById("appointment");
+    var newElement = document.createElement("input");
+
+    newElement.setAttribute("name","observations[][concept_name]");
+    newElement.setAttribute("type","hidden");
+    newElement.value = concept;
+
+    submitForm.appendChild(newElement);
+
+	newElement = document.createElement("input");
+    newElement.setAttribute("name","observations[][value_coded_or_text]");
+    newElement.setAttribute("type","hidden");
+    newElement.value = value;
+    submitForm.appendChild(newElement);
+  }
+
+  function validateOptions(){
+        number_of_selected_test = tstInputTarget.value.split(';').length;
+        if(number_of_selected_test < 2){
+            showMessage('Please select 2 or more tests');
+			//gotoPage(tstCurrentPage - 1, false);
+        }
+    }
+
+  function updateLaborderUrl(mainTest){
+        var url = '/encounters/lab_orders?sample=' + mainTest + '&search_string=';
+        $('lab_orders').setAttribute('ajaxURL', url);
+		$('lab_orders2').setAttribute('ajaxURL', url);
+    }
+
+    function updateLabOptions(){
+        opts_arr = document.getElementsByTagName('li');
+        val_in_list = [];
+        for (var i = 0; i < opts_arr.length; i++){
+            for(k = 0; k < val_arr.length; k++){
+                if(opts_arr[i].innerHTML.toString() == val_arr[k].toString()){
+                    val_in_list.push(val_arr[k]);
+                }
+            }
+
+        }
+        tstInputTarget.value = val_in_list.join(';');
+        listSuggestions(tstCurrentPage);
+    }
 
 </script>
 <style>
@@ -29,6 +101,9 @@
 	left : 980px ! important;
   }
 </style>
+  <% default={
+    :allowFreeText => 'true',
+  } %>
 <% if @patient.patient_programs.current.local.map(&:program).map(&:name).include?('TB PROGRAM') %>
   <div class="inputPage NoKeyboard" id="page" style="display: block;">
     <div id="trigger"></div>
@@ -48,6 +123,84 @@
 	<%= hidden_field_tag "encounter[patient_id]", @patient.id %>
 	<%= hidden_field_tag "encounter[encounter_datetime]", DateTime.now() %>
 	<%= hidden_field_tag "encounter[provider_id]", current_user.user_id %>
+
+
+<%= touch_yes_no_tag "Sputum result", @patient, nil,
+		{	:id => "sputum_result",
+			:helpText => "Do you have results?" } %>
+
+  <% options=default.merge({
+      :field_type => 'text',
+      :helpText => "Select Results:",
+      :id => "result_types",
+      :multiple => false,
+      :tt_pageStyleClass => "MultiSelectList",
+	  :condition => '$("sputum_result").value.toLowerCase() == "yes"'
+    }) %>
+
+  <% @treatements_list = ["Sputum", "X-ray"] %>
+  <%= select_tag("test_type_values",options_for_select(@treatements_list),options)%>
+
+	    <%= text_field_tag "sputum_microscopy_year", nil,
+		  {:helpText => 'Sputum microscopy year',
+		  :field_type => 'number',
+		  :absoluteMin => "1982",
+		  :min => "1982",
+		  :absoluteMax => Date.today.year,
+		  :tt_pageStyleClass => "Numeric NumbersOnly",
+		  :condition => '$("sputum_result").value.toLowerCase() == "yes" && $("result_types").value.toLowerCase() == "sputum"'}  %>
+
+  <label for='sputum_microscopy_month'>Sputum microscopy month</label>
+  <%= select_tag "sputum_microscopy_month", month_name_options,
+    {:helpText => 'Sputum microscopy month',
+	 :tt_onLoad => "__$('keyboard').style.display = 'none';",
+     :condition => '($("sputum_microscopy_year").value.toLowerCase() != "Unknown") && ($("sputum_result").value.toLowerCase() == "yes") && $("result_types").value.toLowerCase() == "sputum"'
+	}%>
+
+
+  <label for='sputum_microscopy_day'>Sputum microscopy day</label>
+  <%= text_field_tag "sputum_microscopy_day",  nil, :field_type => 'number',
+       :helpText => 'Sputum microscopy day',
+       :condition => '($("sputum_microscopy_year").value != "Unknown") && ($("sputum_microscopy_month").value != "Unknown") && ($("sputum_result").value.toLowerCase() == "yes") && $("result_types").value.toLowerCase() == "sputum"',
+	   :tt_onLoad => ";getDayOfMonthPicker($('sputum_microscopy_year').value, $('sputum_microscopy_month').value)",
+	   :tt_onUnload => "$('sputum_microscopy_date').value = compileDate()" %>
+
+  <%= touch_hidden_tag "SPUTUM MICROSCOPY DATE", @patient, "", :id => "sputum_microscopy_date", :value_datetime => true %>
+
+
+  <%= select_tag "main_tests", options_for_select(["Sputum-AAFB", "Sputum-Culture"].unshift(" ")),
+		{	:helptext => 'Main tests',
+			:id => 'main_tests',
+			:tt_onUnLoad => 'updateLaborderUrl($("main_tests").value);',
+			:condition => '$("sputum_result").value.toLowerCase() == "yes" && $("result_types").value.toLowerCase() == "sputum"'} %>
+
+
+	<%= touch_select_tag "TESTS ORDERED", @patient, options_for_select([]),
+		{	:id => "lab_orders",
+			:tt_onLoad => "$('clearButton').style.display='block'",
+			:multiple => false,
+			:helpText => "First test",
+			:condition => '$("sputum_result").value.toLowerCase() == "yes" && $("result_types").value.toLowerCase() == "sputum"' } %>
+
+  <%= select_tag "$('lab_orders').value", options_for_select(@sputum_results),
+      {:id => "first_results",
+      :helpText => "Result",
+	  :tt_onUnLoad => "createHTML()",
+	  :condition => '$("sputum_result").value.toLowerCase() == "yes" && $("result_types").value.toLowerCase() == "sputum"'} %>
+
+  <%= touch_select_tag "TESTS ORDERED", @patient, options_for_select([]),
+		{	:id => "lab_orders2",
+			:tt_onLoad => "$('clearButton').style.display='block'",
+			:multiple => false,
+			:helpText => "Second test",
+			:condition => '$("sputum_result").value.toLowerCase() == "yes" && $("result_types").value.toLowerCase() == "sputum"'} %>
+
+    <%= select_tag "$('lab_orders2').value", options_for_select(@sputum_results),
+      {	:id => "second_results",
+		:helpText => "Result",
+		:tt_onUnLoad => "createSecondHTML()",
+		:condition => '$("sputum_result").value.toLowerCase() == "yes" && $("result_types").value.toLowerCase() == "sputum"'} %>
+
 
 	<%  if @any_previous_tb_programs %>
 		<%= touch_hidden_tag("EVER RECEIVED TB TREATMENT", @patient, "Yes", {:id => "tb_treatment"}) %>
@@ -148,17 +301,21 @@
                        :tt_pageStyleClass => "NoControls" ,
                        :condition => "$('transfer_in').value !='YES'",
                        :helpText => ''} %>
+  <%  else %>
+	 <label for='summary'>Summary</label>
+     <%= text_field_tag :summary, nil, { :tt_onLoad => "__$('keyboard').style.display = 'none';summary();", :optional => "true",
+                       :tt_pageStyleClass => "NoControls" ,
+                       :condition => '$("result_types").value.toLowerCase() == "x-ray"',
+                       :helpText => ''} %>
   <%end%>
 
   <% session_date = session[:datetime].to_date rescue nil                       
-   
     if session_date %>
-      <% if !@appointment_days.blank? %>
+
     <p><label for="filter_provider">Staff who provided the information (Provider)</label></br>
-    <%= text_field "filter" , 'provider', :helpText => 'Staff who provided the information (Provider)', :ajaxURL => '/user/username?username=' %></p>
-     <% else %>
+<%= text_field "filter" , 'provider', :helpText => 'Staff who provided the information (Provider)', :ajaxURL => '/user/username?username=' %></p>
+    <% else %>
       <%= hidden_field_tag "filter[provider]", nil %>
-     <% end %>
     <%end%>
   <%= submit_tag "Finish" %>    
 </form>

@@ -70,7 +70,7 @@ class GenericPropertiesController < ApplicationController
     return wkdays
   end
 
-  def site_code  
+  def site_code
     location = Location.find(Location.current_health_center.id)
     @neighborhood_cell = location.neighborhood_cell
     if request.post?
@@ -134,7 +134,7 @@ class GenericPropertiesController < ApplicationController
   end
 
   def creation
-    if request.post?
+    if request.post?     
       global_property = GlobalProperty.find_by_property(params[:property]) || GlobalProperty.new()
       global_property.property = params[:property]
       global_property.property_value = (params[:property_value].downcase == "yes").to_s

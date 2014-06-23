@@ -6,6 +6,7 @@ class PatientsController < GenericPatientsController
     @reason_for_art_eligibility = PatientService.reason_for_art_eligibility(@patient)
     @arv_number = PatientService.get_patient_identifier(@patient, 'ARV Number')
     @exit_states = concept_set("EXIT FROM CARE").flatten.uniq!
+    @exit_states.delete("Treatment never started") if CoreService.get_global_property_value('mpc.lighthouse.states') == false
     render :template => 'dashboards/exitcare_dashboard.rhtml', :layout => false
   end
 
@@ -76,9 +77,8 @@ class PatientsController < GenericPatientsController
   def patient_transfer_out_label(patient_id)
     date = session[:datetime].to_date rescue Date.today
     patient = Patient.find(patient_id)
-    patient_bean = PatientService.get_patient(patient.person)
     demographics = mastercard_demographics(patient)
-    
+   
     who_stage = demographics.reason_for_art_eligibility 
     initial_staging_conditions = demographics.who_clinical_conditions.split(';')
     destination = demographics.transferred_out_to
@@ -322,4 +322,22 @@ class PatientsController < GenericPatientsController
     end
   end
 
+  def set_allow_hiv_staging_sessions
+    current_date = session[:datetime].to_date rescue Date.today
+    patient = Patient.find(params[:patient_id])
+    session["#{patient.id}"] = {} if session["#{patient.id}"].blank?
+    session["#{patient.id}"]["#{current_date}"] = {} if session["#{patient.id}"]["#{current_date}"].blank?
+    session["#{patient.id}"]["#{current_date}"][:stage_patient] = nil
+    render :text => "true" and return
+  end
+
+  def set_deny_hiv_staging_sessions
+    current_date = session[:datetime].to_date rescue Date.today
+    patient = Patient.find(params[:patient_id])
+    session["#{patient.id}"] = {} if session["#{patient.id}"].blank?
+    session["#{patient.id}"]["#{current_date}"] = {} if session["#{patient.id}"]["#{current_date}"].blank?
+    session["#{patient.id}"]["#{current_date}"][:stage_patient] = "No"
+    next_url = (next_task(patient))
+    render :text => next_url and return
+  end
 end

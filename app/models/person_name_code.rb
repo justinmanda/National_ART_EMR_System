@@ -36,8 +36,8 @@ class PersonNameCode < ActiveRecord::Base
        FROM person_name_code \
        INNER JOIN person_name ON person_name_code.person_name_id = person_name.person_name_id \
        INNER JOIN person ON person.person_id = person_name.person_id \
-       WHERE person.voided = 0 AND person_name.voided = 0 AND #{field_name}_code LIKE ? \
-       GROUP BY #{field_name} \
+       WHERE person.voided = 0 AND person_name.voided = 0 AND (#{field_name}_code LIKE ? \
+       OR person_name.#{field_name} LIKE ?) GROUP BY #{field_name} \
        ORDER BY \
          CASE INSTR(#{field_name},?) WHEN 0 THEN 9999 ELSE INSTR(#{field_name},?) END ASC, \
          CASE INSTR(#{field_name}_code,?) WHEN 0 THEN 9999 ELSE INSTR(#{field_name}_code,?) END ASC, \
@@ -45,6 +45,6 @@ class PersonNameCode < ActiveRecord::Base
          COUNT(#{field_name}) DESC,  \
          #{field_name} ASC \
        LIMIT 10",
-       "#{soundex}%", search_string, search_string, soundex, soundex, soundex])
+       "#{soundex}%", "#{search_string}%",search_string, search_string, soundex, soundex, soundex])
   end
 end

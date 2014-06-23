@@ -1,8 +1,8 @@
 <style>
-  .touchscreenTextInput {
-    width:98% ! important;
+  #tt_page_art_number .touchscreenTextInput {
+    width: 98% !important;
   }
-  #tt_page_art_number #viewPort {  width: 90%; }
+
 </style>
 
 <script>
@@ -50,7 +50,8 @@
 
 %>
   <% if session[:guardian_added] == nil  %>
-    <% if Person.find(@patient.patient_id).relationships.first.blank? %>
+    <% 
+    if Person.find(@patient.patient_id).relationships.first.blank? %>
        <label for='guardian_present'>Guardian Present</label>
        <%  if session_date %>
           <%= select_tag "observations[][value_text]", relationship_options(@patient),
@@ -67,27 +68,28 @@
            :optional => false,
            :tt_onUnLoad => "forcePatientPresentYes(),setTimeout(cleanup_guardian_options() , 500)" } %>
        <% end %>
-
+        
         <%= hidden_field_tag("observations[][value_coded_or_text]", nil) %>
         <%= hidden_field_tag("observations[][concept_name]", "GUARDIAN PRESENT") %>
         <%= hidden_field_tag("observations[][patient_id]", @patient.id) %>
         <%= hidden_field_tag("observations[][obs_datetime]", DateTime.now()) %>
     <% else %>
       <label for='guardian_present'>Guardian Present (<%=@patient_bean.guardian rescue ''%>)</label>
+        <%#= raise session_date.to_yaml %>
         <%  if session_date %>
           <%= select_tag "observations[][value_text]", relationship_options(@patient),
           {:id => "guardian_present",
            :multiple => false,
            :optional => false,
            :tt_onLoad => "showCategory('RECEPTION');",
-           :tt_onUnLoad => "forcePatientPresentYes(),setTimeout(cleanup_guardian_options() , 500)" } %>
+           :tt_onUnLoad => "forcePatientPresentYes()" } %>
         <% else %>
           <%= select_tag "observations[][value_text]", options_for_select([['Yes','YES'],['No','NO']]),
           {:id => "guardian_present",
            :multiple => false,
            :tt_onLoad => "showCategory('RECEPTION');",
            :optional => false,
-           :tt_onUnLoad => "forcePatientPresentYes(),setTimeout(cleanup_guardian_options() , 500)" } %>
+           :tt_onUnLoad => "forcePatientPresentYes()" } %>
        <% end %>
         <%= hidden_field_tag("observations[][value_coded_or_text]", nil) %>
         <%= hidden_field_tag("observations[][concept_name]", "GUARDIAN PRESENT") %>
@@ -99,14 +101,14 @@
   <% end %>
   <% session[:guardian_added] = nil %>
   <label for='patient_present'>Patient Present (<%=@patient_bean.name%>)</label>
-    <%= select_tag "observations[][value_coded_or_text]", options_for_select([['Yes','YES'],['No','NO']]),
+    <%= select_tag "observations[][value_coded_or_text]", options_for_select([['Yes','YES'],['No','NO']]), 
       {:id => 'patient_present',
-       :condition => "$('guardian_present').value == 'YES'",
+       :condition => "$('guardian_present').value.toUpperCase() == 'YES'",
        :tt_onLoad => 'hide_new_relationship_button();showCategory("RECEPTION");'} %>
     <%= hidden_field_tag("observations[][value_text]", nil) %>
     <%= hidden_field_tag("observations[][concept_name]", "PATIENT PRESENT") %>
     <%= hidden_field_tag("observations[][patient_id]", @patient.id) %>
-    <%= hidden_field_tag("observations[][obs_datetime]", DateTime.now()) %>
+    <%= hidden_field_tag("observations[][obs_datetime]", DateTime.now()) %>  
   <%if @given_arvs_before and @patient_bean.arv_number.blank?
       show_arv_number = get_global_property_value('show_arv_number') rescue 'true'
       unless show_arv_number == 'false'
@@ -115,14 +117,13 @@
     <% end %>
   <% end %>
 
-  <%
+  <% 
     if session_date %>
-      <% if !@appointment_days.blank? %>
+
     <p><label for="filter_provider">Staff who provided the information (Provider)</label></br>
-    <%= text_field "filter" , 'provider', :helpText => 'Staff who provided the information (Provider)', :ajaxURL => '/user/username?username=' %></p>
-     <% else %>
+<%= text_field "filter" , 'provider', :helpText => 'Staff who provided the information (Provider)', :ajaxURL => '/user/username?username=' %></p>
+    <% else %>
       <%= hidden_field_tag "filter[provider]", nil %>
-     <% end %>
     <%end%>
   <%= submit_tag "Finish" %>
 </form>

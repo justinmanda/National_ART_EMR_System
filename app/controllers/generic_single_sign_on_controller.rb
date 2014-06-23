@@ -10,6 +10,7 @@ class GenericSingleSignOnController < ApplicationController
 				current_user.reset_authentication_token 
 			end
 			user_token = current_user.authentication_token
+      User.current = current_user
 			current_user.save!
 			render :json => {:auth_token => current_user.authentication_token }.to_json, :status => :ok
 		else

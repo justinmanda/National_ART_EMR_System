@@ -320,7 +320,7 @@
         end
       %>
         <td align='left' style="width:160px" ><%= phone_numbers%></td>
-        <td align='center' style="width:130px"><%= data_row['date_created'].strftime("%a, %d/%m/%Y") %></td>
+        <td align='center' style="width:130px"><%= data_row['date_created'].to_date.strftime("%a, %d/%m/%Y") %></td>
       </tr>
     <%end%>
 

@@ -7,6 +7,7 @@ class GenericLabController < ApplicationController
     (Lab.results(@patient, patient_ids) || []).map do | short_name , test_name , range , value , test_date |
       @results << [short_name.gsub('_',' '),"/lab/view?test=#{short_name}&patient_id=#{@patient.id}"]
     end
+    
     @enter_lab_results = GlobalProperty.find_by_property('enter.lab.results').property_value == 'true' rescue false
     render :layout => 'menu'
   end
@@ -81,17 +82,16 @@ class GenericLabController < ApplicationController
 
   def graph
     @results = []
-    
     params[:results].split(';').map do | result |
-      
+
       date = result.split(',')[0].to_date rescue '1900-01-01'
       modifier = result.split(',')[1].split(" ")[0].sub('more_than','>').sub('less_than','<')
       value = result.split(',')[1].sub('more_than','').sub('less_than','').sub('=','') rescue nil
       next if value.blank?
       value = value.to_f
-      
+
       @results << [ date , value, modifier ]
-    end 
+    end
 
     @patient = Patient.find(params[:patient_id])
     @patient_bean = PatientService.get_patient(@patient.person)
@@ -112,12 +112,13 @@ class GenericLabController < ApplicationController
         patient.id,identifier_types]).each{| i | identifiers << i.identifier }
 
     patient_obj = PatientService.get_patient(patient.person)
+=begin I commented out this because we don't want to pull ids merged with other patients
 
     ActiveRecord::Base.connection.select_all("SELECT * FROM patient_identifier 
       WHERE identifier_type IN(#{identifier_types.join(',')}) 
       AND voided = 1 AND patient_id = #{patient.id} 
       AND void_reason LIKE '%Given new national ID: #{patient_obj.national_id}%'").collect{|r| identifiers << r['identifier']}
-
+=end
     return identifiers
   end
   
@@ -180,8 +181,25 @@ class GenericLabController < ApplicationController
     lab_parameter.TimeStamp = Time.now()                                        
     lab_parameter.Range = test_modifier                                         
     lab_parameter.save
-
-
+#This is for viral load feature
+#Needs to be reworked
+=begin
+    unless params[:result_given].blank?
+      patient = Patient.find(params[:patient_id])
+      type = EncounterType.find_by_name("REQUEST")
+      encounter = patient.encounters.current.find_by_encounter_type(type.id)
+      encounter ||= patient.encounters.create(:encounter_type => type.id)
+      observation = {}
+          observation[:concept_name] = "DATE OF RETURNED RESULT"
+          observation[:encounter_id] = encounter.id
+          observation[:accession_number] = lab_parameter.Sample_ID
+          observation[:obs_datetime] = encounter.encounter_datetime || Time.now()
+          observation[:person_id] ||= encounter.patient_id
+          observation[:value_datetime] = params[:date_result_given]
+          observation[:value_text] 
+          Observation.create(observation)
+    end
+=end
     redirect_to :action => "results" , :id => patient_bean.patient_id
   end
 

@@ -76,29 +76,34 @@ class GenericPeopleController < ApplicationController
   end
 
 	def create_remote
-
-		#raise person_params.to_yaml
+ 	  
 		if current_user.blank?
 		  user = User.authenticate('admin', 'test')
 		  sign_in(:user, user) if !user.blank?
-      set_current_user		  
+      set_current_user	  
 		end rescue []
 
 		if Location.current_location.blank?
 			Location.current_location = Location.find(CoreService.get_global_property_value('current_health_center_id'))
 		end rescue []
-
+    
+    
     if create_from_dde_server                                                
-      
+       
       passed_params = {"region" => "" ,
 				"person"=>{"occupation"=> params["occupation"] ,
 					"age_estimate"=> params["patient_age"]["age_estimate"] ,
-					"cell_phone_number"=> params["cell_phone"]["identifier"] ,
+					"cell_phone_number"=> params["cell_phone"]["identifier"] || nil,
+          "home_phone_number"=> params['home_phone']['identifier'] || nil,
+          "office_phone_number"=> params['office_phone']['identifier'] || nil,
 					"birth_month"=> params["patient_month"],
-					"addresses"=>{"address1"=> "",
-						"address2"=>  "",
-						"city_village"=>  params["patientaddress"]["city_village"] ,
-						"county_district"=> params["patient"]["birthplace"] },
+				 "addresses"=>
+            {"state_province"=> params["addresses"]["state_province"],
+            "address2"=> params["addresses"]["address2"],
+            "address1"=> params["addresses"]["address1"],
+            "neighborhood_cell"=> params["addresses"]["neighborhood_cell"],
+            "city_village"=> params["addresses"]["city_village"],
+            "county_district"=> params["addresses"]["county_district"]},   
 					"gender"=>  params["patient"]["gender"],
 					"patient"=>"",
 					"birth_day"=>  params["patient_day"] ,
@@ -109,7 +114,7 @@ class GenericPeopleController < ApplicationController
 					"birth_year"=> params["patient_year"] },
 				"filter_district"=> params["patient"]["birthplace"] ,
 				"filter"=>{"region"=> "" ,
-					"t_a"=> params["current_ta"]["identifier"] ,
+					"t_a"=> "",
 					"t_a_a"=>""},
 				"relation"=>"",
 				"p"=>{"'address2_a'"=>"",
@@ -119,21 +124,33 @@ class GenericPeopleController < ApplicationController
              
       person = PatientService.create_patient_from_dde(passed_params) 
     else
+      #raise params["addresses"].to_yaml
+      state = params["addresses"]["state_province"] rescue nil
+      address2 = params["addresses"]["address2"] rescue nil
+      address1 = params["addresses"]["address1"] rescue nil
+      address  = params["addresses"]["neighborhood_cell"] rescue nil
+      city_village = params["addresses"]["city_village"] rescue nil
+      district = params["addresses"]["county_district"] rescue nil
       person_params = {"occupation"=> params[:occupation],
         "age_estimate"=> params['patient_age']['age_estimate'],
-        "cell_phone_number"=> params['cell_phone']['identifier'],
+        "cell_phone_number"=> params['cell_phone']['identifier'] || nil,
+        "home_phone_number"=> params['home_phone']['identifier'] || nil,
+        "office_phone_number"=> params['office_phone']['identifier'] || nil,
         "birth_month"=> params[:patient_month],
-        "addresses"=>{ "address2" => params['p_address']['identifier'],
-					"address1" => params['p_address']['identifier'],
-					"city_village"=> params['patientaddress']['city_village'],
-					"county_district"=> params[:birthplace] },
+       "addresses"=>
+            {"state_province"=> state,
+            "address2"=> address2,
+            "address1"=> address1,
+            "neighborhood_cell"=> address,
+            "city_village"=> city_village,
+            "county_district"=> district},   
         "gender" => params['patient']['gender'],
         "birth_day" => params[:patient_day],
         "names"=> {"family_name2"=>"Unknown",
 					"family_name"=> params['patient_name']['family_name'],
 					"given_name"=> params['patient_name']['given_name'] },
         "birth_year"=> params[:patient_year] }
-
+        
       person = PatientService.create_from_form(person_params)
 
       if person
@@ -335,6 +352,7 @@ class GenericPeopleController < ApplicationController
 		@defaulted = "#{defaulter}" == "0" ? nil : true if ! @pp.match(/patient\sdied/i)
 		@task = main_next_task(Location.current_location, @person.patient, session_date)		
 		@arv_number = PatientService.get_patient_identifier(@person, 'ARV Number')
+    @tb_number = PatientService.get_patient_identifier(@person, 'District TB Number') rescue ""
 		@patient_bean = PatientService.get_patient(@person)  
 		
 		
@@ -354,14 +372,17 @@ class GenericPeopleController < ApplicationController
 		@patient_identifiers = PatientIdentifier.find(:all,                                                
 		  :conditions=>["patient_id=? AND identifier_type IN (?)",                  
         patient.id,identifier_types]).collect{| i | i.identifier }
-    if show_lab_results
+    #if show_lab_results
       @results = Lab.latest_result_by_test_type(@person.patient, 'HIV_viral_load', @patient_identifiers) rescue nil
       @latest_date = @results[0].split('::')[0].to_date rescue nil
       @latest_result = @results[1]["TestValue"] rescue nil
       @modifier = @results[1]["Range"] rescue nil
-    end
+    #end
     @reason_for_art = PatientService.reason_for_art_eligibility(patient)
-               
+    @vl_request = Observation.find(:last, :conditions => ["person_id = ? AND concept_id = ?",
+            patient.patient_id, Concept.find_by_name("Viral load").concept_id]
+        ).answer_string.squish.upcase rescue nil
+    
 		render :layout => false
 	end
 
@@ -456,7 +477,7 @@ class GenericPeopleController < ApplicationController
           print_and_redirect("/patients/national_id_label?patient_id=#{person.id}", next_task(person.patient)) and return
         end
         #creating patient's footprint so that we can track them later when they visit other sites
-        DDEService.create_footprint(PatientService.get_patient(person).national_id, "MOH-ART")
+        DDEService.create_footprint(PatientService.get_patient(person).national_id, "BART2 - #{BART_VERSION}")
       end
       redirect_to search_complete_url(params[:person][:id], params[:relation]) and return unless params[:person][:id].blank? || params[:person][:id] == '0'
 
@@ -476,7 +497,7 @@ class GenericPeopleController < ApplicationController
           birthdate = Date.new(Date.today.year - params[:person]["age_estimate"].to_i, 7, 1)
         else
           year = params[:person]["birth_year"].to_i
-          month = params[:person]["birth_month"].to_i
+          month = params[:person]["birth_month"]
           day = params[:person]["birth_day"].to_i
 
           month_i = (month || 0).to_i
@@ -586,7 +607,7 @@ class GenericPeopleController < ApplicationController
 
       #If we are creating from DDE then we must create a footprint of the just created patient to
       #enable future
-      DDEService.create_footprint(PatientService.get_patient(person).national_id, "MOH-ART")
+      DDEService.create_footprint(PatientService.get_patient(person).national_id, "BART2 - #{BART_VERSION}")
     
 
       #for now BART2 will use BART1 for patient/person creation until we upgrade BART1 to 2
@@ -611,7 +632,7 @@ class GenericPeopleController < ApplicationController
       unless (params[:relation].blank?)
         redirect_to search_complete_url(person.id, params[:relation]) and return
       else
-      if  params[:guardian_present] == "YES"
+      if  ! params[:guardian_present].blank?
         new_encounter = {"encounter_datetime"=> (session[:datetime] rescue Date.today),
         "encounter_type_name"=>"HIV RECEPTION",
         "patient_id"=> person.id,
@@ -626,7 +647,7 @@ class GenericPeopleController < ApplicationController
       reason_obs[:encounter_id] = encounter.id
       reason_obs[:obs_datetime] = encounter.encounter_datetime || Time.now()
       reason_obs[:person_id] ||= encounter.patient_id
-      reason_obs['value_coded_or_text'] = "YES"
+      reason_obs['value_coded_or_text'] = params[:guardian_present]
       Observation.create(reason_obs)
 
       reason_obs = {}
@@ -636,7 +657,8 @@ class GenericPeopleController < ApplicationController
       reason_obs[:person_id] ||= encounter.patient_id
       reason_obs['value_coded_or_text'] = "YES"
       Observation.create(reason_obs)
-      
+      end
+      if  params[:guardian_present] == "YES"
       redirect_to "/relationships/search?patient_id=#{person.id}&return_to=/people/redirections?person_id=#{person.id}" and return
       else
       redirect_to "/people/redirections?person_id=#{person.id}" and return
@@ -680,6 +702,7 @@ class GenericPeopleController < ApplicationController
 					params[:set_day].to_i,0,0,1)
         session[:datetime] = date_of_encounter #if date_of_encounter.to_date != Date.today
       end
+      session[:stage_patient] = ""
       unless params[:id].blank?
         redirect_to next_task(Patient.find(params[:id])) 
       else
@@ -691,6 +714,7 @@ class GenericPeopleController < ApplicationController
 
   def reset_datetime
     session[:datetime] = nil
+    session[:stage_patient] = ""
     if params[:id].blank?
       redirect_to :action => "index" and return
     else
@@ -716,12 +740,7 @@ class GenericPeopleController < ApplicationController
         render :template => "people/find_by_tb_number" and return
       end
 
-      if PatientIdentifier.site_prefix == "MPC"
-        prefix = "LL"
-      else
-        prefix = PatientIdentifier.site_prefix
-      end
-      tb_number = "#{prefix}-TB #{year} #{surfix.to_i}"
+      tb_number = "#{params[:tb_prefix].upcase}-TB #{year} #{surfix.to_i}"
       redirect_to :action => 'search' ,
         :identifier => tb_number and return
     end
@@ -738,11 +757,7 @@ class GenericPeopleController < ApplicationController
       current_date = Date.today
       current_date = session[:datetime].to_date if !session[:datetime].blank?
 
-      if PatientIdentifier.site_prefix == "MPC"
-        prefix = "LL"
-      else
-        prefix = PatientIdentifier.site_prefix
-      end
+      prefix = params[:tb_prefix].upcase
       session_date = "#{prefix}-TB #{current_date.year.to_s}"
       patient_exists = PatientIdentifier.find(:all,
         :conditions => ['identifier_type = ?
@@ -1144,7 +1159,8 @@ class GenericPeopleController < ApplicationController
   end
 
   def demographics_remote
-    identifier = params[:person][:patient][:identifiers]["national_id"] 
+    identifier = params[:person][:patient][:identifiers]["national_id"] rescue nil
+    identifier = params["person"]["patient"]["identifiers"]["National id"] if identifier.nil?
     people = PatientService.search_by_identifier(identifier)
     render :text => "" and return if people.blank?
     render :text => PatientService.remote_demographics(people.first).to_json rescue nil

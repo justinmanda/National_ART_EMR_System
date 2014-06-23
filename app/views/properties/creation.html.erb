@@ -30,9 +30,10 @@
       property = 'ask.pills.remaining.at.home'
     when 'extended_family_planning'
       property = 'extended.family.planning'
-    when 'confirm_before_creating_a_patient'                                    
+    when 'confirm_before_creating_a_patient'
       property = 'confirm.before.creating'
-
+    when 'enter_lab_results'
+      property = 'enter.lab.results'
   end
 %>
   <%= hidden_field_tag "property", property %>

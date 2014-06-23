@@ -4,16 +4,15 @@
 
   function arvCode(){
     inputElement = document.getElementById('tt_page_enter_tb_number').getElementsByTagName("input")[0]
+    site_prefix = document.getElementById('tb_prefix').value.toUpperCase()
     prefix = document.createElement("span")
     style = document.createAttribute("style")
     style.value = "position: absolute; z-index: 100; left: 0px; font-size: 35px;"
     prefix.setAttributeNode(style)
     inputElement.setAttribute("style","text-align:right;width:99%;")
-    <% if PatientIdentifier.site_prefix == "MPC" %>
-        prefix.innerHTML = "LL-TB"
-    <% else %>
-        prefix.innerHTML = "<%=  PatientIdentifier.site_prefix + '-TB' %>"
-    <% end %>
+  
+    prefix.innerHTML = site_prefix + "-TB "
+   
     inputElement.parentNode.insertBefore(prefix, inputElement)
     style.value+= 'left:30px;'
     prefix.setAttributeNode(style)
@@ -42,5 +41,6 @@
 <% else %>
   <form method = 'post' action = 'find_by_tb_number'>
 <% end %>
+   <%= text_field_tag :tb_prefix, nil , :field_type => 'alpha' , :helpText => 'Enter Site Prefix' %>
    <%= text_field_tag :tb_number, nil , :field_type => 'number' , :helpText => 'Enter TB Number',:tt_onLoad =>'arvCode()'%>
 </form>

@@ -17,12 +17,15 @@
     .tt_controls_end_day #Unknown { display:none; }
 
 </style>
-
+<% if params[:type] == "missed" %>
 <form action="/report/missed_appointment_report" method='post' >
+  <% else %>
+  <form action="/report/defaulted_patients_report" method='post' >
+  <% end %>
   <% month_names = month_name_options.gsub('<option value="Unknown">Unknown</option>', '') %>
 
-
-  <%#= text_field_tag "start_year", nil,
+<% if params[:type] == "missed" %>
+  <%= text_field_tag "start_year", nil,
                      {:helpText => 'Start Year',
                       :field_type => 'number',
                       :absoluteMin => "1890",
@@ -31,31 +34,20 @@
                       :tt_pageStyleClass => "Numeric NumbersOnly",
                       :validationJS => "setDOB();" }  %>
 
-  <%#= select_tag "start_month", month_names,
+  <%= select_tag "start_month", month_names,
                  {:helpText => 'Start Month',
                   :validationJS => "validateDOB();",
                   :validationMessage => 'Please enter a valid date',
                   :tt_onLoad => "__$('keyboard').style.display = 'none'"}%>
 
-  <%#= text_field_tag "start_day",  nil,
+  <%= text_field_tag "start_day",  nil,
                      :field_type => 'number',
                      :helpText => "Start Day" ,
                      :validationJS => "validateDOB()",
                      :validationMessage => 'Please enter a valid date'%>
-<input type="text"
-       field_type="date"
-       id="start_date"
-       name="start_date" value=""
-       helpText="Select start date" />
+<% end %>
 
-<input type="text"
-       field_type="date"
-       id="end_date"
-       name="end_date" value=""
-       helpText="Select end date" />
-
-
-  <%#= text_field_tag "end_year", nil,
+  <%= text_field_tag "end_year", nil,
                      {:helpText => 'End Year',
                       :field_type => 'number',
                       :absoluteMin => "1890",
@@ -64,13 +56,13 @@
                       :tt_pageStyleClass => "Numeric NumbersOnly",
                       :validationJS => "setDOB();" }  %>
 
-  <%#= select_tag "end_month", month_names,
+  <%= select_tag "end_month", month_names,
                  {:helpText => 'End Month',
                   :validationJS => "validateDOB();",
                   :validationMessage => 'Please enter a valid date',
                   :tt_onLoad => "__$('keyboard').style.display = 'none'"}%>
 
-  <%#= text_field_tag "end_day",  nil,
+  <%= text_field_tag "end_day",  nil,
                      :field_type => 'number',
                      :helpText => "End Day" ,
                      :validationJS => "validateDOB()",

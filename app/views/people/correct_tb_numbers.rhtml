@@ -10,16 +10,13 @@
 <script>
   function tb_number(){
    inputElement = $('tt_page_new_tb_registration_number').getElementsByTagName("input")[0]
+   site_prefix = document.getElementById('tb_prefix').value.toUpperCase()
     prefix = document.createElement("span")
     style = document.createAttribute("style")
     style.value = "position: absolute; z-index: 100; left: 47px; font-size: 44px;"
     prefix.setAttributeNode(style)
     inputElement.setAttribute("style","text-align:right;width:100%;")
-	<% if get_global_property_value("site_prefix") == "MPC" %>
-	   prefix.innerHTML = "LL-TB"
-	<% else %>
-	   prefix.innerHTML = "<%= get_global_property_value("site_prefix") rescue nil %>-TB"
-	<% end %>
+    prefix.innerHTML = site_prefix + "-TB "
     inputElement.parentNode.insertBefore(prefix, inputElement)
     style.value+= 'left:35px;'
     prefix.setAttributeNode(style)
@@ -38,6 +35,8 @@
          :optional => false,
          :helpText => "Type Of Correction",
          :tt_pageStyleClass => "NoKeyboard NoInput small"  } %>
+
+<%= text_field_tag :tb_prefix, nil , :field_type => 'alpha' , :helpText => 'Enter Site Prefix' %>
 
         <%= touch_identifier_tag @patient, "District TB Number", @identifier_value,
             {:id => "tb_district_number",

@@ -1,5 +1,5 @@
+<%= javascript_include_tag "prototype" %>
 <style>
-
   .tt_controls_clinical_notes_optional #space { display:inline; }
 
   .tt_controls_cd4_count #char {
@@ -44,6 +44,7 @@
   var cd4_count_numeric, cd4_count_estimate, cd4_count_modifier;
   var selected_stage_conditions = {};
   var retrospective_entry = <%= @retrospective %>
+  var tstCurrentDate = '<%= session[:datetime].to_date.strftime("%Y-%m-%d") rescue Date.today.strftime("%Y-%m-%d") %>'
 
   function resetPad() {
     curr_page = tstCurrentPage - 1 
@@ -120,7 +121,9 @@
     if (cd4_count_numeric == null || ''+cd4_count_numeric == 'NaN') {
       $('cd4_count_less_than_250').value = "UNKNOWN";
       $('cd4_count_less_than_350').value = "UNKNOWN";
+      $('cd4_count_less_than_500').value = "UNKNOWN";
     } else {
+     
 	  if(cd4_count_numeric <= 250 && cd4_count_modifier != ">") {
 		$('cd4_count_less_than_250').value = "YES";
 	  } else {
@@ -131,6 +134,12 @@
 		$('cd4_count_less_than_350').value = "YES";
 	  } else {
 		$('cd4_count_less_than_350').value = "NO";
+	  }
+
+          if(cd4_count_numeric <= 500 && cd4_count_modifier != ">") {
+		$('cd4_count_less_than_500').value = "YES";
+	  } else {
+		$('cd4_count_less_than_500').value = "NO";
 	  }
     }    
   }
@@ -244,7 +253,94 @@
 	}
   }
 
+  function oldReasonForEligibility(){
+    	var reasonForArtEligibility = "NONE";
+	// Lymphocyte thresholds for ages 0-15
+	var lymphocyteThresholds = [4000, 4000, 4000, 3000, 3000, 2500, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000];
+
+	var lymphocyteCountAvailable = false;
+
+	if ($('new_lymphocyte_count_available')) {
+	  lymphocyteCountAvailable = $('new_lymphocyte_count_available').value == 'YES';
+	}
+
+	var lymphocyteCount = lymphocyteCountAvailable ? $('lymphocyte_count').value : null;
+	var lymphocyteCountNumeric = null;
+
+	try { lymphocyteCountNumeric = parseInt(lymphocyteCount); } catch(e) { }
+
+	if (age > 14) {
+	  if (whoStage >= 3) {
+		reasonForArtEligibility = whoStageConcept(whoStage, "ADULT");
+	  } else if ($('cd4_count_less_than_250').value == "YES") {
+	      reasonForArtEligibility = "CD4 count less than or equal to 250"
+	  } else {
+		if ($('pregnant') && $('pregnant').value == "YES" && $('cd4_count_less_than_250').value == "YES") {
+		  reasonForArtEligibility = "CD4 count less than or equal to 250";
+		} else if (whoStage == 1 && lymphocyteCount < 1200 && lymphocyteCount != null) {
+		  reasonForArtEligibility = "LYMPHOCYTE COUNT BELOW THRESHOLD WITH WHO STAGE 1";
+		} else if (whoStage == 2 && lymphocyteCount < 1200 && lymphocyteCount != null) {
+		  reasonForArtEligibility = "LYMPHOCYTE COUNT BELOW THRESHOLD WITH WHO STAGE 2";
+		} //else if ($('pregnant') && $('pregnant').value == "YES") {
+		  //reasonForArtEligibility = "PATIENT PREGNANT";
+		//} else if ($('breast_feeding') && $('breast_feeding').value == "YES") {
+		  //reasonForArtEligibility = "BREASTFEEDING";
+		//}
+	  }
+	} else {
+	  var presumedSevereHivConditions = "";
+	  if ($('presumed_severe_hiv_conditions')) presumedSevereHivConditions = selectedValues($('presumed_severe_hiv_conditions'));
+	  var presumedSevereHiv = false;
+
+	  if (firstPositiveHivTestType == "HIV rapid test") {
+		if (
+		presumedSevereHivConditions.indexOf("Pneumocystis pneumonia") > -1 ||
+		  presumedSevereHivConditions.indexOf("Candidiasis of oseophagus, trachea and bronchi or lungs") > -1 ||
+		  presumedSevereHivConditions.indexOf("Cryptococcal meningitis") > -1 ||
+		  presumedSevereHivConditions.indexOf("Severe unexplained wasting or malnutrition not responding to treatment (weight-for-height/ -age <70% or MUAC <11cm or oedema)") > -1 ||
+		  presumedSevereHivConditions.indexOf("Toxoplasmosis of the brain (from age 1 month)") > -1) {
+		  presumedSevereHiv = true;
+		} else if (
+		((presumedSevereHivConditions.indexOf("Oral candidiasis") > -1) && (presumedSevereHivConditions.indexOf("Severe sepsis") > -1)) ||
+		  ((presumedSevereHivConditions.indexOf("Oral candidiasis") > -1) && (presumedSevereHivConditions.indexOf("Severe pneumonia") > -1)) ||
+		  ((presumedSevereHivConditions.indexOf("Severe pneumonia") > -1) && (presumedSevereHivConditions.indexOf("Severe sepsis") > -1))) {
+		  presumedSevereHiv = true;
+		}
+	  }
+
+	  try {
+		if (ageInMonths < 12 && firstPositiveHivTestType == "HIV rapid test" && presumedSevereHiv) {
+		  reasonForArtEligibility = "PRESUMED SEVERE HIV";
+		} else if (whoStage >= 3) {
+		  reasonForArtEligibility = whoStageConcept(whoStage, "PEDS");
+		} else if (ageInMonths < 12 && firstPositiveHivTestType == "HIV DNA POLYMERASE CHAIN REACTION") {
+		  reasonForArtEligibility = "HIV DNA POLYMERASE CHAIN REACTION";
+		} else if (ageInMonths < 24) {
+		  reasonForArtEligibility = "HIV infected";
+		} else if (cd4_count_numeric <= 750 && (ageInMonths >= 24 && ageInMonths < 56) && (whoStage) <= 2) {
+		  reasonForArtEligibility = "CD4 COUNT LESS THAN OR EQUAL TO 750";
+		} else if ($('cd4_count_less_than_250') && $('cd4_count_less_than_250').value == "YES" && (whoStage) <= 2) {
+		  reasonForArtEligibility = "CD4 COUNT LESS THAN OR EQUAL TO 250";
+		} else if (lymphocyteCount && (lymphocyteCount < lymphocyteThresholds[age]) && lymphocyteCount != null) {
+		  reasonForArtEligibility = "LYMPHOCYTE COUNT BELOW THRESHOLD WITH WHO STAGE 2";
+		}// else if ($('pregnant') && $('pregnant').value == "YES") {
+		//  reasonForArtEligibility = "PATIENT PREGNANT";
+		//} else if ($('breast_feeding') && $('breast_feeding').value == "YES") {
+		//  reasonForArtEligibility = "BREASTFEEDING";
+		//}
+	  } catch (e) {}
+	}
+
+	$('reason_for_art_eligibility').value = reasonForArtEligibility;
+  }
+
   function updateReasonForArtEligibility() {
+
+     if (tstCurrentDate < '2011-07-01') {
+        oldReasonForEligibility();
+        return
+     }
+
 	var reasonForArtEligibility = "NONE";
 	// Lymphocyte thresholds for ages 0-15
 	var lymphocyteThresholds = [4000, 4000, 4000, 3000, 3000, 2500, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000];
@@ -263,12 +359,13 @@
 	if (age > 14) {
 	  if (whoStage >= 3) {
 		reasonForArtEligibility = whoStageConcept(whoStage, "ADULT");
-	  } else if($('cd4_count_less_than_350').value == "YES") {
-		reasonForArtEligibility = "CD4 COUNT LESS THAN OR EQUAL TO 350";
-	  } else {
-		if ($('pregnant') && $('pregnant').value == "YES" && $('cd4_count_less_than_350').value == "YES") {
-		  reasonForArtEligibility = "CD4 COUNT LESS THAN OR EQUAL TO 350";
-		} else if (whoStage == 1 && lymphocyteCount < 1200 && lymphocyteCount != null) {
+	  
+	  } else if (tstCurrentDate >= '2014-04-01' && $('cd4_count_less_than_500').value == "YES"){
+                   reasonForArtEligibility = "CD4 COUNT LESS THAN OR EQUAL TO 500";
+          } else if (tstCurrentDate < '2014-04-01' && $('cd4_count_less_than_350').value == "YES"){
+                   reasonForArtEligibility = "CD4 COUNT LESS THAN OR EQUAL TO 350";
+          } else {
+		if (whoStage == 1 && lymphocyteCount < 1200 && lymphocyteCount != null) {
 		  reasonForArtEligibility = "LYMPHOCYTE COUNT BELOW THRESHOLD WITH WHO STAGE 1";
 		} else if (whoStage == 2 && lymphocyteCount < 1200 && lymphocyteCount != null) {
 		  reasonForArtEligibility = "LYMPHOCYTE COUNT BELOW THRESHOLD WITH WHO STAGE 2";
@@ -310,15 +407,19 @@
 		  reasonForArtEligibility = "HIV infected";
 		} else if (cd4_count_numeric <= 750 && (ageInMonths >= 24 && ageInMonths < 56) && (whoStage) <= 2) {
 		  reasonForArtEligibility = "CD4 COUNT LESS THAN OR EQUAL TO 750";
-		} else if ($('cd4_count_less_than_350') && $('cd4_count_less_than_350').value == "YES" && (whoStage) <= 2) {
-		  reasonForArtEligibility = "CD4 COUNT LESS THAN OR EQUAL TO 350";
+		} else if ($('cd4_count_less_than_500') && $('cd4_count_less_than_500').value == "YES" && (whoStage) <= 2) {
+		  reasonForArtEligibility = "CD4 COUNT LESS THAN OR EQUAL TO 500";
 		} else if (lymphocyteCount && (lymphocyteCount < lymphocyteThresholds[age]) && lymphocyteCount != null) {
 		  reasonForArtEligibility = "LYMPHOCYTE COUNT BELOW THRESHOLD WITH WHO STAGE 2";
 		} else if ($('pregnant') && $('pregnant').value == "YES") {
 		  reasonForArtEligibility = "PATIENT PREGNANT";
 		} else if ($('breast_feeding') && $('breast_feeding').value == "YES") {
 		  reasonForArtEligibility = "BREASTFEEDING";
-		}
+		} else if (tstCurrentDate >= '2014-04-01' && age > 5 && $('cd4_count_less_than_500').value == "YES"){
+                   reasonForArtEligibility = "CD4 COUNT LESS THAN OR EQUAL TO 500";
+                } else if (tstCurrentDate >= '2014-04-01' && age <= 5){
+                   reasonForArtEligibility = "HIV infected";
+                }
 	  } catch (e) {}
 	}
   
@@ -499,30 +600,77 @@
 				  }
 			  <%  end %>
 	}
+  function denyStaging(){
+    jQuery.ajax({
+      type: "POST",
+      url: "/patients/set_deny_hiv_staging_sessions",
+      data: "patient_id="+<%=@patient.id %>,
+      success: function(next_url){
+        next_task = next_url;
+        window.location = next_task;
+      }
+    });
+  }
+  
+  function allowStaging(){
+    jQuery.ajax({
+      type: "POST",
+      url: "/patients/set_allow_hiv_staging_sessions",
+      data: "patient_id="+<%=@patient.id %>,
+      success: function(){
+        window.location = "/encounters/new/<%= params[:encounter_type] %>?action=show&controller=encounter_types&encounter_type='HIV staging'&id=show&patient_id=<%= params[:patient_id] %>&repeat=no"
+      }
+    });   
+  }
+
 </script>  
 <style type="text/css">
   .small .options li { font-size:1.1em; }
   .tt_controls_cd4_count #lessthan, .tt_controls_cd4_count #greaterthan { display:block; float:right }
   .tt_controls_cd4_percent #lessthan, .tt_controls_cd4_percent #greaterthan { display:block; float:right }
 </style>
+<%
 
-
-<% if !@reason_for_art_eligibility.nil? && @reason_for_art_eligibility.squish != '' %>
+  current_date = session[:datetime].to_date rescue Date.today
+  staging = session["#{@patient.id}"]["#{current_date}"][:stage_patient] rescue []
+  if ! staging.blank?
+  if staging != "No" %>
+     <script>
+     //window.location = "<%#= next_task(@patient) -%>";//This part was commented out because of endless looping. Needs to be re-checked.
+     </script>
+  <% end
+ end %>
+<% if ((!@reason_for_art_eligibility.nil? && @reason_for_art_eligibility.squish != '') || @ask_staging == true) && @normal_procedure == false && @check_preart == false %>
+  
+ 
   <div class="inputPage NoKeyboard" id="page" style="display: block;">
 	<div id="trigger"></div>
 	<div id="infoBar" class="infoBarClass"></div>
 	<label id="helpText" class="helpTextClass" for="">
+          <% if  @ask_staging == true %>
+              This patient has already been staged whithin the past three months.<br/>
+	     <%='&nbsp;'*3%>Do you want to stage patient again?
+          <%  else %>
 			This patient has already been staged.<br/>
 	  <%='&nbsp;'*3%>Reason for ART:&nbsp;<%= @reason_for_art_eligibility %>
+          <% end %>
 	</label>
   </div>
   <div id="buttons" class="buttonsDiv" style="top:456;">
 	<div id="tt_extraButtons"></div>
-	<button onmousedown="window.location=tt_cancel_destination;" id="cancelButton" class="button navButton red"><span>Cancel</span></button>
+        <% if  @ask_staging == true %>
+	<button onmousedown="denyStaging();" id="cancelButton" class="button navButton red"><span>No</span></button>
+        <button onmousedown="allowStaging();" id="stageButton" class="button navButton green"><span>Yes</span></button>
+        <% else %>
+        <button onmousedown="window.location=tt_cancel_destination;" id="cancelButton" class="button navButton red"><span>Cancel</span></button>
+        <% end %>
+        
   </div>
+  <% if  @ask_staging != true %>
   <script>
 	setTimeout("window.location=tt_cancel_destination;", 5000);
   </script>
+   <% end %>
 <% else %>
 
   <form id='appointment' action="/encounters/create" method='post'>
@@ -530,6 +678,7 @@
 	<%= hidden_field_tag "encounter[patient_id]", @patient.id %>
 	<%= hidden_field_tag "encounter[encounter_datetime]", DateTime.now() %>
 	<%= hidden_field_tag "encounter[provider_id]", current_user.user_id %>
+
 
 	<% if @patient_bean.age_in_months < 12 and @confirmatory_hiv_test_type == 'HIV rapid test' %>
 	  <%= touch_select_tag "PRESUMED SEVERE HIV CRITERIA PRESENT", @patient, concept_set_options('PRESUMED SEVERE HIV CRITERIA IN INFANTS'),
@@ -631,7 +780,7 @@
 		:tt_pageStyleClass => "NoKeyboard NoInput small"  } %>
 
 	  <label for='new_cd4_count_available'>Recent CD4 count results available?</label>
-	  <%= select_tag "new_cd4_count_available", options_for_select([['Yes','YES'],['No','NO']]), :id => 'new_cd4_count_available',:tt_onLoad => "showCategory('Hiv Staging');", :tt_pageStyleClass => 'NoKeyboard' %>
+	  <%= select_tag "new_cd4_count_available", options_for_select([['Yes','YES'],['No','NO']]), :id => 'new_cd4_count_available', :tt_pageStyleClass => 'NoKeyboard',:tt_onLoad => "showCategory('Hiv Staging'); %>
 
 	  <%= touch_date_tag "CD4 COUNT DATETIME", @patient, nil,
 		{:id => "cd4_count_date",
@@ -651,6 +800,7 @@
 
 	  <%= touch_hidden_tag "CD4 COUNT LESS THAN OR EQUAL TO 250", @patient, "", :id => "cd4_count_less_than_250" %>
 	  <%= touch_hidden_tag "CD4 COUNT LESS THAN OR EQUAL TO 350", @patient, "", :id => "cd4_count_less_than_350" %>
+          <%= touch_hidden_tag "CD4 COUNT LESS THAN OR EQUAL TO 500", @patient, "", :id => "cd4_count_less_than_500" %>
 
 	  <% if @patient_bean.age <= 14 %>
 
@@ -678,7 +828,7 @@
 	  <% end %>
 
 	  <label for='new_lymphocyte_count_available'>New Lymphocyte count available?</label>
-	  <%= select_tag "new_lymphocyte_count_available", options_for_select([['Yes','YES'],['No','NO']]), :id => 'new_lymphocyte_count_available',:tt_onLoad => "showCategory('Hiv Staging');",:tt_pageStyleClass => 'NoKeyboard' %>
+	  <%= select_tag "new_lymphocyte_count_available", options_for_select([['Yes','YES'],['No','NO']]), :id => 'new_lymphocyte_count_available', :tt_pageStyleClass => 'NoKeyboard', :tt_onLoad => "showCategory('Hiv Staging');" %>
 
 	  <%= touch_date_tag "LYMPHOCYTE COUNT DATETIME", @patient, nil,
 		{:id => "lymphocyte_count_date",
@@ -699,22 +849,20 @@
 		:condition => '$("new_cd4_percent_available").value == "YES" || $("new_lymphocyte_count_available").value == "YES" || ($("new_cd4_count_available").value == "YES" && transferInPatient() == false)',
 		:helpText => "CD4 or Lymphocyte count location"} %>
 	<% end %>
-<% session_date = session[:datetime].to_date rescue nil
-    if session_date.blank? %>
+
 	<%= touch_text_area_tag("CLINICAL NOTES CONSTRUCT", @patient, nil,
 	  {	:optional => true,:helpText => "Clinical notes (optional)"}, time=DateTime.now()) %>
-    <% end %>
 
 	<%= touch_hidden_tag "WHO STAGES CRITERIA PRESENT", @patient, "", :id => "calculated_who_stage_4" %>
 	<%= touch_hidden_tag "WHO STAGE", @patient, "", :id => "who_stage" %>
 	<%= touch_hidden_tag "REASON FOR ART ELIGIBILITY", @patient, "", :id => "reason_for_art_eligibility" %>
 
 	<label for='summary'>Summary</label>
-	<%= text_field_tag :summary, nil, { :tt_onLoad => "summary();__$('keyboard').style.display = 'none';showCategory('Hiv Staging');", :optional => "true", :tt_pageStyleClass => "NoControls" } %>
+	<%= text_field_tag :summary, nil, { :tt_onLoad => "summary();__$('keyboard').style.display = 'none';", :optional => "true", :tt_pageStyleClass => "NoControls" } %>
 
-	
+	<% session_date = session[:datetime].to_date rescue nil
 
-	<%if session_date %>
+	if session_date %>
 	  <p><label for="filter_provider">Staff who provided the information (Provider)</label></br>
 	  <%= text_field "filter" , 'provider', :helpText => 'Staff who provided the information (Provider)', :ajaxURL => '/user/username?username=' %></p>
 	<% else %>

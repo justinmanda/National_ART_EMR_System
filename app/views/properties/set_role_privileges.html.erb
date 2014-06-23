@@ -48,16 +48,6 @@
 </style>
 
 
-<%
-  privileges = ['VITALS',
-                'HIV CLINIC REGISTRATION',
-                'HIV CLINIC CONSULTATION',
-                'HIV STAGING',
-                'HIV RECEPTION',
-                'DISPENSING'
-               ]
-%>
-
 <form method = 'post' action = '/properties/set_role_privileges'>
 
   <%= text_field :role , :title ,

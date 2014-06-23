@@ -120,12 +120,13 @@ module ApplicationHelper
   end
 
   def version
+    #"Bart Version: #{BART_VERSION}#{' ' + BART_SETTINGS['installation'] if BART_SETTINGS}, #{File.ctime(File.join(RAILS_ROOT, 'config', 'environment.rb')).strftime('%d-%b-%Y')}"
     style = "style='background-color:red;'" unless session[:datetime].blank?
     "NART Version: #{BART_VERSION} - <span #{style}>#{(session[:datetime].to_date rescue Date.today).strftime('%A, %d-%b-%Y')}</span>"
   end
   
   def welcome_message
-    "Muli bwanji, enter your user information or scan your id card. <span style='font-size:0.6em;float:right;margin-right: 20px;'>(#{version})</span>"  
+    "Muli bwanji, enter your user information or scan your id card. <span style='font-size:0.6em;float:right;margin-right: 20px;'>(#{version})</span>"
   end
   
   def show_identifiers(location_id, patient)
@@ -548,7 +549,7 @@ module ApplicationHelper
 
     milestones.each do |key, value|
           grace_period = value.last - value.first
-          mile_stone_date = arv_start_date + key.months
+          mile_stone_date = (arv_start_date + key.months).beginning_of_month
           mile_stone_grace_period = mile_stone_date + grace_period.months
           
           if (viral_load_popup_activated(arv_start_date, patient, period_on_art_in_months) && latest_viral_results_date.blank?)
@@ -562,8 +563,10 @@ module ApplicationHelper
 
             if (viral_load_popup_activated(arv_start_date, patient, period_on_art_in_months))
               if !(latest_viral_results_date >= valid_min_date && latest_viral_results_date <= today)
-                milestone_exceeded = false
-                return true
+                if (period_on_art_in_months >= key && period_on_art_in_months <= value.last)
+                  milestone_exceeded = false
+                  return true
+                end
               end
             end
           end
@@ -611,6 +614,7 @@ module ApplicationHelper
 
   end
 
+  #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   def viral_load_check_without_lab_results(patient)
 
     arv_start_date = PatientService.patient_art_start_date(patient).to_date rescue nil
@@ -636,7 +640,7 @@ module ApplicationHelper
 
     milestones.each do |key, value|
           grace_period = value.last - value.first
-          mile_stone_date = arv_start_date + key.months
+          mile_stone_date = (arv_start_date + key.months).beginning_of_month
           mile_stone_grace_period = mile_stone_date + grace_period.months
 
           if (vl_without_results_activated(arv_start_date, patient, period_on_art_in_months))
@@ -661,6 +665,88 @@ module ApplicationHelper
       return false if milestone_exceeded
 	end
 
+
+  #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+  def viral_load_check_without_lab_results_modified(patient)
+    #raise 'dde'.inspec
+    arv_start_date = PatientService.patient_art_start_date(patient).to_date rescue nil
+    return false if arv_start_date.blank?
+    period_on_art_in_months = PatientService.period_on_treatment(arv_start_date).to_i rescue 0
+    return false if (period_on_art_in_months < 6)
+    second_line_art_start_date = PatientService.date_started_second_line_regimen(patient).to_date rescue nil
+    return false unless second_line_art_start_date.blank?
+    today = Date.today
+
+    milestones = {
+                  6 => [6,8], 24 => [24,27], 48 => [48,51],
+                  72 => [72,75], 96 => [96,99], 120 => [120,123],
+                  144 => [144,147], 168 => [168,171], 192 => [192,195],
+                  216 => [216,219], 240 => [240,243], 260 => [260,263]
+                 }
+
+    identifier_types = ["Legacy Pediatric id","National id","Legacy National id"]
+    identifier_types = PatientIdentifierType.find(:all,
+      :conditions=>["name IN (?)",identifier_types]).collect{| type |type.id }
+
+    patient_identifiers = PatientIdentifier.find(:all,
+      :conditions=>["patient_id=? AND identifier_type IN (?)",
+      patient.id,identifier_types]).collect{| i | i.identifier }
+
+    results = Lab.latest_result_by_test_type(patient, 'HIV_viral_load', patient_identifiers) rescue nil
+    latest_viral_results_date = results[0].split('::')[0].to_date rescue nil
+    #yes_concept_id = ConceptName.find_by_name('yes').concept_id
+
+
+    milestone_exceeded = true
+
+    milestones.each do |key, value|
+          grace_period = value.last - value.first
+          mile_stone_date = (arv_start_date + key.months).beginning_of_month
+          mile_stone_grace_period = mile_stone_date + grace_period.months
+
+          if (vl_without_results_activated(arv_start_date, patient, period_on_art_in_months) && latest_viral_results_date.blank?)
+            milestone_exceeded = false
+            return true
+          end
+
+          unless latest_viral_results_date.blank?
+            valid_min_date = today - 6.months
+            return false if (latest_viral_results_date >= valid_min_date && latest_viral_results_date <= today)
+
+            if (vl_without_results_activated(arv_start_date, patient, period_on_art_in_months))
+              if !(latest_viral_results_date >= valid_min_date && latest_viral_results_date <= today)
+                if (period_on_art_in_months >= key && period_on_art_in_months <= value.last)
+                  milestone_exceeded = false
+                  return true
+                end
+              end
+            end
+          end
+
+          if (period_on_art_in_months >= key && period_on_art_in_months <= value.last)
+            
+           milestone_exceeded = false
+
+            if (today >= mile_stone_date && today <=  mile_stone_grace_period)
+              return true if latest_viral_results_date.blank?
+               if (latest_viral_results_date >= valid_min_date && latest_viral_results_date <= today)
+
+                 return false
+               else
+                 return true
+               end
+            else
+              return false
+            end
+          end
+    end
+    return false if milestone_exceeded
+  end
+
+
+  #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
   def vl_without_results_activated(art_start_date, patient, period_on_art)
      possible_ranges = [
                          [6,23],[24,47],[48,71],[72,95],[96,119],[120,143],
@@ -676,12 +762,9 @@ module ApplicationHelper
             patient.patient_id, Concept.find_by_name("Viral load").concept_id, first_date, second_date])
         answer_string = vl_request.answer_string.squish rescue nil
         return false if answer_string.blank?
-        if (answer_string.match(/NOT DONE DUE TO ADHERENCE/i))
-          return true
-        else
-          return false
-        end
+        return true unless answer_string.blank?
       end
     end
   end
+  
 end

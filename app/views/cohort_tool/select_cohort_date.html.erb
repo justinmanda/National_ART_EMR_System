@@ -1,0 +1,25 @@
+<style>
+  #Unknown {
+    display: none;
+  }
+</style>
+ 
+<script>                                                                        
+  var tt_cancel_destination="/"                                                 
+</script>                                                                       
+                                                                                
+<% form_tag :method => :post, :action => 'cohort' do %>                 
+  <%= text_field_tag "date[start]", nil,                                        
+    {:id => "start_date",                                                       
+    :field_type => 'date',                                                      
+    :maxDate => "#{Date.today.to_date}",                                        
+    :helpText => "Select start date"} %>                                              
+
+  <%= text_field_tag "date[end]", nil,                                        
+    {:id => "end_date",                                                       
+    :field_type => 'date',                                                      
+    :maxDate => "#{Date.today.to_date}",                                        
+    :helpText => "Select end date"} %>                                              
+                                                                               
+<%end%>
+

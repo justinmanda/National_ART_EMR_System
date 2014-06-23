@@ -89,11 +89,11 @@ Guardian(s):&nbsp;<%= @patient_gaurdians rescue 'NONE' %>
     </tr>
     <tr>
       <th>BMI</th>
-      <td><%=visit.bmi%></td>
+      <td><%=visit.bmi || '&nbsp;'%></td>
     </tr>
     <tr>
       <th>Regimen</th>
-      <td><%=visit.reg%></td>
+      <td><%=visit.reg || '&nbps;'%></td>
     </tr>
     <tr>
       <th>Outcome</th>

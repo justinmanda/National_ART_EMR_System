@@ -14,12 +14,13 @@
 		<script type="text/javascript">
 
 		var stocks = JSON.parse('<%=@stocks%>');
+                var name = '<%= @name %>';
 
   function getDates() {
     dates = [];
     for(var i = 0; i < stocks.length; i++) {
       dates.push(stocks[i][0]);
-      
+
     }
     return dates;
   }
@@ -31,13 +32,12 @@ $(function () {
                 type: 'line'
             },
             title: {
-                text: ''
+                 text: name
             },
             subtitle: {
-                text: ''
+                text: 'Stock Movement   '
             },
             xAxis: {
-                /* categories:  getDates(), */
                 type: 'datetime',
                 dateTimeLabelFormats: {
                 day: '%e %b',

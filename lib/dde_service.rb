@@ -151,6 +151,8 @@ module DDEService
           "attributes" => {
             "occupation" => (self.get_full_attribute("Occupation").value rescue nil),
             "cell_phone_number" => (self.get_full_attribute("Cell Phone Number").value rescue nil),
+            "home_phone_number" => (self.get_full_attribute("Home Phone Number").value rescue nil),
+            "office_phone_number" => (self.get_full_attribute("Office Phone Number").value rescue nil),
             "citizenship" => (self.get_full_attribute("Citizenship").value rescue nil),
             "race" => (self.get_full_attribute("Race").value rescue nil)
           },
@@ -286,6 +288,8 @@ module DDEService
        "person"=>{"occupation"=>p["person"]["data"]["attributes"]["occupation"],
        "age_estimate"=> birthdate_estimated,
        "cell_phone_number"=>p["person"]["data"]["attributes"]["cell_phone_number"],
+       "home_phone_number"=>p["person"]["data"]["attributes"]["home_phone_number"] || nil,
+       "office_phone_number"=>p["person"]["data"]["attributes"]["office_phone_number"] || nil,
        "birth_month"=> birthdate_month ,
        "addresses"=>{"address1"=>p["person"]["data"]["addresses"]["address1"],
             "address2"=>p["person"]["data"]["addresses"]["address2"],
@@ -506,6 +510,8 @@ module DDEService
           "attributes"=>
             {"occupation"=> (params["person"]["occupation"] rescue ""),
             "cell_phone_number" => (params["person"]["cell_phone_number"] rescue ""),
+            "home_phone_number" => (params["person"]["home_phone_number"] rescue ""),
+            "office_phone_number" => (params["person"]["office_phone_number"] rescue ""),
             "citizenship" => (params["person"]["citizenship"] rescue ""),
             "race" => (params["person"]["race"] rescue "")
           },
@@ -602,6 +608,8 @@ module DDEService
        "person"=>{"occupation"=>p["person"]["data"]["attributes"]["occupation"],
        "age_estimate"=> birthdate_estimated,
        "cell_phone_number"=>p["person"]["data"]["attributes"]["cell_phone_number"],
+       "home_phone_number"=>p["person"]["data"]["attributes"]["home_phone_number"] || nil,
+       "office_phone_number"=>p["person"]["data"]["attributes"]["office_phone_number"] || nil,
        "birth_month"=> birthdate_month ,
        "addresses"=>{"address1"=>p["person"]["data"]["addresses"]["address1"],
             "address2"=>p["person"]["data"]["addresses"]["address2"],

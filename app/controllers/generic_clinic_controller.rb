@@ -1,11 +1,19 @@
 class GenericClinicController < ApplicationController
   def index
-    (session || {}).each do |name , values|                                     
-      next unless name == 'patient_id'                                          
-      session[name] = nil                                                       
+
+    return_uri = session[:return_uri]
+    if !return_uri.blank?
+      session[:return_uri] = []
+      redirect_to return_uri.to_s
+      return
     end
- 
-  	session[:cohort] = nil
+
+    (session || {}).each do |name , values|
+      next unless name == 'patient_id'
+      session[name] = nil
+    end
+
+    session[:cohort] = nil
     @facility = Location.current_health_center.name rescue ''
 
     @location = Location.find(session[:location_id]).name rescue ""
@@ -15,7 +23,7 @@ class GenericClinicController < ApplicationController
     @user = current_user.name rescue ""
 
     @roles = current_user.user_roles.collect{|r| r.role} rescue []
-
+     session[:stage_patient] = ""
     render :template => 'clinic/index', :layout => false
   end
 
@@ -27,7 +35,7 @@ class GenericClinicController < ApplicationController
       ["Stock report","/drug/date_select"]
     ]
 
-    render :template => 'clinic/reports', :layout => 'clinic'
+    render :template => 'clinic/reports', :layout => 'clinic' 
   end
 
   def supervision
@@ -38,7 +46,7 @@ class GenericClinicController < ApplicationController
 
     @landing_dashboard = 'clinic_supervision'
 
-    render :template => 'clinic/supervision', :layout => 'clinic'
+    render :template => 'clinic/supervision', :layout => 'clinic' 
   end
 
   def properties
@@ -49,7 +57,7 @@ class GenericClinicController < ApplicationController
       ["Set site code", "/properties/site_code"],
       ["Set appointment limit", "/properties/set_appointment_limit"]
     ]
-    render :template => 'clinic/properties', :layout => 'clinic'
+    render :template => 'clinic/properties', :layout => 'clinic' 
   end
 
   def management
@@ -61,25 +69,25 @@ class GenericClinicController < ApplicationController
       ["Removed from shelves","date_select"],
       ["Stock report","date_select"]
     ]
-    render :template => 'clinic/management', :layout => 'clinic'
+    render :template => 'clinic/management', :layout => 'clinic' 
   end
 
   def printing
-    render :template => 'clinic/printing', :layout => 'clinic'
+    render :template => 'clinic/printing', :layout => 'clinic' 
   end
 
   def users
-    render :template => 'clinic/users', :layout => 'clinic'
+    render :template => 'clinic/users', :layout => 'clinic' 
   end
 
   def administration
     @reports =  [
                   ['/clinic/users','User accounts/settings'],
-                  ['/clinic/management','Drug Management'],
+                  ['/clinic/management','Drug Management'], 
                   ['/clinic/location_management','Location Management']
                 ]
     @landing_dashboard = 'clinic_administration'
-    render :template => 'clinic/administration', :layout => 'clinic'
+    render :template => 'clinic/administration', :layout => 'clinic' 
   end
 
   def overview_tab
@@ -128,19 +136,19 @@ class GenericClinicController < ApplicationController
       ["Supervision","/clinic/supervision_tab"],
       ["Data Cleaning Tools", "/clinic/data_cleaning_tab"],
       #["View appointments","/report/select_date"],
-      ["Pre-ART","/cohort_tool/cohort_menu?type=pre_art"],
       ["Drug dispensation","/report/drug_menu"],
+      ["Pre-ART","/cohort_tool/cohort_menu?type=pre_art"],
       ["View appointments","/properties/select_date"],
       ["ART Register", "/report/art_register"],
-      ["Missed Appointments", "/report/missed_appointment_duration"]
-
+      ["Missed Appointments", "/report/missed_appointment_duration?type=missed"],
+      ["Defaulted patients", "/report/missed_appointment_duration?type=defaulter"]
     ]
 
 
-
+    
   	if what_app? == 'TB-ART'
   		@reports <<  ["Case Findings", "/cohort_tool/case_findings_quarter"] << ["TB Register","/cohort_tool/report_duration?report_name=tb_register"] #<< ["Laboratory Register","/cohort_tool/report_duration?report_name=lab_register"]
-
+  		
   	end
     @reports = [
       ["Diagnosis","/drug/date_select?goto=/report/age_group_select?type=diagnosis"],
@@ -164,7 +172,7 @@ class GenericClinicController < ApplicationController
                  ['Multiple Start Reasons' , '/cohort_tool/select?report_type=patients_with_multiple_start_reasons'],
                  ['Out of range ARV number' , '/cohort_tool/select?report_type=out_of_range_arv_number'],
                  ['Data Consistency Check' , '/cohort_tool/select?report_type=data_consistency_check']
-               ]
+               ] 
     render :layout => false
   end
 
@@ -194,7 +202,8 @@ class GenericClinicController < ApplicationController
                   ['/clinic/users_tab','User Accounts/Settings'],
                   ['/clinic/location_management_tab','Location Management'],
                   ['/people/tranfer_patient_in','Transfer Patient in'],
-                  ['/patients/patient_merge','Merge Patients'],
+                  #['/patients/patient_merge','Merge Patients'],
+                  ['/patients/merge_menu','Merge Patients'],
                   ['/patients/duplicate_menu','Possible patient duplicates']
 
                 ]
@@ -223,10 +232,10 @@ class GenericClinicController < ApplicationController
   def location_management
     @reports =  [
                   ['/location/new?act=create','Add location'],
-                  ['/location.new?act=delete','Delete location'],
+                  ['/location.new?act=delete','Delete location'], 
                   ['/location/new?act=print','Print location']
                 ]
-    render :template => 'clinic/location_management', :layout => 'clinic'
+    render :template => 'clinic/location_management', :layout => 'clinic' 
   end
 
   def location_management_tab
@@ -241,7 +250,7 @@ class GenericClinicController < ApplicationController
   end
 
   def management_tab
-       @reports = [
+    @reports = [
       ["Enter receipts<br />(from warehouse)","delivery"],
       ["Enter verified stock count<br />(supervision)","delivery?id=verification"],
       ["Print<br />Barcode","print_barcode"],
@@ -252,7 +261,7 @@ class GenericClinicController < ApplicationController
     ]
     render :layout => false
   end
-
+  
   def lab_tab
     #only applicable in the sputum submission area
     enc_date = session[:datetime].to_date rescue Date.today

@@ -23,8 +23,8 @@
     search = document.getElementsByTagName("input")[0];
     search.setAttribute("id","search");
     document.getElementById('search').setAttribute("onclick","showKeyboard();");
-    document.getElementById("find").innerHTML = "<span>Back</span>";
-    document.getElementById("find").style.cssFloat = "left";
+    //document.getElementById("find").innerHTML = "<span>Back</span>";
+   // document.getElementById("find").style.cssFloat = "left";
     //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     keyboard = document.getElementsByClassName("keypad")[0]
     function getCharButtonSetID(character,id){
@@ -275,8 +275,8 @@
     <body>
       <%= image_tag(@logo, :class => "logo")%>
     <br /><b style="margin-left:75px"><%= @location_name %></b><br />
-    <b style="position:relative; top:0px;margin-left:75px">Appointments schedule Report</b><br />
-    <b style="position:relative; top:0px;margin-left:75px">Appointment Date: <%= @date.strftime('%A, %d %b %Y') %></b><br />
+    <b style="position:relative; top:0px;margin-left:75px"><%=  @heading%></b><br />
+    <b style="position:relative; top:0px;margin-left:75px"><%= @sub_heading %>: <%= @date.strftime('%d %b %Y') %></b><br />
     <b style="position:relative; top:0px;margin-left:75px">Total patients: <%= @patients.length.to_s %></b><br /><br />
 <!--
         <div id="mainBar">
@@ -294,11 +294,15 @@
               <th class='tb_art'>ARV number</th>
               <th class='tb'>Name</th>
               <th>Birthdate</th>
+               <%  if params[:process].blank? %>
               <th>Last visit</th>
               <th>Visit type</th>
+              <% end %>
               <th>Phone number</th>
               <th>Outcome</th>
-              <th>&nbsp;</th>
+              <%  if params[:process].blank? %>
+                <th>&nbsp;</th>
+              <% end %>
             </tr>
           </thead>
           <tbody>
@@ -309,11 +313,15 @@
           <td><%=patient_record['arv_number'] || '&nbsp;'%></td>
           <td><%=patient_record['name'] || '&nbsp;'%></td>
           <td><%=patient_record['birthdate'] || '&nbsp;'%></td>
-          <td><%=patient_record['last_visit'] %></td>
-          <td><%=patient_record['visit_by'] || '&nbsp;'%></td>
+           <%  if params[:process].blank? %>
+                <td><%=patient_record['last_visit'] %></td>
+                <td><%=patient_record['visit_by'] || '&nbsp;'%></td>
+           <% end %>
           <td><%=patient_record['phone_number'] || 'Not available'%></td>
           <td><%=patient_record['outcome'] || '&nbsp;'%></td>
+          <%  if params[:process].blank? %>
           <td><a id="number" onclick=' window.location = "/encounter_types/show?encounter_type=Appointment&id=show&patient_id=<%=patient_record['patient_id'].to_s-%>&report_url=<%=request.request_uri.to_s-%>&old_appointment=<%=@date-%>" '>Change Date</a></td>
+          <% end %>
         </tr>
           <% end %>
         </tbody>

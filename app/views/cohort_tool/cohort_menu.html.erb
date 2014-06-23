@@ -9,13 +9,18 @@
 	height:550px ! important;
   }
 </style>
-<% if params[:type].blank? %>
-<form id='quarter' action="cohort" method='post'>
-<% else %>
+<% qtrs = ['']
+  if params[:type] == "pre_art" %>
   <form id='quarter' action="pre_art" method='post'>
-<% end %>
-  <%
-    qtrs = ['']
+<% elsif params[:type] == "appointment" %>
+  <form id='quarter' action="missed_appointment" method='post'>
+<% else %>
+   <form id='quarter' action="cohort" method='post'>
+ <%
+    if current_user.admin?
+      qtrs = ['' , 'Select date range']
+    end
+  end 
     current_qtr = ""
     date = Date.today
     if (date >= "#{date.year}-01-01".to_date and date <= "#{date.year}-03-31".to_date)
@@ -28,7 +33,7 @@
       current_qtr = "4 #{date.year}"
     end
     count = current_qtr[0..0].to_i
-    20.times{|x|
+    24.times{|x|
       qtrs << "Q#{count} #{date.year}"
       count-=1 if count > 0
       date = date - 1.year if count == 0

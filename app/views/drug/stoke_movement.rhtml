@@ -107,10 +107,19 @@ src="/touchscreentoolkit/lib/javascripts/touchScreenToolkit.js" defer  ></script
   setTimeout("changeCancelButton()", 500);
 
   function summary(){
+    
     try{
 <%
 dateToday = session[:datetime].to_date rescue Date.today
 %>
+      cancel = document.getElementById('btnCancel')
+      if (cancel != null){
+        cancel.setAttribute('style', 'float:right;margin:10px;')
+        cancel.setAttribute('class', 'green')
+        //cancel.setAttribute('id', 'btnNext')
+        //cancel.innerHTML = "Finish"
+      }
+  
       
       document.getElementById('tabPageContainer').innerHTML = "<div id='summary' style='background: width:100%;'></div>" ;
       //if (age <= 60){
@@ -147,12 +156,7 @@ dateToday = session[:datetime].to_date rescue Date.today
   <select id="tabs">
 
     <option >
-        <%  if params[:report_type] == "Stock Movement" %>
-    <h1><%= @drug %></h1> Movement Chart : From <%= params[:start_date].to_date.strftime(" %d-%m-%Y") %> To <%= params[:end_date].to_date.strftime(" %d-%m-%Y") %>
-        <% else %>
-     Months Of Stock :  <%= @month_on_stock %>
-    
-        <% end %>
+        
       </option>
   </select>
   
