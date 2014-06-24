@@ -281,37 +281,6 @@
     <h1><%= Location.current_health_center.name + " : " + @quarter %></h1>
     <br />
 
-    <div style="width:100%; height:auto; background-color: <%= params[:print].blank? ? "#7784AE" : "white" %>; max-height:100px; border: 1px solid <%= params[:print].blank? ? "red" : "white" %>; overflow: auto;">
-
-      <table class="tb">
-
-        <% success=0 %>
-
-        <% @cohort_validation.each do |v| %>
-          <% if v[1][1].to_s == "false" then %>
-            <% success+=1%>
-            <tr class="alert">
-              <td class="num"><%= success %></td>
-              <td class="rule"><%= v[1][0] %></td>
-            </tr>
-
-          <% end %>
-        <% end %>
-
-
-        <% if success==0 %>
-          <tr>
-            <td style="background-color: <%= params[:print].blank? ? "#32CD32" : "white" %>;">This cohort report is internally consistent</td>
-          </tr>
-        <% else %>
-          <!-- tr>
-            <td>x</td><td style="background-color: <%= params[:print].blank? ? "#32CD32" : "white" %>;">This cohort report is internally inconsistent</td>
-          </tr -->
-        <%  end %>
-
-      </table>
-    </div>
-
     <div class='scrollTableContainer'>
       <table cellspacing='0'>
         <thead>
