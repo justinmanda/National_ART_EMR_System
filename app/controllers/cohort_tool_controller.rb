@@ -1023,10 +1023,10 @@ class CohortToolController < GenericCohortToolController
 		@sort = CoreService.get_global_property_value('sort')
 		sort_value = CoreService.get_global_property_value("debugger_sorting_attribute") rescue "arv_number"
     @export_data = session["export.cohort.data"].to_s.downcase
-		
+
     data_type = "to_s"
     data_type = "to_i" if ["age", "person_id", "patient_id"].include?(sort_value)
-    
+
 		key = session[:cohort].keys.sort.select { |k|
 			k.humanize.upcase == params[:field].humanize.upcase
 		}.first.to_s rescue nil
@@ -1046,7 +1046,7 @@ class CohortToolController < GenericCohortToolController
     else
 
 		session[:cohort]["sorted"]={} if session[:cohort]["sorted"].blank?
-		if params[:field] == "patients_with_7+_doses_missed_at_their_last_visit" 
+		if params[:field] == "patients_with_7+_doses_missed_at_their_last_visit"
 			#raise session[:cohort]["#{params[:field].humanize}"].to_yaml
 			data = []
 			session[:cohort]["#{params[:field].humanize}"].each do |patient_id|
@@ -1060,20 +1060,14 @@ class CohortToolController < GenericCohortToolController
 				data <<  patient_id
 			end
 			session[:cohort]["sorted"]["#{params[:field].humanize}"] = true
-		elsif params[:field] == "total_patients_with_side_effects"
-			data = []
-			session[:cohort]["#{params[:field].humanize}"].map do |patient_id|
-				data <<  patient_id.patient_id
-			end
-			session[:cohort]["sorted"]["#{params[:field].humanize}"] = true
 		elsif params[:field] == "regimens"
 			type=params[:type].humanize.upcase
-			
+
 			(session[:cohort][key][type] || []).sort! do |a,b|
 				PatientService.get_patient(Person.find(a)).send(sort_value).send(data_type) <=>
 					PatientService.get_patient(Person.find(b)).send(sort_value).send(data_type)
 			end if session[:cohort]["sorted"]["#{type}"].blank?
-																		
+
 			data=session[:cohort][key][type]
 			session[:cohort]["sorted"]["#{type}"] = true
 
@@ -1082,8 +1076,8 @@ class CohortToolController < GenericCohortToolController
 				PatientService.get_patient(Person.find(a)).send(sort_value).send(data_type) <=>
 					PatientService.get_patient(Person.find(b)).send(sort_value).send(data_type)
 			end if session[:cohort]["sorted"]["#{key}"].blank?
-			
-			data=session[:cohort][key] 
+
+			data=session[:cohort][key]
 			session[:cohort]["sorted"]["#{key}"] = true
 		end
        (data || []).each do |patient_id|
