@@ -13,6 +13,29 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+-- view to capture avg ART/HIV care treatment time for ART patients at a given site
+CREATE OR REPLACE ALGORITHM=UNDEFINED  SQL SECURITY INVOKER
+VIEW `patient_service_waiting_time` AS
+    SELECT 
+        `e`.`patient_id` AS `patient_id`,
+        cast(`e`.`encounter_datetime` as date) AS `visit_date`,
+        min(`e`.`encounter_datetime`) AS `start_time`,
+        max(`e`.`encounter_datetime`) AS `finish_time`,
+        timediff(max(`e`.`encounter_datetime`),
+                min(`e`.`encounter_datetime`)) AS `service_time`
+    FROM
+        (`encounter` `e`
+        join `encounter` `e2` ON (((`e`.`patient_id` = `e2`.`patient_id`)
+            AND (`e`.`encounter_type` in (7 , 9, 12, 25, 51, 52, 53, 54, 68)))))
+    WHERE
+        ((`e`.`encounter_datetime` BETWEEN date_format((now() - interval 7 day),
+                '%Y-%m-%d 00:00:00') AND date_format((now() - interval 1 day),
+                '%Y-%m-%d 23:59:59'))
+            AND (right(`e`.`encounter_datetime`, 2) <> '01')
+            AND (right(`e`.`encounter_datetime`, 2) <> '01'))
+    GROUP BY `e`.`patient_id` , cast(`e`.`encounter_datetime` as date)
+    ORDER BY `e`.`patient_id` , `e`.`encounter_datetime`;
+
 -- Non-voided HIV Clinic Consultation encounters
 CREATE OR REPLACE ALGORITHM=UNDEFINED  SQL SECURITY INVOKER
   VIEW `clinic_consultation_encounter` AS
@@ -83,15 +106,13 @@ RETURN date_started;
 END$$                                                                           
 DELIMITER ;
 
-
-
-
 -- The date of the first On ARVs state for each patient
 CREATE OR REPLACE ALGORITHM=UNDEFINED  SQL SECURITY INVOKER
   VIEW `earliest_start_date` AS
   SELECT `p`.`patient_id` AS `patient_id`,`p`.`date_enrolled`,
          MIN(`s`.`start_date`) AS `earliest_start_date`, `person`.`death_date` AS death_date,
-         ROUND(DATEDIFF(date_antiretrovirals_started(`p`.`patient_id`, MIN(`s`.`start_date`)), `person`.`birthdate`)/365) AS age_at_initiation
+         (DATEDIFF(date_antiretrovirals_started(`p`.`patient_id`, MIN(`s`.`start_date`)), `person`.`birthdate`)/365.25) AS age_at_initiation,
+         DATEDIFF(MIN(`s`.`start_date`), `person`.`birthdate`) AS age_in_days
   FROM ((`patient_program` `p`
   LEFT JOIN `patient_state` `s` ON((`p`.`patient_program_id` = `s`.`patient_program_id`)))
   LEFT JOIN `person` ON((`person`.`person_id` = `p`.`patient_id`)))
@@ -269,7 +290,48 @@ CREATE OR REPLACE ALGORITHM=UNDEFINED  SQL SECURITY INVOKER
   FROM `obs` 
   WHERE ((`obs`.`concept_id` = 7459) and (`obs`.`voided` = 0));
 
+-- The following 2 views will be used in calculation of defaulted dates
+CREATE OR REPLACE ALGORITHM=UNDEFINED  SQL SECURITY INVOKER 
+  VIEW `amount_dispensed_obs` AS 
+  SELECT
+    `o`.`person_id`,
+    `o`.`encounter_id`,
+    `o`.`order_id`,
+    `o`.`obs_datetime`,
+    `do`.`drug_inventory_id`,
+    `do`.`equivalent_daily_dose`,
+    `ord`.`start_date`,
+    `o`.`value_numeric`
+FROM
+    `obs` `o`
+        INNER JOIN
+    `orders` `ord` ON `o`.`order_id` = `ord`.`order_id` and `ord`.`voided` = 0
+        INNER JOIN
+    `drug_order` `do` ON `ord`.`order_id` = `do`.`order_id`
+        INNER JOIN
+    `arv_drug` `ad` ON `do`.`drug_inventory_id` = `ad`.`drug_id`
+WHERE
+    `o`.`concept_id` = 2834 AND `o`.`voided` = 0;
 
+CREATE OR REPLACE ALGORITHM=UNDEFINED  SQL SECURITY INVOKER 
+  VIEW `amount_brought_back_obs` AS 
+SELECT 
+    `o`.`person_id`,
+    `o`.`encounter_id`,
+    `o`.`order_id`,
+    `o`.`obs_datetime`,
+    `do`.`drug_inventory_id`,
+    `do`.`equivalent_daily_dose`,
+    `o`.`value_numeric`,
+    `do`.`quantity`
+FROM
+    `obs` `o`
+        INNER JOIN
+    `drug_order` `do` ON `o`.`order_id` = `do`.`order_id`
+        INNER JOIN
+    `arv_drug` `ad` ON `do`.`drug_inventory_id` = `ad`.`drug_id`
+WHERE
+    `o`.`concept_id` = 2540 AND `o`.`voided` = 0;
 
 DROP FUNCTION IF EXISTS earliest_start_date_at_clinic;                                          
                                                                                 
@@ -897,6 +959,31 @@ BEGIN
 	RETURN my_defaulted_date;
 END */;;
 DELIMITER ;
+
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+
+DROP FUNCTION IF EXISTS `patient_max_defaulted_date`;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50020 */ /*!50003 FUNCTION `patient_max_defaulted_date`(m_patient_id int, my_end_date DATETIME) RETURNS DATE
+BEGIN
+
+DECLARE my_defaulted_date DATETIME;
+
+set my_defaulted_date = (SELECT MAX(defaulted_date) FROM patient_defaulted_dates WHERE patient_id = m_patient_id AND start_date <= my_end_date);
+
+RETURN my_defaulted_date;
+END */;;
 
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
