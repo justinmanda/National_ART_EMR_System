@@ -1195,7 +1195,7 @@ EOF
 		patient.person_id = person.id
 		patient.name = person.names.first.given_name + ' ' + person.names.first.family_name rescue nil
 		patient.patient_id = person.patient.id
-		patient.age = age(person, current_date)
+		#patient.age = cul_age(person.birthdate,person.birthdate_estimated)
 		patient.age_in_months = age_in_months(person, current_date)
 		patient.arv_number = get_patient_identifier(person.patient, 'ARV Number')
 		patient.splitted_arv_number = patient.arv_number.split("-").last.to_i rescue 0
@@ -1225,6 +1225,7 @@ EOF
     patient.birthdate_estimated = person.birthdate_estimated
     patient.current_district = person.addresses.first.state_province rescue nil
     patient.home_district = person.addresses.first.address2 rescue nil
+    patient.country = person.addresses.first.country rescue nil
     patient.traditional_authority = person.addresses.first.county_district rescue nil
     patient.current_residence = person.addresses.first.city_village rescue nil
     patient.landmark = person.addresses.first.address1 rescue nil
@@ -1799,7 +1800,10 @@ people = Person.find(:all, :include => [{:names => [:person_name_code]}, :patien
     months = (today.month - start_date.month)
     (years * 12) + months
   end
-
+  def self.duration_on_treatment(start_date,today=Date.today)
+	  months= ((today-start_date.to_date).to_i)/30
+	  return months.to_i
+ end
   def self.date_started_second_line_regimen(patient)
     regimen_category = Concept.find_by_name("Regimen Category")
     regimen_indices = ["7A","8A","9P"]

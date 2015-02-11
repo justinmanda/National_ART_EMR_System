@@ -1,0 +1,32 @@
+<html>
+<title>Viral load Test</title>
+<link rel = "stylesheet" style="text/css" href="stylesheets/viral_load_ask.css">
+<script src="javascripts/Highcharts/js/jquery.min.js" language="javascript" type="text/javascript"></script>
+<script src="javascripts/jquery-blink.js" language="javscript" type="text/javascript"></script>
+<script type="text/javascript" language="javascript">
+
+    jQuery(document).ready(function()
+    {
+        jQuery('.blink').blink();
+        jQuery("#vclose_window").click(function(){
+            jQuery("#vreminder").hide();
+        });
+    });
+
+</script>
+<body>
+<div id = "vreminder">
+
+<div id="vheader"> <span> Viral Load Reminder </span> <span id="vclose_window"><img src="images/cancel_flat_red.png" height="50px" width="50px"></span></div>
+<div id = "vrapper" class="blink"></div>
+<div id="vmessage"> <p> This patient has been on treatment <br/>for a period of 2 years <br/> Please do a Viral Load Check....</p>
+<div id="vavoid_aids"> <img src="images/app.png" height="70px" width="70px"></div>
+</div>
+<div id="vfooter"></div>
+
+</div>
+
+
+</body>
+
+</html>
