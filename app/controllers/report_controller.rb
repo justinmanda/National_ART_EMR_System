@@ -142,7 +142,7 @@ class ReportController < GenericReportController
         detail = {
             'name' => det_patient.name,
             'gender' => det_patient.person.gender,
-            'age' => PatientService.cul_age(det_patient.person.birthdate , det_patient.person.birthdate_estimated ),
+            'age' => PatientService.age(det_patient.person, Date.today),
             'reg_date' => patient.date_enrolled.to_date.strftime('%d/%b/%Y'),
             'start_reason' =>PatientService.reason_for_art_eligibility(det_patient)  ,
             'outcome' => state.nil? ? " ": state,

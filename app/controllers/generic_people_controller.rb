@@ -853,6 +853,16 @@ class GenericPeopleController < ApplicationController
     render :text => regions.join('')  and return
   end
 
+  #counrties
+   def country
+    country_conditions = ["name LIKE (?)", "%#{params[:search_string]}%"]
+
+    countries = Country.find(:all,:conditions => country_conditions, :order => 'name')
+    countries = countries.map do |r|
+        "<li value='#{r.name}'>#{r.name}</li>"
+    end
+    render :text => countries.join('')  and return
+  end
   # Districts containing the string given in params[:value]
   def district
     region_id = Region.find_by_name("#{params[:filter_value]}").id

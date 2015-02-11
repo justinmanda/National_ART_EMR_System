@@ -1098,6 +1098,23 @@ The following block of code should be replaced by a more cleaner function
     patient_bean = PatientService.get_patient(patient.person)
     alerts = []
 
+    #viral load alert
+    type = EncounterType.find_by_name('HIV CLINIC CONSULTATION')
+
+    viral_load = Observation.find(:first,:order => "encounter_datetime DESC,encounter.date_created DESC",
+                                 :joins => "INNER JOIN encounter ON obs.encounter_id = encounter.encounter_id",
+                                 :conditions => ["concept_id = ? AND encounter_type = ? AND patient_id = ?",ConceptName.find_by_name('Hiv Viral Load').concept_id,
+                                                 type.id,patient.id]).value_text.to_s rescue nil
+    if viral_load.start_with?('=')
+      vl_txt = ("Recent viral load result: "+viral_load.delete("/=%>=%<=%>%</")+" copies/ml")
+    elsif viral_load.start_with?('>=')
+      vl_txt = ("Recent viral load result more than: "+viral_load.delete("/=%>=%<=%>%</")+" copies/ml")
+    else
+      vl_txt = ("Recent viral load result less than: "+viral_load.delete("/=%>=%<=%>%</")+" copies/ml")
+    end
+
+    alerts << vl_txt
+
     type = EncounterType.find_by_name("APPOINTMENT")
 
     @show_change_app_date = Observation.find(:first,
@@ -3564,6 +3581,7 @@ The following block of code should be replaced by a more cleaner function
 
     enc.encounter_type = EncounterType.find_by_name("REQUEST").id
     enc.patient_id = 		patient_id
+    enc.encounter_datetime = Time.now
     enc.creator = current_user.id
     enc.location_id = Location.current_location
 
@@ -3578,7 +3596,7 @@ The following block of code should be replaced by a more cleaner function
     else
       obs.value_coded = Concept.find_by_name("No").concept_id
     end
-    obs.concept_id = Concept.find_by_name("Hiv viral load").concept_id
+    obs.concept_id = Concept.find_by_name("Viral load requested").concept_id
     obs.encounter_id = enc.id
     obs.obs_datetime = Time.now
 

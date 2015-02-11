@@ -94,7 +94,11 @@
               <% if (@patient_bean.archived_filing_number rescue nil) != nil && (@patient_bean.archived_filing_number) != " " %>
                 <span value="<%= @patient_bean.archived_filing_number rescue "" %>">Archived Filing Number</span>
               <% end %>
-
+	      
+              <% if (@patient_bean.country rescue nil) != nil && (@patient_bean.country) != " " %>
+                <span value="<%= @patient_bean.country rescue "" %>">Country of Birth</span>
+              <% end %>
+	      
               <% if @art_start_date.blank? and @pre_art_start_date != "" and @pre_art_start_date != nil %>
                 <span value="<%= "#{PatientService.period_on_treatment(@pre_art_start_date.to_date).to_i} month(s)" %>">Period on Pre-ART</span>
               <% end %>

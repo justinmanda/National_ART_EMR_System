@@ -522,8 +522,8 @@ class Cohort
 	    @patient_earliest_start_date[patient.patient_id]= patient.earliest_start_date
 			patients << patient.patient_id
 		end
+	 #possible left out pat	
 		return patients
-
 
 		#start_date = @start_date
 		#end_date = @end_date

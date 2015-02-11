@@ -38,7 +38,15 @@ module ApplicationHelper
   def ask_home_village
     get_global_property_value("demographics.home_village").to_s == "true" rescue false
   end
-
+  #justin added a helper for country of birth
+  def ask_country_of_birth
+	 property = get_global_property_value("ask_country_of_birth").to_s 
+	 if property == "true"
+		 return true
+	  else
+		  return false
+        end		  
+  end	 
   def site_prefix
     site_prefix = Location.current_health_center.neighborhood_cell
     return site_prefix
@@ -400,9 +408,119 @@ module ApplicationHelper
       end
     end
 	end
+  # method that will return a boolean value to activate viral load reminder on milestone
+  def request_viral_load_today?(patient)
+    current_date = Date.today
+    arv_start_date = PatientService.date_antiretrovirals_started(patient).to_date.to_s rescue nil
+    second_line_arv_start_date = PatientService.date_started_second_line_regimen(patient).to_date.to_s rescue nil
+    if second_line_arv_start_date.blank?
+      duration = PatientService.duration_on_treatment(arv_start_date)
+      viral_observation = viral_load_search(patient,duration,arv_start_date)
+      viral_load_asked = viral_load_ever_asked(current_date,patient)
+      treatment = "1<sup>st</sup>"
+       if (viral_observation==true && viral_load_asked == false)
+            if milestone_reached(duration)
+              reminder_text(treatment)
+              return true
+            else
+              return false
+            end
+       end
+    else
+      duration = PatientService.duration_on_treatment(second_line_arv_start_date)
+      viral_observation = viral_load_search(patient,duration,second_line_arv_start_date)
+      viral_load_asked = viral_load_ever_asked(current_date,patient)
+      treatment = "2<sup>nd</sup>"
+      if (viral_observation == true && viral_load_asked == false)
+        if milestone_reached(duration)
+          reminder_text(treatment)
+          return true
+        else
+          return false
+        end
+      end
+    end
+  end
+  def milestone_reached(duration)
+    viral_load_check = ""
+    @text = " "
+     case duration
+       when 6..8
+         viral_load_check = "yes"
+         @text= "first"
+       when 23..26
+         viral_load_check = "yes"
+         @text= "two"
+       when 48..50
+         viral_load_check = "yes"
+         @text= "four"
+       when 72..74
+         viral_load_check = "yes"
+         @text= "six"
+       when 96..98
+         viral_load_check = "yes"
+         @text= "eight"
+       when 120..122
+         viral_load_check = "yes"
+         @text= "ten"
+       when 144..146
+         viral_load_check = "yes"
+         @text= "twelve"
+       else
+         viral_load_check = "no"
+     end
+     if viral_load_check.eql?("yes")
+       return true
+     else
+       return false
+     end
+  end
+  def reminder_text(treat)
+    if @text.eql?("first")
 
+      @message = "<p>This patient has been on #{treat} line ARVs<br/>for six months and initial viral load <br/>screening is due.</p><br/><>
+                  <p>Please request for viral load check today.</p>"
+    else
 
-  def new_viral_load_check(patient)
+      @message = "<p>This patient has been on #{treat} line ARVs<br/>for #{@text} years and routine viral load <br/>screening is due.</p><br/><>
+                  <p>Please request for viral load check today.</p>"
+    end
+  end
+
+def viral_load_search(patient,duration,date)
+    #get viral load obs if availble
+    viral_obs = Observation.find(:first,:conditions=>["person_id= ? AND concept_id = ?
+                                                   AND obs_datetime >= ? ",patient.id,
+                                                    ConceptName.find_by_name("Hiv viral load").concept_id,date],
+                                 :order=>"obs_datetime DESC")
+  unless viral_obs.blank?
+    latest_viral_load_date = viral_obs.obs_datetime.to_date
+    today = Date.today
+    period_in_years = (((today-latest_viral_load_date).to_i)/365)
+     if period_in_years >= 1.4
+       return true
+     else
+       return false
+     end
+  else
+    return true
+  end
+end
+
+def viral_load_ever_asked(date,patient)
+  current_date = date
+  prev_date = current_date-60.day
+  viral_load_requested = Observation.find(:all,:conditions=>["person_id = ? AND concept_id = ?
+                                                   AND obs_datetime BETWEEN ?  AND  ? ",patient.id,
+                                                  ConceptName.find_by_name("Viral load requested").concept_id,prev_date.to_s,(current_date+1.day).to_s],
+                               :order=>"obs_datetime DESC")
+  unless viral_load_requested.blank?
+    return true
+  else
+    return false
+  end
+end
+def new_viral_load_check(patient)
 
 		arv_start_date = PatientService.patient_art_start_date(patient).to_date rescue nil
     return false if arv_start_date.blank?
@@ -586,7 +704,7 @@ module ApplicationHelper
           end
     end
       return false if milestone_exceeded
-	end
+  end
 
   def viral_load_popup_activated(art_start_date, patient, period_on_art)
     possible_ranges = [

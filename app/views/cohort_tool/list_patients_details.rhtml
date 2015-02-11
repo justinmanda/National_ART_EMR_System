@@ -269,11 +269,11 @@
 										  <td align='center'><%= data_row.arv_number %></td>
 										  <td><%= data_row.name %></td>
 
-										  <% if data_row.age > 0 %>
-													  <td align='center'><%= data_row.age %></td>
-										  <% else %>
-													  <td align='center'><%= data_row.age_in_months %> Months</td>
-										  <% end %>
+									      <%if data_row.age_in_months < 12%>
+									        <td align='center'><%= data_row.age_in_months %> Months</td>
+                                                                                <%else%>
+													  <td align='center'><%= (data_row.age_in_months/12).to_i %> Years</td>
+										 <%end%>
 
 										  <td align='center'>
 

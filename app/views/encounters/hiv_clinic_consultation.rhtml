@@ -1,3 +1,4 @@
+<%= javascript_include_tag "prototype" %>
 <style type="text/css">
   .summary {
     margin:20px;
@@ -23,8 +24,17 @@
 
   #notes{background-color:red;}
 
-  .tt_controls_clinical_notes_optional #space { display:inline; }
-</style>
+   .tt_controls_clinical_notes_optional #space { display:inline; }
+  #lessthan , #greaterthan , #equals, #decimal {
+      display: inline !important;
+  }
+
+  .tt_controls_test_result #date,#minus,#abc,#comma,#qwerty,
+  #slash,#percent,#star,#plus,#date,#Unknown,#char,#backspace {
+      display:none;
+  }
+
+  </style>
 
 <script>
  
@@ -59,6 +69,50 @@
     return symptoms;
   }
 
+  function updateResultKeyPad() {
+      curr_page = tstCurrentPage - 1
+      buttons = document.getElementsByClassName("keyboardButton");
+      $("clearButton").setAttribute("onmousedown","clearInput();updateResultKeyPad();");
+      $("backButton").setAttribute("onmousedown",";gotoPage(" + curr_page + ", null, true);resetPad();");
+      //$("nextButton").setAttribute("onmousedown","gotoNextPage();resetPad();");
+
+      for(i = 0; i < buttons.length ; i++) {
+          if (buttons[i].id == "equals" || buttons[i].id == "greaterthan" || buttons[i].id == "lessthan") {
+              buttons[i].disabled = false;
+              if( buttons[i].id == "equals"){
+                  buttons[i].setAttribute("onmousedown","press('=');resetKeyPad();");
+              }else if( buttons[i].id == "lessthan") {
+                  buttons[i].setAttribute("onmousedown","press('<');resetKeyPad();");
+              }else if( buttons[i].id == "greaterthan") {
+                  buttons[i].setAttribute("onmousedown","press('>');resetKeyPad();");
+              }
+          }else{
+              buttons[i].disabled = true;
+          }
+      }
+  }
+
+  function resetPad() {
+      curr_page = tstCurrentPage - 1
+      buttons = document.getElementsByClassName("keyboardButton");
+      for(i = 0; i < buttons.length ; i++) {
+          buttons[i].disabled = false;
+      }
+      $("clearButton").setAttribute("onmousedown","clearInput();");
+      $("backButton").setAttribute("onmousedown",";gotoPage(" + curr_page + ", null, true);");
+      $("nextButton").setAttribute("onmousedown","gotoNextPage();");
+  }
+
+  function resetKeyPad() {
+      buttons = document.getElementsByClassName("keyboardButton");
+      for(i = 0; i < buttons.length ; i++) {
+          if (buttons[i].id == "equals" || buttons[i].id == "greaterthan" || buttons[i].id == "lessthan") {
+              buttons[i].disabled = true;
+          }else{
+              buttons[i].disabled = false;
+          }
+      }
+  }
   function getSelectedSymptoms() {
     var options = $('symptoms').options;
     var symptoms = new Array();
@@ -352,7 +406,24 @@
          :tt_onLoad => "getSelectedSymptoms();showCategory('CONSULTATION');" } %>
       <% end %>
   <% end %>
+  <% if viral_load_ever_asked(Date.today,@patient)%>
+  <label for='new_viral_load_available'>Recent viral load results available?</label>
+  <%= select_tag "new_viral_load_available", options_for_select([['Yes','YES'],['No','NO']]), :id => 'new_viral_load_available', :tt_pageStyleClass => 'NoKeyboard',:tt_onLoad => "showCategory('CONSULTATION'); "%>
+  <%= touch_date_tag "HIV VIRAL LOAD DATE", @patient, nil,
+                     {:id => "viral_load_date",
+                      :tt_onLoad => "showCategory('CONSULTATION');",
+                      :helpText => "Viral Load Result Date",
+                      :condition => '$("new_viral_load_available").value == "YES"',
+                      :max => "#{session[:datetime].to_date rescue Date.today}"} %>
 
+  <%= touch_viral_load_numeric_tag "HIV VIRAL LOAD", @patient, nil,
+                           {:id => "viral_load",
+                            :helpText => "Viral Load",
+                            :max => 10000 ,
+                            :min => 1 ,
+                            :condition => '$("new_viral_load_available").value == "YES"',
+                            :tt_onLoad => "updateResultKeyPad();showCategory('CONSULTATION');"} %>
+  <% end %>
   <% if @avilable_status == '' %>
 	<%= touch_select_tag "Routine Tuberculosis Screening", @patient, concept_set_options('Routine Tuberculosis Screening'),
 		{	:id => 'routine_tb_screening',

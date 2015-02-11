@@ -780,7 +780,7 @@
 		:tt_pageStyleClass => "NoKeyboard NoInput small"  } %>
 
 	  <label for='new_cd4_count_available'>Recent CD4 count results available?</label>
-	  <%= select_tag "new_cd4_count_available", options_for_select([['Yes','YES'],['No','NO']]), :id => 'new_cd4_count_available', :tt_pageStyleClass => 'NoKeyboard',:tt_onLoad => "showCategory('Hiv Staging'); %>
+	  <%= select_tag "new_cd4_count_available", options_for_select([['Yes','YES'],['No','NO']]), :id => 'new_cd4_count_available', :tt_pageStyleClass => 'NoKeyboard',:tt_onLoad => "showCategory('Hiv Staging'); "%>
 
 	  <%= touch_date_tag "CD4 COUNT DATETIME", @patient, nil,
 		{:id => "cd4_count_date",

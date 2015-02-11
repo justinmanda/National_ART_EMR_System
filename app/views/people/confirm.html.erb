@@ -2,10 +2,14 @@
   <head>
     <title>Patient Treatment Dashboard</title>
     <script type="text/javascript" language="javascript"
-    src="/touchscreentoolkit/lib/javascripts/touchScreenToolkit.js" defer  ></script>    
+    src="/touchscreentoolkit/lib/javascripts/touchScreenToolkit.js" defer  ></script>
+    <link rel = "stylesheet" style="text/css" href="/stylesheets/viral_load_ask.css">
+    <link rel = "stylesheet" style="text/css" href="/stylesheets/jquery-ui.min.css">
     <meta http-equiv='content-type' content='text/html;charset=UTF-8' />
     <%#= javascript_include_tag "jquery" %>
     <%= javascript_include_tag "Highcharts/js/jquery.min.js" %>
+    <%= javascript_include_tag "jquery-ui-1.11.2/jquery-ui.min.js" %>
+    <%= javascript_include_tag "jquery-blink.js" %>
     <%= javascript_include_tag "jquery.flot" %>
     <%= javascript_include_tag "prototype" %>
 
@@ -40,6 +44,16 @@
 
       jQuery(document).ready(function() {
         loadChart();
+          jQuery('.blink').blink();
+          jQuery("#vclose_window").click(function(){
+              jQuery("#vreminder").hide();
+          });
+          jQuery("#vreminder").css("display","block").hide();
+          jQuery("#vreminder").css("display","block").fadeIn(5000).delay(50000);
+
+          $(function() {
+              $("#vreminder").draggable();
+          });
       });
 
       var patientDash = "/patients/show/<%= params[:found_person_id] %>"
@@ -80,7 +94,6 @@
       document.getElementById('cover').style.display='inline'
     }
   }
-
   function confirmOperations(message, responseAction, okOnly) {
 
     if(!__$("tstMessageBar")){
@@ -147,7 +160,7 @@ function cancelOperation(action){
   setTimeout('reSize()',500);
     </script>
   </head>
-  <body onload = "setTimeout('changeAttributes()',500);">
+  <body onload = "setTimeout('changeAttributes()',500);" class="content">
     <% 	task = @task
     task_name = (task.encounter_type || 'NONE').upcase rescue 'NONE' %>
 
@@ -227,75 +240,18 @@ function cancelOperation(action){
 
       <input type='submit' value='Finish' />
     </form>
-
-    <% if improved_viral_load_check(@person.patient) == true &&
-        (@task.encounter_type.upcase == "HIV CLINIC CONSULTATION" || @task.encounter_type.upcase == "HIV STAGING") &&
-        show_lab_results &&
-        (current_user_roles.include?("Nurse") || current_user_roles.include?("Clinician") || current_user_roles.include?("Doctor"))%>
-
-      <div id="popup" style="display:none">
-
-        <div class="art_container">
-          <div class="header" style="position: absolute; left: 150px">
-            <div id="viral_header">
-              <u>Routine Viral Load Screening Due</u><br />
-              <u>Assess Adherence:</u> <br />
-            </div>
-            <div id="more_details" style="font-size: 16pt; font-weight:bold; ">
-              If good then request VL today <br />
-              If poor then defer VL for three months after intensive adherence support
-            </div>
-          </div>
-          <table  border=0.5 style = "border-radius:10px;">
-            <tr>
-              <td><span>ART start date</span></td>
-              <td style='text-align:left'><span><%= @art_start_date.strftime("%A, %d %B %Y") rescue '' %></span></td>
-            </tr>
-            <tr><td colspan =2><hr/></td></tr>
-            <tr>
-              <td><span>Duration on ART (Months)</span></td>
-              <td style='text-align:left'><span><%= @duration_in_months %></span></td>
-            </tr>
-            <tr><td colspan =2><hr/></td></tr>
-
-            <% unless @second_line_treatment_start_date.blank? %>
-              <tr>
-                <td><span>Duration on 2<sup>nd</sup>Line ART (Months)</span></td>
-                <td style='text-align:left'><span><%= @second_line_duration_in_months %></span></td>
-              </tr>
-              <tr><td colspan =2><hr/></td></tr>
-            <% end  %>
-
-            <% unless @results.blank?%>
-              <tr>
-                <td><span>Latest viral load (<%= @latest_date.strftime("%A, %d %B %Y")%>)</span></td>
-                <td style='text-align:left'><span><%= @modifier + ' ' + @latest_result.to_s %></span></td>
-              </tr>
-              <tr><td colspan =2><hr/></td></tr>
-            <% end %>
-
-            <tr>
-              <td><span>Outcome</span></td>
-              <td style='text-align:left'><span><%= @outcome %></span></td>
-            </tr>
-            <tr><td colspan =2><hr/></td></tr>
-            <tr>
-              <td><span>Reason for starting</span></td>
-              <td style='text-align:left'><span><%=@reason_for_art%></span></td>
-            </tr>
-
-          </table>
+     <% if request_viral_load_today?(@person.patient) %>
+      <div id = "confirmOverlay">
+      <div id = "vreminder">
+        <div id="vheader"> <span> Viral Load Reminder </span><!-- <span id="vclose_window"><img onclick="removeOverlay()" src="/images/cancel_flat.png" height="50px" width="50px"></span>--></div>
+        <div id = "vrapper" class="blink"></div>
+        <div id="vmessage"> <%= @message %>
+          <div id="vavoid_aids"> <img src="/images/app.png" height="80px" width="80px"></div>
         </div>
-
-        <hr class="popup_hr"></hr>
-        <a id='viral_load_done' onclick = "viral_load_requested_today();" ><span>VL Requested Today</span></a>
-                    <!--<a id='lab_trail' onclick="window.location='/lab/results/<%=@person.id%>'"><span>View Lab Trail</span></a>-->
-        <a id='reminder' onclick="viral_load_not_requested_today(); removePopup();"><span>VL Not Requested Today</span></a>
-      </div>
-
-      <div id="cover">
-      </div>
-    <% end %>
+        <div id="vfooter"> <div class = "button gray" style = "float:left" onclick="defer_viral_load_request()">Request later</div><div class="button blue" style="float: right" onclick="viral_load_requested_today()"> Request today</div></div>
+     </div>
+     </div>
+     <%end%>
     <script>
       function removePopup(){
         popup = document.getElementById('popup')
@@ -314,7 +270,11 @@ function cancelOperation(action){
               window.location="<%= next_task(@person.patient)%>"
         <% end %>	
   }
-			
+	function removeOverlay(){
+        overlay = document.getElementById('confirmOverlay')
+        overlay.parentNode.removeChild(overlay)
+    }
+
   function viral_load_requested_today(){
 			
     jQuery.ajax({
@@ -340,7 +300,10 @@ function cancelOperation(action){
 
     });
   }
+ function defer_viral_load_request(){
+     window.location="<%= next_task(@person.patient)%>";
 
+ }
   function vl_requested_today(){
 
   }
@@ -391,6 +354,67 @@ function cancelOperation(action){
       top: 152px;
       width: 941px;
       border: 1px solid black;
+    }
+    #confirmOverlay{
+        width:100%;
+        height:100%;
+        position:fixed;
+        top:0;
+        left:0;
+        background:url('ie.png');
+        background: -moz-linear-gradient(rgba(11,11,11,0.1), rgba(11,11,11,0.6)) repeat-x rgba(11,11,11,0.2);
+        background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(11,11,11,0.1)), to(rgba(11,11,11,0.6))) repeat-x rgba(11,11,11,0.2);
+        z-index:100000;
+    }
+
+   .button{
+        color:white
+        font:12px/1 'Cuprum','Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+        padding:12px 9px 12px 9px;
+        font-weight: bold;
+        border-radius: 5px;
+       cursor:pointer;
+    }
+    .gray {
+        color: #e9e9e9;
+        border: solid 1px #555;
+        background: #6e6e6e;
+        background: -webkit-gradient(linear, left top, left bottom, from(#888), to(#575757));
+        background: -moz-linear-gradient(top,  #888,  #575757);
+        filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#888888', endColorstr='#575757');
+    }
+    .gray:hover {
+        background: #616161;
+        background: -webkit-gradient(linear, left top, left bottom, from(#757575), to(#4b4b4b));
+        background: -moz-linear-gradient(top,  #757575,  #4b4b4b);
+        filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#757575', endColorstr='#4b4b4b');
+    }
+    .gray:active {
+        color: #afafaf;
+        background: -webkit-gradient(linear, left top, left bottom, from(#575757), to(#888));
+        background: -moz-linear-gradient(top,  #575757,  #888);
+        filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#575757', endColorstr='#888888');
+    }
+    /* blue */
+    .blue {
+        color: #d9eef7;
+        border: solid 1px #0076a3;
+        background: #0095cd;
+        background: -webkit-gradient(linear, left top, left bottom, from(#00adee), to(#0078a5));
+        background: -moz-linear-gradient(top,  #00adee,  #0078a5);
+        filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#00adee', endColorstr='#0078a5');
+    }
+    .blue:hover {
+        background: #007ead;
+        background: -webkit-gradient(linear, left top, left bottom, from(#0095cc), to(#00678e));
+        background: -moz-linear-gradient(top,  #0095cc,  #00678e);
+        filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#0095cc', endColorstr='#00678e');
+    }
+    .blue:active {
+        color: #80bed6;
+        background: -webkit-gradient(linear, left top, left bottom, from(#0078a5), to(#00adee));
+        background: -moz-linear-gradient(top,  #0078a5,  #00adee);
+        filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#0078a5', endColorstr='#00adee');
     }
     #popup{
       -moz-user-select: none;
@@ -560,144 +584,5 @@ function cancelOperation(action){
     }
     
   </style>
-
-
-<% if viral_load_check_without_lab_results_modified(@person.patient) == true &&
-        (@task.encounter_type.upcase == "HIV CLINIC CONSULTATION" || @task.encounter_type.upcase == "HIV STAGING") &&
-        !show_lab_results &&
-        (current_user_roles.include?("Nurse") || current_user_roles.include?("Clinician") || current_user_roles.include?("Doctor"))%>
-
-  <!-------------------------------------------->
-   <% if @vl_request == "YES" %>
-      <div id="popup" style="display:none">
-
-            <div class="art_container">
-              <div class="header" style="position: absolute; left: 150px">
-                <div id="viral_header">
-                  <u>Routine Viral Load Screening Due</u><br />
-                  <u>Assess Adherence:</u> <br />
-                </div>
-                <div id="more_details" style="font-size: 16pt; font-weight:bold; ">
-                  If good then request VL today <br />
-                  If poor then defer VL for three months after intensive adherence support
-                </div>
-              </div>
-              <table  border=0.5 style = "border-radius:10px;">
-                <tr>
-                  <td><span>ART start date</span></td>
-                  <td style='text-align:left'><span><%= @art_start_date.strftime("%A, %d %B %Y") rescue '' %></span></td>
-                </tr>
-                <tr><td colspan =2><hr/></td></tr>
-                <tr>
-                  <td><span>Duration on ART (Months)</span></td>
-                  <td style='text-align:left'><span><%= @duration_in_months %></span></td>
-                </tr>
-                <tr><td colspan =2><hr/></td></tr>
-
-                <% unless @second_line_treatment_start_date.blank? %>
-                  <tr>
-                    <td><span>Duration on 2<sup>nd</sup>Line ART (Months)</span></td>
-                    <td style='text-align:left'><span><%= @second_line_duration_in_months %></span></td>
-                  </tr>
-                  <tr><td colspan =2><hr/></td></tr>
-                <% end  %>
-
-                <% unless @results.blank?%>
-                  <tr>
-                    <td><span>Latest viral load (<%= @latest_date.strftime("%A, %d %B %Y")%>)</span></td>
-                    <td style='text-align:left'><span><%= @modifier + ' ' + @latest_result.to_s %></span></td>
-                  </tr>
-                  <tr><td colspan =2><hr/></td></tr>
-                <% end %>
-
-                <tr>
-                  <td><span>Outcome</span></td>
-                  <td style='text-align:left'><span><%= @outcome %></span></td>
-                </tr>
-                <tr><td colspan =2><hr/></td></tr>
-                <tr>
-                  <td><span>Reason for starting</span></td>
-                  <td style='text-align:left'><span><%=@reason_for_art%></span></td>
-                </tr>
-
-              </table>
-            </div>
-
-            <hr class="popup_hr_without_lab"></hr>
-            <a id='viral_load_requested_today' onclick = "captureVl()" ><span>Enter Viral load result</span></a>
-            <a id='viral_load_already_done' onclick="hidePopup()"><span>No viral load result available</span></a>
-            <!--
-            <a id='viral_load_adherence_issues' onclick="vl_adherence_issue();"><span>Not Requested Today<br />(Due to poor adherence to ART)</span></a>
-            -->
-          </div>
-      <!-------------------------------------------->
-   <% else %>
-      <div id="popup" style="display:none">
-
-            <div class="art_container">
-              <div class="header" style="position: absolute; left: 150px">
-                <div id="viral_header">
-                  <u>Routine Viral Load Screening Due</u><br />
-                  <u>Assess Adherence:</u> <br />
-                </div>
-                <div id="more_details" style="font-size: 16pt; font-weight:bold; ">
-                  If good then request VL today <br />
-                  If poor then defer VL for three months after intensive adherence support
-                </div>
-              </div>
-              <table  border=0.5 style = "border-radius:10px;">
-                <tr>
-                  <td><span>ART start date</span></td>
-                  <td style='text-align:left'><span><%= @art_start_date.strftime("%A, %d %B %Y") rescue '' %></span></td>
-                </tr>
-                <tr><td colspan =2><hr/></td></tr>
-                <tr>
-                  <td><span>Duration on ART (Months)</span></td>
-                  <td style='text-align:left'><span><%= @duration_in_months %></span></td>
-                </tr>
-                <tr><td colspan =2><hr/></td></tr>
-
-                <% unless @second_line_treatment_start_date.blank? %>
-                  <tr>
-                    <td><span>Duration on 2<sup>nd</sup>Line ART (Months)</span></td>
-                    <td style='text-align:left'><span><%= @second_line_duration_in_months %></span></td>
-                  </tr>
-                  <tr><td colspan =2><hr/></td></tr>
-                <% end  %>
-
-                <% unless @results.blank?%>
-                  <tr>
-                    <td><span>Latest viral load (<%= @latest_date.strftime("%A, %d %B %Y")%>)</span></td>
-                    <td style='text-align:left'><span><%= @modifier + ' ' + @latest_result.to_s %></span></td>
-                  </tr>
-                  <tr><td colspan =2><hr/></td></tr>
-                <% end %>
-
-                <tr>
-                  <td><span>Outcome</span></td>
-                  <td style='text-align:left'><span><%= @outcome %></span></td>
-                </tr>
-                <tr><td colspan =2><hr/></td></tr>
-                <tr>
-                  <td><span>Reason for starting</span></td>
-                  <td style='text-align:left'><span><%=@reason_for_art%></span></td>
-                </tr>
-
-              </table>
-            </div>
-
-            <hr class="popup_hr_without_lab"></hr>
-            <a id='viral_load_requested_today' onclick = "viral_load_requested_today();" ><span>VL Requested Today</span></a>
-            <a id='viral_load_already_done' onclick="vl_already_done();"><span>VL Not Requested Today</span></a>
-            <!--
-            <a id='viral_load_adherence_issues' onclick="vl_adherence_issue();"><span>Not Requested Today<br />(Due to poor adherence to ART)</span></a>
-            -->
-          </div>
-
-
-      <div id="cover">
-      </div>
-  <% end %>
-<% end %>
 </body>
 </html>
