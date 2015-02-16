@@ -420,12 +420,19 @@ module ApplicationHelper
       treatment = "1<sup>st</sup>"
        if (viral_observation==true && viral_load_asked == false)
             if milestone_reached(duration)
-              reminder_text(treatment)
+              reminder_text(treatment,duration)
               return true
             else
               return false
             end
        end
+      if (adherence_based_monitoring(patient,arv_start_date)==true && viral_load_asked == false)
+        @text = "monitoring_adhe"
+        reminder_text(treatment,duration)
+        return true
+      else
+        return false
+      end
     else
       duration = PatientService.duration_on_treatment(second_line_arv_start_date)
       viral_observation = viral_load_search(patient,duration,second_line_arv_start_date)
@@ -433,17 +440,22 @@ module ApplicationHelper
       treatment = "2<sup>nd</sup>"
       if (viral_observation == true && viral_load_asked == false)
         if milestone_reached(duration)
-          reminder_text(treatment)
+          reminder_text(treatment,duration)
           return true
         else
           return false
         end
       end
+      if (adherence_based_monitoring(patient,arv_start_date)==true && viral_load_asked == false)
+        @text = "monitoring_adhe"
+        reminder_text(treatment,duration)
+        return true
+      else
+        return false
+      end
     end
   end
   def milestone_reached(duration)
-    viral_load_check = ""
-    @text = " "
      case duration
        when 6..8
          viral_load_check = "yes"
@@ -475,14 +487,21 @@ module ApplicationHelper
        return false
      end
   end
-  def reminder_text(treat)
+  def reminder_text(treat,period)
     if @text.eql?("first")
 
-      @message = "<p>This patient has been on #{treat} line ARVs<br/>for six months and initial viral load <br/>screening is due.</p><br/><>
+      @message = "<p>This patient has been on #{treat} line ARVs<br/>for six months and initial viral load <br/>screening is due.</p><br/><br/>
                   <p>Please request for viral load check today.</p>"
+
+    elsif @text.eql?("monitoring_adhe")
+
+      @message = "<p style = \"font-size:14px;line-height:25px;\"><b>The adherence of this patient on #{treat} line ARVs for
+                  <br/>#{period} months has been monitored for 3 months due to
+                  <br/>high viral load  and another viral load screening is due.</b></p><br/><br/><br/>
+                  <p style = \"font-size:14px;\"><b>Please request for another viral load check today.<b></p>"
     else
 
-      @message = "<p>This patient has been on #{treat} line ARVs<br/>for #{@text} years and routine viral load <br/>screening is due.</p><br/><>
+      @message = "<p >This patient has been on #{treat} line ARVs<br/>for #{@text} years and routine viral load <br/>screening is due.</p><br/><br/>
                   <p>Please request for viral load check today.</p>"
     end
   end
@@ -506,7 +525,24 @@ def viral_load_search(patient,duration,date)
     return true
   end
 end
-
+def adherence_based_monitoring(patient,date)
+  #get viral load obs if availble
+  viral_obs = Observation.find(:first,:conditions=>["person_id= ? AND concept_id = ?
+                                                   AND obs_datetime >= ? ",patient.id,
+                                                    ConceptName.find_by_name("Hiv viral load").concept_id,date],
+                               :order=>"obs_datetime DESC")
+  unless viral_obs.blank?
+    latest_viral_load_date = viral_obs.obs_datetime.to_date
+    today = Date.today
+    period_in_months = (((today-latest_viral_load_date).to_i)/30).to_i
+    latest_viral_load = viral_obs.value_text.to_s.delete("/=%>=%<=%>%</").to_i
+    if (1000..5000).to_a.include?(latest_viral_load) && period_in_months == 3
+      return true
+    else
+      return false
+    end
+  end
+end
 def viral_load_ever_asked(date,patient)
   current_date = date
   prev_date = current_date-60.day

@@ -1104,8 +1104,9 @@ The following block of code should be replaced by a more cleaner function
     viral_load = Observation.find(:first,:order => "encounter_datetime DESC,encounter.date_created DESC",
                                  :joins => "INNER JOIN encounter ON obs.encounter_id = encounter.encounter_id",
                                  :conditions => ["concept_id = ? AND encounter_type = ? AND patient_id = ?",ConceptName.find_by_name('Hiv Viral Load').concept_id,
-                                                 type.id,patient.id]).value_text.to_s rescue nil
-    if viral_load.start_with?('=')
+                                               type.id,patient.id]).value_text.to_s rescue nil
+    unless viral_load.blank?
+      if viral_load.start_with?('=')
       vl_txt = ("Recent viral load result: "+viral_load.delete("/=%>=%<=%>%</")+" copies/ml")
     elsif viral_load.start_with?('>=')
       vl_txt = ("Recent viral load result more than: "+viral_load.delete("/=%>=%<=%>%</")+" copies/ml")
@@ -1114,7 +1115,7 @@ The following block of code should be replaced by a more cleaner function
     end
 
     alerts << vl_txt
-
+    end
     type = EncounterType.find_by_name("APPOINTMENT")
 
     @show_change_app_date = Observation.find(:first,

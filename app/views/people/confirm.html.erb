@@ -73,18 +73,6 @@
   function changeAttributes(){
     document.getElementById("btnNext").innerHTML = "<span>Continue</span>"
 
-    <% if improved_viral_load_check(@person.patient) == true &&
-        (@task.encounter_type.upcase == "HIV CLINIC CONSULTATION" || @task.encounter_type.upcase == "HIV STAGING") &&  show_lab_results &&
-        (current_user_roles.include?("Nurse") || current_user_roles.include?("Clinician") || current_user_roles.include?("Doctor"))%>
-         document.getElementById("btnNext").setAttribute("onclick","showPopup();")
-    <% end %>
-
-  <% if viral_load_check_without_lab_results_modified(@person.patient) == true &&
-        (@task.encounter_type.upcase == "HIV CLINIC CONSULTATION" || @task.encounter_type.upcase == "HIV STAGING") &&
-        !show_lab_results &&
-        (current_user_roles.include?("Nurse") || current_user_roles.include?("Clinician") || current_user_roles.include?("Doctor"))%>
-         document.getElementById("btnNext").setAttribute("onclick","showPopup();")
-  <% end %>
   }
 			
   function showPopup(){
@@ -243,7 +231,7 @@ function cancelOperation(action){
      <% if request_viral_load_today?(@person.patient) %>
       <div id = "confirmOverlay">
       <div id = "vreminder">
-        <div id="vheader"> <span> Viral Load Reminder </span><!-- <span id="vclose_window"><img onclick="removeOverlay()" src="/images/cancel_flat.png" height="50px" width="50px"></span>--></div>
+        <div id="vheader"> <span> Viral Load Reminder </span><span id="vclose_window"><img onclick="removeOverlay()" src="/images/cancel_flat.png" height="50px" width="50px"></span></div>
         <div id = "vrapper" class="blink"></div>
         <div id="vmessage"> <%= @message %>
           <div id="vavoid_aids"> <img src="/images/app.png" height="80px" width="80px"></div>
