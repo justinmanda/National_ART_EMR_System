@@ -41,6 +41,68 @@
      border-radius: 15px;
   }
   .noneWarnings {color:black;background:orange;}
+  /*Features table------------------------------------------------------------*/
+  .features-table
+  {
+      width: 100%;
+      margin: 0 auto;
+      border-collapse: separate;
+      border-spacing: 0;
+      text-shadow: 0 1px 0 #fff;
+      color: #2a2a2a;
+      background: #fafafa;
+      background-image: -moz-linear-gradient(top, #fff, #eaeaea, #fff); /* Firefox 3.6 */
+      background-image: -webkit-gradient(linear,center bottom,center top,from(#fff),color-stop(0.5, #eaeaea),to(#fff));
+  }
+
+  .features-table td
+  {
+      height: 50px;
+      line-height: 50px;
+      padding: 0 10px;
+      border-bottom: 1px solid #cdcdcd;
+      box-shadow: 0 1px 0 white;
+      -moz-box-shadow: 0 1px 0 white;
+      -webkit-box-shadow: 0 1px 0 white;
+      white-space: nowrap;
+      text-align: center;
+  }
+
+  /*Body*/
+  .features-table tbody td
+  {
+      text-align: center;
+      font: normal 12px Verdana, Arial, Helvetica;
+      width: 150px;
+  }
+
+  .features-table tbody td:first-child
+  {
+      width: auto;
+      text-align: left;
+      border-right: 1px solid white;
+  }
+
+  .features-table td:nth-child(2), .features-table td:nth-child(3)
+  {
+      background: #efefef;
+      background: rgba(184,243,85,0.3);
+      border-right: 1px solid white;
+      /*border-left: 1px solid white;*/
+  }
+
+
+  .features-table td:nth-child(4),.features-table td:nth-child(5)
+  {
+      background: #e7f3d4;
+      background: rgba(184,243,85,0.3);
+  }
+
+  .features-table td:nth-child(6),.features-table td:nth-child(7)
+  {
+      background: #e7f3d4;
+      background: rgba(184,243,85,0.3);
+  }
 </style>
 <div  style="display: table; width: 99%;">
   <div  style="display: table-row;">
@@ -71,12 +133,32 @@
 
 
         <div style="display: table-cell; width: 50%; padding: 10px; border: 1px solid #eee; border-radius: 15px;">
-
+          <%if @viral_load_data.blank?%>
           <div id="charts" >
             <!-- h2>Weight Graph</h2 -->
 
           </div>
+           <%else%>
+              <div id="vl-table">
+                <!-- h2>viral load table -->
+              <span style = "margin: 0px;border-top:solid 1px;border-right:solid 1px;border-left:solid 1px;padding: 4px;font-size: 18px"> <strong>Viral load</strong> </span>
+              <table class="features-table">
+               <tbody>
+               <% @viral_load_data.each do |key,value|%>
+                <tr>
+                  <td><strong><%=h key %></strong></td>
+                  <% value.each do |vl| %>
+                  <td>
+                  <%=h vl %>
+                  </td>
+                  <% end %>
+                </tr>
+               <% end %>
+               </tbody>
+              </table>
 
+              </div>
+            <%end%>
         </div>
       </div>
       <div  style="display: table-row;">

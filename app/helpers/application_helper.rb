@@ -460,7 +460,7 @@ module ApplicationHelper
        when 6..8
          viral_load_check = "yes"
          @text= "first"
-       when 23..26
+       when 24..26
          viral_load_check = "yes"
          @text= "two"
        when 48..50
@@ -478,6 +478,12 @@ module ApplicationHelper
        when 144..146
          viral_load_check = "yes"
          @text= "twelve"
+       when 168..170
+         viral_load_check = "yes"
+         @text= "fourteen"
+       when 192..194
+         viral_load_check = "yes"
+         @text= "sixteen"
        else
          viral_load_check = "no"
      end
@@ -536,7 +542,7 @@ def adherence_based_monitoring(patient,date)
     today = Date.today
     period_in_months = (((today-latest_viral_load_date).to_i)/30).to_i
     latest_viral_load = viral_obs.value_text.to_s.delete("/=%>=%<=%>%</").to_i
-    if (1000..5000).to_a.include?(latest_viral_load) && period_in_months == 3
+    if (1000..4999).to_a.include?(latest_viral_load) && period_in_months == 3
       return true
     else
       return false

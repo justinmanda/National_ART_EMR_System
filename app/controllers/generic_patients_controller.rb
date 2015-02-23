@@ -15,6 +15,7 @@ class GenericPatientsController < ApplicationController
     @prescriptions = @patient.orders.unfinished.prescriptions.all
     @programs = @patient.patient_programs.all
     @alerts = alerts(@patient, session_date) rescue nil
+    @viral_load_data = fetch_viral_load_details(@patient)
     @restricted = ProgramLocationRestriction.all(:conditions => {:location_id => Location.current_health_center.id })
     @restricted.each do |restriction|
       @encounters = restriction.filter_encounters(@encounters)
@@ -691,6 +692,7 @@ The following block of code should be replaced by a more cleaner function
     @programs = @patient.patient_programs.all
     #raise @programs.first.patient_states.last.to_s
     @alerts = alerts(@patient, session_date) rescue nil
+    @viral_load_data = fetch_viral_load_details(@patient)
     # This code is pretty hacky at the moment
     @restricted = ProgramLocationRestriction.all(:conditions => {:location_id => Location.current_health_center.id })
 
@@ -1088,8 +1090,62 @@ The following block of code should be replaced by a more cleaner function
 
     return results
   end
+  # method created by justin of Lin
+  def fetch_viral_load_details(patient,date = Date.today)
+    vl_details = {}
 
+    type = EncounterType.find_by_name('HIV CLINIC CONSULTATION')
 
+    viral_loads = Observation.find(:all,:order => "encounter_datetime DESC,encounter.date_created DESC",
+                                   :joins => "INNER JOIN encounter ON obs.encounter_id = encounter.encounter_id",
+                                   :conditions => ["concept_id = ? AND encounter_type = ? AND patient_id = ?",
+                                                   ConceptName.find_by_name('Hiv Viral Load').concept_id,
+                                                   type.id,patient.id],
+                                   :limit=>4 )
+    results = []
+    unless viral_loads.blank?
+      (viral_loads || []).each {|result| results<<result.value_text.to_s.delete("/=%>=%<=%>%</") }
+    end
+
+    viral_load_dates = Observation.find(:all,:order => "encounter_datetime DESC,encounter.date_created DESC",
+                                        :joins => "INNER JOIN encounter ON obs.encounter_id = encounter.encounter_id",
+                                        :conditions => ["concept_id = ? AND encounter_type = ? AND patient_id = ?",
+                                                        ConceptName.find_by_name('HIV viral load date').concept_id,
+                                                        type.id,patient.id],
+                                        :limit=>4)
+    dates = []
+    unless viral_load_dates.blank?
+      (viral_load_dates || []).each { |date| dates<<date.value_datetime.to_date.to_s }
+    end
+
+    type2 = EncounterType.find_by_name('REQUEST')
+
+    viral_load_sample_dates = Observation.find(:all,:order => "encounter_datetime DESC,encounter.date_created DESC",
+                                               :joins => "INNER JOIN encounter ON obs.encounter_id = encounter.encounter_id",
+                                               :conditions => ["concept_id = ? AND encounter_type = ? AND patient_id = ?",
+                                                               ConceptName.find_by_name('Viral load requested').concept_id,
+                                                               type2.id,patient.id],
+                                               :limit => 4)
+
+    sample_dates=[]
+    unless viral_load_sample_dates.blank?
+    (viral_load_sample_dates || []).each do |sample_date|
+      sample_dates << sample_date.obs_datetime.to_date.to_s
+    end
+
+    diff =viral_load_sample_dates.length - viral_loads.length
+    diff.times do
+      results << "N/A"
+      dates << "N/A"
+    end
+    #assigning values to the hash
+    vl_details["VL Result(cp/ml)"] = results
+    vl_details["Result Date"] = dates
+    vl_details["Sample Date"] = sample_dates
+    end
+
+    return vl_details
+  end
   def alerts(patient, session_date = Date.today)
     # next appt
     # adherence
