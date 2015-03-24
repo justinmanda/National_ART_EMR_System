@@ -14,7 +14,7 @@ class GenericPeopleController < ApplicationController
 	end
   
   def create_confirm
-    @search_results = {}                                                        
+    @search_results = {}
     @patients = []
      
     (PatientService.search_demographics_from_remote(params[:user_entered_params]) || []).each do |data|            
@@ -853,7 +853,7 @@ class GenericPeopleController < ApplicationController
     render :text => regions.join('')  and return
   end
 
-  #counrties
+  #countries
    def country
     country_conditions = ["name LIKE (?)", "%#{params[:search_string]}%"]
 

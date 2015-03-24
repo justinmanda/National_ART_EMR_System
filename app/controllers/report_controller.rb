@@ -139,7 +139,16 @@ class ReportController < GenericReportController
         state = patient.patient_states.last.name rescue nil
         start_date = patient.patient_states.last.start_date.strftime('%d/%b/%Y') rescue " "
 
-        detail = {
+        arv_id= PatientIdentifierType.find_by_name('ARV Number').patient_identifier_type_id
+
+        arv_number = PatientIdentifier.find(:first,
+                                                              :select => "identifier",
+                                                              :conditions  =>["patient_id = ? and identifier_type = ?",
+                                                                              encounter.patient_id, arv_id],
+                                                              :order => "date_created DESC" ).identifier rescue nil
+
+        detail ={
+            'arv_number' => PatientService.get_patient_identifier(det_patient.person, 'ARV Number'),
             'name' => det_patient.name,
             'gender' => det_patient.person.gender,
             'age' => PatientService.age(det_patient.person, Date.today),
@@ -149,7 +158,7 @@ class ReportController < GenericReportController
             'outcome_date' => start_date,
             'occupation' => PatientService.get_attribute(det_patient , 'Occupation'),
             'formulation' => drug.nil? ? " " : drug
-        }
+            }
         @data << detail
       end
       @data = @data.uniq

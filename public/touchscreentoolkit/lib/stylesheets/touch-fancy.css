@@ -325,7 +325,7 @@ form{
     width: 250px;
 }
 
-#SHIFT, #na, #showDataButton, #lessthan, #greaterthan, #equals, #unknown {
+#SHIFT, #na, #ldl, #showDataButton, #lessthan, #greaterthan, #equals, #unknown {
     display: none;
 }
 

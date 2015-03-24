@@ -1093,6 +1093,7 @@ The following block of code should be replaced by a more cleaner function
   # method created by justin of Lin
   def fetch_viral_load_details(patient,date = Date.today)
     vl_details = {}
+    second_line_arv_start_date = PatientService.date_started_second_line_regimen(patient).to_date rescue nil
 
     type = EncounterType.find_by_name('HIV CLINIC CONSULTATION')
 
@@ -1104,7 +1105,7 @@ The following block of code should be replaced by a more cleaner function
                                    :limit=>4 )
     results = []
     unless viral_loads.blank?
-      (viral_loads || []).each {|result| results<<result.value_text.to_s.delete("/=%>=%<=%>%</") }
+      (viral_loads || []).each {|result| results<<result.value_text.to_s }
     end
 
     viral_load_dates = Observation.find(:all,:order => "encounter_datetime DESC,encounter.date_created DESC",
@@ -1143,9 +1144,16 @@ The following block of code should be replaced by a more cleaner function
     vl_details["Result Date"] = dates
     vl_details["Sample Date"] = sample_dates
     end
-
+    unless second_line_arv_start_date.blank?
+    #determining whether the patient has just switched to second line arvs
+    period_in_months = (((date-second_line_arv_start_date).to_i)/30).to_i
+    if period_in_months < 6
+      vl_details = {}
+    end
+    end
     return vl_details
   end
+
   def alerts(patient, session_date = Date.today)
     # next appt
     # adherence

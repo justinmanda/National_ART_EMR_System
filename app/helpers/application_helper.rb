@@ -46,7 +46,15 @@ module ApplicationHelper
 	  else
 		  return false
         end		  
-  end	 
+  end
+  def ask_general_health_questions
+    property = get_global_property_value("ask_general_health_questions").to_s
+    if property == "true"
+      return true
+    else
+      return false
+    end
+  end
   def site_prefix
     site_prefix = Location.current_health_center.neighborhood_cell
     return site_prefix

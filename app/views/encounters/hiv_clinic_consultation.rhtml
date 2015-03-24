@@ -25,7 +25,7 @@
   #notes{background-color:red;}
 
    .tt_controls_clinical_notes_optional #space { display:inline; }
-  #lessthan , #greaterthan , #equals, #decimal {
+  #lessthan , #greaterthan , #equals, #decimal,#ldl {
       display: inline !important;
   }
 
@@ -419,8 +419,6 @@
   <%= touch_viral_load_numeric_tag "HIV VIRAL LOAD", @patient, nil,
                            {:id => "viral_load",
                             :helpText => "Viral Load",
-                            :max => 10000 ,
-                            :min => 1 ,
                             :condition => '$("new_viral_load_available").value == "YES"',
                             :tt_onLoad => "updateResultKeyPad();showCategory('CONSULTATION');"} %>
   <% end %>
@@ -444,7 +442,10 @@
     <% else %>
         <%= touch_hidden_tag "TB STATUS" , @patient, ConceptName.find_by_name("#{@patient_tb_status}").name, {:id => "tb_status"} %>
     <% end %>
-
+    <%= touch_yes_no_tag "Will the patient travel abroad any time soon?", @patient, nil,
+                         { :id => "abroad",
+                           :helpText => "Will the patient travel abroad anytime soon?" ,
+                           :tt_onLoad => "showCategory('CONSULTATION');"} %>
 
 <%date = session[:datetime].to_date rescue Date.today
   start_date = date.strftime("%Y-%m-%d 00:00:00")                       

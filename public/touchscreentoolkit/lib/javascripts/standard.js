@@ -1994,7 +1994,7 @@ function getNumericKeyboard(){
     getButtonString('SHIFT','aA') +
     "</span>" +
     "</span><span id='buttonLine3' class='buttonLine'>" +
-    getCharButtonSetID("0","zero") +
+    getCharButtonSetID("0","zero") +getCharButtonSetID("LDL","ldl") +
     "</span>"
 
     return keyboard;
