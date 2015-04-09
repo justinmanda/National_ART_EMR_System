@@ -128,41 +128,57 @@ class ReportController < GenericReportController
 
     program = Program.find_by_name('HIV PROGRAM').id
 
-    patients = PatientProgram.find(:all, :conditions => ["program_id = ? AND date_completed  IS NULL", program])
+    patients = PatientProgram.find(:all, :conditions => ["program_id = ?", program])
 
     patients.each do |patient|
 
       det_patient = Patient.find(patient.patient_id) rescue nil
       unless det_patient.nil?
 
-        drug = ConceptName.find_by_concept_id(patient.current_regimen).name rescue nil
-        state = patient.patient_states.last.name rescue nil
+        #drug = PatientService.current_regimen(det_patient)
+        state = patient.patient_states.last.state.to_i rescue nil
+        outcome = ""
+        unless state.blank?
+          case state
+            when 7
+              outcome = "On ART"
+            when 6
+             outcome = "Stoped ART"
+            when 3
+              outcome = "Died"
+            when 2
+              outcome = "TO"
+          end
+        end
         start_date = patient.patient_states.last.start_date.strftime('%d/%b/%Y') rescue " "
-
-        arv_id= PatientIdentifierType.find_by_name('ARV Number').patient_identifier_type_id
-
-        arv_number = PatientIdentifier.find(:first,
-                                                              :select => "identifier",
-                                                              :conditions  =>["patient_id = ? and identifier_type = ?",
-                                                                              encounter.patient_id, arv_id],
-                                                              :order => "date_created DESC" ).identifier rescue nil
+        arv_no = PatientService.get_patient_identifier(det_patient.person, 'ARV Number')
+        #preparing arv_no for sorting
+        case arv_no.length
+          when 10
+            arv_no.insert(9,'0000')
+          when 11
+            arv_no.insert(9,'000')
+          when 12
+            arv_no.insert(9,'00')
+          when 13
+          arv_no.insert(9,'0')
+        end
 
         detail ={
-            'arv_number' => PatientService.get_patient_identifier(det_patient.person, 'ARV Number'),
+            'arv_number' => arv_no,
             'name' => det_patient.name,
             'gender' => det_patient.person.gender,
             'age' => PatientService.age(det_patient.person, Date.today),
             'reg_date' => patient.date_enrolled.to_date.strftime('%d/%b/%Y'),
             'start_reason' =>PatientService.reason_for_art_eligibility(det_patient)  ,
-            'outcome' => state.nil? ? " ": state,
+            'outcome' => outcome.nil? ? " ": outcome,
             'outcome_date' => start_date,
             'occupation' => PatientService.get_attribute(det_patient , 'Occupation'),
-            'formulation' => drug.nil? ? " " : drug
-            }
+            'regimen' =>  PatientService.current_regimen(det_patient)
+        }
         @data << detail
       end
       @data = @data.uniq
-
     end
 
   end

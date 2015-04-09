@@ -1829,6 +1829,13 @@ people = Person.find(:all, :include => [{:names => [:person_name_code]}, :patien
     PersonAttribute.find(:first,:conditions =>["voided = 0 AND person_attribute_type_id = ? AND person_id = ?",
         PersonAttributeType.find_by_name(attribute).id, person.id]).value rescue nil
   end
+  def self.current_regimen(patient)
+   regimen_concept = Concept.find_by_name("What type of antiretroviral regimen").concept_id
+   regimen = Observation.find(:all,:conditions=>['person_id = ?  AND concept_id = ? AND value_text IS NOT NULL',patient.id,regimen_concept],
+                              :order=>"obs_datetime DESC").first.value_text.to_s rescue ""
+    return regimen
+
+  end
 
   def self.is_transfer_in(patient)
     patient_transfer_in = patient.person.observations.recent(1).question("HAS TRANSFER LETTER").all rescue nil

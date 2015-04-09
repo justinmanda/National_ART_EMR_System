@@ -123,6 +123,23 @@
         search.value+= pressedChar
         search_box.fnFilter(search.value)
     }
+
+     function sortTable(){
+         var rows = $('#table_id tbody  tr').get();
+          rows.sort(function(a, b) {
+              var A = $(a).children('td').eq(1).text().toUpperCase();
+              var B = $(b).children('td').eq(1).text().toUpperCase();
+              if(A < B) {
+              return -1;
+              }
+             if(A > B) {
+               return 1;
+               }
+            return 0;
+            });
+        $.each(rows, function(index, row) {
+          $('#table_id').children('tbody').append(row);
+            });}
     //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 </script>
 
@@ -247,7 +264,7 @@
   <table  id="table_id" class="display" >
     <thead>
     <th>Arv Number</th><th>Name</th><th>Gender</th><th>Age</th><th>Registration Date</th><th>ART Start Reason</th>
-    <th>Outcome Status</th><th>Outcome Date</th><th>Occupation</th><th>Drug Formulation</th>
+    <th>Outcome Status</th><th>Outcome Date</th><th>Occupation</th><th>Regimen</th>
     </thead>
     <tbody>
         <% @data.each do |patient|%>
@@ -255,7 +272,7 @@
               <td><%= patient['arv_number']  %>  <td><%= patient['name']  %></td><td><%= patient['gender']%></td><td><%= patient['age'] %></td>
               <td><%=patient['reg_date'] %></td><td><%= patient['start_reason']%></td><td><%= patient['outcome'] %>
             </td><td><%=patient['outcome_date'] %></td><td><%= patient['occupation'] %></td>
-              <td><%= patient['formulation'] %></td>
+              <td><%= patient['regimen'] %></td>
             </tr>
 
         <%end %>
