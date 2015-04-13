@@ -127,12 +127,11 @@ class ReportController < GenericReportController
     @data = []
 
     program = Program.find_by_name('HIV PROGRAM').id
-
-    patients = PatientProgram.find(:all, :conditions => ["program_id = ?", program])
+    patients = PatientProgram.find(:all, :conditions => ["program_id = ?", program],:include => :patient_states)
 
     patients.each do |patient|
 
-      det_patient = Patient.find(patient.patient_id) rescue nil
+      det_patient = Patient.find(patient.patient_id,:include=>[:person]) rescue nil
       unless det_patient.nil?
 
         #drug = PatientService.current_regimen(det_patient)
@@ -153,15 +152,18 @@ class ReportController < GenericReportController
         start_date = patient.patient_states.last.start_date.strftime('%d/%b/%Y') rescue " "
         arv_no = PatientService.get_patient_identifier(det_patient.person, 'ARV Number')
         #preparing arv_no for sorting
+        site_length = arv_no.split("-").first.to_s.length
+        pos = site_length+5
+        first = site_length+6
         case arv_no.length
-          when 10
-            arv_no.insert(9,'0000')
-          when 11
-            arv_no.insert(9,'000')
-          when 12
-            arv_no.insert(9,'00')
-          when 13
-          arv_no.insert(9,'0')
+          when first
+            arv_no.insert(pos,'0000')
+          when first+1
+            arv_no.insert(pos,'000')
+          when first+2
+            arv_no.insert(pos,'00')
+          when first+3
+          arv_no.insert(pos,'0')
         end
 
         detail ={

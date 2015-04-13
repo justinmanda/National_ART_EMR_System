@@ -269,12 +269,15 @@
 										  <td align='center'><%= data_row.arv_number %></td>
 										  <td><%= data_row.name %></td>
 
+                                          <% unless data_row.age_in_months.blank? %>
 									      <%if data_row.age_in_months < 12%>
 									        <td align='center'><%= data_row.age_in_months %> Months</td>
                                                                                 <%else%>
-													  <td align='center'><%= (data_row.age_in_months/12).to_i %> Years</td>
+													 <td align='center'><%= (data_row.age_in_months/12).to_i rescue 0 %> Years</td>
 										 <%end%>
-
+                                          <%else%>
+                                            <td align='center'>Unknown age</td>
+                                         <%end%>
 										  <td align='center'>
 
                                                                                     <%= link_to "<span class='clinic_data_value' >#{session[:cohort]["Earliest_start_dates"][data_row.patient_id].to_date rescue session[:pre_art]["earliest_start_date"][data_row.patient_id.to_i].to_date rescue 0}</span>", "/patients/show/#{data_row.person_id}?session=#{session[:cohort]["Earliest_start_dates"][data_row.patient_id] rescue session[:pre_art]["earliest_start_date"][data_row.patient_id.to_i] rescue 0}" -%>

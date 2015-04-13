@@ -1196,7 +1196,7 @@ EOF
 		patient.name = person.names.first.given_name + ' ' + person.names.first.family_name rescue nil
 		patient.patient_id = person.patient.id
 		#patient.age = cul_age(person.birthdate,person.birthdate_estimated)
-		patient.age_in_months = age_in_months(person, current_date)
+		#patient.age_in_months = age_in_months(person, current_date)
 		patient.arv_number = get_patient_identifier(person.patient, 'ARV Number')
 		patient.splitted_arv_number = patient.arv_number.split("-").last.to_i rescue 0
 		patient
@@ -1219,7 +1219,7 @@ EOF
     else
       patient.age = age(person, current_date) 
     end
-    patient.age_in_months = age_in_months(person, current_date)
+    patient.age_in_months = age_in_months(person,current_date)
     patient.dead = person.dead
     patient.birth_date = birthdate_formatted(person)
     patient.birthdate_estimated = person.birthdate_estimated
@@ -1767,6 +1767,7 @@ people = Person.find(:all, :include => [{:names => [:person_name_code]}, :patien
 
   def self.birthdate_formatted(person)
     if person.birthdate_estimated==1
+    unless person.birthdate.blank?
       if person.birthdate.day == 1 and person.birthdate.month == 7
         person.birthdate.strftime("??/???/%Y")
       elsif person.birthdate.day == 15
@@ -1774,8 +1775,11 @@ people = Person.find(:all, :include => [{:names => [:person_name_code]}, :patien
       elsif person.birthdate.day == 1 and person.birthdate.month == 1
         person.birthdate.strftime("??/???/%Y")
       else
-        person.birthdate.strftime("%d/%b/%Y") unless person.birthdate.blank? rescue " "
+        person.birthdate.strftime("%d/%b/%Y") #unless person.birthdate.blank? rescue " "
       end
+    else
+      return '00/00/0000'
+    end
     else
       if !person.birthdate.blank?
         person.birthdate.strftime("%d/%b/%Y")
