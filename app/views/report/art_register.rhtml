@@ -157,7 +157,10 @@
         bottom:2px;
         width:200px;
     }
-
+    a{
+      #color:#0000ff;
+      #text-decoration:underline;
+    }
     #clear{
         position:absolute;
         left:470px;
@@ -186,12 +189,15 @@
     div {
         -moz-user-select: none;
     }
-    A{
+    a{
         text-decoration:none;
-        color:maroon;
+        color:dodgerblue;
     }
-    A.visited{
-        color:maroon;
+    a:visited{
+        color:blueviolet;
+    }
+    a:hover{
+        color: #000000;
     }
 
 
@@ -269,9 +275,20 @@
     <tbody>
         <% @data.each do |patient|%>
             <tr>
-              <td><%= patient['arv_number']  %>  <td><%= patient['name']  %></td><td><%= patient['gender']%></td><td><%= patient['age'] %></td>
-              <td><%=patient['reg_date'] %></td><td><%= patient['start_reason']%></td><td><%= patient['outcome'] %>
-            </td><td><%=patient['outcome_date'] %></td><td><%= patient['occupation'] %></td>
+              <td><% if  !patient['arv_number'].blank?  %>
+                <%= patient['arv_number']%>
+                 <%else%>
+                   <%= link_to "<span>#{PatientIdentifier.site_prefix}-ARV-????</span>","/patients/mastercard_modify?field=arv_number&id=#{patient['person_id']}" %>
+                 <%end%>
+               </td>
+              <td><%= patient['name']  %></td>
+              <td><%= patient['gender']%></td>
+              <td><%= patient['age'] %></td>
+              <td><%= link_to "<span'>#{patient['reg_date'].strftime('%d/%b/%Y')}</span>","/patients/show/#{patient['person_id']}?session=#{patient['reg_date'].to_s}" %></td>
+              <td><%= patient['start_reason']%></td>
+              <td><%= patient['outcome'] %></td>
+              <td><%=patient['outcome_date'] %></td>
+              <td><%= patient['occupation'] %></td>
               <td><%= patient['regimen'] %></td>
             </tr>
 

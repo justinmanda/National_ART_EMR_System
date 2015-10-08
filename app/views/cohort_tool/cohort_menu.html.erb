@@ -33,7 +33,7 @@
       current_qtr = "4 #{date.year}"
     end
     count = current_qtr[0..0].to_i
-    24.times{|x|
+    48.times{|x|
       qtrs << "Q#{count} #{date.year}"
       count-=1 if count > 0
       date = date - 1.year if count == 0

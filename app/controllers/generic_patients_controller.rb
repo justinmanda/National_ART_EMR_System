@@ -2,7 +2,6 @@ class GenericPatientsController < ApplicationController
   before_filter :find_patient, :except => [:void]
 
   def show
-
     current_state = tb_status(@patient).downcase
     @show_period = false
     @show_period = true if current_state.match(/currently in treatment/i)
@@ -431,7 +430,7 @@ The following block of code should be replaced by a more cleaner function
 
   def mastercard
     @type = params[:type]
-
+    @year = params[:year]
     if session[:from_report].to_s == "true"
       @from_report = true
       session[:from_report] = false
@@ -472,7 +471,7 @@ The following block of code should be replaced by a more cleaner function
       @source = nil
     end
 
-    render :layout => "menu"
+    render :layout => false
 
   end
 
@@ -566,9 +565,40 @@ The following block of code should be replaced by a more cleaner function
         redirect_to :controller => "people" ,
                     :action => "demographics",:id => @patient_id and return
       else
-        redirect_to :action => "mastercard",:patient_id => @patient_id and return
+        redirect_to :action => "show",:patient_id => @patient_id and return
       end
     end
+  end
+  def edit_arv_start_date
+    @patient_id = params[:patient_id]
+  end
+
+
+  def update_art_startdate
+    #added by justin to update patient program enrollment date
+    patient_id = params[:patient_id]
+    first_line_arv_date = params[:art_date]
+    patient_prog_id = PatientProgram.find(:all,:conditions=>["patient_id = ? AND program_id = ?",patient_id,1]).first.patient_program_id
+    PatientProgram.update_all({:date_enrolled => first_line_arv_date},['patient_program_id = ? AND patient_id = ?',patient_prog_id,patient_id])
+    #some decision making
+    first_state = PatientState.find(:all,:conditions=>["patient_program_id = ?",patient_prog_id],:order=>"start_date ASC").first.state.to_i
+     if first_state == 7
+       update = PatientState.update_all({:start_date => first_line_arv_date},["patient_program_id = ? and start_date = ?",
+                                         patient_prog_id,PatientState.minimum(:start_date,
+                                         :conditions=>["patient_program_id = ?",patient_prog_id])])
+     else
+       update = PatientState.update_all({:start_date => first_line_arv_date,:state => 7},["patient_program_id = ? and start_date = ?",
+                                         patient_prog_id,PatientState.minimum(:start_date,
+                                         :conditions=>["patient_program_id = ?",patient_prog_id])])
+     end
+
+    concept_id = ConceptName.find_by_name('ART START DATE').concept_id
+    update = Observation.update_all({:value_datetime=> first_line_arv_date},["concept_id = ? AND person_id = ? AND value_datetime = ?",concept_id,patient_id,
+                                    Observation.minimum(:value_datetime,:conditions=>["person_id = ? AND concept_id = ?",patient_id,concept_id])])
+
+     if update
+       redirect_to "/patients/show/#{patient_id}"
+     end
   end
 
   def summary
@@ -862,9 +892,15 @@ The following block of code should be replaced by a more cleaner function
     render :template => 'dashboards/programs_dashboard', :layout => false
   end
 
+  #a method to extract patient data and transfer it to couchdb
+  def trasfer_patient_data(patient_obj)
+    
+  end
   def general_mastercard
     @type = nil
-
+    #card year
+    @year = params[:year]
+    @media = "html"
     case params[:type]
       when "1"
         @type = "yellow"
@@ -879,19 +915,106 @@ The following block of code should be replaced by a more cleaner function
     @mastercard = mastercard_demographics(@patient)
     @patient_art_start_date = PatientService.patient_art_start_date(@patient.id)
     @visits = visits(@patient)   # (@patient, (session[:datetime].to_date rescue Date.today))
+    session[:visits] = @visits
+    @visits.reject!{|key,value| key.year.to_i != @year.to_i}
 
     @age_in_months_for_days = {}
     @visits.keys.each do|day|
       @age_in_months_for_days[day] = PatientService.age_in_months(@patient.person, day.to_date)
     end
-
+    @visits.keys.each do|day|
+      @visits[day].age_in_months = PatientService.age_in_months(@patient.person, day.to_date)
+    end
     @patient_age_at_initiation = PatientService.patient_age_at_initiation(@patient,
                                                                           PatientService.patient_art_start_date(@patient.id))
+    if @patient_age_at_initiation > 14
+      @type = "yellow"
+    else
+      @type = "blue"
+    end
 
     @patient_bean = PatientService.get_patient(@patient.person)
     @guardian_phone_number = PatientService.get_attribute(Person.find(@patient.person.relationships.first.person_b), 'Cell phone number') rescue nil
     @patient_phone_number = PatientService.get_attribute(@patient.person, 'Cell phone number')
-    #render :layout => false
+    render :layout=>false
+  end
+ def default_mastercard_pdf_print
+   #an action that commands a printer on the server to print a mastercard pdf document
+   @type = nil
+   #card year
+   @year=params[:year]
+   @media = "printable"
+   case params[:type]
+     when "1"
+       @type = "yellow"
+     when "2"
+       @type = "green"
+     when "3"
+       @type = "pink"
+     when "4"
+       @type = "blue"
+   end
+
+   @mastercard = mastercard_demographics(@patient)
+   @patient_art_start_date = PatientService.patient_art_start_date(@patient.id)
+   if session[:visits].blank?
+   @visits = visits(@patient)   # (@patient, (session[:datetime].to_date rescue Date.today))
+   else
+    @visits = session[:visits]
+   end
+   #filtering by year logic
+
+   @visits.reject!{|key,value| key.year.to_i != @year.to_i}
+   @age_in_months_for_days = {}
+   @visits.keys.each do|day|
+     @visits[day].age_in_months = PatientService.age_in_months(@patient.person, day.to_date)
+   end
+   @patient_age_at_initiation = PatientService.patient_age_at_initiation(@patient,
+                                                                         PatientService.patient_art_start_date(@patient.id))
+
+   @patient_bean = PatientService.get_patient(@patient.person)
+   @guardian_phone_number = PatientService.get_attribute(Person.find(@patient.person.relationships.first.person_b), 'Cell phone number') rescue nil
+   @patient_phone_number = PatientService.get_attribute(@patient.person, 'Cell phone number')
+   file_name = "#{@patient.id}_#{@year}_Mastercard"
+
+     pdf =    render_to_string :pdf => file_name,
+              :orientation=>"landscape",
+              :disposition=>"inline",
+              :page_size=>"A4",
+              :margin=>{:top=>"10mm",:bottom=>"10mm",:right=>"10mm",:left=>"10mm"},
+              :layout => false,
+              :encoding=>"UTF-8",
+              :content_type => 'text/yaml'
+
+   save_path = "/tmp/#{file_name}.pdf"
+   File.open(save_path, 'wb') do |file|
+     file << pdf
+   end
+   s1 = Thread.new{sleep(5)}
+   s2 = Thread.new{
+         sleep(5)
+         #get the printer
+         printer_details = %x"lpstat -a\n".to_s
+         printer_name = printer_details.split(" ").first.to_s.squish
+         #send file to printer
+         has_printed = Kernel.system "lp /tmp/" +file_name.to_s + ".pdf -d #{printer_name}\n"
+         if has_printed
+              Kernel.system "rm /tmp/#{file_name.to_s}.pdf"
+        end
+        }
+  redirect_to :action=>"mastercard",:patient_id=>@patient.id,:year => @year,:type=> params[:type]
+ end
+
+  def patient_years_menu
+    @patient_art_start_date = PatientService.patient_art_start_date(@patient.id)
+    @patient_id = params[:patient_id]
+    @age = params[:age]
+    if @age.to_i > 14
+      @type = 1
+    else
+      @type = 4
+    end
+    #
   end
 
   def patient_details
@@ -927,7 +1050,36 @@ The following block of code should be replaced by a more cleaner function
 
     render :text => (count.to_i >= 0 ? {params[:date] => count}.to_json : 0)
   end
-
+ def number_missed_appointments
+   date = params[:date].to_date
+   encounter_type = EncounterType.find_by_name('APPOINTMENT')
+   concept_id = ConceptName.find_by_name('APPOINTMENT DATE').concept_id
+   start_date = date.strftime('%Y-%m-%d 00:00:00')
+   end_date = date.strftime('%Y-%m-%d 23:59:59')
+   all_patients = []
+   patients_with_nxt_visit = []
+   missing_patients = []
+   missed_count = "0"
+   time = Time.now.strftime("%I:%M")
+   appointment = Observation.find(:all,:conditions=>["concept_id=? AND value_datetime BETWEEN ? AND ?",concept_id,start_date,end_date])
+   #filtering ids of all patients for future use
+   (appointment || []).each do |pat|
+     all_patients << pat.person_id
+   end
+   if time.split(":").first.to_i >= 6
+    (appointment || []).each do |patient|
+      nxt_app = Observation.find(:first,:conditions=>["person_id = ? AND concept_id=? AND DATE(value_datetime) > ?",patient.person_id,concept_id,end_date.to_date])
+      unless nxt_app.blank?
+        patients_with_nxt_visit << patient.person_id
+      end
+    end
+     missing_patients = all_patients-patients_with_nxt_visit
+     session[:missing_patients] = missing_patients
+     session[:m_app_date] = params[:date]
+     missed_count = (appointment.length - patients_with_nxt_visit.length).to_s
+   end
+   render :text => (missed_count.to_i >= 0 ? {params[:date] => missed_count}.to_json : 0)
+ end
   def recent_lab_orders_print
     patient = Patient.find(params[:id])
     lab_orders_label = params[:lab_tests].split(":")
@@ -1116,7 +1268,7 @@ The following block of code should be replaced by a more cleaner function
                                         :limit=>4)
     dates = []
     unless viral_load_dates.blank?
-      (viral_load_dates || []).each { |date| dates<<date.value_datetime.to_date.to_s }
+      (viral_load_dates || []).each { |date| dates<<date.value_datetime.to_date.to_s unless date.value_datetime.blank?}
     end
 
     type2 = EncounterType.find_by_name('REQUEST')
@@ -1146,7 +1298,7 @@ The following block of code should be replaced by a more cleaner function
     end
     unless second_line_arv_start_date.blank?
     #determining whether the patient has just switched to second line arvs
-    period_in_months = (((date-second_line_arv_start_date).to_i)/30).to_i
+    period_in_months = (((Date.today-second_line_arv_start_date).to_i)/30).to_i
     if period_in_months < 6
       vl_details = {}
     end
@@ -1886,11 +2038,19 @@ The following block of code should be replaced by a more cleaner function
     visits.arv_number = patient_bean.arv_number
     visits.address = patient_bean.address
     visits.national_id = patient_bean.national_id
+    visits.traditional_authority =  patient_obj.person.addresses.first.county_district
     visits.name = patient_bean.name rescue nil
     visits.sex = patient_bean.sex
+    visits.birth_date = patient_obj.person.birthdate.to_s rescue nil
     visits.age = patient_bean.age
     visits.occupation = PatientService.get_attribute(patient_obj.person, 'Occupation')
     visits.landmark = patient_obj.person.addresses.first.address1 rescue nil
+    visits.home_district = patient_obj.person.addresses.first.address2 rescue nil
+    visits.current_district = patient_obj.person.addresses.first.state_province rescue nil
+    visits.country = patient_obj.person.addresses.first.country rescue nil
+    visits.home_village = patient_obj.person.addresses.first.neighborhood_cell rescue nil
+    visits.cell_phone_number = PatientService.get_attribute(patient_obj.person, 'Cell Phone Number')
+    visits.home_phone_number = PatientService.get_attribute(patient_obj.person, 'Home Phone Number')
     visits.init_wt = PatientService.get_patient_attribute_value(patient_obj, "initial_weight")
     visits.init_ht = PatientService.get_patient_attribute_value(patient_obj, "initial_height")
     visits.bmi = PatientService.get_patient_attribute_value(patient_obj, "initial_bmi")
@@ -2101,7 +2261,7 @@ The following block of code should be replaced by a more cleaner function
 
   def visits(patient_obj, encounter_date = nil)
     session_date = session[:datetime].blank? ? Date.today : session[:datetime].to_date
-
+    #session_date = Date.today
     transfer_in_date = patient_obj.person.observations.recent(1).question("ART start date").all.collect{|o|
       o.value_datetime }.last.to_date rescue []
     patient_visits = {}
@@ -2119,12 +2279,12 @@ The following block of code should be replaced by a more cleaner function
       observations = Observation.find(:all,
                                       :conditions =>["voided = 0 AND person_id = ? AND concept_id IN (?)",
                                                      patient_obj.patient_id, concept_ids],
-                                      :order =>"obs_datetime").map{|obs| obs if !obs.concept.nil?}
+                                      :order =>"DATE(obs_datetime)").map{|obs| obs if !obs.concept.nil?}
     else
       observations = Observation.find(:all,
                                       :conditions =>["voided = 0 AND person_id = ? AND Date(obs_datetime) = ? AND concept_id IN (?)",
                                                      patient_obj.patient_id,encounter_date.to_date, concept_ids],
-                                      :order =>"obs_datetime").map{|obs| obs if !obs.concept.nil?}
+                                      :order =>"DATE(obs_datetime)").map{|obs| obs if !obs.concept.nil?}
     end
     hiv_program = Program.find_by_name("HIV program").id
     tb_program = Program.find_by_name("TB program").id
@@ -2177,9 +2337,10 @@ The following block of code should be replaced by a more cleaner function
         patient_visits[visit_date].visit_by = '' if patient_visits[visit_date].visit_by.blank?
         patient_visits[visit_date].visit_by+= "P" if obs.to_s.squish.match(/Patient present for consultation: Yes/i)
         patient_visits[visit_date].visit_by+= "G" if obs.to_s.squish.match(/Responsible person present: Yes/i)
-        #elsif concept_name.upcase == 'TB STATUS'
+      elsif concept_name.upcase == 'TB STATUS'
         #	status = tb_status(patient_obj).upcase rescue nil
-        #	patient_visits[visit_date].tb_status = status
+        patient_visits[visit_date].tb_status = [] if  patient_visits[visit_date].tb_status.blank?
+        patient_visits[visit_date].tb_status << interpreted_tb_status(obs.value_coded)
         #	patient_visits[visit_date].tb_status = 'noSup' if status == 'TB NOT SUSPECTED'
         #	patient_visits[visit_date].tb_status = 'sup' if status == 'TB SUSPECTED'
         #	patient_visits[visit_date].tb_status = 'noRx' if status == 'CONFIRMED TB NOT ON TREATMENT'
@@ -2199,15 +2360,7 @@ The following block of code should be replaced by a more cleaner function
         else
           tb_medical = MedicationService.tb_medication(drug)
           patient_visits[visit_date].gave = [] if patient_visits[visit_date].gave.blank?
-          patient_visits[visit_date].gave << [drug_name,obs.value_numeric]
-          drugs_given_uniq = Hash.new(0)
-          (patient_visits[visit_date].gave || {}).each do |drug_given_name,quantity_given|
-            drugs_given_uniq[drug_given_name] += quantity_given
-          end
-          patient_visits[visit_date].gave = []
-          (drugs_given_uniq || {}).each do |drug_given_name,quantity_given|
-            patient_visits[visit_date].gave << [drug_given_name,quantity_given]
-          end
+          patient_visits[visit_date].gave << [obs.value_numeric,"<br/>"]
         end
         #if !drug.blank?
         #	tb_medical = MedicationService.tb_medication(drug)
@@ -2233,7 +2386,7 @@ The following block of code should be replaced by a more cleaner function
         next if drug.blank?
         drug_name = drug.concept.shortname rescue drug.name
         patient_visits[visit_date].pills = [] if patient_visits[visit_date].pills.blank?
-        patient_visits[visit_date].pills << [drug_name,obs.value_numeric] rescue []
+        patient_visits[visit_date].pills << [obs.value_numeric,"<br/>"] rescue []
 
       elsif concept_name.upcase == 'WHAT WAS THE PATIENTS ADHERENCE FOR THIS DRUG ORDER'
 
@@ -2241,9 +2394,9 @@ The following block of code should be replaced by a more cleaner function
         #tb_medical = MedicationService.tb_medication(drug) unless drug.nil?
         #next if tb_medical == true
         next if  obs.to_s.split(':')[1].to_i.blank?
-        patient_visits[visit_date].adherence = [] if patient_visits[visit_date].adherence.blank?
+        #patient_visits[visit_date].adherence = [] if patient_visits[visit_date].adherence.blank?
         #raise obs.order.drug_order.to_yaml
-        patient_visits[visit_date].adherence << [(Drug.find(obs.order.drug_order.drug_inventory_id).name rescue ''),((obs.to_s.split(':')[1] + '%') rescue '')]
+        #patient_visits[visit_date].adherence << [((obs.value_text + '%') rescue ''),"<br/>"]
       elsif concept_name == 'CLINICAL NOTES CONSTRUCT' || concept_name == 'Clinical notes construct'
         patient_visits[visit_date].notes+= '<br/>' + obs.value_text unless patient_visits[visit_date].notes.blank?
         patient_visits[visit_date].notes = obs.value_text if patient_visits[visit_date].notes.blank?
@@ -2293,8 +2446,7 @@ The following block of code should be replaced by a more cleaner function
     end
 
 #=end
-
-    patient_visits.sort.each do |visit_date,data|
+=begin  patient_visits.sort.each do |visit_date,data|
       next if visit_date.blank?
       # patient_visits[visit_date].outcome = hiv_state(patient_obj,visit_date)
       #patient_visits[visit_date].date_of_outcome = visit_date
@@ -2309,7 +2461,7 @@ The following block of code should be replaced by a more cleaner function
       patient_visits[visit_date].tb_status = 'Rx' if status == 'CONFIRMED TB ON TREATMENT'
       patient_visits[visit_date].tb_status = 'Rx' if status == 'CURRENTLY IN TREATMENT'
     end
-
+=end
     unless encounter_date.blank?
       outcome = patient_visits[encounter_date].outcome rescue nil
       if outcome.blank?
@@ -2329,7 +2481,26 @@ The following block of code should be replaced by a more cleaner function
 
     patient_visits
   end
+  def interpreted_tb_status(code)
+    status = ''
+    status_bundle = Array.new(4)
+    case code.to_i
+      when 7454
+        status="No"
+        status_bundle[0]=status
+      when 7455
+        status="Sup"
+        status_bundle[1]=status
+      when 7456
+        status = "NoRx"
+        status_bundle[2]=status
+      when 7458
+        status = "Rx"
+        status_bundle[3]=status
+    end
 
+    return status_bundle
+  end
 
   def tb_status(patient, visit_date = Date.today)
     state = Concept.find(Observation.find(:first, :order => "obs_datetime DESC, date_created DESC", :conditions => ["person_id = ? AND concept_id = ? AND DATE(obs_datetime) <= ? AND value_coded IS NOT NULL", patient.id, ConceptName.find_by_name("TB STATUS").concept_id, visit_date.to_date ]).value_coded).fullname rescue "Unknown"

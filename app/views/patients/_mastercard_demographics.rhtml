@@ -56,7 +56,7 @@
        <td colspan="1"><%= @data_demo.agrees_to_followup %></td>
      </tr>
      <tr>
-       <td colspan="2"><b>Date of Starting 1st Line ARV Regimen:</b></td>
+       <td colspan="2"><b><%= link_to "Date of Starting 1st Line ARV Regimen:","/patients/edit_arv_start_date?patient_id=#{@data_demo.patient_id}" -%></b></td>
        <td colspan="7"><b>Reason for ARV:</b></td>
      </tr>
      <tr class="master_data">

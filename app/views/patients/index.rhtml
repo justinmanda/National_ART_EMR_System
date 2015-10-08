@@ -10,6 +10,7 @@
       tstCurrentDate = "<%= @date %>";
       //tt_cancel_destination = '/clinic';
       tt_cancel_show = '/clinic';
+
     </script>
     <style>
       #tab5 {
@@ -27,7 +28,7 @@
   </head>
   <body><div id='content'>
       <div id='description' style='color:#777;position:absolute;margin-top:-70px;'></div><center>
-        <form id = 'dashboard' action='/clinic'>
+        <form id = 'dashboard' action='/clinic' method="post" onsubmit="redirect_function()">
           <table cellpadding=10>
             <tr>
               <th colspan=2>Patient Dashboard</th>
@@ -141,22 +142,43 @@
               </select>
               <select id="navigation_links">
                 <option link="/encounter_types?patient_id=<%= @patient.id -%>" ttSize = "160px">Tasks</option>
-                <option link="/patients/mastercard_menu?patient_id=<%= @patient.id -%>&source=<%= @source -%>">Mastercard</option>
+                <option link="/patients/patient_years_menu?patient_id=<%= @patient.id -%>&source=<%= @source -%>&age=<%= @patient_bean.age%>">Mastercard</option>
                 <% if @show_change_app_date %>
                   <option link="/encounter_types/show?encounter_type=Appointment&change_app=true&id=show&patient_id=<%=@patient.id -%>">Change appointment</option>
                 <%end%>
+                <%arv_number = PatientService.get_patient_identifier(@patient,"ARV Number")%>
+                <option link=/patients/mastercard_modify?field=arv_number&id=<%= @patient.id %>" ttSize = "160px">
+                  <%= if arv_number.blank?
+                  "Assign ARV Number"
+                  else
+                  "Edit ARV Number"
+                  end
+                    %>
+                  </option>
                 <option link='<%= ((session[:datetime].to_date rescue '') != '' ?
                             "/people/reset_datetime/#{@patient.id}" : "/people/set_datetime/#{@patient.id}") %>'  ttSize="160px">
                 <%= ((session[:datetime].to_date rescue '') != '' ? "Reset Date" : "Set Date") %></option>
               </select>
+               <%= hidden_field_tag "arv_number",arv_number %>
+                <%= hidden_field_tag "patient_id",@patient.id %>
             <% end %>
             <tr>
               <td align='center'>
-                <input type='submit' value='Finish' />
+                <input type='submit' value='Finish' id = "button1" />
               </td>
             </tr>
           </table>
         </form>
+        <script>
+            function redirect_function(){
+                var arv_number = "<%= arv_number%>"
+                if ((arv_number.length) <= 0) {
+                    window.location="/patients/mastercard_modify?field=arv_number&id=<%= @patient.id %>";
+                }
+            }
+           redirect_function();
+        </script>
+       </center>
       </center>
     </div>
   </body>

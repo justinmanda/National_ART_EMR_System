@@ -269,8 +269,8 @@
 										  <td align='center'><%= data_row.arv_number %></td>
 										  <td><%= data_row.name %></td>
 
-                                          <% unless data_row.age_in_months.blank? %>
-									      <%if data_row.age_in_months < 12%>
+                                          <%if data_row.age_in_months.to_i != 0 %>
+									      <%if data_row.age_in_months.to_i < 12%>
 									        <td align='center'><%= data_row.age_in_months %> Months</td>
                                                                                 <%else%>
 													 <td align='center'><%= (data_row.age_in_months/12).to_i rescue 0 %> Years</td>

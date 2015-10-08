@@ -1,0 +1,453 @@
+<html>
+  <head>
+    <title>Mastercard</title>
+    <%= stylesheet_link_tag "mateme" %>
+    <%= stylesheet_link_tag fancy_or_high_contrast_touch %>
+
+    <script type="text/javascript">
+      var tt_cancel_destination = "/patients/show/" + "<%=@patient_id%>"
+
+     var total  = <%="#{session[:mastercard_ids].length.to_i}" rescue 0%>;
+     var current = <%="#{session[:mastercard_counter].to_i + 1}" rescue 0%>;
+ 
+      function next(){
+        current = current + 1;
+        if (current >= total){
+           current = total;
+        }
+        document.location = "/patients/mastercard?show_mastercard_counter=true&current=" + current;
+      }
+
+      function prev(){
+        current = current - 1 ;
+        if (current <= 0){
+           current = 1;
+        }
+        document.location = "/patients/mastercard?show_mastercard_counter=true&current=" + current;
+      }    
+      
+      function hideLoadMsg() {
+        document.getElementById('msgBox').style.display = "none";
+          document.getElementById('footer').style.display = "block";
+      }
+
+      function loadMsg() {
+        try {
+          document.getElementById('msgBox').style.display = "inline";
+          document.getElementById('dot1').style.display = "inline";
+        }catch(e) {}
+      }
+
+      function showDots() {
+        if(document.getElementById('dot10').style.display == "inline"){
+          allDots = document.getElementsByClassName('dots');
+          for(i=0;i<allDots.length;i++) {
+            allDots[i].style.display = "none";
+          }
+          document.getElementById('dot1').style.display = "inline";
+          return
+        }
+
+        if(document.getElementById('dot9').style.display == "inline"){
+          document.getElementById('dot10').style.display = "inline";
+        }else if(document.getElementById('dot8').style.display == "inline"){
+          document.getElementById('dot9').style.display = "inline";
+        }else if(document.getElementById('dot7').style.display == "inline"){
+          document.getElementById('dot8').style.display = "inline";
+        }else if(document.getElementById('dot6').style.display == "inline"){
+          document.getElementById('dot7').style.display = "inline";
+        }else if(document.getElementById('dot5').style.display == "inline"){
+          document.getElementById('dot6').style.display = "inline";
+        }else if(document.getElementById('dot4').style.display == "inline"){
+          document.getElementById('dot5').style.display = "inline";
+        }else if(document.getElementById('dot3').style.display == "inline"){
+          document.getElementById('dot4').style.display = "inline";
+        }else if(document.getElementById('dot2').style.display == "inline"){
+          document.getElementById('dot3').style.display = "inline";
+        }else if(document.getElementById('dot1').style.display == "inline"){
+          document.getElementById('dot2').style.display = "inline";
+        }
+      }
+    </script>
+
+    <style>
+      .dots {
+        display: none;
+      }
+      
+      body {
+        background-color: <%=
+        case @type
+        when "yellow": "#fff99f"
+        when "blue": "#ccf"
+        when "green": "#cfc"
+        when "pink": "#fcc"
+        end
+        %>;
+      }
+      #main {
+        width: 99.7%;
+        height: 88.5%;
+        overflow: hidden;
+        -moz-user-select:none;
+      }
+
+      #msgBox table {
+        -moz-user-select:none;
+        font-size: 27px;
+        margin-left: 10px;
+        margin-right: 10px;
+        position: absolute;
+        top: 25px;
+      }
+
+      #msgBox {
+        background: none repeat scroll 0 0 #40f999;
+        border: 5px outset #40f999;
+        border-radius: 15px 15px 15px 15px;
+        float: right;
+        font-size: 1.2em;
+        height: 130px;
+        left: 260px;
+        padding: 20px;
+        position: absolute;
+        text-align: left;
+        top: 150px;
+        width: 450px;
+        z-index: 842;
+      }
+
+      #content {
+        background:#FFFFFF;
+        position:absolute;
+        left:50%;
+        top:50%;
+        width:98%;
+        height:750px;
+        margin-left:-49%;
+        margin-top:-380px;
+        -moz-user-select:none;
+
+      }
+
+      #footer {
+        background-color:#333333;
+        color:#CADCEA;
+        height:80px;
+        width:100%;
+        bottom:0px;
+        position:absolute;
+        overflow:hidden;
+        -moz-user-select:none;
+        display: none;
+      }
+      
+  #header {
+    margin-top: 10px;
+    border: 1px dotted #000;
+    display: none;
+  }
+  #header td {
+    font-size: 0.8em;
+    border-right: 1px dotted #000;
+  }
+  #card {
+    border: 2px solid #000;
+    width: 99.6%;
+    height: 310px;
+    overflow: auto;
+    overflow-x: hidden;
+    margin-top: 10px;
+  }
+  #cardTable {
+    margin: 2px;
+    border-left: 1px solid #000;
+    border-top: 1px solid #000;
+  }
+  #cardTable td {
+    font-size: 0.9em;
+    border-right: 1px solid #000;
+    border-bottom: 1px solid #000;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: center;
+    font-family: monospace;
+  }
+    </style>
+
+  </head>
+  <body onload="hideLoadMsg();">
+   
+    <div id="content">
+      <!-- mastercard header to start from here. -->
+      
+<table width="100%">
+  <tr>
+    <th align="left" style="font-style: italic;">
+      ART Patient Card
+    </th>
+    <th style="vertical-align: top; font-style: italic;" align="left">
+      Adult ARV Formulations
+    </th>
+    <td style="vertical-align: top">
+      <i>Version 1</i>
+    </td>
+    <td rowspan="2" align="right"  style="vertical-align: top">
+      Transfer-<br />In Date
+    </td>
+    <td rowspan="2"  style="vertical-align: top">
+      <div style="border: 1px solid #000; padding: 5px; min-width: 80px; text-align: center; font-style: italic;">
+        <%= @mastercard.transfer_in_date.strftime("%d-%b-%Y") rescue "" %>&nbsp;
+      </div>
+    </td>
+    <th rowspan="2" align="right"  style="vertical-align: top">
+      ART Reg<br />No
+    </th>
+    <td rowspan="2" style="vertical-align: top">
+      <div style="border: 1px solid #000; padding: 5px; min-width: 80px;">
+        <%= @mastercard.arv_number rescue "" %>&nbsp;
+      </div>
+    </td>
+    <th align="right" rowspan="2" style="vertical-align: top">
+      Year
+    </th>
+    <td rowspan="2" style="vertical-align: top">
+      <div style="border: 1px solid #000; padding: 5px; min-width: 80px; text-align: center; font-style: italic;">
+        <%= (session[:datetime].to_date rescue Date.today).strftime("%Y") rescue "" %>&nbsp;
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <div style="background-color: #999; padding: 5px; color: #fff99f; width: 90px;
+           font-weight: bold; vertical-align: middle; text-align: center;">
+        Yellow Card
+      </div>
+    </td>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+      &nbsp;
+    </td>
+  </tr>
+</table>
+<!-- other details -->
+<div id="card">
+  <table id="cardTable" width="100%" border="0" cellspacing="0" cellpadding="1">
+
+    <tr height = "5px" style = "height:15px;">
+      <td align="center" colspan="3" style="border-bottom: 0px solid #000;">
+        Visit Date
+      </td>
+      <td align="center" style="border-bottom: 0px solid #000;">
+        Hgt
+      </td>
+      <td align="center" style="border-bottom: 0px solid #000;">
+        Wt
+      </td>
+      <td align="center" rowspan="3">
+        Adverse<br />Outcome
+      </td>
+      <td align="center" rowspan="3">
+        Outcome<br />Date
+      </td>
+      <td align="center" rowspan="3">
+        ART <br/>Regimen
+      </td>
+      <td align="center" rowspan="3" colspan = "1">
+        Side Effects (Current)<br /><br/>
+        <span style="font-size: 0.9em;">Specify 'Other' in Notes</span>
+      </td>
+      <td align="center" style="border-bottom: 1px solid #000;" rowspan="2" width = "150px" colspan = "4">
+        TB Status (Curr.)<sup>*</sup><br/><br/>
+	<span style = "float:left;"> &nbsp;&nbspSuspected</span>
+	<span style = "float:right;"> Confirmed&nbsp;&nbsp</span>
+      </td>
+      <td align="center" rowspan="3">
+        Pill Count
+      </td>
+      <td align="center" rowspan="3">
+        Doses Missed
+      </td>
+      <td align="center" colspan="2" style="border-bottom: 0px solid #000;">
+        ARVs Given
+      </td>
+      <td align="center" rowspan="3">
+        CPT<br />No. of<br />Tablets
+      </td>
+      <td align="center" colspan="2" style="border-bottom: 0px solid #000;">
+        Family Plan.
+      </td>
+      <td align="center" rowspan="3">
+        Months<br />on<br />ART
+      </td>
+      <td align="center" colspan="2" style="border-bottom: 0px solid #000;">
+        Viral Load
+      </td>
+      <td align="center" rowspan="3" style="border: 0px solid #000; border-right: 1px solid #000; border-bottom: 1px solid #000;">
+        Next Appointment
+      </td>
+    </tr>
+    <tr height = "5px" style = "height:15px;">
+      <td align="center" colspan="3" style="border-bottom: 0px solid #000;">
+        &nbsp;
+      </td>
+      <td align="center" style="border-bottom: 0px solid #000;">
+          &nbsp;
+      </td>
+      <td align="center" style="border-bottom: 0px solid #000;">
+          &nbsp;
+      </td>
+      <!--td align="center" colspan="2" style="border-bottom: 0px solid #000;">
+        Suspected
+      </td>
+      <td align="center" colspan="2" style="border-bottom: 0px solid #000;">
+        Confirmed
+      </td-->
+      <td align="center" rowspan="2">
+        No. of<br />tablets
+      </td>
+      <td align="center" rowspan="2">
+        To
+      </td>
+      <td align="center" rowspan="2">
+        Depo<br />given
+      </td>
+      <td align="center" rowspan="2">
+        No. of<br />condom
+      </td>
+      <td align="center" rowspan="2" >
+        Sample Taken
+      </td>
+      <td align="center" rowspan="2">
+        Result
+      </td>
+    </tr>
+    <tr height = "5px" style = "height:15px;">
+      <td align="center" colspan="3">
+        d/m/y
+      </td>
+      <td align="center">
+        <i>cm</i>
+      </td>
+      <td align="center">
+        <i>kg</i>
+      </td>
+      <!-- td> &nbsp</td>
+      <td> &nbsp</td>
+      <td> &nbsp</td>
+      <td> &nbsp</td -->
+      <!-- side efects -->
+      <!--td> &nbsp</td>
+      <td> PN</td>
+      <td>HP</td>
+      <td> SK</td>
+      <td> Lip</td>
+      <td> Oth</td -->
+      <!-- TB statuses -->
+      <td style = "padding:1px"> No</td>
+      <td style = "padding:1px"> Yes</td>
+      <td style = "padding:1px">noRx</td>
+      <td style = "padding:1px"> Rx</td>
+      <!--td align="center">
+        No
+      </td>
+      <td align="center">
+        Yes
+      </td>
+      <td align="center">
+        noRx
+      </td>
+      <td align="center">
+        Rx
+      </td-->
+    </tr>
+  </table>
+</div>
+<div id="footer" style="">
+      	<% report_url = "/patients/show/#{@patient_id}" %>
+      	
+		    <% if (@show_mastercard_counter.to_s == "true") || (@from_report.to_s == "true") %>
+		    		<% report_url = session[:report_url] if !session[:report_url].blank? %>
+		    <% end %>
+	
+        <button onclick="window.location ='<%="#{next_task(@patient)}"%>';" class="button navButton green"
+          id="nextButton" style="float: right; margin-right: 10px;" ><span>Finish</span>
+        </button>
+
+        <% if @source.nil? %>
+          <button class="button navButton blue" style="float: left;"
+          	<% if !@show_mastercard_counter %>
+                  onmousedown="window.location = '/patients/print_mastercard?patient_id=<%=@patient_id%>'">
+            <% else %>
+                  onmousedown="window.location = '/patients/print_mastercard?patient_id=<%=@patient_id%>&show_mastercard_counter=true&current=' + current;">            
+            <% end %>
+            <span>
+              Print Mastercard
+            </span>
+          </button>
+
+          <%if @show_mastercard_counter %>        
+                <button id="back" class="<%=@prev_button_class%>" style="position:relative; float:left;" onclick="prev()">
+                	<span>Previous</span>
+                </button>
+                
+                <span style="position:relative;float:left; top:-6px; padding : 0px 10px 0 20px">
+                	<h1 id="navigation_value"> ----- </h1>
+                </span>
+                
+                <button id="forward" class="<%=@next_button_class%>" style="position:relative; float:left;" onclick="next()">
+                	<span>Next</span>
+                </button>
+          <%end%>
+        <% end %>
+    
+        <% if show_lab_results %>                                     
+          <button class="button navButton blue" style="float: left;"
+                  onmousedown="window.location = '/lab/results/<%=@patient.id -%>'">
+            <span>
+              Lab trail
+            </span>
+          </button>
+        <%end%> 
+
+      </div>
+
+      <div id="msgBox">
+        <table>
+          <tr>
+            <td>Loading: please wait</td>
+            <td>&nbsp;</td>
+            <td class="dots" id="dot1">.</td>
+            <td class="dots" id="dot2">.</td>
+            <td class="dots" id="dot3">.</td>
+            <td class="dots" id="dot4">.</td>
+            <td class="dots" id="dot5">.</td>
+            <td class="dots" id="dot6">.</td>
+            <td class="dots" id="dot7">.</td>
+            <td class="dots" id="dot8">.</td>
+            <td class="dots" id="dot9">.</td>
+            <td class="dots" id="dot10">.</td>
+          </tr>
+        <table>
+      </div>
+    </div>
+  </body>
+</html>
+
+<script>
+
+	try {
+		 document.getElementById('navigation_value').innerHTML = "<input value =" + current + " size='3' maxlength='<%= "#{(session[:mastercard_ids].length.to_s rescue 0).split('').count}" %>' type='text' readonly='readonly' style='font-size:35px; text-align:right;font-weight: bold; padding-right:10px;' />" + " of " + total;
+	}
+	catch(e) {
+	 try{
+		document.getElementById('navigation_value').innerHTML = ''
+		}catch(d){}
+	}
+	
+  setInterval("showDots();",200);
+  loadMsg();
+</script>
+

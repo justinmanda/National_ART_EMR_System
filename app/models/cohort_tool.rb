@@ -124,7 +124,7 @@ class CohortTool < ActiveRecord::Base
     unless regimen_ids.blank?
        conditions = "AND e.patient_id IN (#{regimen_ids})"
     end
-		PatientProgram.find_by_sql("SELECT e.patient_id, current_defaulter(e.patient_id, '#{end_date}') AS def
+    PatientProgram.find_by_sql("SELECT e.patient_id, current_defaulter(e.patient_id, '#{end_date}') AS def
 											FROM patient_program e LEFT JOIN person p ON p.person_id = e.patient_id
 											WHERE DATE(date_enrolled) <=  '#{end_date}' AND p.dead=0
 											HAVING def = 1 #{conditions}").each do | patient |

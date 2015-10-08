@@ -510,9 +510,9 @@ module ApplicationHelper
     elsif @text.eql?("monitoring_adhe")
 
       @message = "<p style = \"font-size:14px;line-height:25px;\"><b>The adherence of this patient on #{treat} line ARVs for
-                  <br/>#{period} months has been monitored for 3 months due to
-                  <br/>high viral load  and another viral load screening is due.</b></p><br/><br/><br/>
-                  <p style = \"font-size:14px;\"><b>Please request for another viral load check today.<b></p>"
+                  <br/>#{period} months has been monitored for 3 months
+                  <br/>.</b>Please request for another viral load check</p><br/><br/><br/>
+                  <p style = \"font-size:14px;\"><b>today to assess patient adherence.<b></p>"
     else
 
       @message = "<p >This patient has been on #{treat} line ARVs<br/>for #{@text} years and routine viral load <br/>screening is due.</p><br/><br/>
@@ -530,7 +530,7 @@ def viral_load_search(patient,duration,date)
     latest_viral_load_date = viral_obs.obs_datetime.to_date
     today = Date.today
     period_in_years = (((today-latest_viral_load_date).to_i)/365)
-     if period_in_years >= 1.4
+     if period_in_years >= 1.8
        return true
      else
        return false

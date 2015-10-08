@@ -1,0 +1,67 @@
+<style>                                                                         
+div {                                                                           
+  -moz-user-select: none;                                                       
+}                                                                               
+
+#clearButton { display: none; }
+
+ .cTable {
+    height: 78%;
+    width: 97%;
+  }
+
+  .cRow {
+    line-height: 30px;
+  }
+
+</style>
+
+<script type="text/javascript">
+  tt_cancel_destination = "/clinic";
+  tt_cancel_show = '/clinic';
+
+
+
+  function showSelectedDates() {  
+    activeCells = document.getElementsByClassName('cellActive');                
+    for(var i = 0; i < activeCells.length; i++) {                               
+      weekDay = activeCells[i].getAttribute('date');
+      activeCells[i].setAttribute('onmousedown',"addDate(this);");                  
+    }                                                                           
+  } 
+
+  function addDate(td) {                                                        
+    var selectedDate = td.getAttribute('date');
+    document.getElementById('selected_date').value = selectedDate;
+    //var mastercard = document.getElementById('clearButton');
+    //mastercard.style.display = 'inline';
+    //mastercard.innerHTML = "<span>Mastercards</span>";
+    //mastercard.setAttribute('onmousedown',"javascript:document.forms[0].submit();");
+  }   
+
+  function setAttributes() {                                                    
+    buttons = document.getElementsByClassName('btn');                           
+    for(var i = 0; i < buttons.length; i++) {                                   
+      new_attr = buttons[i].getAttribute('onclick') + ';showSelectedDates();'   
+      buttons[i].setAttribute('onclick',new_attr);                              
+    }                                                                           
+  }
+
+</script>
+
+<% session_date = session[:datetime].to_date rescue Date.today %>
+
+<form id="frmMain" action="/report/set_missed_appointments" method="post">
+<%=label("Missed_Appointment","Missed Appointment")%>
+  <%= text_field_tag("observations[][value_datetime]", session_date.strftime("%Y-%m-%d"),
+    {
+      :field_type => 'calendar',
+      :tt_onLoad => "setAttributes();showCategory('Next Appointment'); __$('category').style.display = 'none';showSelectedDates();",
+      :minDate => "#{session_date}",
+      :ajaxCalendarUrl => "/patients/number_missed_appointments?date=",
+      :helpText => "Missed Appointment",
+      :tt_onUnLoad => "__$('observations__value_datetime').value = hideInfo();"
+      }) %>
+
+<%=hidden_field_tag("user_selected_date", nil, :id => "selected_date" )%>
+</form>

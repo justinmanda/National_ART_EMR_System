@@ -8,33 +8,56 @@
     font-size: 0.8em;
     border-right: 1px dotted #000;
   }
-  #card {
+  <%=
+  if @media == "html"
+  "#card {
     border: 2px solid #000;
-    width: 99.6%;
-    height: 310px;
+    width: 100%;
+    height: 300px;
     overflow: auto;
+    padding:0px;
     overflow-x: hidden;
-    margin-top: 10px;
-  }
+    margin-top: 5px;
+  }"
+  end
+  %>
+  <%
+    value = @visits.size>4? "auto" : "310px"
+  %>
+  <%=
+  if @media == "printable"
+   "#card {
+    border: 2px solid #000;
+    width: 100%;
+    height: #{value};
+    margin-top: 5px;
+  }"
+  end
+  %>
   #cardTable {
-    margin: 2px;
+    margin: 0px;
     border-left: 1px solid #000;
     border-top: 1px solid #000;
+    width:100%;
   }
   #cardTable td {
     font-size: 0.9em;
     border-right: 1px solid #000;
     border-bottom: 1px solid #000;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
     text-align: center;
     font-family: monospace;
+    <%if @media == "printable"%>
+    height: 40px;
+    <%end%>
   }
+#cardTable tr{height:20px;}
 </style>
 
 <table id="header" width="99%" cellspacing="0" cellpadding="2">
   <tr>
-    <td align="center" colspan="3">
+    <td align="center" colspan="1">
       Visit Date
     </td>
     <td align="center">
@@ -120,7 +143,7 @@
     </td-->
   </tr>
   <tr>
-    <td align="center" colspan="3">
+    <td align="center" colspan="1">
       day/month/year
     </td>
     <td align="center">
@@ -145,10 +168,10 @@
 </table>
 
 <div id="card">
-  <table id="cardTable" width="900px" border="0" cellspacing="0" cellpadding="1">
+  <table id="cardTable" width="100%" border="0" cellspacing="0" cellpadding="1">
 
-    <tr>
-      <td align="center" colspan="3" style="border-bottom: 0px solid #000;">
+    <tr height = "5px" style = "height:15px;">
+      <td align="center" colspan="3" style="border-bottom: 0px solid #000;width:150px;height: 20px">
         Visit Date
       </td>
       <td align="center" style="border-bottom: 0px solid #000;">
@@ -164,49 +187,51 @@
         Outcome<br />Date
       </td>
       <td align="center" rowspan="3">
-        ART Regimen<br /><i>Adult Formulations</i>
+        ART <br/>Regimen
       </td>
-      <td align="center" rowspan="3">
-        Side Effects (Current)<br />
+      <td align="center" rowspan="3" colspan = "1">
+        Side Effects (Current)<br /><br/>
         <span style="font-size: 0.9em;">Specify 'Other' in Notes</span>
       </td>
-      <td align="center" style="border-bottom: 1px solid #000;" rowspan="3">
-        TB Status (Curr.)<sup>*</sup>
+      <td align="center" style="border-bottom: 1px solid #000;" rowspan="2" width = "150px" colspan = "4">
+        TB Status (Curr.)<sup>*</sup><br/><br/>
+	<span style = "float:left;"> &nbsp;&nbspSuspected</span>
+	<span style = "float:right;"> Confirmed&nbsp;&nbsp</span>
       </td>
-      <td align="center" rowspan="3">
+      <td align="center" rowspan="3" style="height: 20px">
         Pill Count
       </td>
-      <td align="center" rowspan="3">
+      <td align="center" rowspan="3" style="height: 20px">
         Doses Missed
       </td>
-      <td align="center" colspan="2" style="border-bottom: 0px solid #000;">
+      <td align="center" colspan="2" style="border-bottom: 0px solid #000;" height="20px">
         ARVs Given
       </td>
-      <td align="center" rowspan="3">
+      <td align="center" rowspan="3" style="20px">
         CPT<br />No. of<br />Tablets
       </td>
-      <td align="center" colspan="2" style="border-bottom: 0px solid #000;">
+      <td align="center" colspan="2" style="border-bottom: 0px solid #000;height: 20px">
         Family Plan.
       </td>
-      <td align="center" rowspan="3">
+      <td align="center" rowspan="3" style="height: 20px">
         Months<br />on<br />ART
       </td>
-      <!--td align="center" colspan="2" style="border-bottom: 0px solid #000;">
+      <td align="center" colspan="2" style="border-bottom: 0px solid #000;height:20px;">
         Viral Load
       </td>
-      <td align="center" rowspan="3" style="border: 0px solid #000; border-right: 1px solid #000; border-bottom: 1px solid #000;">
+      <td align="center" rowspan="3" style="border: 0px solid #000; border-right: 1px solid #000; border-bottom: 1px solid #000;height: 20px">
         Next Appointment
-      </td-->
+      </td>
     </tr>
-    <tr>
-      <td align="center" colspan="3" style="border-bottom: 0px solid #000;">
+    <tr height = "5px" style = "height:15px;">
+      <td align="center" colspan="3" style="border-bottom: 0px solid #000;height: 20px">
         &nbsp;
       </td>
-      <td align="center" style="border-bottom: 0px solid #000;">
-        &nbsp;
+      <td align="center" style="border-bottom: 0px solid #000; height: 20px">
+          &nbsp;
       </td>
-      <td align="center" style="border-bottom: 0px solid #000;">
-        &nbsp;
+      <td align="center" style="border-bottom: 0px solid #000; height: 20px">
+          &nbsp;
       </td>
       <!--td align="center" colspan="2" style="border-bottom: 0px solid #000;">
         Suspected
@@ -226,16 +251,16 @@
       <td align="center" rowspan="2">
         No. of<br />condom
       </td>
-      <!--td align="center" rowspan="2" >
+      <td align="center" rowspan="2" >
         Sample Taken
       </td>
       <td align="center" rowspan="2">
         Result
-      </td-->
+      </td>
     </tr>
-    <tr>
-      <td align="center" colspan="3">
-        d/m/y
+    <tr height = "5px" style = "height:15px;">
+      <td align="center" colspan="3" style="width: 150px">
+       <i> day month year </i>
       </td>
       <td align="center">
         <i>cm</i>
@@ -243,6 +268,22 @@
       <td align="center">
         <i>kg</i>
       </td>
+      <!-- td> &nbsp</td>
+      <td> &nbsp</td>
+      <td> &nbsp</td>
+      <td> &nbsp</td -->
+      <!-- side efects -->
+      <!--td> &nbsp</td>
+      <td> PN</td>
+      <td>HP</td>
+      <td> SK</td>
+      <td> Lip</td>
+      <td> Oth</td -->
+      <!-- TB statuses -->
+      <td style = "padding:1px"> No</td>
+      <td style = "padding:1px"> Yes</td>
+      <td style = "padding:1px">noRx</td>
+      <td style = "padding:1px"> Rx</td>
       <!--td align="center">
         No
       </td>
@@ -256,69 +297,83 @@
         Rx
       </td-->
     </tr>
-
-    <% @visits.keys.each do|day| %>
+    <%#@visits.reject!{|key,value|key.to_date.year != @year}%>
+     <%patient_visits = @visits.sort_by { |date,value| date}%>
+    <% patient_visits.each do |visit| %>
       <tr>
-        <td align="center" style="width: 35px;" colspan="3">
-          <b><%= day.strftime("%d-%b-%Y") %></b>
+        <td align="center" style="width: 150px;" colspan="3">
+          <b><%= visit[0].strftime("%d-%b-%Y") %></b>
         </td>
-        <td style="width: 21px;">
-          <%= @visits[day].height rescue "&nbsp;" %>&nbsp;
+        <td style="">
+          <%= visit[1].height rescue "&nbsp;" %>&nbsp;
         </td>
-        <td style="width: 17px;">
-          <%= @visits[day].weight rescue "&nbsp;" %>&nbsp;
+        <td style="">
+          <%= visit[1].weight rescue "&nbsp;" %>&nbsp;
+        </td>
+        <td style="">
+          <%= visit[1].outcome rescue "&nbsp;" %>&nbsp;
+        </td>
+        <td style="">
+          <%= visit[1].date_of_outcome.strftime("%d-%b-%Y") rescue "&nbsp;" %>&nbsp;
+        </td>
+        <td style="">
+          <%= visit[1].reg rescue "&nbsp;" %>&nbsp;
         </td>
         <td style="width: 50px;">
-          <%= @visits[day].outcome rescue "&nbsp;" %>&nbsp;
+          <%= visit[1].s_eff rescue "&nbsp;" %>&nbsp;
         </td>
-        <td style="width: 50px;">
-          <%= @visits[day].date_of_outcome.strftime("%d-%b-%Y") rescue "&nbsp;" %>&nbsp;
+	<% tb_states = visit[1].tb_status.to_a %>
+     <%filtered_state = tb_states[0].to_a %>
+        <td style="" align="center">
+          <%= "N" if !filtered_state[0].blank? rescue "&nbsp;"%>&nbsp;
         </td>
-        <td style="width: 71px;">
-          <%= @visits[day].reg rescue "&nbsp;" %>&nbsp;
+        <td style="" align="center">
+          <%= "Y" if !filtered_state[1].blank? rescue "&nbsp;"%>&nbsp;
         </td>
-        <td style="width: 50px;">
-          <%= @visits[day].s_eff rescue "&nbsp;" %>&nbsp;
+        <td style="" align="center">
+          <%= "C" if !filtered_state[2].blank? rescue "&nbsp;"%>&nbsp;
         </td>
-        <td style="width: 26px;" align="center">
-          <%= @visits[day].tb_status rescue "&nbsp;" %>&nbsp;
+        <td style="" align="center">
+          <%= "Rx" if !filtered_state[3].blank? rescue "&nbsp;"%>&nbsp;
         </td>
-        <td style="width: 32px;">
-          <%= @visits[day].pills rescue "&nbsp;" %>&nbsp;
+
+        <td style="">
+          <%= visit[1].pills rescue "&nbsp;" %>&nbsp;
         </td>
-        <td style="width: 39px;">
-          <%= @visits[day].adherence rescue "&nbsp;" %>&nbsp;
+        <td style="">
+          <%= visit[1].adherence rescue "&nbsp;" %>&nbsp;
         </td>
-        <td style="width: 36px;">
-          <%= @visits[day].gave rescue "&nbsp;" %>&nbsp;
+
+        <td style="">
+          <%= visit[1].gave rescue "&nbsp;" %>&nbsp;
         </td>
-        <td style="width: 16px;">
-          <%= @visits[day].visit_by rescue "&nbsp;" %>&nbsp;
+        <td style="">
+          <%= visit[1].visit_by rescue "&nbsp;" %>&nbsp;
         </td>
-        <td style="width: 42px;">
-          <%= @visits[day].cpt rescue "&nbsp;" %>&nbsp;
+        <td style="">
+          <%= visit[1].cpt rescue "&nbsp;" %>&nbsp;
         </td>
-        <td style="width: 30px;">
+        <td style="">
           &nbsp;
         </td>
-        <td style="width: 43px;">
+        <td style="">
           &nbsp;
         </td>
-        <td style="width: 41px;">
-          <% diff = ((day.to_date rescue Date.today) - @patient_art_start_date).to_i rescue 0 %>
+        <td style="">
+          <% diff = ((visit[0].to_date rescue Date.today) - @patient_art_start_date).to_i rescue 0 %>
           <%= "#{'<span  style=\'font-size: 1.8em;\'>' + (diff / 30).to_s +
           '</span>' if (diff / 30) != 0} #{('<sup style=\'font-size: 0.9em;\'>' + (diff % 30).to_s +
           '</sup>') if (diff % 30) > 0}#{'&frasl;<sub style=\'font-size: 0.9em;\'>30</sub>' if (diff % 30) > 0}" %>&nbsp;
         </td>
-        <!--td style="width: 42px;">
+        <td style="">
           &nbsp;
         </td>
-        <td style="width: 36px;">
+        <td style="">
           &nbsp;
         </td>
-        <td style="width: 68px;">
-          <%#= @visits[day].appointment_date.strftime("%d-%b-%Y") rescue "&nbsp;" %>&nbsp;
-        </td-->
+        <td style="">
+          <%= visit[1].appointment_date.strftime("%d-%b-%Y") rescue "&nbsp;" %>&nbsp;
+        </td>
       </tr>
     <% end %>
   </table>

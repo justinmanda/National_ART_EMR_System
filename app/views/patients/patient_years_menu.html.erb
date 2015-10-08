@@ -1,0 +1,28 @@
+<script>
+  var tt_cancel_destination = "/clinic" // /reports"
+</script>
+<style>
+  .inputFrameClass{
+	height:600px;
+  }
+  #viewport{
+	height:550px ! important;
+  }
+</style>
+ <%
+  years = []
+  first_year = @patient_art_start_date.to_date.year.to_i
+  curr_year = PatientService.last_patient_visit_date(@patient_id).year.to_i
+  duration =(curr_year-@patient_art_start_date.to_date.year).to_i
+  count = 0
+  while(count <= duration) do
+   years<<curr_year-count
+   count = count+1
+  end
+ %>
+   <form id='quarter' action="mastercard" method='post'>
+  <%= select_tag 'year', options_for_select( years ), {:helpText => "Select MasterCard Year", :tt_onLoad => "__$('keyboard').style.display = 'none'"} %>
+  <%= hidden_field_tag "patient_id",@patient_id%>
+  <%= hidden_field_tag "age",@age %>
+  <%= hidden_field_tag "type",@type %>
+</form>

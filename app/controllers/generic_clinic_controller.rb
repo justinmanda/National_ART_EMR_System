@@ -24,6 +24,7 @@ class GenericClinicController < ApplicationController
 
     @roles = current_user.user_roles.collect{|r| r.role} rescue []
      session[:stage_patient] = ""
+
     render :template => 'clinic/index', :layout => false
   end
 
@@ -140,8 +141,8 @@ class GenericClinicController < ApplicationController
       ["Pre-ART","/cohort_tool/cohort_menu?type=pre_art"],
       ["View appointments","/properties/select_date"],
       ["ART Register", "/report/art_register"],
-      ["Missed Appointments", "/report/missed_appointment_duration?type=missed"],
-      ["Defaulted patients", "/report/missed_appointment_duration?type=defaulter"]
+      ["Missed Appointments", "/report/missed_appointment_date"],
+      ["Defaulted patients", "/report/defaulters_menu"]
     ]
 
 
@@ -189,7 +190,8 @@ class GenericClinicController < ApplicationController
         ["Use User Selected Task(s)", "/properties/creation?value=use_user_selected_activities"],
         ["Use Filing Numbers", "/properties/creation?value=use_filing_numbers"],
         ["Show Lab Results", "/properties/creation?value=show_lab_results"],
-        ["Set Appointment Limit", "/properties/set_appointment_limit"]
+        ["Set Appointment Limit", "/properties/set_appointment_limit"],
+        ["Add ARV Drug Regimen", "/properties/add_arv_drug_regimen"]
       ]
     else
       @settings = []

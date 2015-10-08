@@ -1,5 +1,4 @@
-var selecteddays = {};            
-            
+var selecteddays = {};
 var active_cell = null;
 var selected_color = "#9e9";
 var default_color = "#fff";

@@ -31,6 +31,37 @@ class ReportController < GenericReportController
 		end
 		return demographics
 	end
+ # missed appointment
+  def set_missed_appointments
+    @logo = CoreService.get_global_property_value('logo').to_s rescue ''
+    @current_location_name = Location.current_health_center.name
+    @report_name = 'Missed Appointments Report' #find means of making the report name dynamic
+    @select_date = params[:user_selected_date].to_date rescue Date.today
+    @formatted_appointment_date = @select_date.strftime('%A, %d - %b - %Y')
+    @patients = []
+    concept_id = ConceptName.find_by_name("Appointment date").concept_id
+    date = session[:m_app_date]
+    patients = session[:missing_patients]
+    unless patients.blank?
+      records = Observation.find(:all,
+                                 :conditions =>["person_id in (?) AND concept_id = ? AND DATE(value_datetime) = ?",patients,concept_id,date.to_date],
+                                 :order => "obs.obs_datetime DESC")
+
+      demographics = {}
+      (records || []).each do |r|
+        patient = PatientService.get_patient(Person.find(r.person_id))
+        demographics[r.obs_id] = {	:first_name => patient.first_name,
+                                    :last_name => patient.last_name,
+                                    :gender => patient.sex,
+                                    :birthdate => patient.birth_date,
+                                    :visit_date => r.obs_datetime,
+                                    :patient_id => r.person_id,
+                                    :identifier => patient.filing_number || patient.arv_number }
+      end
+      @patients = demographics
+      end
+    render :layout => 'report'
+  end
 
   def get_visits_on(date)
     required_encounters = ["ART ADHERENCE", "ART_FOLLOWUP",   "HIV CLINIC REGISTRATION",
@@ -126,63 +157,43 @@ class ReportController < GenericReportController
 
     @data = []
 
-    program = Program.find_by_name('HIV PROGRAM').id
-    patients = PatientProgram.find(:all, :conditions => ["program_id = ?", program],:include => :patient_states)
+    patients = RegisterDetail.patient_details
 
     patients.each do |patient|
-
-      det_patient = Patient.find(patient.patient_id,:include=>[:person]) rescue nil
-      unless det_patient.nil?
-
-        #drug = PatientService.current_regimen(det_patient)
-        state = patient.patient_states.last.state.to_i rescue nil
-        outcome = ""
-        unless state.blank?
-          case state
-            when 7
-              outcome = "On ART"
-            when 6
-             outcome = "Stoped ART"
-            when 3
-              outcome = "Died"
-            when 2
-              outcome = "TO"
-          end
-        end
-        start_date = patient.patient_states.last.start_date.strftime('%d/%b/%Y') rescue " "
-        arv_no = PatientService.get_patient_identifier(det_patient.person, 'ARV Number')
-        #preparing arv_no for sorting
-        site_length = arv_no.split("-").first.to_s.length
+      unless patient.arv_no.blank?
+        site_length = patient.arv_no.split("-").first.to_s.length
         pos = site_length+5
         first = site_length+6
-        case arv_no.length
+        case patient.arv_no.length
           when first
-            arv_no.insert(pos,'0000')
+            patient.arv_no.insert(pos,'0000')
           when first+1
-            arv_no.insert(pos,'000')
+            patient.arv_no.insert(pos,'000')
           when first+2
-            arv_no.insert(pos,'00')
+            patient.arv_no.insert(pos,'00')
           when first+3
-          arv_no.insert(pos,'0')
+           patient.arv_no.insert(pos,'0')
         end
-
+       end
         detail ={
-            'arv_number' => arv_no,
-            'name' => det_patient.name,
-            'gender' => det_patient.person.gender,
-            'age' => PatientService.age(det_patient.person, Date.today),
-            'reg_date' => patient.date_enrolled.to_date.strftime('%d/%b/%Y'),
-            'start_reason' =>PatientService.reason_for_art_eligibility(det_patient)  ,
-            'outcome' => outcome.nil? ? " ": outcome,
-            'outcome_date' => start_date,
-            'occupation' => PatientService.get_attribute(det_patient , 'Occupation'),
-            'regimen' =>  PatientService.current_regimen(det_patient)
+            'person_id'=> patient.person_id,
+            'arv_number' => patient.arv_no,
+            'name' => patient.given_name+' '+patient.family_name,
+            'gender' => patient.Sex,
+            'age' => patient.Age,
+            'reg_date' => patient.Registration_date.to_date,
+            'start_reason' =>patient.reason_for_starting,
+            'outcome' => patient.outcome,
+            'outcome_date' => patient.outcome_date.to_date,
+            'occupation' => patient.occupation,
+            'regimen' =>  patient.Regimen
         }
         @data << detail
       end
       @data = @data.uniq
-    end
+  end
 
+  def register_menu
   end
 
   def missed_appointment_duration
@@ -257,7 +268,7 @@ class ReportController < GenericReportController
                                 AND concept_id = #{appoinment} AND DATE(value_datetime) <= DATE('#{@end_date}') AND voided = 0
                                 ORDER BY obs_datetime LIMIT 1").first
 
-     
+
        first_obs = Observation.find_by_sql("SELECT person_id, obs_datetime FROM obs
                                             WHERE person_id = #{person_id}
                                             AND voided = 0 order by obs_datetime ASC LIMIT 1").first
@@ -267,7 +278,7 @@ class ReportController < GenericReportController
        next_visit = next_visit.nil? ? "No" : next_visit.obs_datetime.to_date
         unless last_appointment.blank?
               result = adherence(last_appointment.person_id, last_appointment.value_datetime) rescue []
-        
+
           details ={
             'patient_id' => person_id,
             'name' => patient.name,
@@ -280,14 +291,73 @@ class ReportController < GenericReportController
             'came_late' => next_visit,
             'date_registered' => first_obs.obs_datetime.to_date,
             'last_visit_date' => last_appointment.obs_datetime.to_date
-        }  
+        }
         @data << details
         end
     end
 
     render "missed_appointment_report"
   end
-  
+  def missed_appointment_date
+    render :layout=> "application"
+  end
+  def defaulters_menu
+    render :layout=>"application"
+  end
+  #defaulted patient on user defined duration
+
+  def defaulted_patients_for_period
+    @logo = CoreService.get_global_property_value('logo').to_s
+    @data = []
+    patients =[]
+    patient_ids = []
+    detail = {}
+    appointment = Concept.find_by_name('appointment date').concept_id
+    @quarter = params[:quarter]
+    if params[:quarter]== "All defaulters"
+      end_date = Date.today.strftime("%Y-%m-%d %H:%M:%S")
+      @art_defaulters ||= PatientProgram.find_by_sql("SELECT e.patient_id, current_defaulter(e.patient_id, '#{end_date}') AS def
+                                                      FROM earliest_start_date e LEFT JOIN person p ON p.person_id = e.patient_id
+                                                      WHERE e.earliest_start_date <=  '#{end_date}' AND p.dead=0 AND current_state_for_program(patient_id, 1, '#{end_date}') NOT IN (6, 2, 3) HAVING def = 1").each do | patient |
+        patients << patient.patient_id
+        end
+    else
+      date = Report.generate_cohort_date_range(params[:quarter])
+      start_date  = date.first.beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
+      end_date    = date.last.end_of_day.strftime("%Y-%m-%d %H:%M:%S")
+     regimen_obs = Observation.find(:all,:conditions=>["value_datetime BETWEEN ? AND ? AND concept_id = ?",start_date,end_date,appointment]).each do |patient|
+      patient_ids << patient.person_id.to_i
+    end
+    condition = "AND p.person_id IN (#{patient_ids.uniq.join(",")})"
+
+    @art_defaulters ||= PatientProgram.find_by_sql("SELECT e.patient_id, current_defaulter(e.patient_id, '#{end_date}') AS def
+                                                      FROM earliest_start_date e LEFT JOIN person p ON p.person_id = e.patient_id
+                                                      WHERE e.earliest_start_date <=  '#{end_date}' AND p.dead=0 #{condition} AND current_state_for_program(patient_id, 1, '#{end_date}') NOT IN (6, 2, 3) HAVING def = 1").each do | patient |
+      patients << patient.patient_id
+    end
+    end
+    (patients || []).each do |patient|
+
+      det_patient = Patient.find(patient,:include=>[:person]) rescue nil
+      #date = Observation.find(:all,:conditions=>["person_id=? AND concept_id = ? ",patient,appointment],:order=>"obs_datetime DESC",:limit=>1).first.value_datetime.to_date+60.day rescue "0000-00-00".to_date
+      detail ={
+          'person_id'=>patient,
+          'arv_number' => PatientService.get_patient_identifier(det_patient.person, 'ARV Number'),
+          'name' => det_patient.name,
+          'gender' => det_patient.person.gender,
+          'age' => PatientService.age_in_months(det_patient.person, Date.today),
+          'start_date'=> Observation.find(:all,:conditions=>["person_id=?",patient],:order=>"obs_datetime ASC",:limit=>1).first.obs_datetime.strftime("%d/%m/%Y"),
+          'start_reason' =>PatientService.reason_for_art_eligibility(det_patient),
+          'phone'=> self.get_phone(patient),
+          'outcome'=>"Defaulter",
+          #'outcome_date'=> date.strftime("%d/%m/%Y"),
+          'regimen' =>  PatientService.current_regimen(det_patient)
+      }
+    @data << detail
+    @data.uniq
+    end
+  end
+
   def get_phone(patient_id)
 
     patient = Patient.find(patient_id)
@@ -323,6 +393,4 @@ class ReportController < GenericReportController
 
     return results={ 'missed_dosses' => dosses_missed, 'expected_remaining' => expected_remaining }
   end
-
-
 end

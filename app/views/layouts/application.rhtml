@@ -5,6 +5,7 @@
     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
     <% @title = "#{controller.controller_name.humanize} #{controller.action_name.humanize}" rescue ""  %>
     <script type="text/javascript" language="javascript" src="/touchscreentoolkit/lib/javascripts/touchScreenToolkit.js" defer="true"></script>
+    <script type="text/javascript" language="javascript" src="/javascripts/jquery-2.1.4.min.js" defer="true"></script>
     <script language="javascript">
       tstUserKeyboardPref = "<%=preferred_user_keyboard%>"
       tstUsername = "<%= current_user.username unless current_user.nil? %>";

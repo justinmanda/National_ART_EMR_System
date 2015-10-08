@@ -4,9 +4,10 @@ class Mastercard
    :cpt, :cd4,:estimated_date,:next_app, :tb_status, :doses_missed, :visit_by, :date_of_outcome,
    :reg_type, :adherence, :patient_visits, :sputum_count, :end_date, :art_status, :encounter_id , :notes, :appointment_date,
    :home_district, :birth_date, :traditional_authority, :current_residence, :mothers_surname, :eid_number, :pre_art_number, :dead,
-   :person_id, :national_id_with_dashes, :filing_number, :archived_filing_number, :age_in_months, :birthdate_estimated
+   :person_id, :national_id_with_dashes, :filing_number, :cell_phone_number,:home_phone_number,:archived_filing_number, 
+   :state_province, :home_village, :current_district,:country,:age_in_months, :birthdate_estimated
 
- attr_accessor :patient_id,:arv_number, :national_id ,:name ,:age ,:sex, :init_wt, :init_ht ,
+ attr_accessor :patient_id,:arv_number, :national_id ,:name ,:age ,:age_in_months,:sex, :init_wt, :init_ht ,
    :init_bmi ,:transfer_in ,:address, :landmark, :occupation, :guardian, :agrees_to_followup,
    :hiv_test_location, :hiv_test_date, :reason_for_art_eligibility, :date_of_first_line_regimen ,
    :tb_within_last_two_yrs, :eptb ,:ks,:pulmonary_tb, :first_line_drugs, :alt_first_line_drugs,
@@ -14,6 +15,6 @@ class Mastercard
    :cd4_count_date, :cd4_count, :pregnant, :who_clinical_conditions, :tlc, :tlc_date, :tb_status_at_initiation,
    :ever_received_art, :last_art_drugs_taken, :last_art_drugs_date_taken,
    :first_positive_hiv_test_site, :first_positive_hiv_test_date, :first_positive_hiv_test_arv_number,
-   :first_positive_hiv_test_type, :months_on_art, :transferred_out_to, :transferred_out_date, :art_start_date, :current_drugs_given
+   :first_positive_hiv_test_type, :months_on_art, :transferred_out_to, :transferred_out_date, :art_start_date, :current_drugs_given 
 
 end 

@@ -6,7 +6,11 @@
   <head>
     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
     <title><%= @title = "#{controller.controller_name.humanize} #{controller.action_name.humanize}" rescue ""  %></title>
-<script type="text/javascript" language="javascript" src="/touchscreentoolkit/lib/javascripts/touchScreenToolkit.js" defer="true"><
+    <%= javascript_include_tag 'js/jquery-2.1.4.min.js' %>
+<script type="text/javascript" language="javascript" src="/touchscreentoolkit/lib/javascripts/touchScreenToolkit.js" defer="true"></script>
+    <script type="text/javascript"  src="/javascripts/js/jquery.screwdefaultbuttonsV2.js"></script>
+    <%= stylesheet_link_tag 'extra_buttons' %>
+    <script type="text/javascript" charset="utf8" src="/javascripts/jquery.dataTables.min.js"></script>
     <script language="javascript">
       tstUsername = "<%= current_user.username unless current_user.nil? %>";
       tstCurrentDate = "<%= Time.now.strftime("%Y-%m-%d") %>";

@@ -74,6 +74,7 @@ class ClinicController < GenericClinicController
         ["Set Appointment Limit", "/properties/set_appointment_limit"],
 				["Export Cohort Data", "/properties/export_cohort_data"],
         ["Extended Family Planning","/properties/creation?value=extended_family_planning"],
+        ["Add ARV Drug Regimen", "/properties/add_arv_drug_regimen"]
       ]
     else
       @settings = []

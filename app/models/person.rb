@@ -8,7 +8,7 @@ class Person < ActiveRecord::Base
   cattr_accessor :migrated_creator
   cattr_accessor :migrated_location
 
-  has_one :patient, :foreign_key => :patient_id, :dependent => :destroy, :conditions => {:voided => 0}
+  has_one :patient, :class_name=>'Patient',:foreign_key => :patient_id, :dependent => :destroy, :conditions => {:voided => 0}
   has_many :names, :class_name => 'PersonName', :foreign_key => :person_id, :dependent => :destroy, :order => 'person_name.preferred DESC', :conditions => {:voided => 0}
   has_many :addresses, :class_name => 'PersonAddress', :foreign_key => :person_id, :dependent => :destroy, :order => 'person_address.preferred DESC', :conditions => {:voided => 0}
   has_many :relationships, :class_name => 'Relationship', :foreign_key => :person_a, :conditions => {:voided => 0}

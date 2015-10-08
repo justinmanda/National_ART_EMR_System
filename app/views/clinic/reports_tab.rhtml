@@ -1,3 +1,7 @@
+<html>
+<head>
+<script type="text/javascript" language="javascript" src="/javascripts/jquery-2.1.4.min.js" defer  ></script>
+
 <style type="text/css">
   body {
     -moz-user-select:none;
@@ -41,50 +45,61 @@
   #tab {
     -moz-user-select:none;
   }
+
+ #1 {display: block;}
 </style>
 
 <script>
   function setInnerHtmlData(id,result,path, target) {
     td = document.getElementById(id);
     if ( result.upcase == 'DRUG DISPENSATION'){
-        td.innerHTML = "<a href ='" + path + "' target='" + (target ? target : "_self") + "'>" +  result + "</a>"
+        td.innerHTML = "<a href ='" + path + "' target='" + (target ? target : "_self") + "'>" +  result + "</a>";}
+    else if (result == 'ART Register'){
+            td.innerHTML = "<a href ='" + path + "' onclick = 'showRegisterMenu()' target='" + (target ? target : "_parent") + "'>" +  result + "</a>";
     }
-    td.innerHTML = "<a href ='" + path + "' target='" + (target ? target : "_parent") + "'>" +  result + "</a>"
-  }
-</script>
 
+      td.innerHTML = "<a href ='" + path + "'  target='" + (target ? target : "_parent") + "'>" +  result + "</a>";
+  }
+
+ $(document).ready(function (){
+     jQuery('#1').click(function(){
+     jQuery('#vreminder').hide();
+     });
+
+ });
+</script>
+</head>
 <!--base target="_parent"-->
 <div id="tab">
     <h2>Select report to view</h2>
-    <div id="table_div">
-
-      <table id="stats">
-        <% count = @reports.length  unless @reports.blank? %>
-        <% (@reports || []).each do |name,path|
-          count_up = 0
-          count = 0 if @reports.blank?
-        %>
-          <% while count_up < count %>
+  <table id="stats">
+    <% count = @reports.length  unless @reports.blank? %>
+    <% (@reports || []).each do |name,path|
+      count_up = 0
+      count = 0 if @reports.blank?
+    %>
+        <% while count_up < count %>
             <tr>
               <td id = "<%=count_up+= 1%>"></td>
               <td id = "<%=count_up+= 1%>"></td>
               <td id = "<%=count_up+= 1%>"></td>
             </tr>
-          <%end unless @reports.blank?%>
-        <%end%>
-      </table>
+        <%end unless @reports.blank?%>
+    <%end%>
+  </table>
 
 
-      <%
-      count = @reports.length  unless @reports.blank?
-      @reports.sort.reverse.map do | name , path | %>
-        <script>
-          setInnerHtmlData("<%=count%>","<%=name%>","<%=path%>",
-              "<%= (name.include?("Data Cleaning Tools") || name.include?("Supervision") ? "_self" : "_parent") %>" );
-        </script>
-        <%count-=1%>
-      <%end%>
+  <%
+     count = @reports.length  unless @reports.blank?
+     @reports.sort.reverse.map do | name , path | %>
+      <script>
+          setInnerHtmlData("<%=count%>","<%=name%>","<%= path %>",
+                  "<%= (name.include?("Data Cleaning Tools") || name.include?("Supervision")? "_self" : "_parent") %>" );
+      </script>
+      <%count-=1%>
+  <%end%>
 
-    </div>
-  </div>
+</div>
+</html>
 <!--/base-->
+

@@ -1,0 +1,56 @@
+<html>
+<head>
+<%= javascript_include_tag 'js/jquery-2.1.4.min.js' %>
+<script type="text/javascript"  src="/javascripts/js/jquery.screwdefaultbuttonsV2.js"></script>
+<%= stylesheet_link_tag 'extra_buttons' %>
+<script type="text/javascript" charset="utf8" src="/javascripts/jquery.dataTables.min.js"></script>
+<script>
+    $(function(){
+
+        $('input:radio').screwDefaultButtons({
+            image: 'url("/javascript/images/radioSmall-alt.png")',
+            width: 43,
+            height: 43
+        });
+
+        $('input:checkbox').screwDefaultButtons({
+            image: 'url("/javascipt/images/checkboxSmall.jpg")',
+            width: 43,
+            height: 43
+        });
+
+    });
+    $(document).ready(function(){
+        $('#ex1_a').click(function(){
+            $('#fields').toggle();
+        });
+    });
+</script>
+
+<style>
+    #contain{
+        margin: 20px 200px 20px 200px ;
+        width:50%;
+        padding:5px;
+    }
+</style>
+</head>
+<body >
+<body>
+   <div id = "contain">
+	<h1>ART Register Options</h1>
+	<div class="div">
+		<input type="radio" name="ex1" id="ex1_a">
+		 <label for="ex1_a">Enter ARV Number Range</label><br/><br/>
+		 <div id = "fields">
+		 <input type="text" name="fname" placeholder="ARV NUMBER"> <span><strong> TO </strong></span>
+                <input type="text" name="lname" placeholder="ARV NUMBER"></br><br/><br/>
+		</div>
+		<input type="radio" name="ex1" id="ex1_b">
+		<label for="ex1_b">All Patients</label> <br/><br/>
+		<input type="submit" value="Submit">
+	</div>
+   </div>
+</body>
+</body>
+</html>

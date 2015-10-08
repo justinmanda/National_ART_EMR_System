@@ -216,6 +216,7 @@ class GenericPeopleController < ApplicationController
           found_person = PatientService.create_from_form(found_person_data['person']) unless found_person_data.blank?
         end
       end
+
       if found_person
         if params[:identifier].to_s.strip.length != 6 and create_from_dde_server
           patient = DDEService::Patient.new(found_person.patient)

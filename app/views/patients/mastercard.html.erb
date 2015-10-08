@@ -143,7 +143,7 @@
     <div id="content">
       <iframe id="main" style="border: 0px solid #fff;"
               src="/patients/<%= (!@type.nil? ? "general_mastercard" : "mastercard_printable")
-                  %>?patient_id=<%=@patient_id%>&type=<%= @type %>"></iframe>
+                  %>?patient_id=<%=@patient_id%>&type=<%= @type %>&year=<%= @year%>"></iframe>
 
       <div id="footer" style="">
       	<% report_url = "/patients/show/#{@patient_id}" %>
@@ -159,12 +159,12 @@
         <% if @source.nil? %>
           <button class="button navButton blue" style="float: left;"
           	<% if !@show_mastercard_counter %>
-                  onmousedown="window.location = '/patients/print_mastercard?patient_id=<%=@patient_id%>'">
+                  onmousedown="window.location = '/patients/default_mastercard_pdf_print?patient_id=<%=@patient_id%>&type=<%= @type %>&year=<%= @year%>&media=printable'">
             <% else %>
-                  onmousedown="window.location = '/patients/print_mastercard?patient_id=<%=@patient_id%>&show_mastercard_counter=true&current=' + current;">            
+                  onmousedown="window.location = '/patients/default_mastercard_pdf_print?patient_id=<%=@patient_id%>&type=<%= @type %>&show_mastercard_counter=true&current=' + current;">
             <% end %>
             <span>
-              Print Mastercard
+              Print MasterCard
             </span>
           </button>
 

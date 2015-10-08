@@ -123,7 +123,7 @@ a.button {
 </style>
 <div id = 'head'>
   <div class = 'mastercards'>
-    <a href='/patients/mastercard?patient_id=<%=params[:patient_id]%>&source=&type=1' class = 'button' id='yellow'>Yellow</a>
+    <%=link_to "Yellow","/patients/mastercard?patient_id=#{params[:patient_id]}&source =&type=1&year=2014",:format=>:pdf,:class=>"button",:id=>'yellow'%>
   </div>
   <div class = 'mastercards'>
     <a href='/patients/mastercard?patient_id=<%=params[:patient_id]%>&source=&type=2' class = 'button' id='green'>Green</a>

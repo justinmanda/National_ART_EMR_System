@@ -820,10 +820,11 @@ class Cohort
 	def art_defaulted_patients
 		patients = []
 		if @art_defaulters.blank?
-			@art_defaulters ||= PatientProgram.find_by_sql("SELECT e.patient_id, current_defaulter(e.patient_id, '#{@end_date}') AS def
-											FROM earliest_start_date e LEFT JOIN person p ON p.person_id = e.patient_id
-											WHERE e.earliest_start_date <=  '#{@end_date}' AND p.dead=0
-											HAVING def = 1 AND current_state_for_program(patient_id, 1, '#{@end_date}') NOT IN (6, 2, 3)").each do | patient |
+
+		@art_defaulters ||= PatientProgram.find_by_sql("SELECT e.patient_id, current_defaulter(e.patient_id, '#{@end_date}') AS def
+                                                      FROM earliest_start_date e LEFT JOIN person p ON p.person_id = e.patient_id
+                                                      WHERE e.earliest_start_date <=  '#{@end_date}' AND p.dead=0 HAVING def = 1
+                                                      AND current_state_for_program(patient_id, 1, '#{@end_date}') NOT IN (6, 2, 3)").each do | patient |
 				patients << patient.patient_id
 			end
 			@art_defaulters = patients

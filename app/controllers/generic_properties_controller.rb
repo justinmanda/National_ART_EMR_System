@@ -99,7 +99,22 @@ class GenericPropertiesController < ApplicationController
       redirect_to "/clinic" and return
     end
   end
-  
+  def add_arv_drug_regimen
+    @regimen_index = Regimen.find(:all,:conditions=>["regimen_index <> ? OR regimen_index IS NOT NULL",0])
+    concept_id = Concept.find_by_name("ANTIRETROVIRAL DRUGS").id
+    drug_concept = ConceptSet.find(:all,:conditions=>["concept_set =?",concept_id]).map(&:concept_id)
+    @drugs = Drug.find(:all,:conditions=>["concept_id IN (?)",drug_concept]).map(&:name)
+    render :layout=>"application"
+  end
+  def create_regimen_order
+    drug_env_id = Drug.find_by_name("#{params[:drugs]}").drug_id
+    columns = {:drug_inventory_id=>drug_env_id,:regimen_id=>params[:regimen_id],:dose=>params[:dose],
+               :equivalent_daily_dose=>params[:daily_dose],:frequency=>params[:frequency],
+               :instructions=>params[:instructions],:units=>params[:units],:prn=>0,:complex=>0,:voided=>0,:creator=>1,
+               :date_created=>Date.today.strftime("%Y-%m-%d %H:%M")}
+    RegimenDrugOrder.create(columns)
+    redirect_to "/properties/add_arv_drug_regimen"
+  end
   def set_role_privileges
     if request.post?
       role = params[:role]['title']

@@ -1196,7 +1196,7 @@ EOF
 		patient.name = person.names.first.given_name + ' ' + person.names.first.family_name rescue nil
 		patient.patient_id = person.patient.id
 		#patient.age = cul_age(person.birthdate,person.birthdate_estimated)
-		#patient.age_in_months = age_in_months(person, current_date)
+		patient.age_in_months = age_in_months(person, current_date)
 		patient.arv_number = get_patient_identifier(person.patient, 'ARV Number')
 		patient.splitted_arv_number = patient.arv_number.split("-").last.to_i rescue 0
 		patient
@@ -1570,7 +1570,9 @@ EOF
     #raise outcome_dates.to_yaml
     return outcome_dates
   end
-
+ def self.last_patient_visit_date(patient_id)
+   date = Observation.find(:all,:conditions=>["person_id =?",patient_id],:limit=> 1,:order=>"obs_datetime Desc").first.obs_datetime.to_date
+ end
   # Get the any BMI-related alert for this patient
   def self.current_bmi_alert(patient_weight, patient_height)
     weight = patient_weight
@@ -1737,7 +1739,42 @@ people = Person.find(:all, :include => [{:names => [:person_name_code]}, :patien
       passed["person"].merge!("identifiers" => {"National id" => passed_national_id})
       return [self.create_from_form(passed["person"])]
     end
-    return people
+   if self.create_from_couchDB_document
+     url = "http://localhost:5984/patient_details/#{identifier}"
+     data = JSON.parse(RestClient.get(url)) rescue nil
+     unless data.blank?
+     passed = {
+         "person"=>{"occupation"=>data["occupation"],
+                    "age_estimate"=> 0,
+                    "cell_phone_number"=>data["cell_phone_number"],
+                    "birth_month"=> data["birth_date"].to_date.month,
+                    "addresses"=>{"address1"=>data["address"],
+                                  "address2"=>data["home_district"],
+                                  "city_village"=>data["landmark"],
+                                  "state_province"=>data["current_district"],
+                                  "neighborhood_cell"=>data["home_district"],
+                                  "county_district"=>data["traditional_authority"]},
+                    "gender"=> data["sex"],
+                    "patient"=>{"identifiers"=>{"National id" => data["national_id"]}},
+                    "birth_day"=>data["birth_date"].to_date.day,
+                    "home_phone_number"=>data["home_phone_number"],
+                    "names"=>{"family_name"=>data["name"].split[0].squish,
+                              "given_name"=>data["name"].split.last.squish,
+                              "middle_name"=>""},
+                    "birth_year"=>data["birth_date"].to_date.year},
+         "filter_district"=>"",
+         "filter"=>{"region"=>"",
+                    "t_a"=>""},
+         "relation"=>""
+     }
+     people = [self.create_from_form(passed["person"])]
+     return people
+    end
+   end
+    #return people
+  end
+  def self.create_from_couchDB_document
+    CoreService.get_global_property_value('create_from_couchDB_document').to_s == "true" rescue false
   end
 
   def self.set_birthdate_by_age(person, age, today = Date.today)
